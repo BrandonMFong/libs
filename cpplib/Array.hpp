@@ -45,13 +45,13 @@ public:
 	}
 
 	/**
-	 * Returns the argument index
+	 * Returns the value's index. If we could not find it, -1 will be returned
 	 */
-	uint64_t indexForObject(T value) {
+	int64_t indexForObject(T value) {
 		for (uint64_t i = 0; i < this->_count; i++) {
 			if (this->_array[i] == value) return i;
 		}
-		return 0;
+		return -1;
 	}
 
 	/// Returns _count

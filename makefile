@@ -56,12 +56,17 @@ libc:
 clean:
 	rm -rfv bin
 
-test: setup libctests runtests
+test: setup libctests libcpptests runtests
 
 # Tests
 libctests:
 	$(CC) -c -o bin/clib.o clib/clib.c $(CCFLAGS) -D TESTING
 	$(CC) -o bin/runtests.c bin/clib.o clib/tests.c $(CCFLAGS) -D TESTING
 
+libcpptests:
+	g++ -o bin/runtests.cpp cpplib/tests.cpp $(CCFLAGS) -D TESTING
+
 runtests:
 	./bin/runtests.c
+	./bin/runtests.cpp
+
