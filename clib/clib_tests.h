@@ -27,11 +27,14 @@ int test_CopyString(void) {
 		free(output);
 	}
 
+	printf("%s - [ %s ]\n", __func__, !result ? "Pass" : "Fail");
 	return 0;
 }
 
 void clib_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
+
+	printf("\n%s:\n\n", __func__);
 
 	if (!test_CopyString()) {
 		p++;

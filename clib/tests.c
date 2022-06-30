@@ -7,9 +7,11 @@
 
 int main() {
 	int pass = 0, fail = 0;
+
+	printf("\nStarting tests...\n");
 	clib_tests(&pass, &fail);
 
-	printf("Pass: %d\n", pass);
+	printf("\nPass: %d\n", pass);
 	printf("Fail: %d\n", fail);
 	return 0;
 }
