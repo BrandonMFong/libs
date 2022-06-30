@@ -29,8 +29,37 @@ int test_CopyString(void) {
 	}
 
 	PRINT_TEST_RESULTS(!result);
-	//printf("%s - [ %s ]\n", __func__, !result ? "Pass" : "Fail");
-	return 0;
+
+	return result;;
+}
+
+int test_DoesStringArrayContain(void) {
+	int result;
+	const char * array[] = {"Hello", "world", "we", "are", "clib"};
+	int size = sizeof(array) / sizeof(array[0]);
+	int error = 0;
+
+	const char * string = "Hello";
+	bool value = DoesStringArrayContain(array, size, string);
+	
+	if (!value) {
+		printf("Array should have contained: %s\n", string);
+		result = 1;
+	}
+
+	if (result == 0) {
+		string = "tree";
+		value = DoesStringArrayContain(array, size, string);
+
+		if (value) {
+			result = 1;
+			printf("Array should not have: %s\n", string);
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
 }
 
 void clib_tests(int * pass, int * fail) {
@@ -39,6 +68,12 @@ void clib_tests(int * pass, int * fail) {
 	INTRO_TEST_FUNCTION;
 
 	if (!test_CopyString()) {
+		p++;
+	} else {
+		f++;
+	}
+
+	if (!test_DoesStringArrayContain()) {
 		p++;
 	} else {
 		f++;
