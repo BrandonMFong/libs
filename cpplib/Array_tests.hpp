@@ -16,6 +16,14 @@ int test_Initializer() {
 	Array<char> charArr;
 	Array<double> doubleArr;
 
+	Array<int> * intArrPtr = new Array<int>();
+	Array<double> * doubleArrPtr = new Array<double>();
+	Array<char> * charArrPtr = new Array<char>();
+
+	delete intArrPtr;
+	delete doubleArrPtr;
+	delete charArrPtr;
+
 	PRINT_TEST_RESULTS(1);
 
 	return 0;
