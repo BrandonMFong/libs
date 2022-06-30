@@ -35,9 +35,8 @@ int test_CopyString(void) {
 
 int test_DoesStringArrayContain(void) {
 	int result;
-	const char * array[] = {"Hello", "world", "we", "are", "clib"};
+	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
-	int error = 0;
 
 	const char * string = "Hello";
 	bool value = DoesStringArrayContain(array, size, string);
