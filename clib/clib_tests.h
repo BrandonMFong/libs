@@ -62,22 +62,40 @@ int test_DoesStringArrayContain(void) {
 	return result;
 }
 
+int test_GetByteStringRepresentation(void) {
+	int result = 0;
+	char buf[20];
+
+	result = GetByteStringRepresentation(1024 * 1024, buf);
+
+	const char * expected = "1.00 mb";
+
+	if (result == 0) {
+		if (strcmp(expected, buf)) {
+			result = 1;
+			printf("%s != %s\n", expected, buf);
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
+
+}
+
 void clib_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_CopyString()) {
-		p++;
-	} else {
-		f++;
-	}
+	if (!test_CopyString()) p++;
+	else f++;
 
-	if (!test_DoesStringArrayContain()) {
-		p++;
-	} else {
-		f++;
-	}
+	if (!test_DoesStringArrayContain()) p++;
+	else f++;
+
+	if (!test_GetByteStringRepresentation()) p++;
+	else f++;
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
