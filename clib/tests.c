@@ -8,7 +8,7 @@
 int main() {
 	int pass = 0, fail = 0;
 
-	printf("\nStarting tests...\n");
+	printf("\nStarting tests...\n\n");
 	clib_tests(&pass, &fail);
 
 	printf("\nPass: %d\n", pass);

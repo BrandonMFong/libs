@@ -3,6 +3,7 @@
  * date: 6/30/22
  */
 
+#include "tests.h"
 #include "clib.h"
 #include <stdlib.h>
 #include <string.h>
@@ -27,14 +28,15 @@ int test_CopyString(void) {
 		free(output);
 	}
 
-	printf("%s - [ %s ]\n", __func__, !result ? "Pass" : "Fail");
+	PRINT_TEST_RESULTS(!result);
+	//printf("%s - [ %s ]\n", __func__, !result ? "Pass" : "Fail");
 	return 0;
 }
 
 void clib_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
-	printf("\n%s:\n\n", __func__);
+	INTRO_TEST_FUNCTION;
 
 	if (!test_CopyString()) {
 		p++;
