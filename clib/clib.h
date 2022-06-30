@@ -60,6 +60,8 @@ bool IsSymbolicLink(const char * path);
  * Creates a string that represents the byteSize
  *
  * outStr needs to be a valid string buffer that can accept at least 10 bytes of data
+ *
+ * returns 0 on success, anything else is an error
  */
 int GetByteStringRepresentation(unsigned long long byteSize, char * outStr);
 
@@ -77,3 +79,4 @@ char * CopyString(const char * string, int * err);
  * returns the ip address for the hostname
  */
 int ResolveHostname(const char * hostname, char * ip);
+

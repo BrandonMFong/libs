@@ -56,3 +56,12 @@ libc:
 clean:
 	rm -rfv bin
 
+test: setup libctests runtests
+
+# Tests
+libctests:
+	$(CC) -c -o bin/clib.o clib/clib.c $(CCFLAGS) -D TESTING
+	$(CC) -o bin/runtests.c bin/clib.o clib/tests.c $(CCFLAGS) -D TESTING
+
+runtests:
+	./bin/runtests.c

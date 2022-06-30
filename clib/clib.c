@@ -181,19 +181,19 @@ int GetByteStringRepresentation(unsigned long long byteSize, char * outStr) {
 		strcpy(unit, "b");
 
 		// TeraByte
-		if (byteSize > TERABYTE) {
+		if (byteSize >= TERABYTE) {
 			value = ConvertValueToScale(byteSize, TERABYTE);
 			strcpy(unit, "tb");
 		// GigaByte
-		} else if (byteSize > GIGABYTE) {
+		} else if (byteSize >= GIGABYTE) {
 			value = ConvertValueToScale(byteSize, GIGABYTE);
 			strcpy(unit, "gb");
 		// MegaByte
-		} else if (byteSize > MEGABYTE) {
+		} else if (byteSize >= MEGABYTE) {
 			value = ConvertValueToScale(byteSize, MEGABYTE);
 			strcpy(unit, "mb");
 		// KiloByte
-		} else if (byteSize > KILOBYTE) {
+		} else if (byteSize >= KILOBYTE) {
 			value = ConvertValueToScale(byteSize, KILOBYTE);
 			strcpy(unit, "kb");
 		}
