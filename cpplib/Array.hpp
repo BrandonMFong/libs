@@ -7,10 +7,19 @@
 #include <stdint.h>
 #include <initializer_list>
 
+/**
+ * Immutable Array
+ *
+ * This class allows you to access the array in readonly.  This class 
+ * is meant to provide you the basic functionality of an array class
+ *
+ * Notes:
+ * 	I feel that I can derive binary trees and linked lists from this class
+ */
 template <typename T> class Array {
 public:
 	Array() {
-		this->_array = 0;
+		this->_address = 0;
 		this->_count = 0;
 	}
 
@@ -29,7 +38,7 @@ public:
 	}
 
 	virtual ~Array() {
-		if (this->_array) delete this->_array;
+		if (this->_address) delete (T *) this->_address;
 		this->_count = 0;
 	}
 	
@@ -52,7 +61,7 @@ public:
 	 */
 	virtual bool contains(T object) {
 		for (uint64_t i = 0; i < this->_count; i++) {
-			if (this->_array[i] == object)
+			if (((T *) this->_address)[i] == object)
 				return true;
 		}
 		return false;
@@ -62,10 +71,10 @@ public:
 	 * Returns null if argument could not be found
 	 */
 	T objectAtIndex(uint64_t index) {
-		if ((this->_array == 0) || (this->_count == 0)) {
+		if ((this->_address == 0) || (this->_count == 0)) {
 			return (T) 0;
 		} else {
-			return this->_array[index];
+			return ((T *) this->_address)[index];
 		}
 	}
 
@@ -76,7 +85,7 @@ public:
 	 */
 	int64_t indexForObject(T value) {
 		for (uint64_t i = 0; i < this->_count; i++) {
-			if (this->_array[i] == value) return i;
+			if (((T *) this->_address)[i] == value) return i;
 		}
 		return -1;
 	}
@@ -92,13 +101,13 @@ private:
 	 * Copies values from array
 	 */
 	void _saveArray(T * array, uint64_t size) {
-		this->_array = new T[size];
+		this->_address = new T[size];
 		this->_count = size;
 
-		if (this->_array) {
+		if (this->_address) {
 			// Load into array
 			for (uint64_t i = 0; i < size; i++) {
-				this->_array[i] = array[i];
+				((T *) this->_address)[i] = array[i];
 			}
 		}
 	}
@@ -110,21 +119,21 @@ private:
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
-		this->_array = new T[this->_count];
+		this->_address = new T[this->_count];
 
-		if (this->_array) {
+		if (this->_address) {
 			uint64_t i = 0;
 			for (itr = list.begin(); itr != list.end(); ++itr) {
-				this->_array[i] = *itr;
+				((T *) this->_address)[i] = *itr;
 				i++;
 			}
 		}
 	}
 
 	/// Holds copy of array
-	T * _array;
+	void * _address;
 
-	/// Holds size of _array
+	/// Holds size of _address
 	uint64_t _count;
 
 public:
