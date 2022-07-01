@@ -63,6 +63,13 @@ int test_ObjectAtIndex() {
 		printf("%f != 3.3\n", a);
 	}
 
+	a = d[3];
+
+	if (a != 4.4) {
+		result = 1;
+		printf("%f != 4.4\n", a);
+	}
+
 	PRINT_TEST_RESULTS(!result);
 
 	return result;
