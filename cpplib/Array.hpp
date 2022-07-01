@@ -33,7 +33,7 @@ public:
 	/**
 	 * Initializes with initializer
 	 */
-	Array(std::initializer_list<T> list) {
+	Array(std::initializer_list<T> list) : Array() {
 		this->set(list);
 	}
 
