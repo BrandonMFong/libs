@@ -51,6 +51,23 @@ int test_Contains() {
 	return result;
 }
 
+int test_ObjectAtIndex() {
+	int result = 0;
+
+	Array<double> d({1.1, 2.2, 3.3, 4.4, 5.5});
+
+	double a = d.objectAtIndex(2);
+
+	if (a != 3.3) {
+		result = 1;
+		printf("%f != 3.3\n", a);
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
+}
+
 void Array_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -60,6 +77,9 @@ void Array_tests(int * pass, int * fail) {
 	else f++;
 	
 	if (!test_Contains()) p++;
+	else f++;
+
+	if (!test_ObjectAtIndex()) p++;
 	else f++;
 
 	if (pass) *pass += p;

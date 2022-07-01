@@ -14,10 +14,16 @@ public:
 		this->_count = 0;
 	}
 
+	/**
+	 * Initializes with array
+	 */
 	Array(T * array, uint64_t size) : Array() {
 		this->_saveArray(array, size);	
 	}
 
+	/**
+	 * Initializes with initializer
+	 */
 	Array(std::initializer_list<T> list) {
 		this->_saveArray(list);
 	}
@@ -104,4 +110,10 @@ private:
 
 	/// Holds size of _array
 	uint64_t _count;
+
+public:
+
+	T operator[](uint64_t index) {
+		return this->objectAtIndex(index);
+	}
 };
