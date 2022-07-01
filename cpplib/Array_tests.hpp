@@ -39,6 +39,13 @@ int test_Contains() {
 		printf("arr should contain 2\n");
 	}
 
+	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
+
+	if (!ch.contains("world")) {
+		result = 1;
+		printf("ch should contain 'world'\n");
+	}
+
 	PRINT_TEST_RESULTS(!result);
 
 	return result;
