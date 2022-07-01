@@ -18,19 +18,33 @@ public:
 	 * Initializes with array
 	 */
 	Array(T * array, uint64_t size) : Array() {
-		this->_saveArray(array, size);	
+		this->set(array, size);	
 	}
 
 	/**
 	 * Initializes with initializer
 	 */
 	Array(std::initializer_list<T> list) {
-		this->_saveArray(list);
+		this->set(list);
 	}
 
 	virtual ~Array() {
 		if (this->_array) delete this->_array;
 		this->_count = 0;
+	}
+	
+	/**
+	 * Initializes with array
+	 */
+	void set(T * array, uint64_t size) {
+		this->_saveArray(array, size);	
+	}
+
+	/**
+	 * Initializes with initializer
+	 */
+	void set(std::initializer_list<T> list) {
+		this->_saveArray(list);
 	}
 
 	/**
@@ -117,5 +131,9 @@ public:
 
 	T operator[](uint64_t index) {
 		return this->objectAtIndex(index);
+	}
+
+	void operator=(const std::initializer_list<T> & list) {
+		this->_saveArray(list);
 	}
 };
