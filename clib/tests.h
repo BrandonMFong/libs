@@ -4,6 +4,8 @@
  */
 
 #ifdef TESTING
+#ifndef TESTS_H
+#define TESTS_H
 
 #define INTRO_TEST_FUNCTION printf("Running %s:\n", __func__)
 #define PRINT_TEST_RESULTS(result) \
@@ -12,4 +14,5 @@
 	printf("%s\n", __func__)
 
 #endif // TESTING
+#endif // TESTS_H
 

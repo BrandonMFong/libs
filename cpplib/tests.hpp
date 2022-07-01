@@ -4,8 +4,11 @@
  */
 
 #ifdef TESTING
+#ifndef TESTS_HPP
+#define TESTS_HPP
 
 #include "../clib/tests.h"
 
 #endif // TESTING
+#endif // TESTS_HPP
 
