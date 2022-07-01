@@ -3,6 +3,9 @@
  * date: 6/2/22
  */
 
+#ifndef CLIB_H
+#define CLIB_H
+
 #include <stdbool.h>
 
 // MACROS
@@ -79,4 +82,6 @@ char * CopyString(const char * string, int * err);
  * returns the ip address for the hostname
  */
 int ResolveHostname(const char * hostname, char * ip);
+
+#endif // CLIB_H
 

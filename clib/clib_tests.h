@@ -4,6 +4,8 @@
  */
 
 #ifdef TESTING
+#ifndef CLIB_TESTS_H
+#define CLIB_TESTS_H
 
 #include "tests.h"
 #include "clib.h"
@@ -103,4 +105,5 @@ void clib_tests(int * pass, int * fail) {
 }
 
 #endif // TESTING
+#endif // CLIB_TESTS_H
 
