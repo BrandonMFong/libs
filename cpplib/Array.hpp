@@ -5,6 +5,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <initializer_list>
 
 template <typename T> class Array {
 public:
@@ -15,6 +16,10 @@ public:
 
 	Array(T * array, uint64_t size) : Array() {
 		this->_saveArray(array, size);	
+	}
+
+	Array(std::initializer_list<T> list) {
+		this->_saveArray(list);
 	}
 
 	virtual ~Array() {
@@ -73,6 +78,19 @@ private:
 			for (uint64_t i = 0; i < size; i++) {
 				this->_array[i] = array[i];
 			}
+		}
+	}
+
+	void _saveArray(std::initializer_list<T> list) {
+		typename std::initializer_list<T>::iterator itr;
+
+		this->_count = list.size();
+		this->_array = new T[this->_count];
+
+		uint64_t i = 0;
+		for (itr = list.begin(); itr != list.end(); ++itr) {
+			this->_array[i] = *itr;
+			i++;
 		}
 	}
 

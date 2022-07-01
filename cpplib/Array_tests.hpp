@@ -32,6 +32,13 @@ int test_Initializer() {
 int test_Contains() {
 	int result = 0;
 
+	Array<int> arr({1, 2, 3, 4});
+
+	if (!arr.contains(2)) {
+		result = 1;
+		printf("arr should contain 2\n");
+	}
+
 	PRINT_TEST_RESULTS(!result);
 
 	return result;
