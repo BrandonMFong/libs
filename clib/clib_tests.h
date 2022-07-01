@@ -3,6 +3,8 @@
  * date: 6/30/22
  */
 
+#ifdef TESTING
+
 #include "tests.h"
 #include "clib.h"
 #include <stdlib.h>
@@ -99,4 +101,6 @@ void clib_tests(int * pass, int * fail) {
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }
+
+#endif // TESTING
 

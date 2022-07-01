@@ -5,14 +5,14 @@
 
 #ifdef TESTING
 
-#include "clib_tests.h"
+#include "Array_tests.hpp"
 
 int main() {
 	int pass = 0, fail = 0;
 
 	printf("\n---------------------------\n");
-	printf("\nStarting C Library tests...\n\n");
-	clib_tests(&pass, &fail);
+	printf("\nStarting C++ Library tests...\n\n");
+	Array_tests(&pass, &fail);
 
 	printf("\nPass: %d\n", pass);
 	printf("Fail: %d\n", fail);
