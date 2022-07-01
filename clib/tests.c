@@ -3,6 +3,7 @@
  * date: 6/30/22
  */
 
+#ifdef CLIB_TESTING
 #ifdef TESTING
 
 #include "clib_tests.h"
@@ -22,4 +23,5 @@ int main() {
 }
 
 #endif // TESTING
+#endif // CLIB_TESTING
 

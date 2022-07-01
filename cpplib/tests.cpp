@@ -3,6 +3,7 @@
  * date: 6/30/22
  */
 
+#ifdef CPPLIB_TESTING
 #ifdef TESTING
 
 #include "Array_tests.hpp"
@@ -22,4 +23,5 @@ int main() {
 }
 
 #endif // TESTING
+#endif // CPPLIB_TESTING
 
