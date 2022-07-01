@@ -57,6 +57,8 @@ public:
 
 	/**
 	 * Returns the value's index. If we could not find it, -1 will be returned
+	 *
+	 * This will return the first match
 	 */
 	int64_t indexForObject(T value) {
 		for (uint64_t i = 0; i < this->_count; i++) {

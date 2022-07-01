@@ -75,6 +75,21 @@ int test_ObjectAtIndex() {
 	return result;
 }
 
+int test_Count() {
+	int result = 0;
+
+	Array<int> a({1, 2, 3, 4, 5});
+
+	if (a.count() != 5) {
+		result = 1;
+		printf("Count %d\n", a.count());
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
+}
+
 void Array_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -87,6 +102,9 @@ void Array_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_ObjectAtIndex()) p++;
+	else f++;
+
+	if (!test_Count()) p++;
 	else f++;
 
 	if (pass) *pass += p;
