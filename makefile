@@ -45,13 +45,17 @@ endif
 # Warnings
 CCFLAGS += -Wall
 
-all: setup libc
+all: setup libc libcpp
 
 setup:
 	mkdir -p bin/
 
 libc:
 	$(CC) -c -o bin/clib.o clib/clib.c $(CCFLAGS)
+	cp -afv clib/*.h bin/
+
+libcpp:
+	cp -afv cpplib/*.hpp bin/
 
 clean:
 	rm -rfv bin

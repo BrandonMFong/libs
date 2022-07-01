@@ -3,6 +3,8 @@
  * date: 6/30/22
  */
 
+#ifdef TESTING
+
 #include "Array_tests.hpp"
 
 int main() {
@@ -18,4 +20,6 @@ int main() {
 
 	return 0;
 }
+
+#endif // TESTING
 

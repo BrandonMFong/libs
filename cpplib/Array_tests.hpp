@@ -3,6 +3,8 @@
  * date: 6/30/22
  */
 
+#ifdef TESTING
+
 #include "Array.hpp"
 #include "tests.hpp"
 #include <stdio.h>
@@ -129,4 +131,6 @@ void Array_tests(int * pass, int * fail) {
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }
+
+#endif // TESTING
 

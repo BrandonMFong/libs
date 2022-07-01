@@ -3,6 +3,8 @@
  * date: 6/30/22
  */
 
+#ifdef TESTING
+
 #include "clib_tests.h"
 
 int main() {
@@ -18,3 +20,6 @@ int main() {
 
 	return 0;
 }
+
+#endif // TESTING
+

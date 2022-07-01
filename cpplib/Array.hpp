@@ -130,7 +130,11 @@ private:
 		}
 	}
 
-	/// Holds copy of array
+	/** 
+	 * Holds copy of array
+	 *
+	 * Use this to hold the address of where the data will be
+	 */
 	void * _address;
 
 	/// Holds size of _address
