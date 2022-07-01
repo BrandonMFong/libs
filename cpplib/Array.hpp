@@ -81,16 +81,21 @@ private:
 		}
 	}
 
+	/**
+	 * Sweeps through the initializer list to set out array's memory
+	 */
 	void _saveArray(std::initializer_list<T> list) {
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
 		this->_array = new T[this->_count];
 
-		uint64_t i = 0;
-		for (itr = list.begin(); itr != list.end(); ++itr) {
-			this->_array[i] = *itr;
-			i++;
+		if (this->_array) {
+			uint64_t i = 0;
+			for (itr = list.begin(); itr != list.end(); ++itr) {
+				this->_array[i] = *itr;
+				i++;
+			}
 		}
 	}
 
