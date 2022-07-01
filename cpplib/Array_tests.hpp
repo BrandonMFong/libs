@@ -4,6 +4,8 @@
  */
 
 #ifdef TESTING
+#ifndef ARRAY_TESTS_HPP
+#define ARRAY_TESTS_HPP
 
 #include "Array.hpp"
 #include "tests.hpp"
@@ -133,4 +135,5 @@ void Array_tests(int * pass, int * fail) {
 }
 
 #endif // TESTING
+#endif // ARRAY_TESTS_HPP
 

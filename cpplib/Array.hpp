@@ -3,6 +3,9 @@
  * date: 6/30/22
  */
 
+#ifndef ARRAY_HPP
+#define ARRAY_HPP
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <initializer_list>
@@ -150,3 +153,6 @@ public:
 		this->_saveArray(list);
 	}
 };
+
+#endif // ARRAY_HPP
+
