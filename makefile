@@ -11,7 +11,7 @@ CC = gcc
 
 # Determine the OS
 ifeq ($(OS),Windows_NT)
-    CCFLAGS += -D WIN32
+    CCFLAGS += -D WINDOWS
     ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
         CCFLAGS += -D AMD64
     else
@@ -28,7 +28,7 @@ else
         CCFLAGS += -D LINUX
     endif
     ifeq ($(UNAME_S),Darwin)
-        CCFLAGS += -D OSX
+        CCFLAGS += -D MACOS
     endif
     UNAME_P := $(shell uname -p)
     ifeq ($(UNAME_P),x86_64)

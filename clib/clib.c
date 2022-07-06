@@ -10,6 +10,7 @@
 #include <libgen.h>
 #include <stdbool.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 #include <dirent.h>
 #include <sys/types.h>
 #include <stdlib.h>
@@ -97,6 +98,21 @@ unsigned long long CalculateSizeFile(const char * path, unsigned char options, i
        }
 
        return result;
+}
+
+unsigned long long CalculateSizeForAvailability(const char * path, int * error) {
+	unsigned long long result = 0;
+	struct statvfs stat;
+
+	if (!statvfs(path, &stat)) {
+		result = stat.f_frsize * stat.f_bavail;
+	} else {
+		if (error != 0) {
+			*error = 1;
+		}	
+	}
+
+	return result;
 }
 
 void Error(const char * format, ...) {
@@ -260,3 +276,35 @@ int ResolveHostname(const char * hostname, char * ip) {
 	return result;
 }
 
+char * CopyHomePath(int * err) {
+	char * 	result 	= 0;
+	int 	error 	= 0;
+	char 	tempPath[PATH_MAX];
+
+	if (!error) {
+#if defined(WINDOWS)
+		sprintf(tempPath, "%s%s", getenv("HOMEDRIVE"), getenv("HOMEPATH"));
+#elif defined(MACOS)
+		sprintf(tempPath, "%s", getenv("HOME"));
+#elif defined(LINUX)
+		sprintf(tempPath, "%s", getenv("HOME"));
+#else
+		DLog("No architecture defined for build\n");
+		error = 2;
+#endif
+
+		if (strlen(tempPath) == 0) {
+			error = 1;
+		}
+	}
+
+	if (!error) {
+		result = CopyString(tempPath, &error);
+	}
+
+	if (err != 0) {
+		*err = error;
+	}
+
+	return result;
+}

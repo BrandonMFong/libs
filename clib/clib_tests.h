@@ -86,6 +86,47 @@ int test_GetByteStringRepresentation(void) {
 
 }
 
+int test_HomePath(void) {
+	int result = 0;
+	char * home = CopyHomePath(&result);
+
+	if (result) {
+		printf("CopyHomePath returned: %d\n", result);
+	} else if (home == 0) {
+		result = 1;
+		printf("Home path is null\n");
+	} else if (!IsDirectory(home)) {
+		result = 1;
+		printf("Home path does not exist: %s\n", home);
+	}
+
+	free(home);
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_CalculateSizeForAvailability(void) {
+	int result = 0;
+
+	char * home = CopyHomePath(&result);
+	if (result) {
+		printf("CopyHomePath returned: %d\n", result);
+	}
+
+	if (!result) {
+		// We do not care about the return value of the function
+		CalculateSizeForAvailability(home, &result);
+
+		if (result) {
+			printf("CalculateSizeForAvailability() returned %d\n", result);
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void clib_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -98,6 +139,12 @@ void clib_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_GetByteStringRepresentation()) p++;
+	else f++;
+
+	if (!test_HomePath()) p++;
+	else f++;
+
+	if (!test_CalculateSizeForAvailability()) p++;
 	else f++;
 
 	if (pass) *pass += p;
