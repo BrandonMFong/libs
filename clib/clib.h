@@ -35,6 +35,11 @@ unsigned long long CalculateSizeDirectory(const char * path, unsigned char optio
 unsigned long long CalculateSizeFile(const char * path, unsigned char options, int * error);
 
 /**
+ * Returns the available space in bytes for the path
+ */
+unsigned long long CalculateSizeForAvailability(const char * path, int * error);
+
+/**
  * Prints std error
  */
 void Error(const char * format, ...);
@@ -82,6 +87,11 @@ char * CopyString(const char * string, int * err);
  * returns the ip address for the hostname
  */
 int ResolveHostname(const char * hostname, char * ip);
+
+/**
+ * Returns a copy of the home path for the user in scope
+ */
+char * CopyHomePath(int * err);
 
 #endif // CLIB_H
 
