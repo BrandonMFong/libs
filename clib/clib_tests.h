@@ -38,7 +38,7 @@ int test_CopyString(void) {
 }
 
 int test_DoesStringArrayContain(void) {
-	int result;
+	int result = 0;
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
 
