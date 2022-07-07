@@ -79,7 +79,14 @@ int GetByteStringRepresentation(unsigned long long byteSize, char * outStr);
 bool DoesStringArrayContain(char ** strArr, int arrSize, const char * element);
 
 /**
+ * returns -1 if string could not be found
+ */
+int IndexOfStringInArray(char ** strArr, int arrSize, const char * element);
+
+/**
  * Creates a copy of string
+ *
+ * Caller must free
  */
 char * CopyString(const char * string, int * err);
 
@@ -90,8 +97,19 @@ int ResolveHostname(const char * hostname, char * ip);
 
 /**
  * Returns a copy of the home path for the user in scope
+ *
+ * Caller must free
  */
 char * CopyHomePath(int * err);
+
+/**
+ * Creates binary string representation of the num variable (you know since printf() can't print in binary format
+ *
+ * size: byte size of num
+ *
+ * Caller must free
+ */
+char * CreateBinaryStringFromNumber(long long num, int size, int * err);
 
 #endif // CLIB_H
 
