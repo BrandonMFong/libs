@@ -222,12 +222,18 @@ int GetByteStringRepresentation(unsigned long long byteSize, char * outStr) {
 
 bool DoesStringArrayContain(char ** strArr, int arrSize, const char * element) {
 	for (int i = 0; i < arrSize; i++) {
-		if (!strcmp(element, strArr[i])) {
-			return true;
-		}
+		if (!strcmp(element, strArr[i])) return true;
 	}
 
 	return false;
+}
+
+int IndexOfStringInArray(char ** strArr, int arrSize, const char * element) {
+	for (int i = 0; i < arrSize; i++) {
+		if (!strcmp(element, strArr[i])) return i;
+	}
+
+	return -1;
 }
 
 char * CopyString(const char * string, int * err) {
@@ -308,3 +314,27 @@ char * CopyHomePath(int * err) {
 
 	return result;
 }
+
+char * CreateBinaryStringFromNumber(long long num, int byteSize, int * err) {
+	int bitSize = byteSize * 8;
+	int resultSize = bitSize + (bitSize % 4);
+	int error = 0;
+	char * result = (char *) malloc(resultSize);
+
+	if (result == 0) {
+		error = 1;
+	} else {
+		for (int i = resultSize - 1, j = 0; (i >= 0); i--, j++) {
+			if (j < bitSize) {
+				result[i] = (num >> j) & 0x01 ? '1' : '0';
+			} else {
+				result[i] = '0';
+			}
+		}
+	}
+
+	if (err) *err = error;
+
+	return result;
+}
+

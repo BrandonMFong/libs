@@ -127,6 +127,66 @@ int test_CalculateSizeForAvailability(void) {
 	return result;
 }
 
+int test_CreateBinaryStringFromNumber() {
+	int result = 0;
+	char * string = 0;
+	unsigned char a = 0x00;
+
+	a = 0x0f;
+
+	string = CreateBinaryStringFromNumber(a, sizeof(unsigned char), &result);
+
+	if (result == 0) {
+		result = strcmp(string, "00001111");
+		free(string);
+	}
+
+	if (result == 0) {
+		a = 0xf0;
+		string = CreateBinaryStringFromNumber(a, sizeof(unsigned char), &result);
+	}
+
+	if (result == 0) {
+		result = strcmp(string, "11110000");
+		free(string);
+	}
+	
+	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_IndexOfStringInArray() {
+	int result = 0;
+	int index = 0;
+	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
+
+	index = IndexOfStringInArray(arr, 6, "my");
+	if (index != 2) {
+		result = 1;
+		printf("1: index returned was %d\n", index);
+	}
+
+	if (!result) {
+		index = IndexOfStringInArray(arr, 6, "is");
+		if (index != 4) {
+			result = 1;
+			printf("2: index returned was %d\n", index);
+		}
+	}
+
+	if (!result) {
+		index = IndexOfStringInArray(arr, 6, "xpro");
+		if (index != -1) {
+			result = 1;
+			printf("3: index returned was %d\n", index);
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void clib_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -145,6 +205,12 @@ void clib_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_CalculateSizeForAvailability()) p++;
+	else f++;
+
+	if (!test_CreateBinaryStringFromNumber()) p++;
+	else f++;
+
+	if (!test_IndexOfStringInArray()) p++;
 	else f++;
 
 	if (pass) *pass += p;
