@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <initializer_list>
+#include <iostream>
 
 /**
  * Immutable Array
@@ -96,6 +97,18 @@ public:
 	/// Returns _count
 	int count() {
 		return (int) this->_count;
+	}
+
+	/**
+	 * Prints the array from the first element to the last
+	 */
+	void print() {
+		std::cout << "[ ";
+		for (uint64_t i = 0; i < this->_count; i++) {
+			std::cout << ((T *) this->_address)[i];
+			std::cout << " ";
+		}
+		std::cout << "]" << std::endl;
 	}
 
 private:
