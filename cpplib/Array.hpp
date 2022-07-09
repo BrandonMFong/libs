@@ -165,6 +165,27 @@ public:
 	void operator=(const std::initializer_list<T> & list) {
 		this->_saveArray(list);
 	}
+
+// Comparators
+public:
+	typedef enum {
+		kArrayComparisonResultUnknown = 0,
+		kArrayComparisonResultLessThan = 1, 
+		kArrayComparisonResultGreaterThan = 2,
+		kArrayComparisonResultEquals = 3
+	} ArrayComparisonResult;
+
+	static ArrayComparisonResult comparisonDefault(T a, T b) {
+		if (a == b) {
+			return kArrayComparisonResultEquals;
+		} else if (a < b) {
+			return kArrayComparisonResultLessThan;
+		} else if (a > b) {
+			return kArrayComparisonResultGreaterThan;
+		} else {
+			return kArrayComparisonResultUnknown;
+		}
+	}
 };
 
 #endif // ARRAY_HPP

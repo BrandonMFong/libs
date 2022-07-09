@@ -11,6 +11,7 @@
 #include "tests.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Just test that it can build and nothing crashes
@@ -44,8 +45,10 @@ int test_Contains() {
 	}
 
 	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
-
-	if (!ch.contains("world")) {
+	
+	char buf[100];
+	strcpy(buf, "world");
+	if (!ch.contains(buf)) {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
