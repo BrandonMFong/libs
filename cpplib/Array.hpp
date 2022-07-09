@@ -25,6 +25,7 @@ public:
 	Array() {
 		this->_address = 0;
 		this->_count = 0;
+		this->_callback = Array::comparisonDefault;
 	}
 
 	/**
@@ -65,7 +66,11 @@ public:
 	 */
 	virtual bool contains(T object) {
 		for (uint64_t i = 0; i < this->_count; i++) {
+			/*
 			if (((T *) this->_address)[i] == object)
+				return true;
+			*/
+			if (this->_callback(((T *) this->_address)[i], object)) 
 				return true;
 		}
 		return false;
@@ -109,6 +114,10 @@ public:
 			std::cout << " ";
 		}
 		std::cout << "]" << std::endl;
+	}
+
+	void setComparator(Array::ArrayComparisonResult (* callback) (T a, T b)) {
+		this->_callback = callback;
 	}
 
 private:
@@ -156,6 +165,8 @@ private:
 	/// Holds size of _address
 	uint64_t _count;
 
+	ArrayComparisonResult (_callback) (T a, T b);
+
 public:
 
 	T operator[](uint64_t index) {
@@ -175,6 +186,9 @@ public:
 		kArrayComparisonResultEquals = 3
 	} ArrayComparisonResult;
 
+	/**
+	 * Compares the raw value of a and b
+	 */
 	static ArrayComparisonResult comparisonDefault(T a, T b) {
 		if (a == b) {
 			return kArrayComparisonResultEquals;

@@ -34,6 +34,14 @@ int test_Initializer() {
 	return 0;
 }
 
+Array::ArrayComparisonResult Compare(const char * a, const char * b) {
+	if (!strcmp((char *) a, (char *) b)) {
+		return Array::ArrayComparisonResult::kArrayComparisonResultEquals;
+	} else {
+		return Array::ArrayComparisonResult::kArrayComparisonResultUnknown;
+	}
+}
+
 int test_Contains() {
 	int result = 0;
 
