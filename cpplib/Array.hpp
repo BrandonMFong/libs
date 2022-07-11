@@ -165,7 +165,14 @@ private:
 	/// Holds size of _address
 	uint64_t _count;
 
-	ArrayComparisonResult (_callback) (T a, T b);
+	typedef enum {
+		kArrayComparisonResultUnknown = 0,
+		kArrayComparisonResultLessThan = 1, 
+		kArrayComparisonResultGreaterThan = 2,
+		kArrayComparisonResultEquals = 3
+	} ArrayComparisonResult;
+
+	ArrayComparisonResult (* _callback) (T a, T b);
 
 public:
 
@@ -179,13 +186,6 @@ public:
 
 // Comparators
 public:
-	typedef enum {
-		kArrayComparisonResultUnknown = 0,
-		kArrayComparisonResultLessThan = 1, 
-		kArrayComparisonResultGreaterThan = 2,
-		kArrayComparisonResultEquals = 3
-	} ArrayComparisonResult;
-
 	/**
 	 * Compares the raw value of a and b
 	 */
