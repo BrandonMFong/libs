@@ -22,6 +22,13 @@
  */
 template <typename T> class Array {
 public:
+	typedef enum {
+		kArrayComparisonResultUnknown = 0,
+		kArrayComparisonResultLessThan = 1, 
+		kArrayComparisonResultGreaterThan = 2,
+		kArrayComparisonResultEquals = 3
+	} ArrayComparisonResult;
+
 	Array() {
 		this->_address = 0;
 		this->_count = 0;
@@ -165,14 +172,7 @@ private:
 	/// Holds size of _address
 	uint64_t _count;
 
-	typedef enum {
-		kArrayComparisonResultUnknown = 0,
-		kArrayComparisonResultLessThan = 1, 
-		kArrayComparisonResultGreaterThan = 2,
-		kArrayComparisonResultEquals = 3
-	} ArrayComparisonResult;
-
-	ArrayComparisonResult (* _callback) (T a, T b);
+	Array::ArrayComparisonResult (* _callback) (T a, T b);
 
 public:
 
@@ -189,7 +189,7 @@ public:
 	/**
 	 * Compares the raw value of a and b
 	 */
-	static ArrayComparisonResult comparisonDefault(T a, T b) {
+	static Array::ArrayComparisonResult comparisonDefault(T a, T b) {
 		if (a == b) {
 			return kArrayComparisonResultEquals;
 		} else if (a < b) {
