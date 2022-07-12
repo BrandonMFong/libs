@@ -70,14 +70,14 @@ public:
 
 	/**
 	 * Returns false if argument could not be found
+	 *
+	 * This function uses the _callback comparison 
+	 * function to compare each function
 	 */
 	virtual bool contains(T object) {
 		for (uint64_t i = 0; i < this->_count; i++) {
-			/*
-			if (((T *) this->_address)[i] == object)
-				return true;
-			*/
-			if (this->_callback(((T *) this->_address)[i], object) == kArrayComparisonResultEquals) 
+			if (	this->_callback(((T *) this->_address)[i], object) 
+				== 	kArrayComparisonResultEquals) 
 				return true;
 		}
 		return false;
