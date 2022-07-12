@@ -34,8 +34,14 @@ int test_Initializer() {
 	return 0;
 }
 
-ArrayComparisonResult Compare(const char * a, const char * b) {
-	if (!strcmp((char *) a, (char *) b)) {
+ArrayComparisonResult StringCompare(const char * a, const char * b) {
+	int result = strcmp((char *) a, (char *) b);
+
+	if (result < 0) {
+		return kArrayComparisonResultLessThan;
+	} else if (result > 0) {
+		return kArrayComparisonResultGreaterThan;
+	} else if (result == 0) {
 		return kArrayComparisonResultEquals;
 	} else {
 		return kArrayComparisonResultUnknown;
@@ -53,9 +59,22 @@ int test_Contains() {
 	}
 
 	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
+	ch.setComparator(StringCompare);
 	
 	char buf[100];
 	strcpy(buf, "world");
+	if (ch.contains(buf)) {
+		result = 1;
+		printf("ch should contain 'world'\n");
+	}
+	
+	strcpy(buf, "Hello");
+	if (ch.contains(buf)) {
+		result = 1;
+		printf("ch should contain 'world'\n");
+	}
+	
+	strcpy(buf, "hello");
 	if (!ch.contains(buf)) {
 		result = 1;
 		printf("ch should contain 'world'\n");
