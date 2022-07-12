@@ -11,6 +11,10 @@
 #include <initializer_list>
 #include <iostream>
 
+/**
+ * These values are used whenever the array is attempting to compare
+ * each element
+ */
 typedef enum {
 	kArrayComparisonResultUnknown = -1,
 	kArrayComparisonResultLessThan = 0,
