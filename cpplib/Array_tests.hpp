@@ -34,11 +34,11 @@ int test_Initializer() {
 	return 0;
 }
 
-Array::ArrayComparisonResult Compare(const char * a, const char * b) {
+ArrayComparisonResult Compare(const char * a, const char * b) {
 	if (!strcmp((char *) a, (char *) b)) {
-		return Array::ArrayComparisonResult::kArrayComparisonResultEquals;
+		return kArrayComparisonResultEquals;
 	} else {
-		return Array::ArrayComparisonResult::kArrayComparisonResultUnknown;
+		return kArrayComparisonResultUnknown;
 	}
 }
 

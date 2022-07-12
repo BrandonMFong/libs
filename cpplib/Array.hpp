@@ -11,6 +11,13 @@
 #include <initializer_list>
 #include <iostream>
 
+typedef enum {
+	kArrayComparisonResultUnknown = -1,
+	kArrayComparisonResultLessThan = 0,
+	kArrayComparisonResultGreaterThan = 1,
+	kArrayComparisonResultEquals = 2
+} ArrayComparisonResult;
+
 /**
  * Immutable Array
  *
@@ -22,13 +29,6 @@
  */
 template <typename T> class Array {
 public:
-	typedef enum {
-		kArrayComparisonResultUnknown = 0,
-		kArrayComparisonResultLessThan = 1, 
-		kArrayComparisonResultGreaterThan = 2,
-		kArrayComparisonResultEquals = 3
-	} ArrayComparisonResult;
-
 	Array() {
 		this->_address = 0;
 		this->_count = 0;
@@ -123,7 +123,7 @@ public:
 		std::cout << "]" << std::endl;
 	}
 
-	void setComparator(Array::ArrayComparisonResult (* callback) (T a, T b)) {
+	void setComparator(ArrayComparisonResult (* callback) (T a, T b)) {
 		this->_callback = callback;
 	}
 
@@ -172,7 +172,7 @@ private:
 	/// Holds size of _address
 	uint64_t _count;
 
-	Array::ArrayComparisonResult (* _callback) (T a, T b);
+	ArrayComparisonResult (* _callback) (T a, T b);
 
 public:
 
@@ -189,7 +189,7 @@ public:
 	/**
 	 * Compares the raw value of a and b
 	 */
-	static Array::ArrayComparisonResult comparisonDefault(T a, T b) {
+	static ArrayComparisonResult comparisonDefault(T a, T b) {
 		if (a == b) {
 			return kArrayComparisonResultEquals;
 		} else if (a < b) {
