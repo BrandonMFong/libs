@@ -77,7 +77,7 @@ public:
 			if (((T *) this->_address)[i] == object)
 				return true;
 			*/
-			if (this->_callback(((T *) this->_address)[i], object)) 
+			if (this->_callback(((T *) this->_address)[i], object) == kArrayComparisonResultEquals) 
 				return true;
 		}
 		return false;

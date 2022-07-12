@@ -63,19 +63,19 @@ int test_Contains() {
 	
 	char buf[100];
 	strcpy(buf, "world");
-	if (ch.contains(buf)) {
+	if (!ch.contains(buf)) {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
 	
 	strcpy(buf, "Hello");
-	if (ch.contains(buf)) {
+	if (!ch.contains(buf)) {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
 	
 	strcpy(buf, "hello");
-	if (!ch.contains(buf)) {
+	if (ch.contains(buf)) {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
