@@ -103,9 +103,11 @@ public:
 	 *
 	 * This will return the first match
 	 */
-	int64_t indexForObject(T value) {
+	int64_t indexForObject(T object) {
 		for (uint64_t i = 0; i < this->_count; i++) {
-			if (((T *) this->_address)[i] == value) return i;
+			if (	this->_callback(((T *) this->_address)[i], object)
+				== 	kArrayComparisonResultEquals)
+				return i;
 		}
 		return -1;
 	}

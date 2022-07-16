@@ -109,6 +109,44 @@ int test_ObjectAtIndex() {
 	return result;
 }
 
+int test_indexForObject() {
+	int result = 0;
+
+	Array<int> arr({1, 2, 3, 4});
+
+	if (arr.indexForObject(3) != 2) {
+		result = 1;
+		printf("index should be 2 but is %ld\n", arr.indexForObject(3));
+	}
+
+	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
+	ch.setComparator(StringCompare);
+	
+	char buf[100];
+	strcpy(buf, "world");
+	if (ch.indexForObject(buf) != 1) {
+		result = 1;
+		printf("index should be 1 but is %ld\n", ch.indexForObject(buf));
+	}
+	
+	strcpy(buf, "Hello");
+	if (ch.indexForObject(buf) != 0) {
+		result = 1;
+		printf("index should be 0 but is %ld\n", ch.indexForObject(buf));
+	}
+	
+	strcpy(buf, "hello");
+	if (ch.indexForObject(buf) != -1) {
+		result = 1;
+		printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
+
+}
+
 int test_Count() {
 	int result = 0;
 
@@ -158,6 +196,9 @@ void Array_tests(int * pass, int * fail) {
 	else f++;
 	
 	if (!test_Setter()) p++;
+	else f++;
+
+	if (!test_indexForObject()) p++;
 	else f++;
 
 	if (pass) *pass += p;
