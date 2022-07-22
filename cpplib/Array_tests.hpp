@@ -11,6 +11,7 @@
 #include "tests.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Just test that it can build and nothing crashes
@@ -33,6 +34,20 @@ int test_Initializer() {
 	return 0;
 }
 
+ArrayComparisonResult StringCompare(const char * a, const char * b) {
+	int result = strcmp((char *) a, (char *) b);
+
+	if (result < 0) {
+		return kArrayComparisonResultLessThan;
+	} else if (result > 0) {
+		return kArrayComparisonResultGreaterThan;
+	} else if (result == 0) {
+		return kArrayComparisonResultEquals;
+	} else {
+		return kArrayComparisonResultUnknown;
+	}
+}
+
 int test_Contains() {
 	int result = 0;
 
@@ -44,8 +59,23 @@ int test_Contains() {
 	}
 
 	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
-
-	if (!ch.contains("world")) {
+	ch.setComparator(StringCompare);
+	
+	char buf[100];
+	strcpy(buf, "world");
+	if (!ch.contains(buf)) {
+		result = 1;
+		printf("ch should contain 'world'\n");
+	}
+	
+	strcpy(buf, "Hello");
+	if (!ch.contains(buf)) {
+		result = 1;
+		printf("ch should contain 'world'\n");
+	}
+	
+	strcpy(buf, "hello");
+	if (ch.contains(buf)) {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
@@ -77,6 +107,44 @@ int test_ObjectAtIndex() {
 	PRINT_TEST_RESULTS(!result);
 
 	return result;
+}
+
+int test_indexForObject() {
+	int result = 0;
+
+	Array<int> arr({1, 2, 3, 4});
+
+	if (arr.indexForObject(3) != 2) {
+		result = 1;
+		printf("index should be 2 but is %ld\n", arr.indexForObject(3));
+	}
+
+	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
+	ch.setComparator(StringCompare);
+	
+	char buf[100];
+	strcpy(buf, "world");
+	if (ch.indexForObject(buf) != 1) {
+		result = 1;
+		printf("index should be 1 but is %ld\n", ch.indexForObject(buf));
+	}
+	
+	strcpy(buf, "Hello");
+	if (ch.indexForObject(buf) != 0) {
+		result = 1;
+		printf("index should be 0 but is %ld\n", ch.indexForObject(buf));
+	}
+	
+	strcpy(buf, "hello");
+	if (ch.indexForObject(buf) != -1) {
+		result = 1;
+		printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
+
 }
 
 int test_Count() {
@@ -128,6 +196,9 @@ void Array_tests(int * pass, int * fail) {
 	else f++;
 	
 	if (!test_Setter()) p++;
+	else f++;
+
+	if (!test_indexForObject()) p++;
 	else f++;
 
 	if (pass) *pass += p;

@@ -295,7 +295,7 @@ char * CopyHomePath(int * err) {
 #elif defined(LINUX)
 		sprintf(tempPath, "%s", getenv("HOME"));
 #else
-		DLog("No architecture defined for build\n");
+//		DLog("No architecture defined for build\n");
 		error = 2;
 #endif
 
