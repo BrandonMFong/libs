@@ -9,6 +9,18 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <initializer_list>
+#include <iostream>
+
+/**
+ * These values are used whenever the array is attempting to compare
+ * each element
+ */
+typedef enum {
+	kArrayComparisonResultUnknown = -1,
+	kArrayComparisonResultLessThan = 0,
+	kArrayComparisonResultGreaterThan = 1,
+	kArrayComparisonResultEquals = 2
+} ArrayComparisonResult;
 
 /**
  * Immutable Array
@@ -24,6 +36,7 @@ public:
 	Array() {
 		this->_address = 0;
 		this->_count = 0;
+		this->_callback = Array::comparisonDefault;
 	}
 
 	/**
@@ -61,10 +74,14 @@ public:
 
 	/**
 	 * Returns false if argument could not be found
+	 *
+	 * This function uses the _callback comparison 
+	 * function to compare each function
 	 */
 	virtual bool contains(T object) {
 		for (uint64_t i = 0; i < this->_count; i++) {
-			if (((T *) this->_address)[i] == object)
+			if (	this->_callback(((T *) this->_address)[i], object) 
+				== 	kArrayComparisonResultEquals) 
 				return true;
 		}
 		return false;
@@ -86,9 +103,11 @@ public:
 	 *
 	 * This will return the first match
 	 */
-	int64_t indexForObject(T value) {
+	int64_t indexForObject(T object) {
 		for (uint64_t i = 0; i < this->_count; i++) {
-			if (((T *) this->_address)[i] == value) return i;
+			if (	this->_callback(((T *) this->_address)[i], object)
+				== 	kArrayComparisonResultEquals)
+				return i;
 		}
 		return -1;
 	}
@@ -96,6 +115,22 @@ public:
 	/// Returns _count
 	int count() {
 		return (int) this->_count;
+	}
+
+	/**
+	 * Prints the array from the first element to the last
+	 */
+	void print() {
+		std::cout << "[ ";
+		for (uint64_t i = 0; i < this->_count; i++) {
+			std::cout << ((T *) this->_address)[i];
+			std::cout << " ";
+		}
+		std::cout << "]" << std::endl;
+	}
+
+	void setComparator(ArrayComparisonResult (* callback) (T a, T b)) {
+		this->_callback = callback;
 	}
 
 private:
@@ -143,6 +178,8 @@ private:
 	/// Holds size of _address
 	uint64_t _count;
 
+	ArrayComparisonResult (* _callback) (T a, T b);
+
 public:
 
 	T operator[](uint64_t index) {
@@ -151,6 +188,23 @@ public:
 
 	void operator=(const std::initializer_list<T> & list) {
 		this->_saveArray(list);
+	}
+
+// Comparators
+public:
+	/**
+	 * Compares the raw value of a and b
+	 */
+	static ArrayComparisonResult comparisonDefault(T a, T b) {
+		if (a == b) {
+			return kArrayComparisonResultEquals;
+		} else if (a < b) {
+			return kArrayComparisonResultLessThan;
+		} else if (a > b) {
+			return kArrayComparisonResultGreaterThan;
+		} else {
+			return kArrayComparisonResultUnknown;
+		}
 	}
 };
 
