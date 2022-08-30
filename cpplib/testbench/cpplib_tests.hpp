@@ -7,7 +7,7 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
-#include "../clib/tests.h"
+#include "../../clib/testbench/clib_tests.h"
 
 #endif // TESTING
 #endif // TESTS_HPP
