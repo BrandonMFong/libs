@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <initializer_list>
 #include <iostream>
+#include "delete.hpp"
 
 /**
  * These values are used whenever the array is attempting to compare
@@ -54,7 +55,8 @@ public:
 	}
 
 	virtual ~Array() {
-		if (this->_address) delete (T *) this->_address;
+		T * addr = (T *) this->_address;
+		Delete(addr);
 		this->_count = 0;
 	}
 	
@@ -62,14 +64,14 @@ public:
 	 * Initializes with array
 	 */
 	void set(T * array, uint64_t size) {
-		this->_saveArray(array, size);	
+		this->saveArray(array, size);	
 	}
 
 	/**
 	 * Initializes with initializer
 	 */
 	void set(std::initializer_list<T> list) {
-		this->_saveArray(list);
+		this->saveArray(list);
 	}
 
 	/**
@@ -92,6 +94,8 @@ public:
 	 */
 	T objectAtIndex(uint64_t index) {
 		if ((this->_address == 0) || (this->_count == 0)) {
+			return (T) 0;
+		} else if (index >= this->_count) {
 			return (T) 0;
 		} else {
 			return ((T *) this->_address)[index];
@@ -138,7 +142,7 @@ private:
 	/**
 	 * Copies values from array
 	 */
-	void _saveArray(T * array, uint64_t size) {
+	void saveArray(T * array, uint64_t size) {
 		this->_address = new T[size];
 		this->_count = size;
 
@@ -153,7 +157,7 @@ private:
 	/**
 	 * Sweeps through the initializer list to set out array's memory
 	 */
-	void _saveArray(std::initializer_list<T> list) {
+	void saveArray(std::initializer_list<T> list) {
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
@@ -187,7 +191,7 @@ public:
 	}
 
 	void operator=(const std::initializer_list<T> & list) {
-		this->_saveArray(list);
+		this->saveArray(list);
 	}
 
 // Comparators

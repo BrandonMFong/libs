@@ -3,12 +3,11 @@
  * date: 6/30/22
  */
 
-#ifdef TESTING
 #ifndef ARRAY_TESTS_HPP
 #define ARRAY_TESTS_HPP
 
-#include "Array.hpp"
-#include "tests.hpp"
+#include "../array.hpp"
+#include "cpplib_tests.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -178,7 +177,7 @@ int test_Setter() {
 	return result;
 }
 
-void Array_tests(int * pass, int * fail) {
+void array_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
@@ -205,6 +204,5 @@ void Array_tests(int * pass, int * fail) {
 	if (fail) *fail += f;
 }
 
-#endif // TESTING
 #endif // ARRAY_TESTS_HPP
 

@@ -3,9 +3,8 @@
  * date: 6/30/22
  */
 
-#ifdef TESTING
-#ifndef TESTS_H
-#define TESTS_H
+#ifndef CLIB_TESTS_H
+#define CLIB_TESTS_H
 
 #define INTRO_TEST_FUNCTION printf("Running %s:\n", __func__)
 #define PRINT_TEST_RESULTS(result) \
@@ -13,6 +12,5 @@
 	else {system("printf \"[\033[0;31m Fail \033[0m] \"");}\
 	printf("%s\n", __func__)
 
-#endif // TESTING
-#endif // TESTS_H
+#endif // CLIB_TESTS_H
 

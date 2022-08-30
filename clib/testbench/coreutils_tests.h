@@ -3,12 +3,11 @@
  * date: 6/30/22
  */
 
-#ifdef TESTING
-#ifndef CLIB_TESTS_H
-#define CLIB_TESTS_H
+#ifndef COREUTILS_TESTS_H
+#define COREUTILS_TESTS_H
 
-#include "tests.h"
-#include "clib.h"
+#include "clib_tests.h"
+#include "../coreutils.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -86,47 +85,6 @@ int test_GetByteStringRepresentation(void) {
 
 }
 
-int test_HomePath(void) {
-	int result = 0;
-	char * home = CopyHomePath(&result);
-
-	if (result) {
-		printf("CopyHomePath returned: %d\n", result);
-	} else if (home == 0) {
-		result = 1;
-		printf("Home path is null\n");
-	} else if (!IsDirectory(home)) {
-		result = 1;
-		printf("Home path does not exist: %s\n", home);
-	}
-
-	free(home);
-
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_CalculateSizeForAvailability(void) {
-	int result = 0;
-
-	char * home = CopyHomePath(&result);
-	if (result) {
-		printf("CopyHomePath returned: %d\n", result);
-	}
-
-	if (!result) {
-		// We do not care about the return value of the function
-		CalculateSizeForAvailability(home, &result);
-
-		if (result) {
-			printf("CalculateSizeForAvailability() returned %d\n", result);
-		}
-	}
-
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
 int test_CreateBinaryStringFromNumber() {
 	int result = 0;
 	char * string = 0;
@@ -187,7 +145,7 @@ int test_IndexOfStringInArray() {
 	return result;
 }
 
-void clib_tests(int * pass, int * fail) {
+void coreutils_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
@@ -196,15 +154,6 @@ void clib_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_DoesStringArrayContain()) p++;
-	else f++;
-
-	if (!test_GetByteStringRepresentation()) p++;
-	else f++;
-
-	if (!test_HomePath()) p++;
-	else f++;
-
-	if (!test_CalculateSizeForAvailability()) p++;
 	else f++;
 
 	if (!test_CreateBinaryStringFromNumber()) p++;
@@ -217,6 +166,5 @@ void clib_tests(int * pass, int * fail) {
 	if (fail) *fail += f;
 }
 
-#endif // TESTING
-#endif // CLIB_TESTS_H
+#endif // COREUTILS_TESTS_H
 

@@ -2,89 +2,71 @@
 # date: 6/2/22
 # https://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 
+## Includes
+include makefiles/platforms.mk
+
 ## Compiler definitions
 CC = gcc
 CPP = g++
 
 ## Compile Flags
 
-# Includes
-
-# Determine the OS
-ifeq ($(OS),Windows_NT)
-    CCFLAGS += -D WINDOWS
-    CPPFLAGS += -D WINDOWS
-    ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
-        CCFLAGS += -D AMD64
-        CPPFLAGS += -D AMD64
-    else
-        ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
-            CCFLAGS += -D AMD64
-            CPPFLAGS += -D AMD64
-        endif
-        ifeq ($(PROCESSOR_ARCHITECTURE),x86)
-            CCFLAGS += -D IA32
-            CPPFLAGS += -D IA32
-        endif
-    endif
-else
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Linux)
-        CCFLAGS += -D LINUX
-        CPPFLAGS += -D LINUX
-    endif
-    ifeq ($(UNAME_S),Darwin)
-        CCFLAGS += -D MACOS
-        CPPFLAGS += -D MACOS
-    endif
-    UNAME_P := $(shell uname -p)
-    ifeq ($(UNAME_P),x86_64)
-        CCFLAGS += -D AMD64
-        CPPFLAGS += -D AMD64
-    endif
-    ifneq ($(filter %86,$(UNAME_P)),)
-        CCFLAGS += -D IA32
-        CPPFLAGS += -D IA32
-    endif
-    ifneq ($(filter arm%,$(UNAME_P)),)
-        CCFLAGS += -D ARM
-        CPPFLAGS += -D ARM
-    endif
-endif
-
 # Warnings
-CCFLAGS += -Wall
-CPPFLAGS += -Wall
+CCFLAGS += -Wall -Iclib/
+CPPFLAGS += -Wall -Iclib/
 
 # Standards
 CPPFLAGS += -std=c++20
 
-all: setup libc libcpp
+## Other
+BUILD_PATH = build/release
+CLIB_OUT = clib.a
+CPPLIB_OUT = cpplib.a
+
+### RELEASE ###
+all: setup libc libcpp archive
+
+### DEBUG ### 
+debug: CFLAGS += -DDEBUG
+debug: CPPFLAGS += -DDEBUG
+debug: BUILD_PATH = build/debug
+debug: CLIB_OUT = debug-clib.a
+debug: CPPLIB_OUT = debug-cpplib.a
+debug: setup libc libcpp archive
+
+### TESTS ###
+test: CFLAGS += -DTESTING
+test: CPPFLAGS += -DTESTING
+test: BUILD_PATH = build/tests
+test: CLIB_OUT = test-clib
+test: CPPLIB_OUT = test-cpplib
+test: setup libc libcpp compile
+	./bin/$(CLIB_OUT)
+	./bin/$(CPPLIB_OUT)
 
 setup:
+	mkdir -p $(BUILD_PATH)/c
+	mkdir -p $(BUILD_PATH)/cpp
 	mkdir -p bin/
 
 libc:
-	$(CC) -c -o bin/clib.o clib/clib.c $(CCFLAGS)
+	$(CC) -c -o $(BUILD_PATH)/c/coreutils.o clib/coreutils.c $(CCFLAGS)
+	$(CC) -c -o $(BUILD_PATH)/c/filesystem.o clib/filesystem.c $(CCFLAGS)
 	cp -afv clib/*.h bin/
 
 libcpp:
+	$(CPP) -c -o $(BUILD_PATH)/cpp/file.o cpplib/file.cpp $(CPPFLAGS)
 	cp -afv cpplib/*.hpp bin/
 
+archive:
+	ar -rsc bin/$(CLIB_OUT) $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o
+	ar -rsc bin/$(CPPLIB_OUT) $(BUILD_PATH)/cpp/file.o $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o
+
+compile:
+	$(CC) -o bin/$(CLIB_OUT) clib/testbench/tests.c $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o $(CCFLAGS)
+	$(CPP) -o bin/$(CPPLIB_OUT) cpplib/testbench/tests.cpp $(BUILD_PATH)/cpp/file.o $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o $(CPPFLAGS) 
+
 clean:
+	rm -rfv build/
 	rm -rfv bin
-
-test: setup libctests libcpptests runtests
-
-# Tests
-libctests:
-	$(CC) -c -o bin/clib.o clib/clib.c $(CCFLAGS) -D TESTING
-	$(CC) -o bin/runtests.c bin/clib.o clib/tests.c $(CCFLAGS) -D TESTING -D CLIB_TESTING
-
-libcpptests:
-	$(CPP) -o bin/runtests.cpp cpplib/tests.cpp $(CPPFLAGS) -D TESTING -D CPPLIB_TESTING
-
-runtests:
-	./bin/runtests.c
-	./bin/runtests.cpp
 
