@@ -12,7 +12,7 @@ CPP = g++
 ## Compile Flags
 
 # Warnings
-CCFLAGS += -Wall -Iclib/
+CFLAGS += -Wall -Iclib/
 CPPFLAGS += -Wall -Iclib/
 
 # Standards
@@ -35,8 +35,8 @@ debug: CPPLIB_OUT = debug-cpplib.a
 debug: setup libc libcpp archive
 
 ### TESTS ###
-test: CFLAGS += -DTESTING
-test: CPPFLAGS += -DTESTING
+test: CFLAGS += -DTESTING -g
+test: CPPFLAGS += -DTESTING -g
 test: BUILD_PATH = build/tests
 test: CLIB_OUT = test-clib
 test: CPPLIB_OUT = test-cpplib
@@ -50,8 +50,8 @@ setup:
 	mkdir -p bin/
 
 libc:
-	$(CC) -c -o $(BUILD_PATH)/c/coreutils.o clib/coreutils.c $(CCFLAGS)
-	$(CC) -c -o $(BUILD_PATH)/c/filesystem.o clib/filesystem.c $(CCFLAGS)
+	$(CC) -c -o $(BUILD_PATH)/c/coreutils.o clib/coreutils.c $(CFLAGS)
+	$(CC) -c -o $(BUILD_PATH)/c/filesystem.o clib/filesystem.c $(CFLAGS)
 	cp -afv clib/*.h bin/
 
 libcpp:
@@ -63,7 +63,7 @@ archive:
 	ar -rsc bin/$(CPPLIB_OUT) $(BUILD_PATH)/cpp/file.o $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o
 
 compile:
-	$(CC) -o bin/$(CLIB_OUT) clib/testbench/tests.c $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o $(CCFLAGS)
+	$(CC) -o bin/$(CLIB_OUT) clib/testbench/tests.c $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o $(CFLAGS)
 	$(CPP) -o bin/$(CPPLIB_OUT) cpplib/testbench/tests.cpp $(BUILD_PATH)/cpp/file.o $(BUILD_PATH)/c/coreutils.o $(BUILD_PATH)/c/filesystem.o $(CPPFLAGS) 
 
 clean:
