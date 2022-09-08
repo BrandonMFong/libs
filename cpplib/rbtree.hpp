@@ -3,149 +3,41 @@
  * date: 8/19/22
  */
 
+#ifndef RBTREE_HPP
+#define RBTREE_HPP
+
 #include "delete.hpp"
 #include "accessorspecifiers.hpp"
 #include <iostream>
+#include "bintree.hpp"
 
 /**
  * Red Black Binary Tree
  *
  * Left most node is the least value comparison
  */
-template <typename T, typename S = int> class RBTree {
-PUBLIC:
-	RBTree() {
-		this->_root = NULL;
-		this->_compare = NULL;
-	}
-
-	virtual ~RBTree() {
-		Delete(this->_root);
-	}
-
-	/**
-	 * Optional
-	 *
-	 * if not set, we will compare a and b literally
-	 *
-	 * Please set your own comparison if a and b are 
-	 * some other object
-	 */
-	void setCompareCallback(int (* cb) (T a, T b)) {
-		this->_compare = cb;
-	}
-
-	int insert(T obj) {
-		Node * newNode = new Node;
-		newNode->obj = obj;
-
-		if (this->_root) {
-			return this->insert(newNode, this->_root);
-		} else {
-			this->_root = newNode;
-			this->_root->color = 'b';
-			this->_root->location= &this->_root;
-			this->_count++;
-			return 0;
-		}
-	}
-
-	S count() { return this->_count; }
-
-	/**
-	 * Sees if obj is inside our tree start from root
-	 */
-	bool contains(T obj) {
-		return this->contains(obj, this->_root);
-	}
-
-	/**
-	 * Prints tree with root at the left most positions and 
-	 * the leafs at the right most, start from the top 
-	 * the right leaves
-	 */
-	void print() {
-		std::cout << std::endl;
-		this->print(this->_root);
-		std::cout << std::endl;
-	}
-
-	T max() {
-		return this->max(this->_root);
-	}
-
-	T min() {
-		return this->min(this->_root);
-	}
-
+template <typename T, typename S = int> class RBTree : public BinTree<T,S> {
 PRIVATE:
-
-	class Node {
+	class RBNode : public BinTree<T,S>::BinNode {
 	PUBLIC:
-		Node() {
-			this->left = 0;
-			this->right = 0;
-			this->parent = 0;
+		RBNode() : BinTree<T,S>::BinNode() {
 			this->color = 'r';
-			this->location = 0;
 		}
 
-		virtual ~Node() {
+		virtual ~RBNode() {
 
 		}
 
-		Node * grandParent() {
-			if (this->parent) return this->parent->parent;
-			return NULL;
-		}
-
-		Node * pibling() {
-			Node * gp = NULL;
-			
-			if ((gp = this->grandParent()) != NULL) {
-				if (gp->left == this->parent) return gp->right;
-				else return gp->left;
-			}
-
-			return NULL;
-		}
-
-		Node * sibling() {
-			switch (this->childType()) {
-				case 0:
-					return NULL;
-				case -1:
-					return this->parent->right;
-				case 1:
-					return this->parent->left;
-				default:
-					return NULL;
-			}
-		}
-
-		bool isRoot() {
-			return (this->parent == NULL);
+		virtual RBNode * grandParent() override {
+			return (RBNode *) this->BinTree<T,S>::BinNode::grandParent();
 		}
 	
-		/**
-		 * Whether node is left or right child
-		 *
-		 * Type:
-		 * 	- (-1) : left
-		 * 	- (0) : none (may be root)
-		 * 	- (1) : right
-		 */
-		char childType() {
-			if (!this->parent) return 0;
-			else {
-				if (this->parent->left == this) return -1;
-				else if (this->parent->right == this) return 1;
-				else return 0;
-			}
+		virtual RBNode * pibling() override {
+			return (RBNode *) this->BinTree<T,S>::BinNode::pibling();
 		}
-
-		int level() {
-			return this->level(this->parent, 0);
+	
+		virtual RBNode * sibling() override {
+			return (RBNode *) this->BinTree<T,S>::BinNode::sibling();
 		}
 
 		void print() {
@@ -170,32 +62,47 @@ PRIVATE:
 			std::cout << std::endl;
 		}	
 
-		T obj;
-		Node * left;
-		Node * right;
-		Node * parent;
 		char color; // 'r' = red, 'b' = black
-
-		/**
-		 * Holds the address of where the node is in memory
-		 */
-		Node ** location;
-		PRIVATE:
-		
-		int level(Node * node, int level) {
-			if (node) return this->level(node->parent, ++level);
-			else return level;
-		}
 	};
 
-	Node * _root;
+PUBLIC:
 
-	static bool isNodeBlack(Node * node) {
+	RBTree() : BinTree<T,S>() {
+	}
+
+	virtual ~RBTree() {
+	}
+	
+	RBNode * root() override { return (RBNode *) this->BinTree<T,S>::root(); }
+	void setRoot(RBNode * node) { this->BinTree<T,S>::setRoot(node); }
+	
+	virtual int insert(T obj) {
+		RBNode * newNode = (RBNode *) this->createNode();
+		newNode->obj = obj;
+
+		if (this->root()) {
+			return this->insert(newNode, this->root());
+		} else {
+			newNode->color = 'b';
+			this->setRoot(newNode);
+			this->root()->location = this->rootAddr();
+			this->_count++;
+			return 0;
+		}
+	}
+
+PRIVATE:
+
+	virtual void * createNode() {
+		return new RBNode;
+	}
+	
+	static bool isNodeBlack(RBNode * node) {
 		if (!node) return true;
 		else return node->color == 'b';
 	}
 
-	static bool isNodeRed(Node * node) {
+	static bool isNodeRed(RBNode * node) {
 		if (!node) return false;
 		else return node->color == 'r';
 	}
@@ -208,59 +115,31 @@ PRIVATE:
 	 *
 	 * Sets newNode's location field
 	 */
-	int insert(Node * newNode, Node * parent) {
-		Node ** newLocation = NULL;
-
-		if (!newNode) return 1;
-		else if (!parent) return 2;
-		else {
-			switch (this->runCompare(newNode->obj, parent->obj)) {
-				case 0:
-				case -1:
-					newLocation = &parent->left;
-					break;
-				case 1:
-					newLocation = &parent->right;
-					break;
-				default:
-					return 3;
-			}
-		}
-
-		if (!newLocation) return 4;
-
-		// Continue traversing
-		else if (*newLocation) return this->insert(newNode, *newLocation);
-		else {
-			newNode->parent = parent;
-			newNode->location = newLocation;
-			*newLocation = newNode;
-
-			this->_count++;
-
-			return this->balance(newNode);
-		}
+	int insert(RBNode * newNode, RBNode * parent) {
+		int result = this->BinTree<T,S>::insert(newNode, parent);
+		if (result == 0) result = this->balance(newNode);
+		return result;
 	}
 
 	/**
 	 * Recursively balances tree
 	 */
-	int balance(Node * node) {
-		Node * tmp = NULL;
+	int balance(RBNode * node) {
+		RBNode * tmp = NULL;
 		
 		if (!node) {
 			return 4;
 		} else if (RBTree<T>::isNodeBlack(node)) {
 			return 0;	
-		} else if (RBTree<T>::isNodeBlack(node->parent)) {
+		} else if (RBTree<T>::isNodeBlack((RBNode *) node->parent)) {
 			return 0;
-		} else if (RBTree<T>::isNodeRed(node->parent)) {
+		} else if (RBTree<T>::isNodeRed((RBNode *) node->parent)) {
 			// Involves rotations
 			if (RBTree<T>::isNodeBlack(node->pibling())) {
 				return this->rotate(node);
 			} else if (RBTree<T>::isNodeRed(node->pibling())) {
 				if (node->parent) {
-					node->parent->color = 'b';
+					((RBNode *) node->parent)->color = 'b';
 				}
 
 				if ((tmp = node->pibling()) != NULL) {
@@ -289,7 +168,7 @@ PRIVATE:
 	 * 	- 3: rr
 	 * 	- 4: rl
 	 */
-	static unsigned char rotationCase(Node * node) {
+	static unsigned char rotationCase(RBNode * node) {
 		if (!node) return 0;
 		else if (RBTree<T>::isNodeBlack(node)) return 0;
 		else if (node->isRoot()) return 0;
@@ -323,17 +202,17 @@ PRIVATE:
 	/**
 	 * Rotates the node, parent, and grandparent
 	 */
-	int rotate(Node * node) {
+	int rotate(RBNode * node) {
 		int result = 0;
-		Node * parent = node->parent;
-		Node * grandparent = node->grandParent();
-		Node * tmp = NULL;
+		RBNode * parent = (RBNode *) node->parent;
+		RBNode * grandparent = node->grandParent();
+		RBNode * tmp = NULL;
 		const unsigned char ll = 1;
 		const unsigned char lr = 2;
 		const unsigned char rr = 3;
 		const unsigned char rl = 4;
 		unsigned char rcase = RBTree<T>::rotationCase(node);
-		Node ** newLocation = NULL;
+		RBNode ** newLocation = NULL;
 		char childType = 0;
 
 		// Figure out who we are replacing	
@@ -377,26 +256,26 @@ PRIVATE:
 
 				// Find new spot for grandparent
 				if (rcase == ll) {
-					tmp = parent->right;
-					newLocation = &parent->right;
+					tmp = (RBNode *) parent->right;
+					newLocation = (RBNode **) &parent->right;
 				} else {
-					tmp = parent->left;
-					newLocation = &parent->left;
+					tmp = (RBNode *) parent->left;
+					newLocation = (RBNode **) &parent->left;
 				}
 
 				// Do the replacement
 				grandparent->parent = parent;
 				*newLocation = grandparent;
-				grandparent->location = newLocation;
+				grandparent->location = (typename BinTree<T,S>::BinNode **) newLocation;
 
 				// Figuring out new spot for the node
 				// grandparent is replacing
 				if (tmp) {
 					tmp->parent = grandparent;
 					if (rcase == ll) {
-						newLocation = &grandparent->left;
+						newLocation = (RBNode **) &grandparent->left;
 					} else {
-						newLocation = &grandparent->right;
+						newLocation = (RBNode **) &grandparent->right;
 					}
 				}
 			} else if ((rcase == lr) || (rcase == rl)) {
@@ -409,26 +288,26 @@ PRIVATE:
 
 				// Find where the parent will be next
 				if (rcase == lr) {
-					tmp = node->left;
-					newLocation = &node->left;
+					tmp = (RBNode *) node->left;
+					newLocation = (RBNode **) &node->left;
 				} else {
-					tmp = node->right;
-					newLocation = &node->right;
+					tmp = (RBNode *) node->right;
+					newLocation = (RBNode **) &node->right;
 				}
 
 				// Do the replacement
-				parent->parent = node;
+				parent->parent = (typename BinTree<T,S>::BinNode *) node;
 				*newLocation = parent;
-				parent->location = newLocation;
+				parent->location = (typename BinTree<T,S>::BinNode **) newLocation;
 
 				// Find the new spot for the node
 				// parent is replacing
 				if (tmp) {
 					tmp->parent = parent;
 					if (rcase == lr) {
-						newLocation = &parent->right;
+						newLocation = (RBNode **) &parent->right;
 					} else {
-						newLocation = &parent->left;
+						newLocation =(RBNode **) &parent->left;
 					}
 				}
 			
@@ -445,7 +324,7 @@ PRIVATE:
 				if (*newLocation) result = this->insert(tmp, *newLocation);
 				else {
 					*newLocation = tmp;
-					tmp->location = newLocation;
+					tmp->location = (typename BinTree<T,S>::BinNode **) newLocation;
 				}
 			}
 		}
@@ -457,74 +336,7 @@ PRIVATE:
 
 		return result;
 	}
-
-	/**
-	 * If the _compare function pointer was not set, then 
-	 * we will default by comparing its literal value
-	 *
-	 * 0xFFFFFFFF returned if comparison errored
-	 */
-	int runCompare(T a, T b) {
-		if (this->_compare) return this->_compare(a, b);
-		else {
-			if (a == b) return 0;
-			else if (a < b) return -1;
-			else if (a > b) return 1;
-			else return ~0;
-		}
-	}
-
-	/**
-	 * Checks if node has object obj. If not then it will keep traversing
-	 */
-	bool contains(T obj, Node * node) {
-		if (!node) { 
-			return false;
-		}
-		
-		switch (this->runCompare(obj, node->obj)) {
-		case 0:
-			return true;
-		case -1:
-			return this->contains(obj, node->left);
-		case 1:
-			return this->contains(obj, node->right);
-		default:
-			return false;
-		}
-	}
-
-	void print(Node * node) {
-		if (node->right) this->print(node->right);
-
-		node->print();
-
-		if (node->left) this->print(node->left);
-			
-	}
-
-	T max(RBTree<T>::Node * node) {
-		if (!node) return 0;
-		else if (node->right) return this->max(node->right);
-		else return node->obj;
-	}
-	
-	T min(RBTree<T>::Node * node) {
-		if (!node) return 0;
-		else if (node->left) return this->min(node->left);
-		else return node->obj;
-	}
-
-	/**
-	 * a1 == a2 -> 0
-	 * a1 < a2 -> -1
-	 * a1 > a2 -> 1
-	 */
-	int (* _compare) (T a1, T a2);
-
-	/**
-	 * Holds size of tree
-	 */	
-	S _count;
 };
+
+#endif // RBTREE_HPP
 
