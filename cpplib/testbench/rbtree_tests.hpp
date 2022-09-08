@@ -18,10 +18,10 @@ static int test_RBInitializer() {
 	PRINT_TEST_RESULTS(1);
 
 	RBTree<int> i;
-	RBTree<double> d;
-	RBTree<float> f;
-	RBTree<char> c;
-	
+	//RBTree<double> d;
+	//RBTree<float> f;
+	//RBTree<char> c;
+
 	RBTree<int> * ii = new RBTree<int>;
 	RBTree<double> * dd = new RBTree<double>;
 	RBTree<float> * ff = new RBTree<float>;
@@ -31,7 +31,7 @@ static int test_RBInitializer() {
 	Delete(dd);
 	Delete(ff);
 	Delete(cc);
-
+	
 	return 0;
 }
 
@@ -170,15 +170,15 @@ static int test_InsertingRLCase() {
 static int test_AccessingNodeHierarchy() {
 	int result = 0;
 
-	RBTree<int>::Node * n1;
-	RBTree<int>::Node * n2;
-	RBTree<int>::Node * n3;
-	RBTree<int>::Node * n4;
+	RBTree<int>::RBNode * n1;
+	RBTree<int>::RBNode * n2;
+	RBTree<int>::RBNode * n3;
+	RBTree<int>::RBNode * n4;
 
-	n1 = new RBTree<int>::Node;
-	n2 = new RBTree<int>::Node;
-	n3 = new RBTree<int>::Node;
-	n4 = new RBTree<int>::Node;
+	n1 = new RBTree<int>::RBNode;
+	n2 = new RBTree<int>::RBNode;
+	n3 = new RBTree<int>::RBNode;
+	n4 = new RBTree<int>::RBNode;
 
 	n3->parent = n2;
 	n2->parent = n1;
@@ -220,7 +220,7 @@ static int test_AccessingNodeHierarchy() {
 int test_NodeColors() {
 	int result = 0;
 
-	RBTree<int>::Node * n1 = 0;
+	RBTree<int>::RBNode * n1 = 0;
 
 	if (!RBTree<int>::isNodeBlack(n1)) {
 		result = 1;
@@ -228,7 +228,7 @@ int test_NodeColors() {
 	}
 
 	if (result == 0) {
-		n1 = new RBTree<int>::Node;
+		n1 = new RBTree<int>::RBNode;
 
 		n1->color = 'r';
 
@@ -263,15 +263,15 @@ int test_NodeColors() {
 int test_RotationCases() {
 	int result = 0;
 	
-	RBTree<int>::Node * n1;
-	RBTree<int>::Node * n2;
-	RBTree<int>::Node * n3;
-	RBTree<int>::Node * n4;
+	RBTree<int>::RBNode * n1;
+	RBTree<int>::RBNode * n2;
+	RBTree<int>::RBNode * n3;
+	RBTree<int>::RBNode * n4;
 
-	n1 = new RBTree<int>::Node;
-	n2 = new RBTree<int>::Node;
-	n3 = new RBTree<int>::Node;
-	n4 = new RBTree<int>::Node;
+	n1 = new RBTree<int>::RBNode;
+	n2 = new RBTree<int>::RBNode;
+	n3 = new RBTree<int>::RBNode;
+	n4 = new RBTree<int>::RBNode;
 
 	n3->parent = n2;
 	n4->parent = n2;
@@ -313,15 +313,15 @@ int test_RotationCases() {
 int test_NodeLevels() {
 	int result = 0;
 	
-	RBTree<int>::Node * n1;
-	RBTree<int>::Node * n2;
-	RBTree<int>::Node * n3;
-	RBTree<int>::Node * n4;
+	RBTree<int>::RBNode * n1;
+	RBTree<int>::RBNode * n2;
+	RBTree<int>::RBNode * n3;
+	RBTree<int>::RBNode * n4;
 
-	n1 = new RBTree<int>::Node;
-	n2 = new RBTree<int>::Node;
-	n3 = new RBTree<int>::Node;
-	n4 = new RBTree<int>::Node;
+	n1 = new RBTree<int>::RBNode;
+	n2 = new RBTree<int>::RBNode;
+	n3 = new RBTree<int>::RBNode;
+	n4 = new RBTree<int>::RBNode;
 
 	n4->parent = n2;
 	n3->parent = n2;
@@ -366,12 +366,12 @@ PUBLIC:
 			return false;
 		}
 
-		if (!this->everyNodeHasAColor(this->_root)) {
+		if (!this->everyNodeHasAColor(this->root())) {
 			printf("Not every node has a color\n");
 			return false;
 		}
 
-		if (!this->testColorPatterns(this->_root)) {
+		if (!this->testColorPatterns(this->root())) {
 			printf("Found two adjacent red nodes\n");
 			return false;
 		}
@@ -386,16 +386,16 @@ PUBLIC:
 
     // The root of the tree is always black.
 	bool rootIsColoredBlack() {
-		return this->_root->color == 'b';
+		return this->root()->color == 'b';
 	}
 
 	// Every node has a color either red or black.
-	bool everyNodeHasAColor(RBTree<T>::Node * node) {
+	bool everyNodeHasAColor(RBTree<T>::RBNode * node) {
 		bool res = true;
-		if (node->left) res = this->everyNodeHasAColor(node->left);
+		if (node->left) res = this->everyNodeHasAColor((typename RBTree<T>::RBNode *) node->left);
 
 		if (res)
-			if (node->right) res = this->everyNodeHasAColor(node->right);
+			if (node->right) res = this->everyNodeHasAColor((typename RBTree<T>::RBNode *) node->right);
 
 		if (res) res = (node->color == 'b') || (node->color == 'r');
 
@@ -403,20 +403,20 @@ PUBLIC:
 	}
 
     // There are no two adjacent red nodes (A red node cannot have a red parent or red child).
-	bool testColorPatterns(RBTree<T>::Node * node) {
+	bool testColorPatterns(RBTree<T>::RBNode * node) {
 		bool res = true;
 
 		if (node->parent) {
-			if (node->parent->color == 'r') {
+			if (((typename RBTree<T>::RBNode *) node->parent)->color == 'r') {
 				res = node->color != 'r';
 			}
 		}
 
 		if (res) 
-			if (node->left) res = this->testColorPatterns(node->left);
+			if (node->left) res = this->testColorPatterns((typename RBTree<T>::RBNode *) node->left);
 
 		if (res)
-			if (node->right) res = this->testColorPatterns(node->right);
+			if (node->right) res = this->testColorPatterns((typename RBTree<T>::RBNode *) node->right);
 
 		return res;
 	}
@@ -426,20 +426,20 @@ PUBLIC:
 		// true if there is any count
 		// assuming the tester has inserting things into this tree
 		if (!this->count()) return false;
-		return this->countBlackNodesOnPathToLeaves(this->_root);
+		return this->countBlackNodesOnPathToLeaves(this->root());
 	}
 
 	// Returns number black nodes there are on the way to 
 	// the leaves, including param node
 	//
 	// returns 0 on error
-	int countBlackNodesOnPathToLeaves(RBTree<T>::Node * node) {
+	int countBlackNodesOnPathToLeaves(RBTree<T>::RBNode * node) {
 		int lc = 0, rc = 0;
 
-		if (node->left) lc = this->countBlackNodesOnPathToLeaves(node->left);
+		if (node->left) lc = this->countBlackNodesOnPathToLeaves((typename RBTree<T>::RBNode *) node->left);
 		else lc++;
 
-		if (node->right) rc = this->countBlackNodesOnPathToLeaves(node->right);
+		if (node->right) rc = this->countBlackNodesOnPathToLeaves((typename RBTree<T>::RBNode *) node->right);
 		else rc++;
 		
 		if (!lc && !rc) return 0; 

@@ -7,6 +7,7 @@
 #include "list_tests.hpp"
 #include "file_tests.hpp"
 #include "rbtree_tests.hpp"
+#include "bintree_tests.hpp"
 
 int main() {
 	int pass = 0, fail = 0, tp = 0, tf = 0;
@@ -37,7 +38,16 @@ int main() {
 	printf("Fail: %d\n", fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	
+		
+	printf("\n---------------------------\n");
+	printf("\nStarting Binary Tree tests...\n\n");
+	bintree_tests(&pass, &fail);
+
+	printf("\nPass: %d\n", pass);
+	printf("Fail: %d\n", fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+
 	printf("\n---------------------------\n");
 	printf("\nStarting List tests...\n\n");
 	list_tests(&pass, &fail);
