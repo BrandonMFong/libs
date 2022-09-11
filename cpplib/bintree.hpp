@@ -27,7 +27,10 @@ PRIVATE:
 		}
 
 		virtual ~BinNode() {
-
+			this->left = 0;
+			this->right = 0;
+			this->parent = 0;
+			this->location = 0;
 		}
 
 		virtual BinNode * grandParent() {
@@ -57,6 +60,10 @@ PRIVATE:
 				default:
 					return NULL;
 			}
+		}
+
+		bool isLeaf() {
+			return !this->left && !this->right;
 		}
 
 		bool isRoot() {
@@ -129,8 +136,7 @@ PUBLIC:
 	}
 
 	virtual ~BinTree() {
-		BinNode * root = (BinNode *) this->_root;
-		Delete(root);
+		this->removeAll();
 	}
 
 	// Root accessors
@@ -150,6 +156,9 @@ PUBLIC:
 		this->_compare = cb;
 	}
 
+	/**
+	 * Inserts object into tree
+	 */
 	int insert(T obj) {
 		BinNode * newNode = (BinNode *) this->createNode();
 		newNode->obj = obj;
@@ -170,7 +179,7 @@ PUBLIC:
 	 * Sees if obj is inside our tree start from root
 	 */
 	bool contains(T obj) {
-		return this->contains(obj, this->root());
+		return this->getNodeForObject(obj, this->root()) != NULL;
 	}
 
 	/**
@@ -185,11 +194,28 @@ PUBLIC:
 	}
 
 	T max() {
-		return this->max(this->root());
+		BinNode * node = this->maxNode(this->root());
+		return node ? node->obj : 0;
 	}
 
 	T min() {
-		return this->min(this->root());
+		BinNode * node = this->minNode(this->root());
+		return node ? node->obj : 0;
+	}
+
+	int remove(T obj) {
+		BinNode * node = this->getNodeForObject(obj, this->root());
+
+		return node ? this->removeNode(node) : 1;
+	}
+
+	/**
+	 * Deletes everything in the tree
+	 */
+	int removeAll() {
+		int result = this->removeAll(this->root());
+		if (result == 0) this->_root = NULL;
+		return result;
 	}
 
 PROTECTED:
@@ -263,22 +289,23 @@ PRIVATE:
 	}
 
 	/**
-	 * Checks if node has object obj. If not then it will keep traversing
+	 * Returns nonnull pointer to BinNode
+	 *
+	 * Returns NULL if node with obj could not
+	 * be found
 	 */
-	bool contains(T obj, BinNode * node) {
-		if (!node) { 
-			return false;
-		}
+	BinNode * getNodeForObject(T obj, BinNode * node) {
+		if (!node) return NULL;
 		
 		switch (this->runCompare(obj, node->obj)) {
 		case 0:
-			return true;
+			return node;
 		case -1:
-			return this->contains(obj, node->left);
+			return this->getNodeForObject(obj, node->left);
 		case 1:
-			return this->contains(obj, node->right);
+			return this->getNodeForObject(obj, node->right);
 		default:
-			return false;
+			return NULL;
 		}
 	}
 
@@ -291,16 +318,103 @@ PRIVATE:
 			
 	}
 
-	T max(BinNode * node) {
-		if (!node) return 0;
-		else if (node->right) return this->max(node->right);
-		else return node->obj;
+	BinNode * maxNode(BinNode * node) {
+		if (!node) return NULL;
+		else if (node->right) return this->maxNode(node->right);
+		else return node;
 	}
 	
-	T min(BinNode * node) {
+	BinNode * minNode(BinNode * node) {
+		if (!node) return NULL;
+		else if (node->left) return this->minNode(node->left);
+		else return node;
+	}
+
+	/**
+	 * Performs standard BST Deletion
+	 *
+	 * cases:
+	 * 	- 	Is leaf. Just delete the leaf
+	 * 	- 	Has two children. Copy contents of the inorder successor 
+	 * 		to the node and delete the inorder successor. In this particular 
+	 * 		case, inorder successor can be obtained by finding the 
+	 * 		minimum value in the right child of the node
+	 * 	- 	Has one child. replace node with child
+	 */
+	int removeNode(BinNode * node) {
+		int result = 0;
+
+		if (node == NULL) {
+			result = 1;
+		} else if (node->isLeaf()) {
+			// erase traces of node at its location
+			*node->location = NULL;
+		} else if (node->left && node->right) {
+			// Find the replacement for node
+			// should be a leaf
+			BinNode * min = this->minNode(node->right);
+
+			// Take min out of its location
+			*min->location = NULL;
+
+			// Put min in node's location
+			min->location = node->location;
+			*node->location = min;
+			min->parent = node->parent;
+
+			// Make sure node's children know
+			// the new parent
+			min->left = node->left;
+			if (min->left) min->left->parent = min;
+			min->right = node->right;
+			if (min->right) min->right->parent = min;
+		} else {
+			if (node->left) {
+				node->left->location = node->location;
+				*node->location = node->left;
+				node->left->parent = node->parent;
+			} else {
+				node->right->location = node->location;
+				*node->location = node->right;
+				node->right->parent = node->parent;
+			}
+		}
+
+		if (result == 0) {
+			Delete(node);
+			this->_count--;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Traverses through tree to remove everything
+	 */
+	int removeAll(BinNode * node) {
+		int result = 0;
+
+		// Just leave function if there is no node
 		if (!node) return 0;
-		else if (node->left) return this->min(node->left);
-		else return node->obj;
+
+		if (node->left) {
+			result = this->removeAll(node->left);
+			node->left = NULL;
+		}
+
+		if (result == 0) {
+			if (node->right) {
+				result = this->removeAll(node->right);
+				node->right = NULL;
+			}
+		}
+
+		if (result == 0) {
+			Delete(node);
+			this->_count--;
+		}
+
+		return result;
 	}
 
 	/**
