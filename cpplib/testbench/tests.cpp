@@ -29,16 +29,16 @@ int main() {
 	printf("Fail: %d\n", fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	
-	printf("\n---------------------------\n");
-	printf("\nStarting Red Black Tree tests...\n\n");
-	rbtree_tests(&pass, &fail);
 
+	printf("\n---------------------------\n");
+	printf("\nStarting List tests...\n\n");
+	list_tests(&pass, &fail);
+	
 	printf("\nPass: %d\n", pass);
 	printf("Fail: %d\n", fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-		
+	
 	printf("\n---------------------------\n");
 	printf("\nStarting Binary Tree tests...\n\n");
 	bintree_tests(&pass, &fail);
@@ -49,9 +49,9 @@ int main() {
 	pass = 0; fail = 0;
 
 	printf("\n---------------------------\n");
-	printf("\nStarting List tests...\n\n");
-	list_tests(&pass, &fail);
-	
+	printf("\nStarting Red Black Tree tests...\n\n");
+	rbtree_tests(&pass, &fail);
+
 	printf("\nPass: %d\n", pass);
 	printf("Fail: %d\n", fail);
 	tp += pass; tf += fail;

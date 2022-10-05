@@ -3,12 +3,10 @@
  * date: 6/30/22
  */
 
-#ifdef TESTING
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
 #include "../../clib/testbench/clib_tests.h"
 
-#endif // TESTING
 #endif // TESTS_HPP
 

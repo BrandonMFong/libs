@@ -6,7 +6,7 @@
 #ifndef DELETE_HPP
 #define DELETE_HPP
 
-#define Delete(x) if (x) {delete x; x = 0; }
+#define Delete(x) if (x != 0) {delete x; x = 0; }
 
 #endif // DELETE_HPP
 

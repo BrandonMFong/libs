@@ -6,6 +6,8 @@
 #ifndef LIST_TESTS_HPP
 #define LIST_TESTS_HPP
 
+#define ASSERT_PUBLIC_MEMBER_ACCESS
+
 #include "../list.hpp"
 
 int test_Init() {
@@ -228,6 +230,61 @@ int test_listMemoryHandling() {
 	return result;
 }
 
+int test_traversing() {
+	int result = 0;
+	int max = 50; // max nodes
+	int minValue = 10;
+	
+	List<int> t;
+
+	while (max) {
+		int val = (rand() % 100) + minValue;
+
+		result = t.add(val);
+		if (result) {
+			printf("error: %d\n", result);
+			break;
+		}
+
+		max--;
+	}
+
+	int i = 0;
+	List<int>::Node * node = t.first();
+	while (!result && (i < t.count()) && node) {
+		node = node->next();
+		i++;
+	}
+
+	if (result == 0) {
+		if (i != t.count()) {
+			printf("Traversing did not go through entire list\n");
+			result = 1;
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_ListContains() {
+	int result = 0;
+
+	List<int> l;
+	l.add(1);
+	l.add(2);
+	l.add(3);
+
+	if (!l.contains(1)) {
+		result = 1;
+	} else if (l.contains(4)) {
+		result = 2;
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -252,6 +309,12 @@ void list_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_listMemoryHandling()) p++;
+	else f++;
+
+	if (!test_traversing()) p++;
+	else f++;
+
+	if (!test_ListContains()) p++;
 	else f++;
 
 	if (pass) *pass += p;
