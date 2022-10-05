@@ -111,8 +111,8 @@ static int test_BinNodeKnowsItsLeaf() {
 	}
 
 	if (result == 0) {
-		n1.left = &n2;
-		n1.right = &n3;
+		n1.setLeft(&n2);
+		n1.setRight(&n3);
 
 		if (n1.isLeaf()) {
 			result = 2;
@@ -132,20 +132,23 @@ static int test_BSTDelete() {
 	t.insert(4);
 	t.insert(6);
 	t.insert(10);
-	t.insert(8);
-	t.insert(7);
-	t.insert(9);
+	t.insert(12);
+	t.insert(11);
+	t.insert(13);
 	t.insert(1);
 	t.insert(3);
 
 	result = t.remove(3);
+	if (result) printf("Error removing 3\n");
 
 	if (result == 0) {
 		result = t.remove(10);
+		if (result) printf("Error removing 10\n");
 	}
 	
 	if (result == 0) {
-		result = t.remove(8);
+		result = t.remove(5);
+		if (result) printf("Error removing 8\n");
 	}
 
 	PRINT_TEST_RESULTS(!result);
@@ -206,6 +209,88 @@ int test_RemovingAll() {
 	return result;
 }
 
+int test_ReturningLeafValues() {
+	int result = 0;
+
+	BinTree<int> t;
+	t.insert(5);
+	t.insert(4);
+	t.insert(6);
+
+	List<int> l;
+	
+	result = t.leafValues(&l);
+
+	if (result == 0) {
+		if (l.count() != 2) {
+			printf("List count is: %d\n", l.count());
+			result = 1;
+		} else if (!l.contains(4)) {
+			printf("List does not have: 4\n");
+			result = 2;
+		} else if (!l.contains(6)) {
+			printf("List does not have: 6\n");
+			result = 6;
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_BinTreeCount() {
+	int result = 0;
+	BinTree<int> t;
+	const int size = 100;
+	int counter = size;
+
+	while (counter) {
+		int val = rand() % 100;
+		result = t.insert(val);
+		if (result != 0) break;
+		counter--;
+	}
+
+	if (result == 0) {
+		if (t.count() != size) {
+			printf("Size: %d, actual count: %d\n", size, t.count());
+			result = 2;
+		}
+	}
+	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_ReplacingBinNodes() {
+	int result = 0;
+
+	BinTree<int>::BinNode a;
+	BinTree<int>::BinNode b;
+	BinTree<int>::BinNode c;
+	BinTree<int>::BinNode d;
+	BinTree<int>::BinNode e;
+	BinTree<int>::BinNode f;
+
+	a.setLeft(&b);
+	a.setRight(&c);
+	c.setLeft(&d);
+	c.setRight(&e);
+
+	c.replaceWithNode(&f);
+
+	if (c.parent) {
+		printf("parent node should be null\n");
+		result = 1;
+	} else if (c.location) {
+		printf("location should be null\n");
+		result = 2;
+	}
+	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void bintree_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -233,6 +318,15 @@ void bintree_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_RemovingAll()) p++;
+	else f++;
+
+	if (!test_ReturningLeafValues()) p++;
+	else f++;
+
+	if (!test_BinTreeCount()) p++;
+	else f++;
+
+	if (!test_ReplacingBinNodes()) p++;
 	else f++;
 
 	if (pass) *pass += p;
