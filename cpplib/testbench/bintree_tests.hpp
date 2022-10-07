@@ -291,6 +291,41 @@ int test_ReplacingBinNodes() {
 	return result;
 }
 
+int test_SearchingBinTree() {
+	int result = 0;
+
+	int target = 4;
+	BinTree<int> t;
+	t.insert(5);
+	t.insert(3);
+	t.insert(8);
+	t.insert(7);
+	t.insert(target);
+	t.insert(1);
+	t.insert(2);
+	t.insert(9);
+	t.insert(0);
+	t.insert(11);
+
+	const BinTree<int>::BinNode * node = t.root();
+
+	bool found = false;
+	do {
+		int obj = node->object();
+		if (target < obj) node = node->left();
+		else if (target > obj) node = node->right();
+		else found = true;
+	} while (!found && (node != NULL));
+
+	if (!found) {
+		result = 1;
+		printf("Could not find %d\n", target);
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void bintree_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -327,6 +362,9 @@ void bintree_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_ReplacingBinNodes()) p++;
+	else f++;
+
+	if (!test_SearchingBinTree()) p++;
 	else f++;
 
 	if (pass) *pass += p;

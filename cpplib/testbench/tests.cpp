@@ -8,56 +8,45 @@
 #include "file_tests.hpp"
 #include "rbtree_tests.hpp"
 #include "bintree_tests.hpp"
+#include "dictionary_tests.hpp"
 
 int main() {
-	int pass = 0, fail = 0, tp = 0, tf = 0;
+	int pass = 0, fail = 0;
+	float tp = 0, tf = 0;
 
 	printf("\n---------------------------\n");
-	printf("\nStarting Array tests...\n\n");
+
 	array_tests(&pass, &fail);
-	
-	printf("\nPass: %d\n", pass);
-	printf("Fail: %d\n", fail);
+	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
-	printf("\n---------------------------\n");
-	printf("\nStarting File tests...\n\n");
 	file_tests(&pass, &fail);
-
-	printf("\nPass: %d\n", pass);
-	printf("Fail: %d\n", fail);
+	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
-	printf("\n---------------------------\n");
-	printf("\nStarting List tests...\n\n");
 	list_tests(&pass, &fail);
-	
-	printf("\nPass: %d\n", pass);
-	printf("Fail: %d\n", fail);
+	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 	
-	printf("\n---------------------------\n");
-	printf("\nStarting Binary Tree tests...\n\n");
 	bintree_tests(&pass, &fail);
-
-	printf("\nPass: %d\n", pass);
-	printf("Fail: %d\n", fail);
+	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
-	printf("\n---------------------------\n");
-	printf("\nStarting Red Black Tree tests...\n\n");
 	rbtree_tests(&pass, &fail);
-
-	printf("\nPass: %d\n", pass);
-	printf("Fail: %d\n", fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+	
+	dictionary_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
-	printf("\n---------------------------\n\n");
+	printf("Grade - %.2f%% (%d/%d)\n", (tp / (tp + tf)) * 100, (int) tp, (int) (tp + tf));
 
 	return 0;
 }

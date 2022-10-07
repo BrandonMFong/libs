@@ -40,13 +40,6 @@ bool DoesStringArrayContain(char ** strArr, int arrSize, const char * element);
 int IndexOfStringInArray(char ** strArr, int arrSize, const char * element);
 
 /**
- * Creates a copy of string
- *
- * Caller must free
- */
-char * CopyString(const char * string, int * err);
-
-/**
  * returns the ip address for the hostname
  */
 int ResolveHostname(const char * hostname, char * ip);

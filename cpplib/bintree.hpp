@@ -20,12 +20,25 @@ template <typename T, typename S = int> class BinTree {
 PROTECTED:
 	class BinNode {
 		friend class BinTree<T,S>;
-
-		T object() {
+	PUBLIC:
+		T object() const {
 			return this->obj;
 		}
 
-		PROTECTED:
+		virtual const BinNode * left() const { return this->_left; }
+		virtual const BinNode * right() const { return this->_right; }
+
+		// True if we have no childred
+		virtual bool isLeaf() const {
+			return this->childCount() == 0;
+		}
+
+		// Is root if we have no parent
+		bool isRoot() const {
+			return (this->parent == NULL);
+		}
+	
+	PROTECTED:
 		BinNode() {
 			this->obj = 0;
 			this->_left = 0;
@@ -74,7 +87,7 @@ PROTECTED:
 			}
 		}
 
-		virtual unsigned char childCount() {
+		virtual unsigned char childCount() const {
 			if (this->_left && this->_right) {
 				return 2;
 			} else if (this->_left || this->_right) {
@@ -82,16 +95,6 @@ PROTECTED:
 			} else return 0;
 		}
 
-		// True if we have no childred
-		virtual bool isLeaf() {
-			return this->childCount() == 0;
-		}
-
-		// Is root if we have no parent
-		bool isRoot() {
-			return (this->parent == NULL);
-		}
-	
 		/**
 		 * Whether node is left or right child
 		 *
@@ -100,7 +103,7 @@ PROTECTED:
 		 * 	- (0) : none (may be root)
 		 * 	- (1) : right
 		 */
-		char childType() {
+		char childType() const {
 			if (!this->parent) return 0;
 			else {
 				if (this->parent->_left == this) return -1;
@@ -110,11 +113,11 @@ PROTECTED:
 		}
 
 		// Returns number of levels we are from root
-		int level() {
+		int level() const {
 			return this->level(this->parent, 0);
 		}
 
-		virtual void print() {
+		virtual void print() const {
 			int lvl = this->level();
 
 			for (int i = 1; i <= lvl; i++) {
@@ -211,9 +214,8 @@ PROTECTED:
 		}
 
 		virtual BinNode * left() { return this->_left; }
-		BinNode ** leftAddr() { return &this->_left; }
-
 		virtual BinNode * right() { return this->_right; }
+		BinNode ** leftAddr() { return &this->_left; }
 		BinNode ** rightAddr() { return &this->_right; }
 
 		// Wondering if I want to make accessors for this
@@ -234,7 +236,7 @@ PROTECTED:
 		BinNode * _right;
 	
 		// recursively executes until we reach root	
-		int level(BinNode * node, int level) {
+		int level(BinNode * node, int level) const {
 			if (node) return this->level(node->parent, ++level);
 			else return level;
 		}
@@ -252,8 +254,10 @@ PUBLIC:
 		this->removeAll();
 	}
 
+	virtual const BinNode * root() const { return (const BinNode *) this->_root; }
+
 	/**
-	 * Optional
+	 * Optional but will help with sorting tree
 	 *
 	 * if not set, we will compare a and b literally
 	 *
@@ -281,7 +285,7 @@ PUBLIC:
 		}
 	}
 
-	S count() { return this->_count; }
+	S count() const { return this->_count; }
 
 	/**
 	 * Sees if obj is inside our tree start from root
@@ -302,30 +306,42 @@ PUBLIC:
 	}
 
 	// Returns object from the right most leaf
-	T max() {
-		BinNode * node = this->maxNode(this->root());
+	T max() const {
+		const BinNode * node = this->maxNode(this->root());
 		return node ? node->obj : 0;
 	}
 
 	// Returns object from the left most leaf
-	T min() {
-		BinNode * node = this->minNode(this->root());
+	T min() const {
+		const BinNode * node = this->minNode(this->root());
 		return node ? node->obj : 0;
+	}
+
+	virtual const BinNode * minNode() const {
+		return this->minNode(this->root());
+	}
+
+	virtual const BinNode * maxNode() const {
+		return this->maxNode(this->root());
 	}
 
 	/**
 	 * Removes the node that has the object
 	 */
 	virtual int remove(T obj) {
-		int result = 0;
 		BinNode * node = this->getNodeForObject(obj, this->root());
-		if (node) {
-			result = this->removeNode(node); // we do not need to know who replaced node
-			
-			// Delete node
-			Delete(node);
-		} else result = 1;
-	
+		if (node) return this->deleteNode(node);
+		else return 1;
+	}
+
+	/**
+	 * Removes node from tree and deletes it from memory
+	 */
+	virtual int deleteNode(BinNode * node) {
+		int result = this->removeNode(node); // we do not need to know who replaced node
+		
+		// Delete node
+		Delete(node);
 		if (result == 0) {
 			this->_count--;
 		}
@@ -515,7 +531,7 @@ PROTECTED:
 			} else {
 				// Find the replacement for node
 				// should be a leaf
-				BinNode * max = this->maxNode(node->left());
+				BinNode * max = (BinNode *) this->maxNode(node->left());
 
 				// repNode will be used to put max node's data in
 				// then we will put repNode in node
@@ -558,14 +574,14 @@ PROTECTED:
 	}
 
 	/// Returns the leaf node	
-	virtual BinNode * maxNode(BinNode * node) {
+	virtual const BinNode * maxNode(const BinNode * node) const {
 		if (!node) return NULL;
 		else if (node->right()) return this->maxNode(node->right());
 		else return node;
 	}
 
 	/// Returns the leaf node	
-	virtual BinNode * minNode(BinNode * node) {
+	virtual const BinNode * minNode(const BinNode * node) const {
 		if (!node) return NULL;
 		else if (node->left()) return this->minNode(node->left());
 		else return node;

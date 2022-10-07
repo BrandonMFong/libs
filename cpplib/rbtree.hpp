@@ -31,8 +31,10 @@
  * Left most node is the least value comparison
  */
 template <typename T, typename S = int> class RBTree : public BinTree<T,S> {
-PRIVATE:
+PUBLIC:
 	class RBNode : public BinTree<T,S>::BinNode {
+		friend class RBTree<T,S>;
+
 	PUBLIC:
 		RBNode() : BinTree<T,S>::BinNode() {
 			this->_colorSpace = 0;
@@ -42,15 +44,22 @@ PRIVATE:
 		}
 
 		virtual ~RBNode() {}
-		virtual bool isNull() { return false; }
 
-		virtual void setLeft(BinTree<T,S>::BinNode * left) { this->BinTree<T,S>::BinNode::setLeft(left); }
+		virtual bool isNull() const { return false; }
+		virtual const RBNode * left() const { return (const RBNode *) this->BinTree<T,S>::BinNode::left(); }
+		virtual const RBNode * right() const { return (const RBNode *) this->BinTree<T,S>::BinNode::right(); }
+
+	PROTECTED:
+
+		virtual void printObject() const { std::cout << this->obj; }
+
 		virtual RBNode * left() { return (RBNode *) this->BinTree<T,S>::BinNode::left(); }
-
-		virtual void setRight(BinTree<T,S>::BinNode * right) { this->BinTree<T,S>::BinNode::setRight(right); }
 		virtual RBNode * right() { return (RBNode *) this->BinTree<T,S>::BinNode::right(); }
 
-		void print() {
+		virtual void setLeft(BinTree<T,S>::BinNode * left) { this->BinTree<T,S>::BinNode::setLeft(left); }
+		virtual void setRight(BinTree<T,S>::BinNode * right) { this->BinTree<T,S>::BinNode::setRight(right); }
+
+		void print() const {
 			int lvl = this->level();
 
 			for (int i = 1; i <= lvl; i++) {
@@ -76,8 +85,6 @@ PRIVATE:
 			std::cout << std::endl;
 		}
 
-		virtual void printObject() { std::cout << this->obj; }
-
 		/**
 	 	 *	When a black node is deleted and replaced by a black child, the child is marked as double black
 		 */
@@ -100,7 +107,7 @@ PRIVATE:
 			return result;
 		}
 	
-		virtual unsigned char childCount() {
+		virtual unsigned char childCount() const {
 			RBNode * l = (RBNode *) this->left(), 
 				   * r = (RBNode *) this->right();
 		
@@ -115,19 +122,19 @@ PRIVATE:
 			return new RBNode(*this);
 		}
 
-		virtual RBNode * grandParent() override {
+		virtual RBNode * grandParent() {
 			return (RBNode *) this->BinTree<T,S>::BinNode::grandParent();
 		}
 	
-		virtual RBNode * pibling() override {
+		virtual RBNode * pibling() {
 			return (RBNode *) this->BinTree<T,S>::BinNode::pibling();
 		}
 	
-		virtual RBNode * sibling() override {
+		virtual RBNode * sibling() {
 			return (RBNode *) this->BinTree<T,S>::BinNode::sibling();
 		}
 
-		char color() {
+		char color() const {
 			return this->_colorSpace & kRBTreeNodeMaskColor;
 		}
 
@@ -135,7 +142,7 @@ PRIVATE:
 			this->_colorSpace = (this->_colorSpace & ~kRBTreeNodeMaskColor) | (color & kRBTreeNodeMaskColor);
 		}
 
-		unsigned char colorCount() {
+		unsigned char colorCount() const {
 			return (this->_colorSpace & kRBTreeNodeMaskColorCount) >> 4;
 		}
 
@@ -151,6 +158,8 @@ PRIVATE:
 		unsigned char _colorSpace;	
 	};
 
+PUBLIC:
+
 	/**
 	 * Every node will start with a null node for their left and right children
 	 */
@@ -162,9 +171,9 @@ PRIVATE:
 
 		virtual ~RBNodeNull() {}
 		
-		virtual bool isNull() { return true; }
+		virtual bool isNull() const { return true; }
 
-		virtual void printObject() { std::cout << "_"; }
+		virtual void printObject() const { std::cout << "_"; }
 	};
 
 	class RBNodeNonnull : public RBNode {
@@ -179,8 +188,10 @@ PRIVATE:
 		virtual ~RBNodeNonnull() {}
 
 		// Identifies if RBNodeNonnull is a null type node
-		virtual bool isNull() { return false; }
-	
+		virtual bool isNull() const { return false; }
+
+	PROTECTED:
+
 		virtual void setLeft(BinTree<T,S>::BinNode * left) { 
 			if (left) this->RBNode::setLeft(left);
 			else {
@@ -206,7 +217,7 @@ PUBLIC:
 
 	virtual ~RBTree() {}
 	
-	RBNode * root() override { return (RBNode *) this->BinTree<T,S>::root(); }
+	virtual const RBNode * root() const { return (const RBNode *) this->BinTree<T,S>::root(); }
 
 	/**
 	 * inserts object into tree
@@ -236,89 +247,116 @@ PUBLIC:
 	 */	
 	virtual int remove(T obj) {
 		RBNode * node = (RBNode *) this->getNodeForObject(obj, (typename BinTree<T,S>::BinNode *) this->root());
-		bool isRoot = node->isRoot();
 
 		if (!node) return 101;
-		else {
-			// The dbLocation will have the node we will need to interrogate if it
-			// has a double black node
-			RBNode * max = (RBNode *) this->maxNode(node->left());
-			
-			// If max has a child, it would only have a right child
-			RBNode * dbNode = (RBNode *) max->left();
-			if (max->isNull()) {
-				dbNode = max;
-			}
-			
-			int result = this->removeNode(node);
-
-			if (result == 0) {
-				// We should have at least a null node object
-				if (!dbNode) result = 107;
-				else {
-					if (dbNode->colorCount() == 2) {
-						result = this->balanceRemoval(dbNode);
-					}
-				}
-			}
-
-			// If we are deleting the root node then we need to make
-			// sure the root remains black
-			if (result == 0) {
-				if (isRoot) {
-					if (RBTree<T,S>::isNodeRed(this->root())) {
-						this->root()->setColor(kRBTreeNodeColorBlack);
-					}
-				}
-			}
-
-			// Delete null nodes if any
-			if (node->left())
-				if (node->left()->isNull()) {
-					RBNode * l = (RBNode *) node->left();
-					Delete(l);
-				}
-
-			if (node->right())
-				if ((node->right())->isNull()) {
-					RBNode * r = (RBNode *) node->right();
-					Delete(r);
-				}
-
-			// Delete node
-			Delete(node);
-		
-			if (result == 0) {
-				this->_count--;
-			}
-
-			return result;
-		}
+		else return this->deleteNode(node);
 	}
 
 	virtual void print() {
 		this->print(false);
 	}
 
+	/**
+	 * param `printNullNodes`: If true, then null nodes will be shown
+	 */
 	virtual void print(bool printNullNodes) {
 		std::cout << std::endl;
 		this->print(this->root(), printNullNodes);
 		std::cout << std::endl;
 	}
 
+	/**
+	 * Removes node from tree and deletes the memory
+	 */
+	int deleteNode(const RBNode * node) {
+		return this->deleteNode((typename BinTree<T,S>::BinNode *) node);
+	}
+
+	virtual const RBNode * minNode() const {
+		return (const RBNode *) this->minNode(this->root());
+	}
+
+	virtual const RBNode * maxNode() const {
+		return (const RBNode *) this->maxNode(this->root());
+	}
+
 PRIVATE:
+	
+	virtual RBNode * root() { return (RBNode *) this->BinTree<T,S>::root(); }
 
 	virtual void * createNode() {
 		return new RBNodeNonnull;
 	}
 	
-	static bool isNodeBlack(RBNode * node) {
+	/**
+	 * Removes node from tree and deletes it from memory
+	 */
+	virtual int deleteNode(typename BinTree<T,S>::BinNode * bnode) {
+		RBNode * node = (RBNode *) bnode;
+		bool isRoot = node->isRoot();
+
+		// The dbLocation will have the node we will need to interrogate if it
+		// has a double black node
+		RBNode * max = (RBNode *) this->maxNode(node->left());
+		
+		// If max has a child, it would only have a right child
+		RBNode * dbNode = (RBNode *) max->left();
+		if (max->isNull()) {
+			dbNode = max;
+		}
+		
+		int result = this->removeNode(node);
+
+		if (result == 0) {
+			// We should have at least a null node object
+			if (!dbNode) result = 107;
+			else {
+				if (dbNode->colorCount() == 2) {
+					result = this->balanceRemoval(dbNode);
+				}
+			}
+		}
+
+		// If we are deleting the root node then we need to make
+		// sure the root remains black
+		if (result == 0) {
+			if (isRoot) {
+				if (RBTree<T,S>::isNodeRed(this->root())) {
+					this->root()->setColor(kRBTreeNodeColorBlack);
+				}
+			}
+		}
+
+		// Delete null nodes if any
+		if (node->left())
+			if (node->left()->isNull()) {
+				RBNode * l = (RBNode *) node->left();
+				Delete(l);
+			}
+
+		if (node->right())
+			if ((node->right())->isNull()) {
+				RBNode * r = (RBNode *) node->right();
+				Delete(r);
+			}
+
+		// Delete node
+		Delete(node);
+	
+		if (result == 0) {
+			this->_count--;
+		}
+
+		return result;
+	}
+
+	static bool isNodeBlack(const RBNode * node) {
 		if (!node) return true;
 		else if (node->isNull()) return true;
 		else return node->color() == kRBTreeNodeColorBlack;
 	}
 
-	static bool isNodeRed(RBNode * node) {
+	static bool isNodeRed(const RBNode * node) {
 		if (!node) return false;
 		else if (node->isNull()) return false;
 		else return node->color() == kRBTreeNodeColorRed;
@@ -802,16 +840,16 @@ PRIVATE:
 		return result;
 	}
 
-	virtual typename BinTree<T,S>::BinNode * maxNode(typename BinTree<T,S>::BinNode * node) {
-		RBNode * rnode = (RBNode *) node;
+	virtual const typename BinTree<T,S>::BinNode * maxNode(const typename BinTree<T,S>::BinNode * node) const {
+		const RBNode * rnode = (const RBNode *) node;
 		if (!rnode) return NULL;
 		else if (rnode->isNull()) return rnode;
 		else if (!rnode->right()->isNull()) return this->maxNode(rnode->right());
 		else return rnode;
 	}
 	
-	virtual typename BinTree<T,S>::BinNode * minNode(typename BinTree<T,S>::BinNode * node) {
-		RBNode * rnode = (RBNode *) node;
+	virtual const typename BinTree<T,S>::BinNode * minNode(const typename BinTree<T,S>::BinNode * node) const {
+		const RBNode * rnode = (const RBNode *) node;
 		if (!rnode) return NULL;
 		else if (rnode->isNull()) return rnode;
 		else if (!rnode->left()->isNull()) return this->minNode(rnode->left());

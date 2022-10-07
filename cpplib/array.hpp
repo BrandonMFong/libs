@@ -11,16 +11,16 @@
 #include <initializer_list>
 #include <iostream>
 #include "delete.hpp"
+#include "accessorspecifiers.hpp"
 
 /**
  * These values are used whenever the array is attempting to compare
  * each element
  */
 typedef enum {
-	kArrayComparisonResultUnknown = -1,
-	kArrayComparisonResultLessThan = 0,
+	kArrayComparisonResultLessThan = -1,
 	kArrayComparisonResultGreaterThan = 1,
-	kArrayComparisonResultEquals = 2
+	kArrayComparisonResultEquals = 0
 } ArrayComparisonResult;
 
 /**
@@ -32,8 +32,8 @@ typedef enum {
  * Notes:
  * 	I feel that I can derive binary trees and linked lists from this class
  */
-template <typename T> class Array {
-public:
+template <typename T, typename S = size_t> class Array {
+PUBLIC:
 	Array() {
 		this->_address = 0;
 		this->_count = 0;
@@ -43,7 +43,7 @@ public:
 	/**
 	 * Initializes with array
 	 */
-	Array(T * array, uint64_t size) : Array() {
+	Array(T * array, S size) : Array() {
 		this->set(array, size);	
 	}
 
@@ -55,15 +55,18 @@ public:
 	}
 
 	virtual ~Array() {
-		T * addr = (T *) this->_address;
-		Delete(addr);
+		this->removeAll();
+	}
+
+	void removeAll() {
+		Delete(this->_address);
 		this->_count = 0;
 	}
 	
 	/**
 	 * Initializes with array
 	 */
-	void set(T * array, uint64_t size) {
+	void set(T * array, S size) {
 		this->saveArray(array, size);	
 	}
 
@@ -81,8 +84,8 @@ public:
 	 * function to compare each function
 	 */
 	virtual bool contains(T object) {
-		for (uint64_t i = 0; i < this->_count; i++) {
-			if (	this->_callback(((T *) this->_address)[i], object) 
+		for (S i = 0; i < this->_count; i++) {
+			if (	this->_callback((this->_address)[i], object) 
 				== 	kArrayComparisonResultEquals) 
 				return true;
 		}
@@ -92,13 +95,13 @@ public:
 	/**
 	 * Returns null if argument could not be found
 	 */
-	T objectAtIndex(uint64_t index) {
+	T objectAtIndex(S index) const {
 		if ((this->_address == 0) || (this->_count == 0)) {
 			return (T) 0;
 		} else if (index >= this->_count) {
 			return (T) 0;
 		} else {
-			return ((T *) this->_address)[index];
+			return this->_address[index];
 		}
 	}
 
@@ -107,9 +110,9 @@ public:
 	 *
 	 * This will return the first match
 	 */
-	int64_t indexForObject(T object) {
-		for (uint64_t i = 0; i < this->_count; i++) {
-			if (	this->_callback(((T *) this->_address)[i], object)
+	S indexForObject(T object) const {
+		for (S i = 0; i < this->_count; i++) {
+			if (	this->_callback(this->_address[i], object)
 				== 	kArrayComparisonResultEquals)
 				return i;
 		}
@@ -117,17 +120,17 @@ public:
 	}
 
 	/// Returns _count
-	int count() {
-		return (int) this->_count;
+	virtual S count() const {
+		return this->_count;
 	}
 
 	/**
 	 * Prints the array from the first element to the last
 	 */
-	void print() {
+	virtual void print() {
 		std::cout << "[ ";
-		for (uint64_t i = 0; i < this->_count; i++) {
-			std::cout << ((T *) this->_address)[i];
+		for (S i = 0; i < this->_count; i++) {
+			std::cout << this->_address[i];
 			std::cout << " ";
 		}
 		std::cout << "]" << std::endl;
@@ -137,19 +140,27 @@ public:
 		this->_callback = callback;
 	}
 
-private:
+PROTECTED:
+
+	/**
+	 * Returns address of array
+	 */
+	const T * address() const { return this->_address; }
+	
+PRIVATE:
 
 	/**
 	 * Copies values from array
 	 */
-	void saveArray(T * array, uint64_t size) {
+	void saveArray(T * array, S size) {
+		this->removeAll();
 		this->_address = new T[size];
 		this->_count = size;
 
 		if (this->_address) {
 			// Load into array
-			for (uint64_t i = 0; i < size; i++) {
-				((T *) this->_address)[i] = array[i];
+			for (S i = 0; i < size; i++) {
+				this->_address[i] = array[i];
 			}
 		}
 	}
@@ -158,15 +169,16 @@ private:
 	 * Sweeps through the initializer list to set out array's memory
 	 */
 	void saveArray(std::initializer_list<T> list) {
+		this->removeAll();
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
 		this->_address = new T[this->_count];
 
 		if (this->_address) {
-			uint64_t i = 0;
+			S i = 0;
 			for (itr = list.begin(); itr != list.end(); ++itr) {
-				((T *) this->_address)[i] = *itr;
+				this->_address[i] = *itr;
 				i++;
 			}
 		}
@@ -177,16 +189,16 @@ private:
 	 *
 	 * Use this to hold the address of where the data will be
 	 */
-	void * _address;
+	T * _address;
 
 	/// Holds size of _address
-	uint64_t _count;
+	S _count;
 
 	ArrayComparisonResult (* _callback) (T a, T b);
 
-public:
+PUBLIC:
 
-	T operator[](uint64_t index) {
+	T operator[](S index) {
 		return this->objectAtIndex(index);
 	}
 
@@ -195,19 +207,17 @@ public:
 	}
 
 // Comparators
-public:
+PUBLIC:
 	/**
 	 * Compares the raw value of a and b
 	 */
 	static ArrayComparisonResult comparisonDefault(T a, T b) {
-		if (a == b) {
-			return kArrayComparisonResultEquals;
-		} else if (a < b) {
+		if (a < b) {
 			return kArrayComparisonResultLessThan;
 		} else if (a > b) {
 			return kArrayComparisonResultGreaterThan;
 		} else {
-			return kArrayComparisonResultUnknown;
+			return kArrayComparisonResultEquals;
 		}
 	}
 };
