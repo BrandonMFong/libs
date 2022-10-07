@@ -22,8 +22,8 @@ CPPFLAGS += -Wall -Icpplib/ -Iclib/
 CPPFLAGS += -std=c++20
 
 # Objects
-C_OBJECTS = filesystem coreutils
-CPP_OBJECTS = file
+C_OBJECTS = filesystem coreutils stringutils
+CPP_OBJECTS = file 
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)
@@ -31,8 +31,10 @@ R_CPPFLAGS = $(CPPFLAGS)
 R_BUILD_PATH = build/release
 R_CLIB_OUT = clib.a
 R_CPPLIB_OUT = cpplib.a
+R_C_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/c/%.o, $(C_OBJECTS))
+R_CPP_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/cpp/%.o, $(CPP_OBJECTS))
 
-release: r-setup bin/$(R_CLIB_OUT) bin/$(R_CPPLIB_OUT)
+release: r-setup bin/c/$(R_CLIB_OUT) bin/cpp/$(R_CPPLIB_OUT)
 
 r-setup:
 	@mkdir -p $(R_BUILD_PATH)/c
@@ -40,16 +42,19 @@ r-setup:
 	@mkdir -p bin/c
 	@mkdir -p bin/cpp
 
-bin/$(R_CLIB_OUT):
-	$(CC) -c -o $(R_BUILD_PATH)/c/filesystem.o clib/filesystem.c $(R_CFLAGS)
-	$(CC) -c -o $(R_BUILD_PATH)/c/coreutils.o clib/coreutils.c $(R_CFLAGS)
+bin/c/$(R_CLIB_OUT): $(R_C_OBJ_FILES)
 	cp -afv clib/*.h bin/c
-	$(AR) -rsc bin/c/$(R_CLIB_OUT) $(R_BUILD_PATH)/c/coreutils.o $(R_BUILD_PATH)/c/filesystem.o
+	$(AR) -rsc bin/c/$(R_CLIB_OUT) $^
 
-bin/$(R_CPPLIB_OUT):
-	$(CPP) -c -o $(R_BUILD_PATH)/cpp/file.o cpplib/file.cpp $(R_CPPFLAGS)
+$(R_BUILD_PATH)/c/%.o: clib/%.c clib/%.h
+	$(CC) -c -o $@ $< $(R_CFLAGS)
+
+bin/cpp/$(R_CPPLIB_OUT): $(R_CPP_OBJ_FILES)
 	cp -afv cpplib/*.hpp bin/cpp
-	$(AR) -rsc bin/cpp/$(R_CPPLIB_OUT) $(R_BUILD_PATH)/cpp/file.o
+	$(AR) -rsc bin/cpp/$(R_CPPLIB_OUT) $^
+
+$(R_BUILD_PATH)/cpp/%.o: cpplib/%.cpp cpplib/%.hpp
+	$(CPP) -c -o $@ $< $(R_CPPFLAGS)
 
 ### DEBUG ### 
 D_CFLAGS = $(CFLAGS) -DDEBUG -g
@@ -57,8 +62,10 @@ D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g
 D_BUILD_PATH = build/debug
 D_CLIB_OUT = debug-clib.a
 D_CPPLIB_OUT = debug-cpplib.a
+D_C_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/c/%.o, $(C_OBJECTS))
+D_CPP_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/cpp/%.o, $(CPP_OBJECTS))
 
-debug: d-setup bin/$(D_CLIB_OUT) bin/$(D_CPPLIB_OUT)
+debug: d-setup bin/c/$(D_CLIB_OUT) bin/cpp/$(D_CPPLIB_OUT)
 
 d-setup:
 	@mkdir -p $(D_BUILD_PATH)/c
@@ -66,16 +73,23 @@ d-setup:
 	@mkdir -p bin/c
 	@mkdir -p bin/cpp
 
-bin/$(D_CLIB_OUT):
-	$(CC) -c -o $(D_BUILD_PATH)/c/filesystem.o clib/filesystem.c $(D_CFLAGS)
-	$(CC) -c -o $(D_BUILD_PATH)/c/coreutils.o clib/coreutils.c $(D_CFLAGS)
+bin/c/$(D_CLIB_OUT):
 	cp -afv clib/*.h bin/c
 	$(AR) -rsc bin/c/$(D_CLIB_OUT) $(D_BUILD_PATH)/c/coreutils.o $(D_BUILD_PATH)/c/filesystem.o
 
-bin/$(D_CPPLIB_OUT):
-	$(CPP) -c -o $(D_BUILD_PATH)/cpp/file.o cpplib/file.cpp $(D_CPPFLAGS)
+bin/c/$(D_CLIB_OUT): $(D_C_OBJ_FILES)
+	cp -afv clib/*.h bin/c
+	$(AR) -rsc bin/c/$(D_CLIB_OUT) $^
+
+$(D_BUILD_PATH)/c/%.o: clib/%.c clib/%.h
+	$(CC) -c -o $@ $< $(D_CFLAGS)
+
+bin/cpp/$(D_CPPLIB_OUT): $(D_CPP_OBJ_FILES)
 	cp -afv cpplib/*.hpp bin/cpp
-	$(AR) -rsc bin/cpp/$(D_CPPLIB_OUT) $(D_BUILD_PATH)/cpp/file.o
+	$(AR) -rsc bin/cpp/$(D_CPPLIB_OUT) $^
+
+$(D_BUILD_PATH)/cpp/%.o: cpplib/%.cpp cpplib/%.hpp
+	$(CPP) -c -o $@ $< $(D_CPPFLAGS)
 
 ### TESTS ###
 T_CLIB_OUT = test-clib

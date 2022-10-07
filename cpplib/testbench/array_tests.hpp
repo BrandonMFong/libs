@@ -6,6 +6,8 @@
 #ifndef ARRAY_TESTS_HPP
 #define ARRAY_TESTS_HPP
 
+#define ASSERT_PUBLIC_MEMBER_ACCESS
+
 #include "../array.hpp"
 #include "cpplib_tests.hpp"
 #include <stdio.h>
@@ -40,10 +42,8 @@ ArrayComparisonResult StringCompare(const char * a, const char * b) {
 		return kArrayComparisonResultLessThan;
 	} else if (result > 0) {
 		return kArrayComparisonResultGreaterThan;
-	} else if (result == 0) {
-		return kArrayComparisonResultEquals;
 	} else {
-		return kArrayComparisonResultUnknown;
+		return kArrayComparisonResultEquals;
 	}
 }
 
@@ -135,7 +135,7 @@ int test_indexForObject() {
 	}
 	
 	strcpy(buf, "hello");
-	if (ch.indexForObject(buf) != -1) {
+	if (ch.indexForObject(buf) != -1UL) {
 		result = 1;
 		printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
 	}
@@ -153,7 +153,7 @@ int test_Count() {
 
 	if (a.count() != 5) {
 		result = 1;
-		printf("Count %d\n", a.count());
+		printf("Count %ld\n", a.count());
 	}
 
 	PRINT_TEST_RESULTS(!result);
@@ -170,7 +170,7 @@ int test_Setter() {
 
 	if (a.count() != 5) {
 		result = 1;
-		printf("Count %d\n", a.count());
+		printf("Count %ld\n", a.count());
 	}
 
 	PRINT_TEST_RESULTS(!result);

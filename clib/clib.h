@@ -8,6 +8,7 @@
 
 #include "filesystem.h"
 #include "coreutils.h"
+#include "stringutils.h"
 #include "log.h"
 #include "free.h"
 

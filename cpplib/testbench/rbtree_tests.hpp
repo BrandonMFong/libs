@@ -612,7 +612,7 @@ int test_RBTreeMin() {
  */
 int test_RBRemove() {
 	int result = 0;
-	int addCount = 100;
+	int addCount = 500;
 	int removeCount = 25;
 
 	RBTreeChecker<int> t;
@@ -622,13 +622,15 @@ int test_RBRemove() {
 
 	// I use this for debugging an error pattern
 #if 0
-	// [ 15  10  9 ]
-	t.print();
-	t.remove(15);
-	t.print();
-	t.remove(10);
-	t.print();
-	t.remove(9);
+	// TODO: [ 87  72  98  12  51  75  99  61 
+	t.remove(87);
+	t.remove(72);
+	t.remove(98);
+	t.remove(12);
+	t.remove(51);
+	t.remove(75);
+	t.remove(99);
+	t.remove(61);
 
 	t.print(true);
 	int object = 11;
@@ -680,7 +682,7 @@ int test_RBRemove() {
 int test_RBTreeCount() {
 	int result = 0;
 	RBTree<int> t;
-	const int size = 10;
+	const int size = 100;
 	int counter = size;
 
 	while (counter) {
@@ -697,6 +699,45 @@ int test_RBTreeCount() {
 		}
 	}
 	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_SearchingRBTree() {
+	int result = 0;
+	const int maxVal = 2000;
+	srand(time(0));
+
+	int target = rand() % maxVal;
+	RBTree<int> t;
+
+	for (int i = 0; i < maxVal; i++) {
+		if (i != target) {
+			result = t.insert(i);
+
+			if (result) break;
+		}
+	}
+
+	if (!result) {
+		result = t.insert(target);
+	}
+
+	if (!result) {
+		bool found = false;
+		const RBTree<int>::RBNode * n = t.root();
+		do {
+			int obj = n->object();
+			if (target < obj) n = n->left();
+			else if (target > obj) n = n->right();
+			else found = true;
+		} while (!found && !n->isNull());
+
+		if (!found) {
+			result = 2;
+		}
+	}
+
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
@@ -746,6 +787,9 @@ void rbtree_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_RBTreeCount()) p++;
+	else f++;
+
+	if (!test_SearchingRBTree()) p++;
 	else f++;
 
 	if (pass) *pass += p;

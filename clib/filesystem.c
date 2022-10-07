@@ -14,6 +14,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include "stringutils.h"
 
 unsigned long long CalculateSizeDirectory(const char * path, unsigned char options, int * err) {
 	unsigned long long result = 0;
