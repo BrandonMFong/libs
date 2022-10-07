@@ -622,18 +622,23 @@ int test_RBRemove() {
 
 	// I use this for debugging an error pattern
 #if 0
-	// TODO: [ 87  72  98  12  51  75  99  61 
-	t.remove(87);
-	t.remove(72);
-	t.remove(98);
-	t.remove(12);
-	t.remove(51);
-	t.remove(75);
-	t.remove(99);
-	t.remove(61);
+	/*
+	Remove error: 150
+	An issue occurred removing: 454
+	Removed: 
+
+	[ 383  359  284  181  479  472  48 ]
+	*/
+	t.remove(383);
+	t.remove(359);
+	t.remove(284);
+	t.remove(181);
+	t.remove(479);
+	t.remove(472);
+	t.remove(48);
 
 	t.print(true);
-	int object = 11;
+	int object = 454;
 	printf("Remove %d\n", object);
 	result = t.remove(object);
 	if (!result) {

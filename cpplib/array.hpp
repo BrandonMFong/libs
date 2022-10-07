@@ -12,6 +12,7 @@
 #include <iostream>
 #include "delete.hpp"
 #include "accessorspecifiers.hpp"
+#include <string.h>
 
 /**
  * These values are used whenever the array is attempting to compare
@@ -140,12 +141,30 @@ PUBLIC:
 		this->_callback = callback;
 	}
 
+	/**
+	 * Copies content from arr to us
+	 */
+	void copyFromArray(const Array<T> * arr) {
+		this->removeAll();
+		this->_address = this->allocate(arr->count());
+		memcpy(this->_address, arr->address(), arr->count());
+	}
+
 PROTECTED:
 
 	/**
 	 * Returns address of array
 	 */
-	const T * address() const { return this->_address; }
+	T * address() const { return this->_address; }
+
+	/**
+	 * Derived classes can override if they want to use the heap
+	 *
+	 * By default we are using the free store
+	 */
+	virtual T * allocate(S size) {
+		return new T[size];
+	}
 	
 PRIVATE:
 
@@ -154,7 +173,7 @@ PRIVATE:
 	 */
 	void saveArray(T * array, S size) {
 		this->removeAll();
-		this->_address = new T[size];
+		this->_address = this->allocate(size);
 		this->_count = size;
 
 		if (this->_address) {
@@ -173,7 +192,7 @@ PRIVATE:
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
-		this->_address = new T[this->_count];
+		this->_address = this->allocate(this->_count);
 
 		if (this->_address) {
 			S i = 0;
@@ -194,6 +213,9 @@ PRIVATE:
 	/// Holds size of _address
 	S _count;
 
+	/**
+	 * How we compare each item in the array
+	 */
 	ArrayComparisonResult (* _callback) (T a, T b);
 
 PUBLIC:
@@ -205,6 +227,15 @@ PUBLIC:
 	void operator=(const std::initializer_list<T> & list) {
 		this->saveArray(list);
 	}
+
+	/**
+	 * Copies the string content from str to us
+	 */
+	Array<T> & operator=(const Array<T> & arr) {
+		this->copyFromArray(&arr);
+		return *this;
+	}
+
 
 // Comparators
 PUBLIC:
