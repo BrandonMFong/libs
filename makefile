@@ -23,7 +23,7 @@ CPPFLAGS += -std=c++20
 
 # Objects
 C_OBJECTS = filesystem coreutils stringutils
-CPP_OBJECTS = file 
+CPP_OBJECTS = file string
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)

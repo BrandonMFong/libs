@@ -9,6 +9,7 @@
 #include "rbtree_tests.hpp"
 #include "bintree_tests.hpp"
 #include "dictionary_tests.hpp"
+#include "string_tests.hpp"
 
 int main() {
 	int pass = 0, fail = 0;
@@ -42,6 +43,11 @@ int main() {
 	pass = 0; fail = 0;
 	
 	dictionary_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+	
+	string_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
