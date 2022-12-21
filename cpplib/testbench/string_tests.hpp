@@ -71,6 +71,63 @@ int test_StringLength() {
 	return result;
 }
 
+int test_StringCopy() {
+	int result = 0;
+
+	String str0 = "Hello world";
+	String str1;
+
+	result = str0.copy(str1);
+
+	if (result) {
+		printf("Error %d\n", result);
+	} else if (str0 != str1) {
+		printf("%s != %s\n", str0.cString(), str1.cString());
+		result = 1;
+	}
+
+	if (!result) {
+		str0 = "Hello world!";
+		str1 = str0;
+
+		if (str0 != str1) {
+			result = 2;
+			printf("%s != %s\n", (const char *) str0, (const char *) str1);
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+bool DoStringsMatch(String str, const char * expected) {
+	return !strcmp(str.cString(), expected);
+}
+
+int test_PassingStringToFunction() {
+	int result = 0;
+
+	if (!DoStringsMatch("Hello", "Hello")) {
+		result = 1;
+	} else if (DoStringsMatch("Hello", "hello")) {
+		result = 2;
+	}
+
+	if (!result) {
+		String a = "World";
+
+		// TODO: this crashes
+		if (!DoStringsMatch(a, "World")) {
+			result = 3;
+		} else if (DoStringsMatch(a, "world")) {
+			result = 4;
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -83,6 +140,12 @@ void string_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_StringLength()) p++;
+	else f++;
+
+	if (!test_StringCopy()) p++;
+	else f++;
+
+	if (!test_PassingStringToFunction()) p++;
 	else f++;
 
 	if (pass) *pass += p;

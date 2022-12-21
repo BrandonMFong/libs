@@ -23,6 +23,7 @@ File::File(const char * path, int * err) {
 	} else {
 		// Get the full path string
 		if (realpath(path, this->_fileReserved) == NULL) {
+			// if above fails, we will just use the path as is
 			strcpy(this->_fileReserved, path);
 		}
 

@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "list.hpp"
 
 static int test_BinInitializer() {
 	PRINT_TEST_RESULTS(1);
@@ -265,27 +266,43 @@ int test_BinTreeCount() {
 int test_ReplacingBinNodes() {
 	int result = 0;
 
-	BinTree<int>::BinNode a;
-	BinTree<int>::BinNode b;
-	BinTree<int>::BinNode c;
-	BinTree<int>::BinNode d;
-	BinTree<int>::BinNode e;
-	BinTree<int>::BinNode f;
+	BinTree<char> t;
 
-	a.setLeft(&b);
-	a.setRight(&c);
-	c.setLeft(&d);
-	c.setRight(&e);
+	BinTree<char>::BinNode * a = new BinTree<char>::BinNode('a');
+	BinTree<char>::BinNode * b = new BinTree<char>::BinNode('b');
+	BinTree<char>::BinNode * c = new BinTree<char>::BinNode('c');
+	BinTree<char>::BinNode * d = new BinTree<char>::BinNode('d');
+	BinTree<char>::BinNode * e = new BinTree<char>::BinNode('e');
+	BinTree<char>::BinNode * f = new BinTree<char>::BinNode('f');
+	BinTree<char>::BinNode * g = new BinTree<char>::BinNode('g');
 
-	c.replaceWithNode(&f);
+	g->setLeft(f);
 
-	if (c.parent) {
+	a->setLeft(b);
+	a->setRight(c);
+	c->setLeft(d);
+	c->setRight(e);
+
+	t.replaceNodeWithNode(c, f);
+
+	if (c->_parent) {
 		printf("parent node should be null\n");
 		result = 1;
-	} else if (c.location) {
+	} else if (c->_location) {
 		printf("location should be null\n");
 		result = 2;
+	} else if (f->_parent != a) {
+		printf("Error swapping parents\n");
+		result = 3;
 	}
+
+	Delete(a);
+	Delete(b);
+	Delete(c);
+	Delete(d);
+	Delete(e);
+	Delete(f);
+	Delete(g);
 	
 	PRINT_TEST_RESULTS(!result);
 	return result;
@@ -322,6 +339,55 @@ int test_SearchingBinTree() {
 		printf("Could not find %d\n", target);
 	}
 
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_Iterations() {
+	int result = 0;
+
+	// randomly add to list so we can have a better chance of a balanced tree
+	List<int> l;
+
+	srand(time(NULL));
+
+	int size = 100, max = 100;
+	for (int i = 0; i < size; i++) {
+		int num = rand() % max;
+		result = l.add(num);
+		if (result) break;
+	}
+
+	BinTree<int> t;
+	if (!result) {
+		List<int>::Node * n = l.first();
+		for(; n; n = n->next()) {
+			result = t.insert(n->object());
+			if (result) break;
+		}
+	}
+
+	if (!result) {
+		result = l.sort();
+	}
+	
+	BinTree<int>::Iterator * itr = 0;
+	if (!result) {
+		result = t.createIterator(&itr);
+	}
+
+	List<int>::Node * n = l.first();
+	while (!result && itr->finished() && n) {
+		if (n->object() != itr->current()) {
+			printf("%d != %d\n", n->object(), itr->current());
+			result = 3;
+		} else {
+			n = n->next();
+			result = itr->next();
+		}
+	}
+
+	Delete(itr);
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
@@ -365,6 +431,9 @@ void bintree_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_SearchingBinTree()) p++;
+	else f++;
+
+	if (!test_Iterations()) p++;
 	else f++;
 
 	if (pass) *pass += p;

@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include "../dictionary.hpp"
+#include "../string.hpp"
 
 extern "C" {
 #include <clib.h>
@@ -221,6 +222,55 @@ int test_DictionaryPrint() {
 }
 #endif
 
+int KeyLibStringCompare(String k1, String k2) {
+	if (k1 < k2) return -1;
+	else if (k1 > k2) return 1;
+	else return 0;
+}
+
+bool DictionaryTestStringArrayContainsString(const char ** arr, int size, const char * str) {
+	for (int i = 0; i < size; i++)
+		if (!strcmp(arr[i], str)) return true;
+	return false;
+}
+
+int test_TraversingThroughDictionary() {
+	int result = 0;
+
+	Dictionary<String, String> d;
+	d.setKeyCompareCallback(KeyLibStringCompare);
+
+	const int size = 5;
+	const char * keys[size] = {"one", "two", "three", "four", "five"};
+	const char * values[size] = {"1", "2", "3", "4", "5"};
+	
+	for (int i = 0; i < size; i++) {
+		d.setValueForKey(keys[i], values[i]);
+	}
+
+	Dictionary<String, String>::Iterator * itr = 0;
+	result = d.createIterator(&itr);
+
+	Dictionary<String, String>::Entry * ent = 0;
+	int i = 0;
+	while (!result && !itr->finished() && (i < size)) {
+		ent = itr->current();
+
+		// Make sure we actually have those keys and values
+		if (!DictionaryTestStringArrayContainsString(keys, size, ent->key())) result = 11;
+		else if (!DictionaryTestStringArrayContainsString(values, size, ent->value())) result = 12;
+		else {
+			result = itr->next();
+			i++;
+		}
+	}
+
+	Delete(itr);
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void dictionary_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -248,6 +298,9 @@ void dictionary_tests(int * pass, int * fail) {
 	if (!test_DictionaryPrint()) p++;
 	else f++;
 #endif
+
+	if (!test_TraversingThroughDictionary()) p++;
+	else f++;
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

@@ -32,6 +32,7 @@
  */
 template <typename T, typename S = int> class RBTree : public BinTree<T,S> {
 PUBLIC:
+	// TODO: rename rbnode to node
 	class RBNode : public BinTree<T,S>::BinNode {
 		friend class RBTree<T,S>;
 
@@ -51,13 +52,13 @@ PUBLIC:
 
 	PROTECTED:
 
-		virtual void printObject() const { std::cout << this->obj; }
+		virtual void printObject() const { std::cout << this->_obj; }
 
 		virtual RBNode * left() { return (RBNode *) this->BinTree<T,S>::BinNode::left(); }
 		virtual RBNode * right() { return (RBNode *) this->BinTree<T,S>::BinNode::right(); }
 
-		virtual void setLeft(BinTree<T,S>::BinNode * left) { this->BinTree<T,S>::BinNode::setLeft(left); }
-		virtual void setRight(BinTree<T,S>::BinNode * right) { this->BinTree<T,S>::BinNode::setRight(right); }
+		virtual void setLeft(typename BinTree<T,S>::BinNode * left) { this->BinTree<T,S>::BinNode::setLeft(left); }
+		virtual void setRight(typename BinTree<T,S>::BinNode * right) { this->BinTree<T,S>::BinNode::setRight(right); }
 
 		void print() const {
 			int lvl = this->level();
@@ -83,28 +84,6 @@ PUBLIC:
 
 			if (this->color() == kRBTreeNodeColorRed) std::cout << "\033[0m";
 			std::cout << std::endl;
-		}
-
-		/**
-	 	 *	When a black node is deleted and replaced by a black child, the child is marked as double black
-		 */
-		virtual int replaceWithNode(BinTree<T,S>::BinNode * replacement) {
-			if (!replacement) {
-				replacement = new RBNodeNull;
-			}
-
-			int result = this->BinTree<T,S>::BinNode::replaceWithNode(replacement);
-
-			if (result == 0) {
-				if ((this->color() == kRBTreeNodeColorBlack) && (((RBNode *) replacement)->color() == kRBTreeNodeColorBlack)) {
-					unsigned char currCount = ((RBNode *) replacement)->colorCount();
-					((RBNode *) replacement)->setColorCount(++currCount);
-				} else {
-					((RBNode *) replacement)->setColor(kRBTreeNodeColorBlack);
-				}
-			}
-
-			return result;
 		}
 	
 		virtual unsigned char childCount() const {
@@ -155,10 +134,8 @@ PUBLIC:
 		/**
 		 * This will hold the color value in 0x0f and the color count in 0xf0
 		 */		
-		unsigned char _colorSpace;	
+		unsigned char _colorSpace;
 	};
-
-PUBLIC:
 
 	/**
 	 * Every node will start with a null node for their left and right children
@@ -174,6 +151,10 @@ PUBLIC:
 		virtual bool isNull() const { return true; }
 
 		virtual void printObject() const { std::cout << "_"; }
+		
+		virtual RBNodeNull * clone() {
+			return new RBNodeNull(*this);
+		}
 	};
 
 	class RBNodeNonnull : public RBNode {
@@ -189,29 +170,53 @@ PUBLIC:
 
 		// Identifies if RBNodeNonnull is a null type node
 		virtual bool isNull() const { return false; }
+		
+		virtual RBNodeNonnull * clone() {
+			return new RBNodeNonnull(*this);
+		}
 
 	PROTECTED:
 
-		virtual void setLeft(BinTree<T,S>::BinNode * left) { 
+		virtual void setLeft(typename BinTree<T,S>::BinNode * left) { 
 			if (left) this->RBNode::setLeft(left);
 			else {
 				this->RBNode::setLeft(new RBNodeNull);
-				this->left()->location = this->leftAddr();
-				this->left()->parent = this;
+				this->left()->_location = this->leftAddr();
+				this->left()->_parent = this;
 			}
 		}
 
-		virtual void setRight(BinTree<T,S>::BinNode * right) {
+		virtual void setRight(typename BinTree<T,S>::BinNode * right) {
 			if (right) this->RBNode::setRight(right);
 			else {
 				this->RBNode::setRight(new RBNodeNull);
-				this->right()->location = this->rightAddr();
-				this->right()->parent = this;
+				this->right()->_location = this->rightAddr();
+				this->right()->_parent = this;
 			}
 		}
 	};
+	
+	class Iterator : public BinTree<T,S>::Iterator {
+		friend class RBTree<T,S>;
+	PROTECTED:
+		Iterator() : BinTree<T,S>::Iterator() {}
 
-PUBLIC:
+		/**
+		 * Sets stack to every node's left child
+		 */
+		int setCurrent(typename BinTree<T,S>::BinNode * bnode) {
+			RBNode * node = (RBNode *) bnode;
+			if (!node) return 1;
+			else if (node->isNull()) return 0;
+			else {
+				int result = this->_st.push(node);
+
+				if (!result && !node->left()->isNull()) 
+					return this->setCurrent(node->left());
+				else return result;
+			}
+		}
+	};
 
 	RBTree() : BinTree<T,S>() {}
 
@@ -224,14 +229,15 @@ PUBLIC:
 	 */
 	virtual int insert(T obj) {
 		RBNode * newNode = (RBNode *) this->createNode();
-		newNode->obj = obj;
+		newNode->_obj = obj;
 
 		if (this->root()) {
 			return this->insert(newNode, this->root());
 		} else {
 			newNode->setColor(kRBTreeNodeColorBlack);
 			this->setRoot(newNode);
-			this->root()->location = this->rootAddr();
+			this->root()->_location = this->rootAddr();
+			this->setNodeLocation(this->root(), this->rootAddr());
 			this->_count++;
 			return 0;
 		}
@@ -267,6 +273,8 @@ PUBLIC:
 
 	/**
 	 * Removes node from tree and deletes the memory
+	 *
+	 * This is was made so that caller does not have to cast RBNode to BinNode
 	 */
 	int deleteNode(const RBNode * node) {
 		return this->deleteNode((typename BinTree<T,S>::BinNode *) node);
@@ -278,6 +286,16 @@ PUBLIC:
 
 	virtual const RBNode * maxNode() const {
 		return (const RBNode *) this->maxNode(this->root());
+	}
+
+	virtual int createIterator(Iterator ** itr) {
+		int result = 0;
+		if (!itr) return 9;
+		else {
+			*itr = new RBTree<T,S>::Iterator;
+			result = (*itr)->setCurrent(this->root());
+		}
+		return result;
 	}
 
 PRIVATE:
@@ -396,16 +414,16 @@ PRIVATE:
 			return 110;
 		} else if (RBTree<T>::isNodeBlack(node)) {
 			return 0;	
-		} else if (RBTree<T>::isNodeBlack((RBNode *) node->parent)) {
+		} else if (RBTree<T>::isNodeBlack((RBNode *) node->_parent)) {
 			return 0;
-		} else if (RBTree<T>::isNodeRed((RBNode *) node->parent)) {
+		} else if (RBTree<T>::isNodeRed((RBNode *) node->_parent)) {
 			// Involves rotations
 			if (RBTree<T>::isNodeBlack(node->pibling())) {
-				RBNode * parent = (RBNode *) node->parent;
-				unsigned char rcase = RBTree<T>::rotationCase(node);
+				RBNode * parent = (RBNode *) node->_parent;
+				unsigned char rcase = this->rotationCase(node);
 
 				if ((rcase == ROTATION_CASE_RR) || (rcase == ROTATION_CASE_LL)) {
-					if ((tmp = (RBNode *) node->parent)) {
+					if ((tmp = (RBNode *) node->_parent)) {
 						tmp->setColor(kRBTreeNodeColorBlack);
 					}
 
@@ -418,7 +436,7 @@ PRIVATE:
 				
 				if (result == 0) {
 					if ((rcase == ROTATION_CASE_RL) || (rcase == ROTATION_CASE_LR)) {
-						if ((tmp = (RBNode *) parent->parent)) {
+						if ((tmp = (RBNode *) parent->_parent)) {
 							tmp->setColor(kRBTreeNodeColorBlack);
 						}
 
@@ -439,8 +457,8 @@ PRIVATE:
 				return result;
 
 			} else if (RBTree<T>::isNodeRed(node->pibling())) {
-				if (node->parent) {
-					((RBNode *) node->parent)->setColor(kRBTreeNodeColorBlack);
+				if (node->_parent) {
+					((RBNode *) node->_parent)->setColor(kRBTreeNodeColorBlack);
 				}
 
 				if ((tmp = node->pibling()) != NULL) {
@@ -470,7 +488,7 @@ PRIVATE:
 	int balanceRemoval(RBNode * node) {
 		int result = 0;
 		RBNode * sibling = node->sibling();
-		RBNode * parent = (RBNode *) node->parent;
+		RBNode * parent = (RBNode *) node->_parent;
 		bool doCaseSix = false;
 
 		if ((node->colorCount() < 2) && !RBTree<T>::isNodeBlack(node)) {
@@ -617,9 +635,10 @@ PRIVATE:
 	/**
 	 * Makes sure that we replace the node with a nonnull node
 	 */	
-	virtual int replaceNodeWithTheOnlyChild(typename BinTree<T,S>::BinNode * node) {
+	virtual int replaceNodeWithTheOnlyChild(typename BinTree<T,S>::BinNode * bnode) {
 		int result = 0;
 		typename BinTree<T,S>::BinNode * rep = NULL;
+		RBNode * node = (RBNode *) bnode;
 
 		if (node->childCount() != 1) {
 			result = 3;
@@ -638,7 +657,33 @@ PRIVATE:
 		}
 
 		if (result == 0) {
-			result = node->replaceWithNode(rep);
+			// result = node->replaceWithNode(rep);
+			result = this->replaceNodeWithNode(node, rep);
+		}
+
+		return result;
+	}
+
+	/**
+	 *	When a black node is deleted and replaced by a black child, the child is marked as double black
+	 */
+	virtual int replaceNodeWithNode(typename BinTree<T,S>::BinNode * bnode, typename BinTree<T,S>::BinNode * breplacement) {
+		RBNode * node = (RBNode *) bnode;
+		RBNode * replacement = (RBNode *) breplacement;
+
+		if (!replacement) {
+			replacement = new RBNodeNull;
+		}
+
+		int result = this->BinTree<T,S>::replaceNodeWithNode(node, replacement);
+
+		if (result == 0) {
+			if ((node->color() == kRBTreeNodeColorBlack) && (replacement->color() == kRBTreeNodeColorBlack)) {
+				unsigned char currCount = replacement->colorCount();
+				replacement->setColorCount(++currCount);
+			} else {
+				replacement->setColor(kRBTreeNodeColorBlack);
+			}
 		}
 
 		return result;
@@ -658,13 +703,13 @@ PRIVATE:
 	 * 	- 3: rr
 	 * 	- 4: rl
 	 */
-	static unsigned char rotationCase(RBNode * node) {
+	unsigned char rotationCase(RBNode * node) {
 		if (!node) return 0;
 		else if (RBTree<T>::isNodeBlack(node)) return 0;
 		else if (node->isRoot()) return 0;
 		else if (node->childType() == 0) return 0;
 		else {
-			switch (node->parent->childType()) {
+			switch (this->getNodeParent(node)->childType()) {
 				case -1:
 					switch (node->childType()) {
 						case -1:
@@ -702,7 +747,8 @@ PRIVATE:
 	 */
 	int rotate(RBNode * node, unsigned char rotationCase) {
 		int result = 0;
-		RBNode * parent = (RBNode *) node->parent;
+		// RBNode * parent = (RBNode *) node->_parent;
+		RBNode * parent = (RBNode *) this->getNodeParent(node);
 		RBNode * grandparent = node->grandParent();
 		RBNode * tmp = NULL;
 		const unsigned char ll = ROTATION_CASE_LL;
@@ -727,13 +773,17 @@ PRIVATE:
 		switch (childType) {
 			case -1:
 				tmp->setLeft(new RBNodeNull);
-				tmp->left()->location = tmp->left()->location;
-				tmp->left()->parent = tmp;
+				//tmp->left()->_location = tmp->left()->_location;
+				this->setNodeLocation(tmp->left(), tmp->leftAddr());
+				// tmp->left()->_parent = tmp;
+				this->setNodeParent(tmp->left(), (typename BinTree<T,S>::BinNode *) tmp);
 				break;
 			case 1:
 				tmp->setRight(new RBNodeNull);
-				tmp->right()->location = tmp->right()->location;
-				tmp->right()->parent = tmp;
+				// tmp->right()->_location = tmp->right()->_location;
+				this->setNodeLocation(tmp->right(), tmp->rightAddr());
+				// tmp->right()->_parent = tmp;
+				this->setNodeParent(tmp->right(), (typename BinTree<T,S>::BinNode *) tmp);
 				break;
 			default:
 				result = 111;
@@ -744,16 +794,30 @@ PRIVATE:
 			tmp = NULL;
 			if ((rcase == ll) || (rcase ==  rr)) {
 				// Put parent in grandparent's location
-				*grandparent->location = parent;
-				*parent->location = new RBNodeNull; // make sure gp has a null node to replace parent
-				(*parent->location)->parent = grandparent;
-				(*parent->location)->location = parent->location;
-				parent->location = grandparent->location;
-				parent->parent = grandparent->parent; // should work if gp is root
+				// *grandparent->_location = parent;
+				*this->getNodeLocation(grandparent) = parent;
+				// *parent->_location = new RBNodeNull; // make sure gp has a null node to replace parent
+				*this->getNodeLocation(parent) = new RBNodeNull;
+				// (*parent->_location)->_parent = grandparent;
+				this->setNodeParent(
+					*this->getNodeLocation(parent),
+					(typename BinTree<T,S>::BinNode *) grandparent
+				);
+				// (*parent->_location)->_location = parent->_location;
+				this->setNodeLocation(
+					*this->getNodeLocation(parent),
+					this->getNodeLocation(parent)
+				);
+				// parent->_location = grandparent->_location;
+				this->setNodeLocation(parent, this->getNodeLocation((typename BinTree<T,S>::BinNode *) grandparent));
+				// parent->_parent = grandparent->_parent; // should work if gp is root
+				this->setNodeParent(parent, this->getNodeParent((typename BinTree<T,S>::BinNode *) grandparent));
 
 				// Clear grandparent's position memory
-				grandparent->parent = NULL;
-				grandparent->location = NULL;
+				// grandparent->_parent = NULL;
+				// grandparent->_location = NULL;
+				this->setNodeParent(grandparent, NULL);
+				this->setNodeLocation(grandparent, NULL);
 
 				// Find new spot for grandparent
 				if (rcase == ll) {
@@ -765,14 +829,17 @@ PRIVATE:
 				}
 
 				// Do the replacement
-				grandparent->parent = parent;
+				// grandparent->_parent = parent;
+				this->setNodeParent(grandparent, (typename BinTree<T,S>::BinNode *) parent);
 				*newLocation = grandparent;
-				grandparent->location = (typename BinTree<T,S>::BinNode **) newLocation;
+				// grandparent->_location = (typename BinTree<T,S>::BinNode **) newLocation;
+				this->setNodeLocation(grandparent, (typename BinTree<T,S>::BinNode **) newLocation);
 
 				// Figuring out new spot for the node
 				// grandparent is replacing
 				if (!tmp->isNull()) {
-					tmp->parent = grandparent;
+					// tmp->_parent = grandparent;
+					this->setNodeParent(tmp, (typename BinTree<T,S>::BinNode *) grandparent);
 					if (rcase == ll) {
 						newLocation = (RBNode **) grandparent->leftAddr();
 					} else {
@@ -781,14 +848,28 @@ PRIVATE:
 				}
 			} else if ((rcase == lr) || (rcase == rl)) {
 				// Put node in parent's position
-				node->parent = parent->parent;
-				*node->location = new RBNodeNull; // Make sure parent has a null node we node used to be
-				(*node->location)->parent = parent;
-				(*node->location)->location = node->location;
-				node->location = parent->location;
-				*node->location = node;
-				parent->parent = NULL;
-				parent->location = NULL;
+				// node->_parent = parent->_parent;
+				this->setNodeParent(node, this->getNodeParent(parent));
+				// *node->_location = new RBNodeNull; // Make sure parent has a null node we node used to be
+				*this->getNodeLocation(node) = new RBNodeNull;
+				// (*node->_location)->_parent = parent;
+				this->setNodeParent(
+					*this->getNodeLocation(node),
+					this->getNodeParent(node)
+				);
+				// (*node->_location)->_location = node->_location;
+				this->setNodeLocation(
+					*this->getNodeLocation(node),
+					this->getNodeLocation(node)
+				);
+				// node->_location = parent->_location;
+				this->setNodeLocation(node, parent->_location);
+				// *node->_location = node;
+				*this->getNodeLocation(node) = node;
+				//parent->_parent = NULL;
+				this->setNodeParent((typename BinTree<T,S>::BinNode *) parent, NULL);
+				// parent->_location = NULL;
+				this->setNodeLocation((typename BinTree<T,S>::BinNode *) parent, NULL);
 
 				// Find where the parent will be next
 				if (rcase == lr) {
@@ -800,14 +881,17 @@ PRIVATE:
 				}
 
 				// Do the replacement
-				parent->parent = (typename BinTree<T,S>::BinNode *) node;
+				// parent->_parent = (typename BinTree<T,S>::BinNode *) node;
+				this->setNodeParent(parent, (typename BinTree<T,S>::BinNode *) node);
 				*newLocation = parent;
-				parent->location = (typename BinTree<T,S>::BinNode **) newLocation;
+				//parent->_location = (typename BinTree<T,S>::BinNode **) newLocation;
+				this->setNodeLocation(parent, (typename BinTree<T,S>::BinNode **) newLocation);
 
 				// Find the new spot for the node
 				// parent is replacing
 				if (!tmp->isNull()) {
-					tmp->parent = parent;
+					//tmp->_parent = parent;
+					this->setNodeParent(tmp, (typename BinTree<T,S>::BinNode *) parent);
 					if (rcase == lr) {
 						newLocation = (RBNode **) parent->rightAddr();
 					} else {
@@ -832,7 +916,8 @@ PRIVATE:
 					Delete(*newLocation);
 
 					*newLocation = tmp;
-					tmp->location = (typename BinTree<T,S>::BinNode **) newLocation;
+					//tmp->_location = (typename BinTree<T,S>::BinNode **) newLocation;
+					this->setNodeLocation((typename BinTree<T,S>::BinNode *) tmp, (typename BinTree<T,S>::BinNode **) newLocation);
 				}
 			}
 		}
@@ -878,7 +963,7 @@ PRIVATE:
 	/**
 	 * 	We want to make sure we consider the null nodes
 	 */	
-	virtual int locateLeafNodes(List<typename BinTree<T,S>::BinNode *> * outList, typename BinTree<T,S>::BinNode * node) {
+	virtual int locateLeafNodes(List<const typename BinTree<T,S>::BinNode *> * outList, const typename BinTree<T,S>::BinNode * node) {
 		int result = 0;
 		RBNode * rnode = (RBNode *) node;
 

@@ -10,6 +10,7 @@
 #include "delete.hpp"
 #include <iostream>
 #include "list.hpp"
+#include "stack.hpp"
 
 /**
  * Standard Binary Tree
@@ -18,15 +19,17 @@
  */
 template <typename T, typename S = int> class BinTree {
 PROTECTED:
+	// TODO: rename BinNode to Node
 	class BinNode {
 		friend class BinTree<T,S>;
 	PUBLIC:
 		T object() const {
-			return this->obj;
+			return this->_obj;
 		}
 
 		virtual const BinNode * left() const { return this->_left; }
 		virtual const BinNode * right() const { return this->_right; }
+		const BinNode * parent() const { return this->_parent; }
 
 		// True if we have no childred
 		virtual bool isLeaf() const {
@@ -35,29 +38,50 @@ PROTECTED:
 
 		// Is root if we have no parent
 		bool isRoot() const {
-			return (this->parent == NULL);
+			return (this->_parent == NULL);
 		}
 	
+		/**
+		 * Whether node is left or right child
+		 *
+		 * Type:
+		 * 	- (-1) : left
+		 * 	- (0) : none (may be root)
+		 * 	- (1) : right
+		 */
+		char childType() const {
+			if (!this->_parent) return 0;
+			else {
+				if (this->_parent->_left == this) return -1;
+				else if (this->_parent->_right == this) return 1;
+				else return 0;
+			}
+		}
+
 	PROTECTED:
 		BinNode() {
-			this->obj = 0;
+			this->_obj = 0;
 			this->_left = 0;
 			this->_right = 0;
-			this->parent = 0;
-			this->location = 0;
+			this->_parent = 0;
+			this->_location = 0;
+		}
+
+		BinNode(T object) : BinNode() {
+			this->_obj = object;
 		}
 
 		virtual ~BinNode() {
 			this->_left = 0;
 			this->_right = 0;
-			this->parent = 0;
-			this->location = 0;
+			this->_parent = 0;
+			this->_location = 0;
 		}
 
 		// Returns parent of parent
 		// Null if no parent
 		virtual BinNode * grandParent() {
-			if (this->parent) return this->parent->parent;
+			if (this->_parent) return this->_parent->_parent;
 			return NULL;
 		}
 
@@ -66,7 +90,7 @@ PROTECTED:
 			BinNode * gp = NULL;
 			
 			if ((gp = this->grandParent()) != NULL) {
-				if (gp->_left == this->parent) return gp->_right;
+				if (gp->_left == this->_parent) return gp->_right;
 				else return gp->_left;
 			}
 
@@ -79,9 +103,9 @@ PROTECTED:
 				case 0:
 					return NULL;
 				case -1:
-					return this->parent->_right;
+					return this->_parent->_right;
 				case 1:
-					return this->parent->_left;
+					return this->_parent->_left;
 				default:
 					return NULL;
 			}
@@ -95,26 +119,9 @@ PROTECTED:
 			} else return 0;
 		}
 
-		/**
-		 * Whether node is left or right child
-		 *
-		 * Type:
-		 * 	- (-1) : left
-		 * 	- (0) : none (may be root)
-		 * 	- (1) : right
-		 */
-		char childType() const {
-			if (!this->parent) return 0;
-			else {
-				if (this->parent->_left == this) return -1;
-				else if (this->parent->_right == this) return 1;
-				else return 0;
-			}
-		}
-
 		// Returns number of levels we are from root
 		int level() const {
-			return this->level(this->parent, 0);
+			return this->level(this->_parent, 0);
 		}
 
 		virtual void print() const {
@@ -133,61 +140,7 @@ PROTECTED:
 				}
 			}
 			
-			std::cout << "[" << this->obj << "]" << std::endl;
-		}
-
-		/**
-		 * This node's children will not be exchanged.  The replacement's
-		 * children will be retained. Additionally, the replacement's
-		 * parent will no longer have any reference to node
-		 *
-		 * Use insert logic to place the children in correctly
-		 */
-		virtual int replaceWithNode(BinNode * replacement) {
-			int result = 0;
-
-			// Make parent forget about replacement node
-			if (replacement) {
-				if (replacement->parent) {
-					switch (replacement->childType()) {
-					case -1:
-						replacement->parent->setLeft(NULL);
-						break;
-					case 1:
-						replacement->parent->setRight(NULL);
-						break;
-					default:
-						break;
-					}
-				}
-			}
-
-			if (this->isRoot()) {
-				*this->location = replacement;
-				if (replacement) {
-					replacement->location = this->location;
-					replacement->parent = NULL;
-				}
-			} else {
-				switch (this->childType()) {
-				case -1:
-					this->parent->setLeft(replacement);
-					break;
-				case 1:
-					this->parent->setRight(replacement);
-					break;
-				default:
-					result = 2;
-					break;
-				}
-			}
-
-			if (result == 0) {
-				this->parent = NULL;
-				this->location = NULL;
-			}
-
-			return result;
+			std::cout << "[" << this->_obj << "]" << std::endl;
 		}
 
 		// Makes shallow copy of us
@@ -199,8 +152,8 @@ PROTECTED:
 		virtual void setLeft(BinNode * left) {
 			this->_left = left;
 			if (this->_left) {
-				this->_left->parent = this;
-				this->_left->location = &this->_left;
+				this->_left->_parent = this;
+				this->_left->_location = &this->_left;
 			}
 		}
 	
@@ -208,41 +161,105 @@ PROTECTED:
 		virtual void setRight(BinNode * right) {
 			this->_right = right;
 			if (this->_right) {
-				this->_right->parent = this;
-				this->_right->location = &this->_right;
+				this->_right->_parent = this;
+				this->_right->_location = &this->_right;
 			}
 		}
 
 		virtual BinNode * left() { return this->_left; }
-		virtual BinNode * right() { return this->_right; }
 		BinNode ** leftAddr() { return &this->_left; }
+
+		virtual BinNode * right() { return this->_right; }
 		BinNode ** rightAddr() { return &this->_right; }
 
 		// Wondering if I want to make accessors for this
-		BinNode * parent;
+		BinNode * _parent;
 
 		/**
 		 * Holds the address of where the node is in memory
 		 */
-		BinNode ** location;
-
+		BinNode ** _location;
+	
 		// Holds object
-		T obj;
+		T _obj;
 
 		PRIVATE:
+
+		// recursively executes until we reach root	
+		int level(BinNode * node, int level) const {
+			if (node) return this->level(node->_parent, ++level);
+			else return level;
+		}
 
 		// Child node pointers
 		BinNode * _left;
 		BinNode * _right;
-	
-		// recursively executes until we reach root	
-		int level(BinNode * node, int level) const {
-			if (node) return this->level(node->parent, ++level);
-			else return level;
-		}
 	};
 
 PUBLIC:
+
+	/**
+	 * Iterates through the nodes in tree to return their objects
+	 *
+	 * https://www.geeksforgeeks.org/implementing-forward-iterator-in-bst/
+	 */
+	class Iterator {
+		friend class BinTree<T,S>;
+	PUBLIC:
+		
+		virtual ~Iterator() {
+
+		}
+
+		/**
+		 * Returns current object
+		 */
+		T current() { return this->_st.top()->object(); }
+
+		/**
+		 * Goes to the next node in tree
+		 *
+		 * Should I implement a descending iterator?
+		 */
+		int next() {
+			BinNode * curr = this->_st.top()->right();
+			int result = this->_st.pop();
+
+			if (!result) {
+				result = this->setCurrent(curr);
+			}
+
+			return result;
+		}
+
+		/**
+		 * If we have no more nodes to traverse
+		 */
+		bool finished() { return this->_st.empty(); }
+
+	PROTECTED:
+
+		/**
+		 * Sets stack to every node's left child
+		 */
+		virtual int setCurrent(BinNode * node) {
+			if (!node) return 1;
+			else {
+				int result = this->_st.push(node);
+
+				if (!result && node->left()) 
+					return this->setCurrent(node->left());
+				else return result;
+			}
+		}
+
+		Iterator() {}
+
+		/**
+		 * Assists the iterations
+		 */
+		Stack<BinNode *> _st;
+	};
 
 	BinTree() {
 		this->_root = NULL;
@@ -273,12 +290,12 @@ PUBLIC:
 	 */
 	int insert(T obj) {
 		BinNode * newNode = (BinNode *) this->createNode();
-		newNode->obj = obj;
+		newNode->_obj = obj;
 
 		if (this->root()) {
 			return this->insert(newNode, this->root());
 		} else {
-			newNode->location = this->rootAddr();
+			newNode->_location = this->rootAddr();
 			this->setRoot(newNode);
 			this->_count++;
 			return 0;
@@ -308,13 +325,13 @@ PUBLIC:
 	// Returns object from the right most leaf
 	T max() const {
 		const BinNode * node = this->maxNode(this->root());
-		return node ? node->obj : 0;
+		return node ? node->_obj : 0;
 	}
 
 	// Returns object from the left most leaf
 	T min() const {
 		const BinNode * node = this->minNode(this->root());
-		return node ? node->obj : 0;
+		return node ? node->_obj : 0;
 	}
 
 	virtual const BinNode * minNode() const {
@@ -364,16 +381,34 @@ PUBLIC:
 	 * Returns nonzero upon error
 	 */
 	int leafValues(List<T> * list) {
-		List<BinNode *> leafNodes;
+		List<const BinNode *> leafNodes;
 		int result = this->locateLeafNodes(&leafNodes, this->root());
 
 		if (result == 0) {
-			typename List<BinNode *>::Node * listNode = leafNodes.first();
+			typename List<const BinNode *>::Node * listNode = leafNodes.first();
 			do {
-				list->add(listNode->object()->obj);
+				list->add(listNode->object()->_obj);
 			} while ((listNode = listNode->next()));
 		}
 
+		return result;
+	}
+
+	/**
+	 * Caller owns memory to the iterator
+	 *
+	 * After you have traversed through all nodes, the iterator
+	 * becomes stale.  To reiterate, you must ask us to create
+	 * one again
+	 */
+	virtual int createIterator(Iterator ** itr) {
+		int result = 0;
+		if (!itr) return 9;
+		else {
+			*itr = new Iterator();
+
+			result = (*itr)->setCurrent(this->root());
+		}
 		return result;
 	}
 
@@ -400,6 +435,12 @@ PROTECTED:
 	virtual void * createNode() {
 		return new BinNode;
 	}
+
+	BinNode ** getNodeLocation(const BinNode * node) { return node->_location; }
+	void setNodeLocation(BinNode * node, BinNode ** location) { node->_location = location; }
+
+	BinNode * getNodeParent(const BinNode * node) { return node->_parent; }
+	void setNodeParent(BinNode * node, BinNode * parent) { node->_parent = parent; }
 	
 	/**
 	 * Returns nonnull pointer to BinNode
@@ -410,7 +451,7 @@ PROTECTED:
 	BinNode * getNodeForObject(T obj, BinNode * node) {
 		if (!node) return NULL;
 		
-		switch (this->runCompare(obj, node->obj)) {
+		switch (this->runCompare(obj, node->_obj)) {
 		case 0:
 			return node;
 		case -1:
@@ -436,7 +477,7 @@ PROTECTED:
 		if (!newNode) return 1;
 		else if (!parent) return 2;
 		else {
-			switch (this->runCompare(newNode->obj, parent->obj)) {
+			switch (this->runCompare(newNode->_obj, parent->_obj)) {
 				case 0:
 				case -1:
 					newLocation = &parent->_left;
@@ -452,8 +493,9 @@ PROTECTED:
 		// Continue traversing
 		if (!this->canNewNodeTakeNewLocation(newLocation)) return this->insert(newNode, *newLocation);
 		else {
-			newNode->parent = parent;
-			newNode->location = newLocation;
+			newNode->_parent = parent;
+			//newNode->_location = newLocation;
+			this->setNodeLocation(newNode, newLocation);
 			*newLocation = newNode;
 
 			this->_count++;
@@ -501,7 +543,62 @@ PROTECTED:
 		// We do not need to worry about exchanging children
 		// since node only has 1 child
 		if (result == 0) {
-			result = node->replaceWithNode(rep);
+			// result = node->replaceWithNode(rep);
+			result = this->replaceNodeWithNode(node, rep);
+		}
+
+		return result;
+	}
+
+	/**
+	 * This node's children will not be exchanged.  The replacement's
+	 * children will be retained. Additionally, the replacement's
+	 * parent will no longer have any reference to node
+	 *
+	 * Use insert logic to place the children in correctly
+	 */
+	virtual int replaceNodeWithNode(BinNode * node, BinNode * replacement) {
+		int result = 0;
+
+		// Make parent forget about replacement node
+		if (replacement) {
+			if (replacement->_parent) {
+				switch (replacement->childType()) {
+				case -1:
+					replacement->_parent->setLeft(NULL);
+					break;
+				case 1:
+					replacement->_parent->setRight(NULL);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		if (node->isRoot()) {
+			*node->_location = replacement;
+			if (replacement) {
+				replacement->_location = node->_location;
+				replacement->_parent = NULL;
+			}
+		} else {
+			switch (node->childType()) {
+			case -1:
+				node->_parent->setLeft(replacement);
+				break;
+			case 1:
+				node->_parent->setRight(replacement);
+				break;
+			default:
+				result = 2;
+				break;
+			}
+		}
+
+		if (result == 0) {
+			node->_parent = NULL;
+			node->_location = NULL;
 		}
 
 		return result;
@@ -523,7 +620,8 @@ PROTECTED:
 		if (result == 0) {	
 			if (childCount == 0) {
 				// Right is null anyways
-				result = node->replaceWithNode(node->left());
+				// result = node->replaceWithNode(node->left());
+				result = this->replaceNodeWithNode(node, node->left());
 			} else if (childCount == 1) {
 				result = this->replaceNodeWithTheOnlyChild(node);
 
@@ -538,9 +636,13 @@ PROTECTED:
 				BinNode * repNode = node->clone();
 			
 				// give max data to repNode
-				repNode->obj = max->obj;
+				repNode->_obj = max->_obj;
 
-				result = node->BinNode::replaceWithNode(repNode);
+				// We must call our replace node
+				// 
+				// It is known that RBTree does some color changes
+				// result = node->BinNode::replaceWithNode(repNode);
+				result = this->BinTree<T,S>::replaceNodeWithNode(node, repNode);
 
 				if (result == 0) {
 					if (node->left() != repNode) {
@@ -635,7 +737,7 @@ PRIVATE:
 	/**
 	 * Puts leaf nodes in outList
 	 */
-	virtual int locateLeafNodes(List<BinNode *> * outList, BinNode * node) {
+	virtual int locateLeafNodes(List<const BinNode *> * outList, const BinNode * node) {
 		int result = 0;
 
 		if (!node) return 1;
