@@ -9,11 +9,12 @@
 #include "array.hpp"
 #include "accessorspecifiers.hpp"
 
-class String : public Array<char, size_t> {
+class String : protected Array<char, size_t> {
 PUBLIC:
 	String();
 	String(const char * str);
 	String(char * str);
+	String(const String & str);
 	virtual ~String();
 
 	// Returns raw c string
@@ -29,12 +30,22 @@ PUBLIC:
 	 */
 	size_t length() const;
 
+	/**
+	 * Creates a deep copy of object and outputs to s
+	 *
+	 * s will have its own string to worry about
+	 */
+	int copy(String & s) const;
+
 // Overloading operators
 PUBLIC:
 	friend std::ostream& operator<<(std::ostream& out, const String & s);
 	operator const char * () const; // casting overloader
 	bool operator==(const String & s);
+	bool operator<(const String & s);
+	bool operator>(const String & s);
 	bool operator!=(const String & s);
+	String & operator=(const String & str);
 };
 
 #endif // STRING_HPP

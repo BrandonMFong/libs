@@ -35,18 +35,6 @@ int test_Initializer() {
 	return 0;
 }
 
-ArrayComparisonResult StringCompare(const char * a, const char * b) {
-	int result = strcmp((char *) a, (char *) b);
-
-	if (result < 0) {
-		return kArrayComparisonResultLessThan;
-	} else if (result > 0) {
-		return kArrayComparisonResultGreaterThan;
-	} else {
-		return kArrayComparisonResultEquals;
-	}
-}
-
 int test_Contains() {
 	int result = 0;
 
@@ -58,7 +46,7 @@ int test_Contains() {
 	}
 
 	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
-	ch.setComparator(StringCompare);
+	ch.setComparator(strcmp);
 	
 	char buf[100];
 	strcpy(buf, "world");
@@ -119,7 +107,7 @@ int test_indexForObject() {
 	}
 
 	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
-	ch.setComparator(StringCompare);
+	ch.setComparator(strcmp);
 	
 	char buf[100];
 	strcpy(buf, "world");

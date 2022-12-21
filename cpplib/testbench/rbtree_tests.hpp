@@ -181,8 +181,8 @@ static int test_AccessingNodeHierarchy() {
 	n3 = new RBTree<int>::RBNodeNonnull;
 	n4 = new RBTree<int>::RBNodeNonnull;
 
-	n3->parent = n2;
-	n2->parent = n1;
+	n3->_parent = n2;
+	n2->_parent = n1;
 
 	n1->setRight(n4);
 	n1->setLeft(n2);
@@ -194,7 +194,7 @@ static int test_AccessingNodeHierarchy() {
 	} else if (n1->grandParent() != NULL) {
 		result = 2;
 		printf("grand parent should be null\n");
-	} else if (n1->parent != NULL) {
+	} else if (n1->_parent != NULL) {
 		result = 3;
 		printf("parent should be null\n");
 	} else if (n3->pibling() != n4) {
@@ -281,7 +281,8 @@ int test_NodeColors() {
 
 int test_RotationCases() {
 	int result = 0;
-	
+	RBTree<int> t;
+
 	RBTree<int>::RBNodeNonnull * n1;
 	RBTree<int>::RBNodeNonnull * n2;
 	RBTree<int>::RBNodeNonnull * n3;
@@ -292,29 +293,29 @@ int test_RotationCases() {
 	n3 = new RBTree<int>::RBNodeNonnull;
 	n4 = new RBTree<int>::RBNodeNonnull;
 
-	n3->parent = n2;
-	n4->parent = n2;
-	n2->parent = n1;
+	n3->_parent = n2;
+	n4->_parent = n2;
+	n2->_parent = n1;
 
 	n1->setLeft(n2);
 	n2->setLeft(n3);
 	n2->setRight(n4);
 
-	if (RBTree<int>::rotationCase(n4) != 2) {
-		printf("Case should be 2 but is %d\n", RBTree<int>::rotationCase(n4));
+	if (t.rotationCase(n4) != 2) {
+		printf("Case should be 2 but is %d\n", t.rotationCase(n4));
 		result = 1;
-	} else if (RBTree<int>::rotationCase(n3) != 1) {
-		printf("Case should be 1 but is %d\n", RBTree<int>::rotationCase(n4));
+	} else if (t.rotationCase(n3) != 1) {
+		printf("Case should be 1 but is %d\n", t.rotationCase(n4));
 		result = 2;
 	}
 
 	if (result == 0) {
 		n1->setLeft(n2);
-		if (RBTree<int>::rotationCase(n4) != 2) {
-			printf("Case should be 2 but is %d\n", RBTree<int>::rotationCase(n4));
+		if (t.rotationCase(n4) != 2) {
+			printf("Case should be 2 but is %d\n", t.rotationCase(n4));
 			result = 1;
-		} else if (RBTree<int>::rotationCase(n3) != 1) {
-			printf("Case should be 1 but is %d\n", RBTree<int>::rotationCase(n4));
+		} else if (t.rotationCase(n3) != 1) {
+			printf("Case should be 1 but is %d\n", t.rotationCase(n4));
 			result = 2;
 		}
 	}
@@ -426,14 +427,14 @@ PUBLIC:
 	bool testColorPatterns(typename RBTree<T>::RBNode * node) {
 		bool res = true;
 
-		if (node->parent) {
-			if (((typename RBTree<T>::RBNodeNonnull *) node->parent)->color() == kRBTreeNodeColorRed) {
+		if (node->_parent) {
+			if (((typename RBTree<T>::RBNodeNonnull *) node->_parent)->color() == kRBTreeNodeColorRed) {
 				res = node->color() != kRBTreeNodeColorRed;
 
 				if (!res) {
 					std::cout << "Found error:" << std::endl;
-					std::cout << "\tRed parent: " << node->parent->obj << std::endl;
-					std::cout << "\tRed node: " << node->obj << std::endl;
+					std::cout << "\tRed parent: " << node->_parent->_obj << std::endl;
+					std::cout << "\tRed node: " << node->_obj << std::endl;
 				}
 			}
 		}
@@ -468,7 +469,7 @@ PUBLIC:
 		
 		if (lc != rc) {
 			printf("Left count: %d, right count: %d\n", lc, rc);
-			std::cout << "Node: " << node->obj << std::endl;
+			std::cout << "Node: " << node->_obj << std::endl;
 			return 0;
 		}
 	
@@ -477,11 +478,11 @@ PUBLIC:
 
 	bool everyLeafHasRBNodeNullObjects() {
 		int result = 0;
-		List<typename BinTree<T>::BinNode *> nodes;
+		List<const typename BinTree<T>::BinNode *> nodes;
 		result = this->locateLeafNodes(&nodes, this->root());
 
 		if (result == 0) {
-			typename List<typename BinTree<T>::BinNode *>::Node * lnode = nodes.first();
+			typename List<const typename BinTree<T>::BinNode *>::Node * lnode = nodes.first();
 			do {
 				typename RBTree<T>::RBNodeNonnull * rbn = (typename RBTree<T>::RBNodeNonnull *) lnode->object();
 				typename RBTree<T>::RBNodeNonnull * l = (typename RBTree<T>::RBNodeNonnull *) rbn->left();
@@ -500,8 +501,8 @@ PUBLIC:
 				}
 
 				if (result) {
-					std::cout << "node: " << rbn->obj << std::endl;
-					std::cout << "parent: " << rbn->parent->obj << std::endl;
+					std::cout << "node: " << rbn->_obj << std::endl;
+					std::cout << "parent: " << rbn->_parent->_obj << std::endl;
 					std::cout << "error: " << result << std::endl;
 				}
 			} while ((lnode = lnode->next()) && !result);
@@ -629,16 +630,9 @@ int test_RBRemove() {
 
 	[ 383  359  284  181  479  472  48 ]
 	*/
-	t.remove(383);
-	t.remove(359);
-	t.remove(284);
-	t.remove(181);
-	t.remove(479);
-	t.remove(472);
-	t.remove(48);
 
 	t.print(true);
-	int object = 454;
+	int object = 16;
 	printf("Remove %d\n", object);
 	result = t.remove(object);
 	if (!result) {

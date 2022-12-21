@@ -22,6 +22,9 @@ CPPFLAGS += -Wall -Icpplib/ -Iclib/
 CPPFLAGS += -std=c++20
 
 # Objects
+#
+# All objects defined in headers should be copied to 
+# bin
 C_OBJECTS = filesystem coreutils stringutils
 CPP_OBJECTS = file string
 
@@ -49,8 +52,9 @@ bin/c/$(R_CLIB_OUT): $(R_C_OBJ_FILES)
 $(R_BUILD_PATH)/c/%.o: clib/%.c clib/%.h
 	$(CC) -c -o $@ $< $(R_CFLAGS)
 
-bin/cpp/$(R_CPPLIB_OUT): $(R_CPP_OBJ_FILES)
+bin/cpp/$(R_CPPLIB_OUT): $(R_CPP_OBJ_FILES) $(R_C_OBJ_FILES)
 	cp -afv cpplib/*.hpp bin/cpp
+	cp -afv clib/*.h bin/cpp
 	$(AR) -rsc bin/cpp/$(R_CPPLIB_OUT) $^
 
 $(R_BUILD_PATH)/cpp/%.o: cpplib/%.cpp cpplib/%.hpp
@@ -73,10 +77,6 @@ d-setup:
 	@mkdir -p bin/c
 	@mkdir -p bin/cpp
 
-bin/c/$(D_CLIB_OUT):
-	cp -afv clib/*.h bin/c
-	$(AR) -rsc bin/c/$(D_CLIB_OUT) $(D_BUILD_PATH)/c/coreutils.o $(D_BUILD_PATH)/c/filesystem.o
-
 bin/c/$(D_CLIB_OUT): $(D_C_OBJ_FILES)
 	cp -afv clib/*.h bin/c
 	$(AR) -rsc bin/c/$(D_CLIB_OUT) $^
@@ -84,8 +84,9 @@ bin/c/$(D_CLIB_OUT): $(D_C_OBJ_FILES)
 $(D_BUILD_PATH)/c/%.o: clib/%.c clib/%.h
 	$(CC) -c -o $@ $< $(D_CFLAGS)
 
-bin/cpp/$(D_CPPLIB_OUT): $(D_CPP_OBJ_FILES)
+bin/cpp/$(D_CPPLIB_OUT): $(D_CPP_OBJ_FILES) $(D_C_OBJ_FILES)
 	cp -afv cpplib/*.hpp bin/cpp
+	cp -afv clib/*.h bin/cpp
 	$(AR) -rsc bin/cpp/$(D_CPPLIB_OUT) $^
 
 $(D_BUILD_PATH)/cpp/%.o: cpplib/%.cpp cpplib/%.hpp

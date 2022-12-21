@@ -24,14 +24,14 @@ int test_adding() {
 
 	List<int> * l = new List<int>;
 
-	if (l->add((int) 1)) {
-		printf("Error adding 1\n");
+	if ((result = l->add((int) 1)) != 0) {
+		printf("Error adding 1 (%d)\n", result);
 		result = 1;
 	}
 
 	if (!result) {
-		if (l->add((int) 2)) {
-			printf("Error adding 2\n");
+		if ((result = l->add((int) 2)) != 0) {
+			printf("Error adding 2 (%d)\n", result);
 			result = 1;
 		}
 	}
@@ -136,6 +136,10 @@ int test_deletingAtIndex() {
 		printf("Count %d\n", l->count());
 	} else if (l->objectAtIndex(0) != 1) {
 		result = 7;
+	} else if (l->deleteObjectAtIndex(0)) {
+		result = 8;
+	} else if (l->deleteObjectAtIndex(0)) {
+		result = 9;
 	}
 
 	if (result) {
@@ -285,6 +289,137 @@ int test_ListContains() {
 	return result;
 }
 
+int test_InitializingWithInitList() {
+	int result = 0;
+	
+	List<int> l = {1,2,3,4};
+
+	l = {5,6,7,8};
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_ListSortAscending() {
+	int result = 0;
+
+	List<int> l;
+
+	srand(time(NULL));
+
+	int size = 1000, max = 100;
+	for (int i = 0; i < size; i++) {
+		int num = rand() % max;
+
+		result = l.add(num);
+
+		if (result) break;
+	}
+
+	if (!result)
+		result = l.sort();
+
+	if (!result) {
+		List<int>::Node * n = l.first();
+		int tmp = n->object();
+		for (n = n->next(); n; n = n->next()) {
+			if (tmp > n->object()) {
+				printf("%d > %d\n", tmp, n->object());
+				result = 2;
+				break;
+			}
+			tmp = n->object();
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_ListSortDescending() {
+	int result = 0;
+
+	List<int> l;
+
+	srand(time(NULL));
+
+	int size = 1000, max = 100;
+	for (int i = 0; i < size; i++) {
+		int num = rand() % max;
+
+		result = l.add(num);
+
+		if (result) break;
+	}
+
+	if (!result)
+		result = l.sort(kListSortOptionsDescending);
+
+	if (!result) {
+		List<int>::Node * n = l.first();
+		int tmp = n->object();
+		for (n = n->next(); n; n = n->next()) {
+			if (tmp < n->object()) {
+				printf("%d < %d\n", tmp, n->object());
+				result = 2;
+				break;
+			}
+			tmp = n->object();
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_InitializingFromRawArray() {
+	int result = 0;
+
+	const int size = 5;
+	const char * strings[size] = {"one", "two", "three", "four", "five"};
+
+	List<const char *> l;
+
+	l.set(strings, size);
+
+	if (l.count() != size) result = 1;
+
+	for (int i = 0; (i < size) && !result; i++) {
+		if (!l.contains(strings[i])) result = i + 10;
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_ListSortingStrings() {
+	int result = 0;
+
+	List<const char *> l = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
+	l.setCompareCallback(strcmp);
+
+	result = l.sort();
+	List<const char *>::Node * n = 0;
+	const char * tmp = 0;
+	if (!result) {
+		tmp = l.first()->object();
+		n = l.first()->next();
+	}
+
+	while (!result && n) {
+		if (strcmp(tmp, n->object()) > 0) {
+			result = 2;
+			l.print();
+		}
+
+		n = n->next();
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -315,6 +450,21 @@ void list_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_ListContains()) p++;
+	else f++;
+
+	if (!test_InitializingWithInitList()) p++;
+	else f++;
+
+	if (!test_ListSortAscending()) p++;
+	else f++;
+
+	if (!test_ListSortDescending()) p++;
+	else f++;
+
+	if (!test_InitializingFromRawArray()) p++;
+	else f++;
+
+	if (!test_ListSortingStrings()) p++;
 	else f++;
 
 	if (pass) *pass += p;

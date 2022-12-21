@@ -20,6 +20,7 @@ PUBLIC:
 	 * Holds an entry for value that can be located by key
 	 */
 	class Entry {
+		friend class Dictionary<K,V,S>;
 	PUBLIC:
 		/**
 		 * Used for tree to organize
@@ -176,6 +177,11 @@ PUBLIC:
 		this->print(this->_tree.root());
 	}
 
+	typedef typename RBTree<Entry *, S>::Iterator Iterator;
+
+	int createIterator(Iterator ** itr) {
+		return this->_tree.createIterator(itr);
+	}
 PRIVATE:
 
 	/**

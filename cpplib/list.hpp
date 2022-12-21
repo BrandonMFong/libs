@@ -7,6 +7,17 @@
 #define LIST_HPP
 
 #include "accessorspecifiers.hpp"
+#include <iostream>
+#include <initializer_list>
+
+/**
+ * Sort options for the List object
+ */
+typedef enum {
+	kListSortOptionsAscending = 0,
+	kListSortOptionsDescending = 1,
+	kListSortOptionsDefault = kListSortOptionsAscending,
+} ListSortOptions;
 
 /**
  * Linked List implementation
@@ -21,7 +32,7 @@
  */
 template <typename L, typename S = int>
 class List {
-PRIVATE:
+PUBLIC:
 	
 	/**
 	 * Bi-directional node
@@ -49,8 +60,10 @@ PRIVATE:
 			if (this->objectDeletionCallback) {
 				this->objectDeletionCallback(this->obj);
 			}
-		}
 
+			this->left = 0;
+			this->right = 0;
+		}
 
 		Node * left;
 		Node * right;
@@ -62,8 +75,14 @@ PUBLIC:
 
 	List() {
 		this->_head = 0;
+		this->_tail = 0;
 		this->_count = 0;
 		this->_nodeObjectCleanUpCallback = 0;
+		this->_compareCallback = 0;
+	}
+
+	List(const std::initializer_list<L> & list) : List() {
+		this->set(list);
 	}
 
 	virtual ~List() {
@@ -74,13 +93,38 @@ PUBLIC:
 
 	// Adds obj at tail end of list
 	int add(L obj) {
-		return this->add(&this->_head, 0, obj);
+		int result = 0;
+
+		Node * n = new Node;
+		n->obj = obj;
+		n->objectDeletionCallback = this->_nodeObjectCleanUpCallback;
+
+		// If we are first adding something
+		if (!this->_head && !this->_tail) {
+			this->_head = n;
+			this->_tail = n;
+
+		// If we already have a list of things
+		} else if (this->_head && this->_tail) {
+			n->left = this->_tail;
+			this->_tail->right = n;
+			this->_tail = n;
+
+		// this case shouldn't happen
+		} else {
+			result = 1;
+		}
+
+		if (!result)
+			this->_count++;
+
+		return result;
 	}
 
 	/**
 	 * Insert obj at index.  Will push every object after an index 
 	 *
-	 * index: must be within range of list
+	 * index: must be within range of list.
 	 */
 	int insertObjectAtIndex(L obj, S index) {
 		if ((index >= 0) && (index < this->_count)) {
@@ -103,9 +147,12 @@ PUBLIC:
 
 	/**
 	 * deletes object at the index
+	 *
+	 * index: must not exceed bounds of array
 	 */
 	int deleteObjectAtIndex(S index) {
-		if (this->_count > 0) return this->deleteObjectAtIndex(index, this->_head, 0);
+		if ((index >= 0) && (index < this->_count))
+			return this->deleteObjectAtIndex(index, this->_head, 0);
 		else return 1;
 	}
 
@@ -117,6 +164,13 @@ PUBLIC:
 	}
 
 	/**
+	 * Sets the callback we use when sorting
+	 */
+	void setCompareCallback(int (* callback) (L a, L b)) {
+		this->_compareCallback = callback;
+	}
+
+	/**
 	 * Returns the head of the list
 	 *
 	 * Caller can use this node to traverse through the 
@@ -124,6 +178,10 @@ PUBLIC:
 	 */
 	Node * first() {
 		return this->_head;
+	}
+
+	Node * last() {
+		return this->_tail;
 	}
 
 	/**
@@ -140,39 +198,178 @@ PUBLIC:
 		std::cout << std::endl;
 		std::cout << "[";
 
-		this->print(this->_head);
+		this->print(this->_head, NULL);
 
 		std::cout << "]";
 		std::cout << std::endl;
 	}
 
+	/**
+	 * Default sort kListSortOptionsDefault
+	 */
+	int sort() {
+		return this->sort(kListSortOptionsDefault);
+	}
+
+	int sort(const ListSortOptions option) {
+		return this->sortNodeToNode(this->_head, this->_tail, this->_count, option);
+	}
+
+PROTECTED:
+
+	int deleteNode(Node * node) {
+		// If currNode is the tail, reset the tail var 
+		// to the currNode's left
+		if (this->_tail == node) this->_tail = node->left;
+		if (this->_head == node) this->_head = node->right;
+
+		// Close connection
+		if (node->left)
+			node->left->right = node->right;
+
+		if (node->right)
+			node->right->left = node->left;
+
+		// Delete this node at index
+		delete node;
+
+		this->_count--;
+
+		return 0;
+	}
+
 PRIVATE:
 
 	/**
-	 * Recursively finds a null spot of obj to be added to
+	 * Sorts nodes from first to last using merge sort techinques
 	 */
-	int add(Node ** currNode, Node * prevNode, L obj) {
-		if (currNode == 0) {
-			return 1;
-		} else if (*currNode != 0) {
-			return this->add(&(*currNode)->right, *currNode, obj);
+	int sortNodeToNode(Node * first, Node * last, S distance, const ListSortOptions option) {
+		int result = 0;
+		List<L,S> tmp;
+		Node * mid = 0, * t0 = 0, * t1 = 0;
+		const S halfDistance = distance / 2;
+
+		if (!first && !last) {
+			result = 2;
 		} else {
-			Node * n = new Node;
-			n->obj = obj;
-			n->objectDeletionCallback = this->_nodeObjectCleanUpCallback;
+			if (distance < 3) {
+				// We only worry about swapping
+				if (distance == 2) {
+					if (option == kListSortOptionsDescending) {
+						if (this->runCompare(first->obj, last->obj) < 0) {
+							L obj = first->obj;
+							first->obj = last->obj;
+							last->obj = obj;
+						}
+					} else {
+						if (this->runCompare(first->obj, last->obj) > 0) {
+							L obj = first->obj;
+							first->obj = last->obj;
+							last->obj = obj;
+						}
+					}
+				}
+			} else {
+				mid = first;
+				// Find mid node
+				for (S i = 0; i < (halfDistance - 1); i++)
+					mid = mid->next();
 
-			// make connection if there was a previous nodea
-			if (prevNode) {
-				n->left = prevNode;
-				prevNode->right = n;
+				t0 = first;
+				t1 = mid->next();
+
+				// Sort the first half
+				result = this->sortNodeToNode(first, mid, halfDistance, option);
+
+				// Then sort the last half
+				if (!result)
+					result = this->sortNodeToNode(mid->next(), last, distance - halfDistance, option);
+
+				// Merge the two halves
+				if (!result) {
+					while (t0 && (t0 != mid->next()) && t1 && (t1 != last->next())) {
+						int res = this->runCompare(t0->obj, t1->obj);
+						switch (option) {
+							case kListSortOptionsDescending:
+								if (res < 0) {
+									tmp.add(t1->obj);
+									t1 = t1->next();
+								} else if (res > 0) {
+									tmp.add(t0->obj);
+									t0 = t0->next();
+								} else {
+									tmp.add(t0->obj);
+									tmp.add(t1->obj);
+									t0 = t0->next();
+									t1 = t1->next();
+								}
+
+								break;
+							case kListSortOptionsAscending:
+							default:
+								if (res < 0) {
+									tmp.add(t0->obj);
+									t0 = t0->next();
+								} else if (res > 0) {
+									tmp.add(t1->obj);
+									t1 = t1->next();
+								} else {
+									tmp.add(t0->obj);
+									tmp.add(t1->obj);
+									t0 = t0->next();
+									t1 = t1->next();
+								}
+
+								break;
+						}
+					}
+
+					// Merge in leftovers
+
+					while (t0 && (t0 != mid->next())) {
+						tmp.add(t0->obj);
+						t0 = t0->next();
+					}
+
+					while (t1 && (t1 != last->next())) {
+						tmp.add(t1->obj);
+						t1 = t1->next();
+					}
+
+					// Reset our data with the sorted data
+					for (Node * n0 = tmp.first(), * n1 = first; 
+						n0 && n1 && (n1 != last->next()); 
+						n0 = n0->next(), n1 = n1->next()) {
+						n1->obj = n0->obj;
+					}
+				}
 			}
+		}
 
-			this->_count++;
+		return result;
+	}
 
-			// Save to currNode
-			*currNode = n;
+	/**
+	 * Allows us to set list with {...} notation
+	 *
+	 * Calling this will reset the list to the input
+	 */
+	void set(const std::initializer_list<L> & list) {
+		this->deleteAll();
+		typename std::initializer_list<L>::iterator itr;
+		for (itr = list.begin(); itr != list.end(); ++itr) {
+			this->add(*itr);
+		}
+	}
 
-			return 0;
+	/**
+	 * Allows us to set our data from a fixed sequenced collection
+	 */	
+	void set(L * rawArray, S size) {
+		if (!rawArray) return; // don't do anything
+		this->deleteAll();
+		for (S i = 0; i < size; i++) {
+			this->add(rawArray[i]);
 		}
 	}
 
@@ -192,6 +389,10 @@ PRIVATE:
 	/**
 	 * If position is found, this will effectively push currNode (and 
 	 * following nodes) up one index and set obj's node to take its place
+	 *
+	 * We do not need to worry about head or tail since we should not be
+	 * inserting at the end of the list (if so then caller should use 
+	 * `add`)
 	 */
 	int insertObjectAtIndex(L obj, S reqIndex, Node * currNode, S currIndex) {
 		if (currNode == 0) {
@@ -219,6 +420,8 @@ PRIVATE:
 
 	/**
 	 * Finds node at reqIndex for deletion
+	 *
+	 * Deletes currNode and pulls everything forward
 	 */
 	int deleteObjectAtIndex(S reqIndex, Node * currNode, S currIndex) {
 		if (currNode == 0) return 2;
@@ -226,16 +429,7 @@ PRIVATE:
 			if (currIndex < reqIndex) {
 				return this->deleteObjectAtIndex(reqIndex, currNode->right, ++currIndex);
 			} else {
-				// Close connection
-				currNode->left->right = currNode->right;
-				currNode->right->left = currNode->left;
-
-				// Delete this node at index
-				delete currNode;
-
-				this->_count--;
-
-				return 0;
+				return this->deleteNode(currNode);
 			}
 		}
 	}
@@ -266,16 +460,34 @@ PRIVATE:
 		}
 	}
 
-	void print(Node * node) {
+	void print(Node * node, Node * end) {
 		if (node) {
 			std::cout << " " <<  node->object() << " ";
 
-			this->print(node->right);
+			if (node != end)
+				this->print(node->right, end);
+		}
+	}
+
+	/**
+	 * a < b : < 0
+	 * a > b : > 0
+	 * a == b : 0
+	 */
+	int runCompare(L a, L b) {
+		if (this->_compareCallback) return this->_compareCallback(a, b);
+		else {
+			if (a < b) return -1;
+			else if (a > b) return 1;
+			else return 0;
 		}
 	}
 
 	// Holds the first node
 	Node * _head;
+
+	// Holds the last node in list
+	Node * _tail;
 
 	// Keeps count of how many nodes are linked
 	S _count;
@@ -285,6 +497,20 @@ PRIVATE:
 	 * Node::obj's memory should be handled at deletion
 	 */
 	void (* _nodeObjectCleanUpCallback)(L obj);
+
+	/**
+	 * Used to compare node objects
+	 * a < b : < 0
+	 * a > b : > 0
+	 * a == b : 0
+	 */
+	int (* _compareCallback) (L a, L b);
+	
+PUBLIC:
+
+	void operator=(const std::initializer_list<L> & list) {
+		this->set(list);
+	}
 };
 
 #endif // LIST_HPP

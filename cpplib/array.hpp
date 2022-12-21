@@ -15,16 +15,6 @@
 #include <string.h>
 
 /**
- * These values are used whenever the array is attempting to compare
- * each element
- */
-typedef enum {
-	kArrayComparisonResultLessThan = -1,
-	kArrayComparisonResultGreaterThan = 1,
-	kArrayComparisonResultEquals = 0
-} ArrayComparisonResult;
-
-/**
  * Immutable Array
  *
  * This class allows you to access the array in readonly.  This class 
@@ -39,6 +29,8 @@ PUBLIC:
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
+		this->_allocationCallback = 0;
+		this->_deallocationCallback = 0;
 	}
 
 	/**
@@ -60,7 +52,8 @@ PUBLIC:
 	}
 
 	void removeAll() {
-		Delete(this->_address);
+		this->deallocate(this->_address);
+		this->_address = 0;
 		this->_count = 0;
 	}
 	
@@ -79,6 +72,24 @@ PUBLIC:
 	}
 
 	/**
+	 * Establishes how allocation works
+	 *
+	 * By default free store is utilized
+	 */
+	void setAllocationCallback(T * (* cb) (S size)) {
+		this->_allocationCallback = cb;
+	}
+
+	/**
+	 * Establishes how deallocation works
+	 *
+	 * By default free store is utilized
+	 */
+	void setDeallocationCallback(void (* cb) (T * value)) {
+		this->_deallocationCallback = cb;
+	}
+
+	/**
 	 * Returns false if argument could not be found
 	 *
 	 * This function uses the _callback comparison 
@@ -87,7 +98,7 @@ PUBLIC:
 	virtual bool contains(T object) {
 		for (S i = 0; i < this->_count; i++) {
 			if (	this->_callback((this->_address)[i], object) 
-				== 	kArrayComparisonResultEquals) 
+				== 	0) 
 				return true;
 		}
 		return false;
@@ -114,7 +125,7 @@ PUBLIC:
 	S indexForObject(T object) const {
 		for (S i = 0; i < this->_count; i++) {
 			if (	this->_callback(this->_address[i], object)
-				== 	kArrayComparisonResultEquals)
+				== 	0)
 				return i;
 		}
 		return -1;
@@ -137,7 +148,10 @@ PUBLIC:
 		std::cout << "]" << std::endl;
 	}
 
-	void setComparator(ArrayComparisonResult (* callback) (T a, T b)) {
+	/**
+	 * Rename comparator to compare callback
+	 */
+	void setComparator(int (* callback) (T a, T b)) {
 		this->_callback = callback;
 	}
 
@@ -146,8 +160,9 @@ PUBLIC:
 	 */
 	void copyFromArray(const Array<T> * arr) {
 		this->removeAll();
-		this->_address = this->allocate(arr->count());
-		memcpy(this->_address, arr->address(), arr->count());
+		this->_address = (T *) this->allocate(arr->count());
+		this->_count = arr->count();
+		memcpy(this->_address, arr->address(), this->_count);
 	}
 
 PROTECTED:
@@ -156,24 +171,36 @@ PROTECTED:
 	 * Returns address of array
 	 */
 	T * address() const { return this->_address; }
+	
+PRIVATE:
 
 	/**
 	 * Derived classes can override if they want to use the heap
 	 *
 	 * By default we are using the free store
 	 */
-	virtual T * allocate(S size) {
-		return new T[size];
+	T * allocate(S size) {
+		if (this->_allocationCallback) return this->_allocationCallback(size);
+		else return new T[size];
 	}
-	
-PRIVATE:
+
+	/**
+	 * Derived must make sure this follows the standard established
+	 * by allocate()
+	 */
+	void deallocate(T * value) {
+		if (this->_deallocationCallback) this->_deallocationCallback(value);
+		else {
+			Delete(value);
+		}
+	}
 
 	/**
 	 * Copies values from array
 	 */
 	void saveArray(T * array, S size) {
 		this->removeAll();
-		this->_address = this->allocate(size);
+		this->_address = (T *) this->allocate(size);
 		this->_count = size;
 
 		if (this->_address) {
@@ -192,7 +219,7 @@ PRIVATE:
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
-		this->_address = this->allocate(this->_count);
+		this->_address = (T *) this->allocate(this->_count);
 
 		if (this->_address) {
 			S i = 0;
@@ -216,7 +243,13 @@ PRIVATE:
 	/**
 	 * How we compare each item in the array
 	 */
-	ArrayComparisonResult (* _callback) (T a, T b);
+	int (* _callback) (T a, T b);
+
+	/// Defines how _address is allocated
+	T * (* _allocationCallback) (S size);
+
+	/// Defines how _address is deallocated
+	void (* _deallocationCallback) (T * value);
 
 PUBLIC:
 
@@ -229,26 +262,25 @@ PUBLIC:
 	}
 
 	/**
-	 * Copies the string content from str to us
+	 * Copies the string content from arr to us
 	 */
 	Array<T> & operator=(const Array<T> & arr) {
 		this->copyFromArray(&arr);
 		return *this;
 	}
 
-
 // Comparators
 PUBLIC:
 	/**
 	 * Compares the raw value of a and b
 	 */
-	static ArrayComparisonResult comparisonDefault(T a, T b) {
+	static int comparisonDefault(T a, T b) {
 		if (a < b) {
-			return kArrayComparisonResultLessThan;
+			return -1;
 		} else if (a > b) {
-			return kArrayComparisonResultGreaterThan;
+			return 1;
 		} else {
-			return kArrayComparisonResultEquals;
+			return 0;
 		}
 	}
 };
