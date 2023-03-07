@@ -3,3 +3,6 @@ a.out
 *.swp
 build
 
+# rust
+bflibrust/target
+bflibrust/Cargo.lock
