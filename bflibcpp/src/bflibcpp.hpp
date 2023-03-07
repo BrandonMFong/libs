@@ -7,7 +7,7 @@
 #define CPPLIB_HPP
 
 extern "C" {
-#include <clib.h>
+#include <bflibc/bflibc.h>
 }
 
 #include "delete.hpp"

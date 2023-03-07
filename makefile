@@ -15,8 +15,12 @@ $(PROJECTS):
 	cd $@ && make debug
 	cp -afv $@/bin/* bin/
 
+test:
+	./scripts/runtests
+
 setup: 
 	mkdir -p bin
 
 clean:
 	rm -rfv bin
+

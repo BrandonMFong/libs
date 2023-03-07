@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cd $(dirname $0)/../bflibc;
+make test --no-print-directory;
+echo;
+echo;
+
+cd ../bflibcpp;
+make test --no-print-directory;
+echo;
+echo;
+
+cd ../bflibrust;
+make test --no-print-directory;
+echo;
+echo;
+
+cd $(dirname $0);
+
