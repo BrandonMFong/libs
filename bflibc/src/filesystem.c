@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include "stringutils.h"
+#include <limits.h>
 
 unsigned long long BFFileSystemDirectoryGetSizeUsed(const char * path, unsigned char options, int * err) {
 	unsigned long long result = 0;
