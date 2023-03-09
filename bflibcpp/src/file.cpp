@@ -9,7 +9,11 @@ extern "C" {
 #include <bflibc.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#ifdef LINUX
 #include <linux/limits.h>
+#endif
+#include <limits.h>
 }
 
 #include "file.hpp"
