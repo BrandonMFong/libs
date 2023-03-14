@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-cd $(dirname $0)/../bflibc;
+pushd $(realpath $(dirname $0))/../bflibc;
 make test --no-print-directory;
 echo;
 echo;
@@ -15,5 +15,5 @@ make test --no-print-directory;
 echo;
 echo;
 
-cd $(dirname $0);
+popd;
 
