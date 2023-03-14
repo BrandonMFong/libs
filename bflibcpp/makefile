@@ -14,7 +14,7 @@ AR = ar
 ## Compile Flags
 
 # Warnings
-CPPFLAGS += -Wall -I. -I../bflibc/src/
+CPPFLAGS += -Wall -I.
 
 # Standards
 CPPFLAGS += -std=c++20
@@ -23,15 +23,15 @@ CPPFLAGS += -std=c++20
 #
 # All objects defined in headers should be copied to 
 # bin
-CPP_OBJECTS = file string
+CPP_OBJECTS = file string time
 
 ### RELEASE ###
-R_CPPFLAGS = $(CPPFLAGS)
+R_CPPFLAGS = $(CPPFLAGS) -I../bflibc/bin/release/
 R_BUILD_PATH = build/release
 R_BIN_PATH = bin/release/bflibcpp
 R_BFLIBCPP_OUT = libbfcpp.a
 R_CPP_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/%.o, $(CPP_OBJECTS))
-
+R_C_OBJ_FILES = ../bflibc/build/release/*.o
 release: r-setup build-release-c $(R_BIN_PATH)/$(R_BFLIBCPP_OUT)
 
 build-release-c:
@@ -43,7 +43,7 @@ r-setup:
 
 $(R_BIN_PATH)/$(R_BFLIBCPP_OUT): $(R_CPP_OBJ_FILES) $(R_C_OBJ_FILES)
 	cp -afv src/*.hpp $(R_BIN_PATH)
-	$(AR) -rsc $(R_BIN_PATH)/$(R_BFLIBCPP_OUT) $^ ../bflibc/build/release/*.o
+	$(AR) -rsc $(R_BIN_PATH)/$(R_BFLIBCPP_OUT) $^ $(R_C_OBJ_FILES)
 
 $(R_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(R_CPPFLAGS)
@@ -53,11 +53,12 @@ r-clean:
 	rm -rfv $(R_BIN_PATH)
 
 ### DEBUG ### 
-D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g
+D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -I../bflibc/bin/debug/
 D_BUILD_PATH = build/debug
 D_BIN_PATH = bin/debug/bflibcpp
 D_BFLIBCPP_OUT = libbfcpp-debug.a
 D_CPP_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/%.o, $(CPP_OBJECTS))
+D_C_OBJ_FILES = ../bflibc/build/debug/*.o
 
 debug: d-setup build-debug-c $(D_BIN_PATH)/$(D_BFLIBCPP_OUT)
 
@@ -70,7 +71,7 @@ d-setup:
 
 $(D_BIN_PATH)/$(D_BFLIBCPP_OUT): $(D_CPP_OBJ_FILES) $(D_C_OBJ_FILES)
 	cp -afv src/*.hpp $(D_BIN_PATH)
-	$(AR) -rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $^ ../bflibc/build/debug/*.o
+	$(AR) -rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $^ $(D_C_OBJ_FILES)
 
 $(D_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(D_CPPFLAGS)
@@ -83,8 +84,7 @@ d-clean:
 T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
 
-test: D_CFLAGS = $(CFLAGS) -DTESTING -g -Isrc/
-test: D_CPPFLAGS = $(CPPFLAGS) -DTESTING -g -Isrc/
+test: D_CPPFLAGS += $(CPPFLAGS) -DTESTING -Isrc/
 test: t-setup d-clean debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBCPP_OUT)
 

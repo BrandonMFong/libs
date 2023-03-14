@@ -4,9 +4,7 @@
  */
 
 #include "string.hpp"
-#include "stringutils.h"
-#include <string.h>
-#include <free.h>
+#include <bflibc/bflibc.h>
 
 using namespace BF;
 

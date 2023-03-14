@@ -11,6 +11,7 @@
 #include "stringutils.h"
 #include "log.h"
 #include "free.h"
+#include "bftime.h"
 
 #endif // CLIB_H
 
