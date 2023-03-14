@@ -12,10 +12,10 @@ extern "C" {
 
 #include "delete.hpp"
 #include "accessorspecifiers.hpp"
-
 #include "array.hpp"
 #include "list.hpp"
 #include "file.hpp"
+#include "time.hpp"
 
 #endif // CPPLIB_HPP
 

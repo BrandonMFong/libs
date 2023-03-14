@@ -20,7 +20,7 @@ CFLAGS += -Wall -I.
 #
 # All objects defined in headers should be copied to 
 # bin
-C_OBJECTS = filesystem coreutils stringutils
+C_OBJECTS = filesystem coreutils stringutils bftime
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)
@@ -74,7 +74,7 @@ d-clean:
 T_BFLIBC_OUT = test-bflibc
 T_BIN_PATH = bin/test/bflibc
 
-test: D_CFLAGS = $(CFLAGS) -DTESTING -g -Isrc/
+test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/
 test: t-setup d-clean debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBC_OUT)
 

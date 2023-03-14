@@ -6,7 +6,7 @@
 extern "C" {
 #include <string.h>
 #include <libgen.h>
-#include <bflibc.h>
+#include <bflibc/bflibc.h>
 #include <stdlib.h>
 #include <stdio.h>
 

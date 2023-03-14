@@ -11,7 +11,7 @@
 #include <string.hpp>
 
 extern "C" {
-#include <bflibc.h>
+#include <bflibc/bflibc.h>
 }
 
 using namespace BF;
