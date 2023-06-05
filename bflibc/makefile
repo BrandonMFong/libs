@@ -4,6 +4,7 @@
 
 ## Includes
 include ../makefiles/platforms.mk
+include makefiles/checksum.mk
 
 ## Compiler definitions
 CC = gcc
@@ -20,7 +21,7 @@ CFLAGS += -Wall -I.
 #
 # All objects defined in headers should be copied to 
 # bin
-C_OBJECTS = filesystem coreutils stringutils bftime
+C_OBJECTS = filesystem coreutils stringutils bftime checksum
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)
@@ -74,7 +75,7 @@ d-clean:
 T_BFLIBC_OUT = test-bflibc
 T_BIN_PATH = bin/test/bflibc
 
-test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/
+test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS)
 test: t-setup d-clean debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBC_OUT)
 
