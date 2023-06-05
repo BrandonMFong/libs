@@ -7,6 +7,7 @@
 #include "filesystem_tests.h"
 #include "stringutils_tests.h"
 #include "time_tests.h"
+#include "checksum_tests.h"
 #include <stdio.h>
 
 int main() {
@@ -31,6 +32,11 @@ int main() {
 	pass = 0; fail = 0;
 	
 	time_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+	
+	checksum_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;

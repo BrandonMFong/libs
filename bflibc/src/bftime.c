@@ -50,12 +50,13 @@ int BFTimeGetDateTimeFromTime(BFTime t, BFDateTime * dt) {
 }
 
 const char * BFTimeGetMonthStringFromTime(const BFTime t) {
-	int result = 0;
 	BFDateTime dt = {0};
 
 	if (BFTimeGetDateTimeFromTime(t, &dt)) {
-		return 2;
+		return 0;
 	}
+
+	// TODO: finish function
 	return 0;
 }
 

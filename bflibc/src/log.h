@@ -5,6 +5,8 @@
 
 #ifdef DEBUG
 
+#include <stdio.h>
+
 #define BFDLog(...) printf("[%s:%d]: ",  __FILE__, __LINE__); printf(__VA_ARGS__); printf("\n")
 
 #else 

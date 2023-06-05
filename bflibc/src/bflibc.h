@@ -12,6 +12,7 @@
 #include "log.h"
 #include "free.h"
 #include "bftime.h"
+#include "checksum.h"
 
 #endif // CLIB_H
 
