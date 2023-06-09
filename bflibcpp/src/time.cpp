@@ -17,7 +17,13 @@ Time * Time::createCurrent() {
 	return new Time(BFTimeGetCurrentTime());
 }
 
+Time::Time() : Time(0) { }
+
 Time::Time(BFTime t) {
+	this->set(t);
+}
+
+void Time::set(BFTime t) {
 	this->_time = t;
 	this->_dateTime = {0};
 
@@ -80,5 +86,15 @@ Time * Time::operator*(const Time & t) {
 
 Time * Time::operator/(const Time & t) {
 	return new Time(this->epoch() / t.epoch());
+}
+
+Time & Time::operator=(const Time & t) {
+	this->set(t._time);
+	return *this;
+}
+
+Time & Time::operator=(const BFTime & t) {
+	this->set(t);
+	return *this;
 }
 

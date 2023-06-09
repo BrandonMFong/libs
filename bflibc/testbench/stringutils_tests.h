@@ -32,8 +32,26 @@ int test_CopyString(void) {
 	}
 
 	PRINT_TEST_RESULTS(!result);
+	return result;
+}
 
-	return result;;
+int test_uuidGen(void) {
+	int result = 0;
+	char uuidStr[kBFStringUUIDStringLength];
+	BFStringGetRandomUUIDString(uuidStr);
+	uuid_t bin;
+
+	if (strlen(uuidStr) != kBFStringUUIDStringLength) {
+		printf("Length: %ld != %d\n", strlen(uuidStr), kBFStringUUIDStringLength);
+		result = 1;
+	} else if (uuid_parse(uuidStr, bin)) {
+		result = 2;
+	}
+
+	if (result) { printf("Error: %d\n", result); }
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
 }
 
 void stringutils_tests(int * pass, int * fail) {
@@ -42,6 +60,9 @@ void stringutils_tests(int * pass, int * fail) {
 	INTRO_TEST_FUNCTION;
 
 	if (!test_CopyString()) p++;
+	else f++;
+	
+	if (!test_uuidGen()) p++;
 	else f++;
 
 	if (pass) *pass += p;

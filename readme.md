@@ -4,3 +4,8 @@
 - 1.0
 	- Introduces standard c and cpp functions/classes
 
+## Libraries
+
+### bflibc
+- Dependencies: uuid lib
+

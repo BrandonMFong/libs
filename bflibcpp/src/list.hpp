@@ -31,6 +31,10 @@ typedef enum {
  * is a 32 bit integer.  If you are planning to have 
  * a list with size exceeding the 2^32, you should 
  * change the S value to 'long' or 'long long'
+ *
+ * Memory:
+ * Unless a callback is specified, by default the node
+ * object memory will not be deallocated.
  */
 template <typename L, typename S = int>
 class List {
@@ -42,11 +46,11 @@ PUBLIC:
 	class Node {
 		friend List<L, S>;
 	PUBLIC:
-		Node * next() {
+		Node * next() const {
 			return this->right;
 		}
 
-		L object() {
+		L object() const {
 			return this->obj;
 		}
 
@@ -161,7 +165,7 @@ PUBLIC:
 	/**
 	 * callback will be a pointer to a function that handles how we will delete object memory
 	 */
-	void setObjectMemoryHandler(void (* callback)(L obj)) {
+	void setDeallocateCallback(void (* callback)(L obj)) {
 		this->_nodeObjectCleanUpCallback = callback;
 	}
 
@@ -178,11 +182,11 @@ PUBLIC:
 	 * Caller can use this node to traverse through the 
 	 * list
 	 */
-	Node * first() {
+	Node * first() const {
 		return this->_head;
 	}
 
-	Node * last() {
+	Node * last() const {
 		return this->_tail;
 	}
 
