@@ -92,7 +92,7 @@ t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
 compile-tests:
-	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS)
+	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS) -luuid
 
 clean: r-clean d-clean
 	rm -rfv build/

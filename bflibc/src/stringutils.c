@@ -6,6 +6,7 @@
 #include "stringutils.h"
 #include <stdlib.h>
 #include <string.h>
+#include <uuid/uuid.h>
 
 char * BFStringCopyString(const char * string, int * err) {
 	int error = 0;
@@ -23,5 +24,12 @@ char * BFStringCopyString(const char * string, int * err) {
 	if (err != 0) *err = error;
 
 	return result;
+}
+
+void BFStringGetRandomUUIDString(char * uuidString) {
+	uuid_t bin;
+
+	uuid_generate_random(bin);
+	uuid_unparse_lower(bin, uuidString);
 }
 

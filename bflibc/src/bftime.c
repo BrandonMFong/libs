@@ -49,6 +49,7 @@ int BFTimeGetDateTimeFromTime(BFTime t, BFDateTime * dt) {
 	return result;
 }
 
+// TODO: delete if we do not need
 const char * BFTimeGetMonthStringFromTime(const BFTime t) {
 	BFDateTime dt = {0};
 

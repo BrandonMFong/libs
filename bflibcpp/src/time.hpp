@@ -18,6 +18,7 @@ class Time {
 PUBLIC:
 	static Time * createCurrent();
 	Time(BFTime t);
+	Time();
 	~Time();
 
 	/**
@@ -48,6 +49,8 @@ PUBLIC:
 
 PRIVATE:
 
+	void set(BFTime t);
+
 	// Base variables to hold time we are representing
 	BFTime _time;
 	BFDateTime _dateTime;
@@ -59,6 +62,8 @@ PUBLIC:
 	Time * operator-(const Time & t);
 	Time * operator*(const Time & t);
 	Time * operator/(const Time & t);
+	Time & operator=(const Time & t);
+	Time & operator=(const BFTime & t);
 };
 
 }

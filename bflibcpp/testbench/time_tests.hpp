@@ -38,6 +38,28 @@ int test_TimeInit() {
 		}
 	}
 
+	Time tm3;
+	if (result == 0) {
+		if (tm3.epoch() != 0) {
+			result = 4;
+		}
+	}
+	
+	if (result == 0) {
+		tm3 = tm2;
+		if (tm3 != tm2) {
+			result = 4;
+		}
+	}
+
+	if (result == 0) {
+		t = BFTimeGetCurrentTime();
+		tm3 = t;
+		if (tm3.epoch() != t) {
+			result = 4;
+		}
+	}
+
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
