@@ -103,10 +103,19 @@ int test_MoveFSItems(void) {
 	int result = 0;
 	char tmpdir[PATH_MAX];
 	// setup
-	result = BFFileSystemGetOSTempDirectory(tmpdir);
-	strcat(tmpdir, "/.test_MoveFSItems");
-	mkdir(tmpdir, 0700);
+	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
+		result = 1;
+	} else if (strcat(tmpdir, "/.test_MoveFSItems") == NULL) {
+		result = 2;
+	} else if (mkdir(tmpdir, 0700)) {
+		result = 3;
+	}
+	
 	// teardown
+	
+	if (remove(tmpdir)) {
+		printf("could not remove: %s\n", tmpdir);
+	}
 	
 	PRINT_TEST_RESULTS(!result);
 	return result;
