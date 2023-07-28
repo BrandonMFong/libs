@@ -11,6 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <limits.h>
 
 int test_HomePath(void) {
 	int result = 0;
@@ -84,8 +87,27 @@ int test_GetFileExtensionForPath(void) {
 	return result;
 }
 
+int test_tmpdir(void) {
+	int result = 0;
+	char tmpdir[PATH_MAX];
+	result = BFFileSystemGetOSTempDirectory(tmpdir);
+
+	if (result == 0) {
+		if (!strlen(tmpdir)) result = 2;
+	}
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 int test_MoveFSItems(void) {
 	int result = 0;
+	char tmpdir[PATH_MAX];
+	// setup
+	result = BFFileSystemGetOSTempDirectory(tmpdir);
+	strcat(tmpdir, "/.test_MoveFSItems");
+	mkdir(tmpdir, 0700);
+	// teardown
+	
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
@@ -99,6 +121,7 @@ void filesystem_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_CalculateSizeForAvailability, p, f);
 	LAUNCH_TEST(test_GetFileExtensionForPath, p, f);
 	LAUNCH_TEST(test_MoveFSItems, p, f);
+	LAUNCH_TEST(test_tmpdir, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

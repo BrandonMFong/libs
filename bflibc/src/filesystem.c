@@ -213,3 +213,10 @@ int BFFileSystemMove(const char * spath, const char * dpath) {
 	return result;
 }
 
+int BFFileSystemGetOSTempDirectory(char * path) {
+	if (path) {
+		strcpy(path, "/tmp");
+	}
+	return 0;
+}
+
