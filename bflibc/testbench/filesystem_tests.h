@@ -121,14 +121,11 @@ int test_MoveFSItems(void) {
 	} else if (strcat(srcdir, "/src") == NULL) {
 		result = 5;
 	} else if (mkdir(srcdir, 0700)) {
-		result = 5;
+		result = 6;
 	} else if (strcpy(dstdir, tmpdir) == NULL) {
-		result = 4;
+		result = 7;
 	} else if (strcat(dstdir, "/dst") == NULL) {
-		result = 5;
-	} else if (mkdir(dstdir, 0700)) {
-		result = 5;
-
+		result = 8;
 	}
 
 	// test
@@ -155,6 +152,7 @@ int test_MoveFSItems(void) {
 			free(buf);
 		}
 
+		result = BFFileSystemMove(srcdir, dstdir);
 	}
 	
 	// teardown

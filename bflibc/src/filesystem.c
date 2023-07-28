@@ -210,6 +210,7 @@ int BFFileSystemPathGetExtension(const char * path, char * buf) {
 int BFFileSystemMove(const char * spath, const char * dpath) {
 	int result = 0;
 
+	printf("%s -> %s\n", spath, dpath);
 	return result;
 }
 
