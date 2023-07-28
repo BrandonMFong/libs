@@ -58,6 +58,11 @@ bool BFFileSystemPathIsSymbolicLink(const char * path);
 char * BFFileSystemPathCopyHomePath(int * err);
 
 /**
+ * returns operating system's tmp directory
+ */
+int BFFileSystemGetOSTempDirectory(char * path);
+
+/**
  * Upon success, buf will have the file extension for the 
  * input path. If no input path was found, nothing will
  * change in buf and no error code will be returned.  
@@ -69,6 +74,11 @@ char * BFFileSystemPathCopyHomePath(int * err);
  * string, undefined behavior will occur
  */
 int BFFileSystemPathGetExtension(const char * path, char * buf);
+
+/**
+ * Recursively removes path
+ */
+int BFFileSystemRemoveAll(const char * path);
 
 #endif // FILESYSTEM_H
 
