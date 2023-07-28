@@ -95,17 +95,10 @@ void filesystem_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_HomePath()) p++;
-	else f++;
-
-	if (!test_CalculateSizeForAvailability()) p++;
-	else f++;
-
-	if (!test_GetFileExtensionForPath()) p++;
-	else f++;
-
-	if (!test_MoveFSItems()) p++;
-	else f++;
+	LAUNCH_TEST(test_HomePath, p, f);
+	LAUNCH_TEST(test_CalculateSizeForAvailability, p, f);
+	LAUNCH_TEST(test_GetFileExtensionForPath, p, f);
+	LAUNCH_TEST(test_MoveFSItems, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
