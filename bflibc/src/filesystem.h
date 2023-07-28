@@ -76,11 +76,6 @@ int BFFileSystemGetOSTempDirectory(char * path);
 int BFFileSystemPathGetExtension(const char * path, char * buf);
 
 /**
- * Moves spath to dpath
- */
-int BFFileSystemMove(const char * spath, const char * dpath);
-
-/**
  * Recursively removes path
  */
 int BFFileSystemRemoveAll(const char * path);

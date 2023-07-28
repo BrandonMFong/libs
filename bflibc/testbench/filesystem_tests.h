@@ -102,120 +102,6 @@ int test_tmpdir(void) {
 	return result;
 }
 
-int test_MoveFSItems(void) {
-	int result = 0;
-	char tmpdir[PATH_MAX];
-	char srcdir[PATH_MAX];
-	char dstdir[PATH_MAX];
-	char file[PATH_MAX];
-
-	// setup
-	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
-		result = 1;
-	} else if (strcat(tmpdir, "/.test_MoveFSItems") == NULL) {
-		result = 2;
-	} else if (mkdir(tmpdir, 0700)) {
-		result = 3;
-	} else if (strcpy(srcdir, tmpdir) == NULL) {
-		result = 4;
-	} else if (strcat(srcdir, "/src") == NULL) {
-		result = 5;
-	} else if (mkdir(srcdir, 0700)) {
-		result = 6;
-	} else if (strcpy(dstdir, tmpdir) == NULL) {
-		result = 7;
-	} else if (strcat(dstdir, "/dst") == NULL) {
-		result = 8;
-	}
-
-	// test
-	if (result == 0) {
-		// create test files
-		for (int i = 0; i < 10; i++) {
-			// create file path
-			strcpy(file, srcdir);
-			strcat(file, "/file");
-			size_t size = strlen(file);
-			file[size] = BFStringIntegerToChar(i);
-			file[size + 1] = '\0';
-			
-			// Create file
-			int f = open(file, O_WRONLY | O_CREAT, S_IRWXU);
-
-			// Write random stuff into it
-			size = 2 << 8;
-			char * buf = (char *) malloc(size);
-			write(f, buf, size);
-
-			// clean up
-			close(f);
-			free(buf);
-		}
-
-		result = BFFileSystemMove(srcdir, dstdir);
-	}
-	
-	// teardown
-
-	if (BFFileSystemRemoveAll(tmpdir)) {
-		printf("could not remove: %s\n", tmpdir);
-	}
-	
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_MoveFSItem(void) {
-	int result = 0;
-	char tmpdir[PATH_MAX];
-	char file1[PATH_MAX], file2[PATH_MAX];
-
-	// setup
-	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
-		result = 1;
-	} else if (strcat(tmpdir, "/.test_MoveFSItems") == NULL) {
-		result = 2;
-	} else if (mkdir(tmpdir, 0700)) {
-		result = 3;
-	}
-
-	// test
-	if (result == 0) {
-		strcpy(file1, tmpdir);
-		strcat(file1, "/file1");
-		strcpy(file2, tmpdir);
-		strcat(file2, "/file2");
-	
-		// Create file
-		int f = open(file1, O_WRONLY | O_CREAT, S_IRWXU);
-
-		// Write random stuff into it
-		size_t size = 2 << 8;
-		char * buf = (char *) malloc(size);
-		write(f, buf, size);
-
-		// clean up
-		close(f);
-		free(buf);
-
-		result = BFFileSystemMove(file1, file2);
-	}
-
-	if (result == 0) {
-		if (!BFFileSystemPathExists(file2)) {
-			result = 3;
-		}
-	}
-	
-	// teardown
-	if (BFFileSystemRemoveAll(tmpdir)) {
-		printf("could not remove: %s\n", tmpdir);
-	}
-	
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
 int test_RemoveFullDirectory(void) {
 	int result = 0;
 	char tmpdir[PATH_MAX];
@@ -274,8 +160,6 @@ void filesystem_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_CalculateSizeForAvailability, p, f);
 	LAUNCH_TEST(test_GetFileExtensionForPath, p, f);
 	LAUNCH_TEST(test_RemoveFullDirectory, p, f);
-	//LAUNCH_TEST(test_MoveFSItems, p, f);
-	LAUNCH_TEST(test_MoveFSItem, p, f);
 	LAUNCH_TEST(test_tmpdir, p, f);
 
 	if (pass) *pass += p;

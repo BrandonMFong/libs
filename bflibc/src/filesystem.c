@@ -207,35 +207,6 @@ int BFFileSystemPathGetExtension(const char * path, char * buf) {
 	return result;
 }
 
-int BFFileSystemMove(const char * spath, const char * dpath) {
-	printf("%s -> %s\n", spath, dpath);
-
-	if (!BFFileSystemPathIsDirectory(spath)) {
-		return rename(spath, dpath);
-	} else {
-		int error = 0;
-		DIR * dir = opendir(spath);
-		if (dir == 0) {
-			error = -1;
-		} else {
-			// TODO: figure out how to recursively do this
-			struct dirent * sdirent = 0;
-			while ((sdirent = readdir(dir)) && !error) {
-				if (strcmp(sdirent->d_name, "..") && strcmp(sdirent->d_name, ".")) {
-					char tempPath[PATH_MAX];
-					sprintf(tempPath, "%s/%s", spath, sdirent->d_name);
-				}
-			}
-
-			if (error == 0) {
-				//error = remove(path); // remove directory
-			}
-		}
-
-		return error;
-	}
-}
-
 int BFFileSystemRemoveAll(const char * path) {
 	if (!BFFileSystemPathIsDirectory(path)) {
 		return remove(path); // remove file
