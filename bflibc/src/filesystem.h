@@ -80,5 +80,10 @@ int BFFileSystemPathGetExtension(const char * path, char * buf);
  */
 int BFFileSystemMove(const char * spath, const char * dpath);
 
+/**
+ * Recursively removes path
+ */
+int BFFileSystemRemoveAll(const char * path);
+
 #endif // FILESYSTEM_H
 

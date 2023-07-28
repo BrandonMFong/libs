@@ -118,25 +118,82 @@ int test_MoveFSItems(void) {
 
 	// test
 	if (result == 0) {
-		// create files
+		// create test files
 		for (int i = 0; i < 10; i++) {
+			// create file path
 			strcpy(file, tmpdir);
 			strcat(file, "/file");
 			size_t size = strlen(file);
 			file[size] = BFStringIntegerToChar(i);
 			file[size + 1] = '\0';
-			int f = open(file, O_WRONLY);
+			
+			// Create file
+			int f = open(file, O_WRONLY | O_CREAT, S_IRWXU);
+
+			// Write random stuff into it
 			size = 2 << 8;
 			char * buf = (char *) malloc(size);
 			write(f, buf, size);
+
+			// clean up
 			close(f);
 			free(buf);
 		}
 	}
 	
 	// teardown
+
+	if (BFFileSystemRemoveAll(tmpdir)) {
+		printf("could not remove: %s\n", tmpdir);
+	}
 	
-	if (remove(tmpdir)) {
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+
+int test_RemoveFullDirectory(void) {
+	int result = 0;
+	char tmpdir[PATH_MAX];
+	char file[PATH_MAX];
+
+	// setup
+	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
+		result = 1;
+	} else if (strcat(tmpdir, "/.test_MoveFSItems") == NULL) {
+		result = 2;
+	} else if (mkdir(tmpdir, 0700)) {
+		result = 3;
+	}
+
+	// test
+	if (result == 0) {
+		// create test files
+		for (int i = 0; i < 10; i++) {
+			// create file path
+			strcpy(file, tmpdir);
+			strcat(file, "/file");
+			size_t size = strlen(file);
+			file[size] = BFStringIntegerToChar(i);
+			file[size + 1] = '\0';
+			
+			// Create file
+			int f = open(file, O_WRONLY | O_CREAT, S_IRWXU);
+
+			// Write random stuff into it
+			size = 2 << 8;
+			char * buf = (char *) malloc(size);
+			write(f, buf, size);
+
+			// clean up
+			close(f);
+			free(buf);
+		}
+	}
+	
+	// teardown
+
+	if (BFFileSystemRemoveAll(tmpdir)) {
 		printf("could not remove: %s\n", tmpdir);
 	}
 	
@@ -152,6 +209,7 @@ void filesystem_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_HomePath, p, f);
 	LAUNCH_TEST(test_CalculateSizeForAvailability, p, f);
 	LAUNCH_TEST(test_GetFileExtensionForPath, p, f);
+	LAUNCH_TEST(test_RemoveFullDirectory, p, f);
 	LAUNCH_TEST(test_MoveFSItems, p, f);
 	LAUNCH_TEST(test_tmpdir, p, f);
 
