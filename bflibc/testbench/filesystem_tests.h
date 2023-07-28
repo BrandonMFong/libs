@@ -165,6 +165,56 @@ int test_MoveFSItems(void) {
 	return result;
 }
 
+int test_MoveFSItem(void) {
+	int result = 0;
+	char tmpdir[PATH_MAX];
+	char file1[PATH_MAX], file2[PATH_MAX];
+
+	// setup
+	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
+		result = 1;
+	} else if (strcat(tmpdir, "/.test_MoveFSItems") == NULL) {
+		result = 2;
+	} else if (mkdir(tmpdir, 0700)) {
+		result = 3;
+	}
+
+	// test
+	if (result == 0) {
+		strcpy(file1, tmpdir);
+		strcat(file1, "/file1");
+		strcpy(file2, tmpdir);
+		strcat(file2, "/file2");
+	
+		// Create file
+		int f = open(file1, O_WRONLY | O_CREAT, S_IRWXU);
+
+		// Write random stuff into it
+		size_t size = 2 << 8;
+		char * buf = (char *) malloc(size);
+		write(f, buf, size);
+
+		// clean up
+		close(f);
+		free(buf);
+
+		result = BFFileSystemMove(file1, file2);
+	}
+
+	if (result == 0) {
+		if (!BFFileSystemPathExists(file2)) {
+			result = 3;
+		}
+	}
+	
+	// teardown
+	if (BFFileSystemRemoveAll(tmpdir)) {
+		printf("could not remove: %s\n", tmpdir);
+	}
+	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
 
 int test_RemoveFullDirectory(void) {
 	int result = 0;
@@ -224,7 +274,8 @@ void filesystem_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_CalculateSizeForAvailability, p, f);
 	LAUNCH_TEST(test_GetFileExtensionForPath, p, f);
 	LAUNCH_TEST(test_RemoveFullDirectory, p, f);
-	LAUNCH_TEST(test_MoveFSItems, p, f);
+	//LAUNCH_TEST(test_MoveFSItems, p, f);
+	LAUNCH_TEST(test_MoveFSItem, p, f);
 	LAUNCH_TEST(test_tmpdir, p, f);
 
 	if (pass) *pass += p;
