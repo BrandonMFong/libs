@@ -10,6 +10,8 @@
 
 #define kBFStringUUIDStringLength UUID_STR_LEN - 1
 
+#define BFStringIntegerToChar(i) i + '0'
+
 /**
  * Creates a copy of string
  *

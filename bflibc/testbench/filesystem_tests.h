@@ -7,6 +7,7 @@
 #define FILESYSTEM_TESTS_H
 
 #include "clib_tests.h"
+#include "stringutils.h"
 #include <filesystem.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +15,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <limits.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 int test_HomePath(void) {
 	int result = 0;
@@ -102,6 +105,8 @@ int test_tmpdir(void) {
 int test_MoveFSItems(void) {
 	int result = 0;
 	char tmpdir[PATH_MAX];
+	char file[PATH_MAX];
+
 	// setup
 	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
 		result = 1;
@@ -109,6 +114,24 @@ int test_MoveFSItems(void) {
 		result = 2;
 	} else if (mkdir(tmpdir, 0700)) {
 		result = 3;
+	}
+
+	// test
+	if (result == 0) {
+		// create files
+		for (int i = 0; i < 10; i++) {
+			strcpy(file, tmpdir);
+			strcat(file, "/file");
+			size_t size = strlen(file);
+			file[size] = BFStringIntegerToChar(i);
+			file[size + 1] = '\0';
+			int f = open(file, O_WRONLY);
+			size = 2 << 8;
+			char * buf = (char *) malloc(size);
+			write(f, buf, size);
+			close(f);
+			free(buf);
+		}
 	}
 	
 	// teardown
