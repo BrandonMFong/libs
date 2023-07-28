@@ -105,6 +105,8 @@ int test_tmpdir(void) {
 int test_MoveFSItems(void) {
 	int result = 0;
 	char tmpdir[PATH_MAX];
+	char srcdir[PATH_MAX];
+	char dstdir[PATH_MAX];
 	char file[PATH_MAX];
 
 	// setup
@@ -114,6 +116,19 @@ int test_MoveFSItems(void) {
 		result = 2;
 	} else if (mkdir(tmpdir, 0700)) {
 		result = 3;
+	} else if (strcpy(srcdir, tmpdir) == NULL) {
+		result = 4;
+	} else if (strcat(srcdir, "/src") == NULL) {
+		result = 5;
+	} else if (mkdir(srcdir, 0700)) {
+		result = 5;
+	} else if (strcpy(dstdir, tmpdir) == NULL) {
+		result = 4;
+	} else if (strcat(dstdir, "/dst") == NULL) {
+		result = 5;
+	} else if (mkdir(dstdir, 0700)) {
+		result = 5;
+
 	}
 
 	// test
@@ -121,7 +136,7 @@ int test_MoveFSItems(void) {
 		// create test files
 		for (int i = 0; i < 10; i++) {
 			// create file path
-			strcpy(file, tmpdir);
+			strcpy(file, srcdir);
 			strcat(file, "/file");
 			size_t size = strlen(file);
 			file[size] = BFStringIntegerToChar(i);
@@ -139,6 +154,7 @@ int test_MoveFSItems(void) {
 			close(f);
 			free(buf);
 		}
+
 	}
 	
 	// teardown
