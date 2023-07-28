@@ -12,5 +12,12 @@
 	else {system("printf \"[\033[0;31m Fail \033[0m] \"");}\
 	printf("%s\n", __func__)
 
+/**
+ * each function should take no params and return 0 on success
+ */
+#define LAUNCH_TEST(unit_test_function, pass_counter, fail_counter) \
+	if (!unit_test_function()) pass_counter++; \
+	else fail_counter++;
+
 #endif // CLIB_TESTS_H
 

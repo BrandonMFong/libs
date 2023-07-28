@@ -6,11 +6,13 @@
 include ../makefiles/platforms.mk
 include makefiles/checksum.mk
 
-## Compiler definitions
-CC = gcc
-
-## Archiver
-AR = ar
+## tools
+CC = gcc # compiler
+AR = ar # Archiver
+COPY = cp # copy tool
+COPY_FLAGS = -afv
+REMOVE = rm # remove tool
+REMOVE_FLAGS = -rfv
 
 ## Compile Flags
 
@@ -61,21 +63,27 @@ d-setup:
 	@mkdir -p $(D_BIN_PATH)
 
 $(D_BIN_PATH)/$(D_BFLIBC_OUT): $(D_C_OBJ_FILES)
-	cp -afv src/*.h $(D_BIN_PATH)
+	$(COPY) $(COPY_FLAGS) src/*.h $(D_BIN_PATH)
 	$(AR) -rsc $(D_BIN_PATH)/$(D_BFLIBC_OUT) $^
 
 $(D_BUILD_PATH)/%.o: src/%.c src/%.h
 	$(CC) -c -o $@ $< $(D_CFLAGS)
 
 d-clean:
-	rm -rfv $(D_BUILD_PATH)
-	rm -rfv $(D_BIN_PATH)
+	$(REMOVE) $(REMOVE_FLAGS) $(D_BUILD_PATH)
+	$(REMOVE) $(REMOVE_FLAGS) $(D_BIN_PATH)
 
 ### TESTS ###
 T_BFLIBC_OUT = test-bflibc
 T_BIN_PATH = bin/test/bflibc
 
 test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS)
+test: CC = @gcc
+test: AR = @ar
+test: COPY = @cp
+test: REMOVE = @rm
+test: REMOVE_FLAGS = -rf
+test: COPY_FLAGS = -af
 test: t-setup d-clean debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBC_OUT)
 
@@ -86,6 +94,6 @@ compile-tests:
 	$(CC) -o $(T_BIN_PATH)/$(T_BFLIBC_OUT) testbench/tests.c $(D_BIN_PATH)/$(D_BFLIBC_OUT) $(D_CFLAGS) -luuid
 
 clean: r-clean d-clean
-	rm -rfv build/
-	rm -rfv bin
+	$(REMOVE) $(REMOVE_FLAGS) build/
+	$(REMOVE) $(REMOVE_FLAGS) bin
 

@@ -207,3 +207,37 @@ int BFFileSystemPathGetExtension(const char * path, char * buf) {
 	return result;
 }
 
+int BFFileSystemRemoveAll(const char * path) {
+	if (!BFFileSystemPathIsDirectory(path)) {
+		return remove(path); // remove file
+	} else {
+		int error = 0;
+		DIR * dir = opendir(path);
+		if (dir == 0) {
+			error = -1;
+		} else {
+			struct dirent * sdirent = 0;
+			while ((sdirent = readdir(dir)) && !error) {
+				if (strcmp(sdirent->d_name, "..") && strcmp(sdirent->d_name, ".")) {
+					char tempPath[PATH_MAX];
+					sprintf(tempPath, "%s/%s", path, sdirent->d_name);
+					error = BFFileSystemRemoveAll(tempPath); // recursively call
+				}
+			}
+
+			if (error == 0) {
+				error = remove(path); // remove directory
+			}
+		}
+
+		return error;
+	}
+}
+
+int BFFileSystemGetOSTempDirectory(char * path) {
+	if (path) {
+		strcpy(path, "/tmp");
+	}
+	return 0;
+}
+
