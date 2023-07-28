@@ -218,6 +218,7 @@ int BFFileSystemMove(const char * spath, const char * dpath) {
 		if (dir == 0) {
 			error = -1;
 		} else {
+			// TODO: figure out how to recursively do this
 			struct dirent * sdirent = 0;
 			while ((sdirent = readdir(dir)) && !error) {
 				if (strcmp(sdirent->d_name, "..") && strcmp(sdirent->d_name, ".")) {
