@@ -84,6 +84,12 @@ int test_GetFileExtensionForPath(void) {
 	return result;
 }
 
+int test_MoveFSItems(void) {
+	int result = 0;
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void filesystem_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -96,6 +102,9 @@ void filesystem_tests(int * pass, int * fail) {
 	else f++;
 
 	if (!test_GetFileExtensionForPath()) p++;
+	else f++;
+
+	if (!test_MoveFSItems()) p++;
 	else f++;
 
 	if (pass) *pass += p;

@@ -70,5 +70,10 @@ char * BFFileSystemPathCopyHomePath(int * err);
  */
 int BFFileSystemPathGetExtension(const char * path, char * buf);
 
+/**
+ * Moves spath to dpath
+ */
+int BFFileSystemMove(const char * spath, const char * dpath);
+
 #endif // FILESYSTEM_H
 

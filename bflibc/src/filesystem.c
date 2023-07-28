@@ -207,3 +207,9 @@ int BFFileSystemPathGetExtension(const char * path, char * buf) {
 	return result;
 }
 
+int BFFileSystemMove(const char * spath, const char * dpath) {
+	int result = 0;
+
+	return result;
+}
+
