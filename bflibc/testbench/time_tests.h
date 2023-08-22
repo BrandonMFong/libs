@@ -70,11 +70,8 @@ void time_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_GettingTime()) p++;
-	else f++;
-
-	if (!test_GettingDateTime()) p++;
-	else f++;
+	LAUNCH_TEST(test_GettingTime, p, f);
+	LAUNCH_TEST(test_GettingDateTime, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

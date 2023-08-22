@@ -221,6 +221,13 @@ PUBLIC:
 		return this->sortNodeToNode(this->_head, this->_tail, this->_count, option);
 	}
 
+	/**
+	 * Shuffles node links
+	 */
+	int shuffle() {
+		return 0;
+	}
+
 PROTECTED:
 
 	int deleteNode(Node * node) {
