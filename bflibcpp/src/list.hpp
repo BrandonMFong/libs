@@ -258,8 +258,28 @@ PROTECTED:
 PRIVATE:
 
 	static int swap(Node * a, Node * b) {
-		
-		return 0;
+		// Don't continue with this if a or b are null
+		if (!a || !b) return -1;
+		else {
+			Node * al = a->left;
+			Node * ar = a->right;
+			Node * bl = b->left;
+			Node * br = b->right;
+
+			// set a
+			if (bl) bl->right = a;
+			if (br) br->left = a;
+			a->left = bl;
+			a->right = br;
+
+			// set b
+			if (al) al->right = b;
+			if (ar) ar->left = b;
+			b->left = al;
+			b->right = ar;
+
+			return 0;
+		}
 	}
 
 	/**
