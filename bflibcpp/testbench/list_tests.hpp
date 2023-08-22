@@ -421,6 +421,47 @@ int test_ListSortingStrings() {
 	return result;
 }
 
+int test_ListSwap() {
+	int result = 0;
+	List<int>::Node * a = new List<int>::Node;
+	List<int>::Node * al = new List<int>::Node;
+	List<int>::Node * ar = new List<int>::Node;
+	a->left = al;
+	a->right = ar;
+	al->right = a;
+	ar->left = a;
+	List<int>::Node * b = new List<int>::Node;
+	List<int>::Node * bl = new List<int>::Node;
+	List<int>::Node * br = new List<int>::Node;
+	b->left = bl;
+	b->right = br;
+	bl->right = b;
+	br->left = b;
+
+	if (a->prev() != al) result = 1;
+	else if (a->next() != ar) result = 1;
+	else if (al->next() != a) result = 1;
+	else if (ar->prev() != a) result = 1;
+	else if (b->prev() != bl) result = 1;
+	else if (b->next() != br) result = 1;
+	else if (bl->next() != b) result = 1;
+	else if (br->prev() != b) result = 1;
+
+	if (result == 0) result = List<int>::swap(a, b);
+	if (result == 0) {
+		if (b->prev() != al) result = 2;
+		else if (b->next() != ar) result = 2;
+		else if (al->next() != b) result = 2;
+		else if (ar->prev() != b) result = 2;
+		else if (a->prev() != bl) result = 2;
+		else if (a->next() != br) result = 2;
+		else if (bl->next() != a) result = 2;
+		else if (br->prev() != a) result = 2;
+	}
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
@@ -441,6 +482,7 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_ListSortDescending, p, f);
 	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
 	LAUNCH_TEST(test_ListSortingStrings, p, f);
+	LAUNCH_TEST(test_ListSwap, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

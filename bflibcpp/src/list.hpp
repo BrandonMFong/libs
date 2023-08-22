@@ -50,6 +50,10 @@ PUBLIC:
 			return this->right;
 		}
 
+		Node * prev() const {
+			return this->left;
+		}
+
 		L object() const {
 			return this->obj;
 		}
