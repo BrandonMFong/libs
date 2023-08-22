@@ -253,6 +253,11 @@ PROTECTED:
 
 PRIVATE:
 
+	static int swap(Node * a, Node * b) {
+		
+		return 0;
+	}
+
 	/**
 	 * Sorts nodes from first to last using merge sort techinques
 	 */

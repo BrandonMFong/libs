@@ -427,47 +427,20 @@ void list_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_Init()) p++;
-	else f++;
-
-	if (!test_adding()) p++;
-	else f++;
-
-	if (!test_indexing()) p++;
-	else f++;
-
-	if (!test_inserting()) p++;
-	else f++;
-
-	if (!test_deletingAtIndex()) p++;
-	else f++;
-
-	if (!test_deletingAllNodes()) p++;
-	else f++;
-
-	if (!test_listMemoryHandling()) p++;
-	else f++;
-
-	if (!test_traversing()) p++;
-	else f++;
-
-	if (!test_ListContains()) p++;
-	else f++;
-
-	if (!test_InitializingWithInitList()) p++;
-	else f++;
-
-	if (!test_ListSortAscending()) p++;
-	else f++;
-
-	if (!test_ListSortDescending()) p++;
-	else f++;
-
-	if (!test_InitializingFromRawArray()) p++;
-	else f++;
-
-	if (!test_ListSortingStrings()) p++;
-	else f++;
+	LAUNCH_TEST(test_Init, p, f);
+	LAUNCH_TEST(test_adding, p, f);
+	LAUNCH_TEST(test_indexing, p, f);
+	LAUNCH_TEST(test_inserting, p, f);
+	LAUNCH_TEST(test_deletingAtIndex, p, f);
+	LAUNCH_TEST(test_deletingAllNodes, p, f);
+	LAUNCH_TEST(test_listMemoryHandling, p, f);
+	LAUNCH_TEST(test_traversing, p, f);
+	LAUNCH_TEST(test_ListContains, p, f);
+	LAUNCH_TEST(test_InitializingWithInitList, p, f);
+	LAUNCH_TEST(test_ListSortAscending, p, f);
+	LAUNCH_TEST(test_ListSortDescending, p, f);
+	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
+	LAUNCH_TEST(test_ListSortingStrings, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
