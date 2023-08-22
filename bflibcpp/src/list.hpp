@@ -257,6 +257,9 @@ PROTECTED:
 
 PRIVATE:
 
+	/**
+	 * Swaps a and b
+	 */
 	static int swap(Node * a, Node * b) {
 		// Don't continue with this if a or b are null
 		if (!a || !b) return -1;
