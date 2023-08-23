@@ -345,7 +345,7 @@ int test_ListSortDescending() {
 
 	srand(time(NULL));
 
-	int size = 1000, max = 100;
+	int size = 2 << 20, max = 2 << 14;
 	for (int i = 0; i < size; i++) {
 		int num = rand() % max;
 

@@ -146,7 +146,16 @@ PUBLIC:
 
 	// Deletes every object in list
 	void deleteAll() {
-		this->deleteAll(this->_head);
+		Node * node = this->_head;
+		while (node) {
+			Node * tmp = node->right;
+			delete node;
+			node = tmp;
+			this->_count--;
+		}
+
+		this->_head = NULL;
+		this->_tail = NULL;
 	}
 
 	// returns object at index
@@ -473,17 +482,6 @@ PRIVATE:
 				return this->deleteNode(currNode);
 			}
 		}
-	}
-
-	/**
-	 * Traverses linked list from the start node and deletes from the 
-	 * last node
-	 */
-	void deleteAll(Node * node) {
-		if (node == 0) return;
-		if (node->right) this->deleteAll(node->right);
-		delete node;
-		this->_count--;
 	}
 
 	/**
