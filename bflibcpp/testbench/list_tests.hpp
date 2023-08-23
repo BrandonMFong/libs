@@ -421,6 +421,19 @@ int test_ListSortingStrings() {
 	return result;
 }
 
+int test_ListNullSwap() {
+	int result = 0;
+	List<int>::Node a, b;
+	a.obj = 0;
+	b.obj = 1;
+	result = List<int>::swap(&a, 0);
+	if (result) result = List<int>::swap(0, &b);
+	if (result) result = List<int>::swap(0, 0);
+
+	PRINT_TEST_RESULTS(result);
+	return result == 0 ? -1 : 0;
+}
+
 int test_ListSwap() {
 	int result = 0;
 	List<int>::Node * a = new List<int>::Node;
@@ -470,6 +483,20 @@ int test_ListSwap() {
 	return result;
 }
 
+int test_shuffle() {
+	int result = 0;
+	const int size = 5;
+	int array[size];
+	for (int i = 0; i < size; i++) {
+		array[i] = i;
+	}
+	List<int> list;
+	list.set(array, size);
+	result = list.shuffle();
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -490,7 +517,9 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
 	LAUNCH_TEST(test_ListSortingStrings, p, f);
 	LAUNCH_TEST(test_ListSwap, p, f);
-
+	LAUNCH_TEST(test_shuffle, p, f);
+	LAUNCH_TEST(test_ListNullSwap, p, f);
+	
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }

@@ -229,6 +229,18 @@ PUBLIC:
 	 * Shuffles node links
 	 */
 	int shuffle() {
+		srand(time(0));
+		Node * n = this->_tail; // get last
+		int i = this->count() - 1; // get last's index
+		for (; n; n = n->prev()) {
+			// Get random node
+			int r = rand() % (i + 1);
+			Node * tmp = this->objectAtIndex(r);
+			int err = this->swap(n, tmp); // swap nodes
+			if (err) return err; // leave if there was an error in swapping
+			i--;
+		}
+
 		return 0;
 	}
 
