@@ -514,6 +514,39 @@ int test_shuffle() {
 	return result;
 }
 
+int test_ShuffleLargeDataSet() {
+	int result = 0;
+	srand(time(0));
+	const int size = 2 << 14;
+	int array[size];
+	for (int i = 0; i < size; i++) {
+		array[i] = rand();
+	}
+	List<int> list;
+	list.set(array, size);
+	result = list.shuffle();
+
+	if (result == 0) {
+		int score = 0;
+		int i = 0;
+		for (List<int>::Node * n = list.first();
+			n; n = n->next()) {
+			if ((i < size) && (n->object() == array[i])) score++;
+			i++;
+		}
+
+		// If I record that all of the elements in both 
+		// arrays match at every index then we didn't 
+		// shuffle correctly
+		if (score == size) {
+			result = 5;
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -536,7 +569,8 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_ListSwap, p, f);
 	LAUNCH_TEST(test_shuffle, p, f);
 	LAUNCH_TEST(test_ListNullSwap, p, f);
-	
+	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
+
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }
