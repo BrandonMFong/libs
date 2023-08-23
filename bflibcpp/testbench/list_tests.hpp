@@ -238,13 +238,13 @@ int test_listMemoryHandling() {
 
 int test_traversing() {
 	int result = 0;
-	int max = 50; // max nodes
+	int max = 2 << 31; // max nodes
 	int minValue = 10;
 	
 	List<int> t;
 
 	while (max) {
-		int val = (rand() % 100) + minValue;
+		int val = (rand() % (2 << 16)) + minValue;
 
 		result = t.add(val);
 		if (result) {
@@ -309,7 +309,7 @@ int test_ListSortAscending() {
 
 	srand(time(NULL));
 
-	int size = 1000, max = 100;
+	int size = 2 << 20, max = size;
 	for (int i = 0; i < size; i++) {
 		int num = rand() % max;
 
@@ -345,7 +345,7 @@ int test_ListSortDescending() {
 
 	srand(time(NULL));
 
-	int size = 2 << 20, max = 2 << 14;
+	int size = 2 << 20, max = 2 << 20;
 	for (int i = 0; i < size; i++) {
 		int num = rand() % max;
 
