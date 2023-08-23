@@ -238,13 +238,13 @@ int test_listMemoryHandling() {
 
 int test_traversing() {
 	int result = 0;
-	int max = 50; // max nodes
+	int max = 2 << 31; // max nodes
 	int minValue = 10;
 	
 	List<int> t;
 
 	while (max) {
-		int val = (rand() % 100) + minValue;
+		int val = (rand() % (2 << 16)) + minValue;
 
 		result = t.add(val);
 		if (result) {
@@ -309,7 +309,7 @@ int test_ListSortAscending() {
 
 	srand(time(NULL));
 
-	int size = 1000, max = 100;
+	int size = 2 << 20, max = size;
 	for (int i = 0; i < size; i++) {
 		int num = rand() % max;
 
@@ -345,7 +345,7 @@ int test_ListSortDescending() {
 
 	srand(time(NULL));
 
-	int size = 1000, max = 100;
+	int size = 2 << 20, max = 2 << 20;
 	for (int i = 0; i < size; i++) {
 		int num = rand() % max;
 
@@ -421,53 +421,155 @@ int test_ListSortingStrings() {
 	return result;
 }
 
+int test_ListNullSwap() {
+	int result = 0;
+	List<int>::Node a, b;
+	a.obj = 0;
+	b.obj = 1;
+	result = List<int>::swap(&a, 0);
+	if (result) result = List<int>::swap(0, &b);
+	if (result) result = List<int>::swap(0, 0);
+
+	PRINT_TEST_RESULTS(result);
+	return result == 0 ? -1 : 0;
+}
+
+int test_ListSwap() {
+	int result = 0;
+	List<int>::Node * a = new List<int>::Node;
+	a->obj = 1;
+	List<int>::Node * al = new List<int>::Node;
+	List<int>::Node * ar = new List<int>::Node;
+	a->left = al;
+	a->right = ar;
+	al->right = a;
+	ar->left = a;
+
+	List<int>::Node * b = new List<int>::Node;
+	b->obj = 2;
+	List<int>::Node * bl = new List<int>::Node;
+	List<int>::Node * br = new List<int>::Node;
+	b->left = bl;
+	b->right = br;
+	bl->right = b;
+	br->left = b;
+
+	if (a->obj != 1) result = 1;
+	else if (a->prev() != al) result = 1;
+	else if (a->next() != ar) result = 1;
+	else if (al->next() != a) result = 1;
+	else if (ar->prev() != a) result = 1;
+	else if (b->obj != 2) result = 1;
+	else if (b->prev() != bl) result = 1;
+	else if (b->next() != br) result = 1;
+	else if (bl->next() != b) result = 1;
+	else if (br->prev() != b) result = 1;
+
+	if (result == 0) result = List<int>::swap(a, b);
+	if (result == 0) {
+		if (a->obj != 2) result = 2;
+		else if (a->prev() != al) result = 2;
+		else if (a->next() != ar) result = 2;
+		else if (al->next() != a) result = 2;
+		else if (ar->prev() != a) result = 2;
+		else if (b->obj != 1) result = 2;
+		else if (b->prev() != bl) result = 2;
+		else if (b->next() != br) result = 2;
+		else if (bl->next() != b) result = 2;
+		else if (br->prev() != b) result = 2;
+	}
+	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_shuffle() {
+	int result = 0;
+	const int size = 5;
+	int array[size];
+	for (int i = 0; i < size; i++) {
+		array[i] = i;
+	}
+	List<int> list;
+	list.set(array, size);
+	result = list.shuffle();
+
+	if (result == 0) {
+		int score = 0;
+		int i = 0;
+		for (List<int>::Node * n = list.first();
+			n; n = n->next()) {
+			if ((i < size) && (n->object() == array[i])) score++;
+			i++;
+		}
+
+		// If I record that all of the elements in both 
+		// arrays match at every index then we didn't 
+		// shuffle correctly
+		if (score == size) {
+			result = 5;
+		}
+	}
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
+int test_ShuffleLargeDataSet() {
+	int result = 0;
+	srand(time(0));
+	const int size = 2 << 14;
+	int array[size];
+	for (int i = 0; i < size; i++) {
+		array[i] = rand();
+	}
+	List<int> list;
+	list.set(array, size);
+	result = list.shuffle();
+
+	if (result == 0) {
+		int score = 0;
+		int i = 0;
+		for (List<int>::Node * n = list.first();
+			n; n = n->next()) {
+			if ((i < size) && (n->object() == array[i])) score++;
+			i++;
+		}
+
+		// If I record that all of the elements in both 
+		// arrays match at every index then we didn't 
+		// shuffle correctly
+		if (score == size) {
+			result = 5;
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
 
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_Init()) p++;
-	else f++;
-
-	if (!test_adding()) p++;
-	else f++;
-
-	if (!test_indexing()) p++;
-	else f++;
-
-	if (!test_inserting()) p++;
-	else f++;
-
-	if (!test_deletingAtIndex()) p++;
-	else f++;
-
-	if (!test_deletingAllNodes()) p++;
-	else f++;
-
-	if (!test_listMemoryHandling()) p++;
-	else f++;
-
-	if (!test_traversing()) p++;
-	else f++;
-
-	if (!test_ListContains()) p++;
-	else f++;
-
-	if (!test_InitializingWithInitList()) p++;
-	else f++;
-
-	if (!test_ListSortAscending()) p++;
-	else f++;
-
-	if (!test_ListSortDescending()) p++;
-	else f++;
-
-	if (!test_InitializingFromRawArray()) p++;
-	else f++;
-
-	if (!test_ListSortingStrings()) p++;
-	else f++;
+	LAUNCH_TEST(test_Init, p, f);
+	LAUNCH_TEST(test_adding, p, f);
+	LAUNCH_TEST(test_indexing, p, f);
+	LAUNCH_TEST(test_inserting, p, f);
+	LAUNCH_TEST(test_deletingAtIndex, p, f);
+	LAUNCH_TEST(test_deletingAllNodes, p, f);
+	LAUNCH_TEST(test_listMemoryHandling, p, f);
+	LAUNCH_TEST(test_traversing, p, f);
+	LAUNCH_TEST(test_ListContains, p, f);
+	LAUNCH_TEST(test_InitializingWithInitList, p, f);
+	LAUNCH_TEST(test_ListSortAscending, p, f);
+	LAUNCH_TEST(test_ListSortDescending, p, f);
+	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
+	LAUNCH_TEST(test_ListSortingStrings, p, f);
+	LAUNCH_TEST(test_ListSwap, p, f);
+	LAUNCH_TEST(test_shuffle, p, f);
+	LAUNCH_TEST(test_ListNullSwap, p, f);
+	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
