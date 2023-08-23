@@ -288,20 +288,10 @@ PRIVATE:
 				if (distance == 2) {
 					if (option == kListSortOptionsDescending) {
 						if (this->runCompare(first->obj, last->obj) < 0) {
-							/*
-							L obj = first->obj;
-							first->obj = last->obj;
-							last->obj = obj;
-							*/
 							result = this->swap(first, last);
 						}
 					} else {
 						if (this->runCompare(first->obj, last->obj) > 0) {
-							/*
-							L obj = first->obj;
-							first->obj = last->obj;
-							last->obj = obj;
-							*/
 							result = this->swap(first, last);
 						}
 					}
