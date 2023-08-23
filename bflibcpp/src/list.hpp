@@ -152,7 +152,9 @@ PUBLIC:
 	// returns object at index
 	// returns 0 if an error ocurred
 	L objectAtIndex(S index) {
-		return this->objectAtIndex(index, this->_head, 0);
+		Node * n = this->nodeAtIndex(index, this->_head, 0);
+		if (n) return n->object();
+		else return 0;
 	}
 
 	/**
@@ -235,7 +237,7 @@ PUBLIC:
 		for (; n; n = n->prev()) {
 			// Get random node
 			int r = rand() % (i + 1);
-			Node * tmp = this->objectAtIndex(r);
+			Node * tmp = this->nodeAtIndex(r, this->_head, 0);
 			int err = this->swap(n, tmp); // swap nodes
 			if (err) return err; // leave if there was an error in swapping
 			i--;
@@ -415,12 +417,12 @@ PRIVATE:
 	/**
 	 * Recursively traverses through linked list until we read the reqIndex'th node
 	 */
-	L objectAtIndex(S reqIndex, Node * node, S currIndex) {
+	Node * nodeAtIndex(S reqIndex, Node * node, S currIndex) {
 		if (node) {
 			if (currIndex == reqIndex) {
-				return node->obj;
+				return node;
 			} else {
-				return this->objectAtIndex(reqIndex, node->right, ++currIndex);
+				return this->nodeAtIndex(reqIndex, node->right, ++currIndex);
 			}
 		} else return 0;
 	}
