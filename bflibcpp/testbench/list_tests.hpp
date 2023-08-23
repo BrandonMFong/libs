@@ -493,6 +493,23 @@ int test_shuffle() {
 	List<int> list;
 	list.set(array, size);
 	result = list.shuffle();
+
+	if (result == 0) {
+		int score = 0;
+		int i = 0;
+		for (List<int>::Node * n = list.first();
+			n; n = n->next()) {
+			if ((i < size) && (n->object() == array[i])) score++;
+			i++;
+		}
+
+		// If I record that all of the elements in both 
+		// arrays match at every index then we didn't 
+		// shuffle correctly
+		if (score == size) {
+			result = 5;
+		}
+	}
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
