@@ -50,6 +50,10 @@ PUBLIC:
 			return this->right;
 		}
 
+		Node * prev() const {
+			return this->left;
+		}
+
 		L object() const {
 			return this->obj;
 		}
@@ -142,13 +146,24 @@ PUBLIC:
 
 	// Deletes every object in list
 	void deleteAll() {
-		this->deleteAll(this->_head);
+		Node * node = this->_head;
+		while (node) {
+			Node * tmp = node->right;
+			delete node;
+			node = tmp;
+			this->_count--;
+		}
+
+		this->_head = NULL;
+		this->_tail = NULL;
 	}
 
 	// returns object at index
 	// returns 0 if an error ocurred
 	L objectAtIndex(S index) {
-		return this->objectAtIndex(index, this->_head, 0);
+		Node * n = this->nodeAtIndex(index, this->_head, 0);
+		if (n) return n->object();
+		else return 0;
 	}
 
 	/**
@@ -221,6 +236,25 @@ PUBLIC:
 		return this->sortNodeToNode(this->_head, this->_tail, this->_count, option);
 	}
 
+	/**
+	 * Shuffles node links
+	 */
+	int shuffle() {
+		srand(time(0));
+		Node * n = this->_tail; // get last
+		int i = this->count() - 1; // get last's index
+		for (; n; n = n->prev()) {
+			// Get random node
+			int r = rand() % (i + 1);
+			Node * tmp = this->nodeAtIndex(r, this->_head, 0);
+			int err = this->swap(n, tmp); // swap nodes
+			if (err) return err; // leave if there was an error in swapping
+			i--;
+		}
+
+		return 0;
+	}
+
 PROTECTED:
 
 	int deleteNode(Node * node) {
@@ -247,6 +281,20 @@ PROTECTED:
 PRIVATE:
 
 	/**
+	 * Swaps a and b objects
+	 */
+	static int swap(Node * a, Node * b) {
+		// Don't continue with this if a or b are null
+		if (!a || !b) return -1;
+		else {
+			L obj = a->obj;
+			a->obj = b->obj;
+			b->obj = obj;
+			return 0;
+		}
+	}
+
+	/**
 	 * Sorts nodes from first to last using merge sort techinques
 	 */
 	int sortNodeToNode(Node * first, Node * last, S distance, const ListSortOptions option) {
@@ -263,15 +311,11 @@ PRIVATE:
 				if (distance == 2) {
 					if (option == kListSortOptionsDescending) {
 						if (this->runCompare(first->obj, last->obj) < 0) {
-							L obj = first->obj;
-							first->obj = last->obj;
-							last->obj = obj;
+							result = this->swap(first, last);
 						}
 					} else {
 						if (this->runCompare(first->obj, last->obj) > 0) {
-							L obj = first->obj;
-							first->obj = last->obj;
-							last->obj = obj;
+							result = this->swap(first, last);
 						}
 					}
 				}
@@ -382,12 +426,12 @@ PRIVATE:
 	/**
 	 * Recursively traverses through linked list until we read the reqIndex'th node
 	 */
-	L objectAtIndex(S reqIndex, Node * node, S currIndex) {
+	Node * nodeAtIndex(S reqIndex, Node * node, S currIndex) {
 		if (node) {
 			if (currIndex == reqIndex) {
-				return node->obj;
+				return node;
 			} else {
-				return this->objectAtIndex(reqIndex, node->right, ++currIndex);
+				return this->nodeAtIndex(reqIndex, node->right, ++currIndex);
 			}
 		} else return 0;
 	}
@@ -438,17 +482,6 @@ PRIVATE:
 				return this->deleteNode(currNode);
 			}
 		}
-	}
-
-	/**
-	 * Traverses linked list from the start node and deletes from the 
-	 * last node
-	 */
-	void deleteAll(Node * node) {
-		if (node == 0) return;
-		if (node->right) this->deleteAll(node->right);
-		delete node;
-		this->_count--;
 	}
 
 	/**

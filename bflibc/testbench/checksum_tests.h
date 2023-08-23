@@ -86,17 +86,10 @@ void checksum_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_checksumMD5()) p++;
-	else f++;
-	
-	if (!test_checksumSHA1()) p++;
-	else f++;
-	
-	if (!test_checksumSHA256()) p++;
-	else f++;
-
-	if (!test_checksumSHA512()) p++;
-	else f++;
+	LAUNCH_TEST(test_checksumMD5, p, f);
+	LAUNCH_TEST(test_checksumSHA1, p, f);
+	LAUNCH_TEST(test_checksumSHA256, p, f);
+	LAUNCH_TEST(test_checksumSHA512, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
