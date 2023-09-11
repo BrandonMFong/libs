@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include "stringutils.h"
+#include "log.h"
 #include <limits.h>
 
 unsigned long long BFFileSystemDirectoryGetSizeUsed(const char * path, unsigned char options, int * err) {
@@ -181,6 +182,31 @@ char * BFFileSystemPathCopyHomePath(int * err) {
 	}
 
 	return result;
+}
+
+int BFFileSystemPathGetName(const char * path, char * ret) {
+	if ((ret == NULL) || (path == NULL)) {
+		return -1;
+	}
+
+	strcpy(ret, "");
+	char * t1 = NULL, * t2 = NULL, t3[PATH_MAX];
+
+	strcpy(t3, path);
+
+	if (!strlen(path)) {
+		BFDLog("The path is empty");
+	} else if ((t1 = basename(t3)) == NULL) {
+		BFDLog("Could not get base name: %s", path);
+	} else if ((t2 = strrchr(t1, '.')) == NULL) {
+		BFDLog("Could not find '.' in '%s'", path);
+	} else {
+		t2[0] = '\0';
+		strcpy(ret, t1);
+	}
+
+	return 0;
+
 }
 
 int BFFileSystemPathGetExtension(const char * path, char * buf) {
