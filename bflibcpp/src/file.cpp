@@ -56,6 +56,7 @@ const char * File::extension() {
 }
 
 const char * File::name() {
+	// TODO: use BFFileSystemPathGetName
 	strcpy(this->_fileReserved, "");
 	char * t1 = NULL, * t2 = NULL, t3[PATH_MAX];
 

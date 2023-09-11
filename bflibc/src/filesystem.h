@@ -76,6 +76,11 @@ int BFFileSystemGetOSTempDirectory(char * path);
 int BFFileSystemPathGetExtension(const char * path, char * buf);
 
 /**
+ * returns basename without file extension
+ */
+int BFFileSystemPathGetName(const char * path, char * ret);
+
+/**
  * Recursively removes path
  */
 int BFFileSystemRemoveAll(const char * path);
