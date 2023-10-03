@@ -237,6 +237,8 @@ int test_listMemoryHandling() {
 }
 
 int test_traversing() {
+	UNIT_TEST_START;
+
 	int result = 0;
 	int max = 2 << 31; // max nodes
 	int minValue = 10;
@@ -269,7 +271,7 @@ int test_traversing() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -303,6 +305,7 @@ int test_InitializingWithInitList() {
 }
 
 int test_ListSortAscending() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<int> l;
@@ -334,11 +337,12 @@ int test_ListSortAscending() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_ListSortDescending() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<int> l;
@@ -370,7 +374,7 @@ int test_ListSortDescending() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -484,8 +488,9 @@ int test_ListSwap() {
 }
 
 int test_shuffle() {
+	UNIT_TEST_START;
 	int result = 0;
-	const int size = 5;
+	const int size = 2 << 14;
 	int array[size];
 	for (int i = 0; i < size; i++) {
 		array[i] = i;
@@ -510,11 +515,14 @@ int test_shuffle() {
 			result = 5;
 		}
 	}
-	PRINT_TEST_RESULTS(!result);
+	
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_ShuffleLargeDataSet() {
+	UNIT_TEST_START;
+
 	int result = 0;
 	srand(time(0));
 	const int size = 2 << 14;
@@ -543,7 +551,7 @@ int test_ShuffleLargeDataSet() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -551,7 +559,6 @@ void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
-
 	LAUNCH_TEST(test_Init, p, f);
 	LAUNCH_TEST(test_adding, p, f);
 	LAUNCH_TEST(test_indexing, p, f);

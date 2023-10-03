@@ -6,7 +6,7 @@
 #ifndef BINTREE_HPP
 #define BINTREE_HPP
 
-#include "accessorspecifiers.hpp"
+#include "access.hpp"
 #include "delete.hpp"
 #include <iostream>
 #include "list.hpp"

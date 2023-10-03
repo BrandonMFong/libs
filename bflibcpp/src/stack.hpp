@@ -6,17 +6,22 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include "accessorspecifiers.hpp"
+#include "access.hpp"
 #include "list.hpp"
 
 namespace BF {
 
 /**
  * Has similar interface to cpp stack object
+ *
+ * This object does not handle any memory deallocation. Caller is still 
+ * responsible for maintaining every object memory that gets pushed 
+ * and popped. Thus it MUST be noted all references to objects will 
+ * be deleted when stack is still full when stack object gets deleted
  */
 template <typename T, typename S = int>
 class Stack : protected List<T, S> {
-PUBLIC:
+public:
 	Stack() : List<T,S>() {
 
 	}

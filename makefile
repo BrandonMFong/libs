@@ -9,10 +9,9 @@ PROJECTS := bflibc bflibcpp bflibrust
 
 all: setup $(PROJECTS)
 
-$(PROJECTS):
+$(PROJECTS): setup
 	cd $@ && make clean
-	cd $@ && make release
-	cd $@ && make debug
+	cd $@ && make debug release
 	cp -afv $@/bin/* bin/
 
 test:

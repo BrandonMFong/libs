@@ -6,18 +6,7 @@
 #ifndef ACCESS_SPECIFIERS
 #define ACCESS_SPECIFIERS
 
-#ifdef ASSERT_PUBLIC_MEMBER_ACCESS
-
-#define PUBLIC public
-#define PROTECTED public
-#define PRIVATE public
-
-#else // ASSERT_PUBLIC_MEMBER_ACCESS
-
-#define PUBLIC public
-#define PROTECTED protected
-#define PRIVATE private
-
-#endif // ASSERT_PUBLIC_MEMBER_ACCESS
+#include "access.hpp"
+#warning "accessorspecifiers.hpp is deprecated. Please use access.hpp"
 
 #endif // Accessor Specifier

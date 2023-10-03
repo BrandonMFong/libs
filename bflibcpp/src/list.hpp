@@ -6,7 +6,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include "accessorspecifiers.hpp"
+#include "access.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -99,7 +99,7 @@ PUBLIC:
 		this->deleteAll();
 	}
 
-	S count() { return this->_count; }
+	S count() const { return this->_count; }
 
 	// Adds obj at tail end of list
 	int add(L obj) {
@@ -160,7 +160,7 @@ PUBLIC:
 
 	// returns object at index
 	// returns 0 if an error ocurred
-	L objectAtIndex(S index) {
+	L objectAtIndex(S index) const {
 		Node * n = this->nodeAtIndex(index, this->_head, 0);
 		if (n) return n->object();
 		else return 0;
@@ -257,6 +257,9 @@ PUBLIC:
 
 PROTECTED:
 
+	/**
+	 * Delete node but does not delete object
+	 */
 	int deleteNode(Node * node) {
 		// If currNode is the tail, reset the tail var 
 		// to the currNode's left
@@ -269,6 +272,9 @@ PROTECTED:
 
 		if (node->right)
 			node->right->left = node->left;
+	
+		// This method does not delete the object memory
+		node->objectDeletionCallback = NULL;
 
 		// Delete this node at index
 		delete node;
@@ -426,7 +432,7 @@ PRIVATE:
 	/**
 	 * Recursively traverses through linked list until we read the reqIndex'th node
 	 */
-	Node * nodeAtIndex(S reqIndex, Node * node, S currIndex) {
+	Node * nodeAtIndex(S reqIndex, Node * node, S currIndex) const {
 		if (node) {
 			if (currIndex == reqIndex) {
 				return node;
@@ -479,6 +485,8 @@ PRIVATE:
 			if (currIndex < reqIndex) {
 				return this->deleteObjectAtIndex(reqIndex, currNode->right, ++currIndex);
 			} else {
+				L object = currNode->object();
+				if (this->_nodeObjectCleanUpCallback) this->_nodeObjectCleanUpCallback(object);
 				return this->deleteNode(currNode);
 			}
 		}

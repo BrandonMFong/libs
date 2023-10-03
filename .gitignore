@@ -2,6 +2,7 @@ bin
 a.out
 *.swp
 build
+external
 
 # rust
 bflibrust/target
@@ -9,3 +10,4 @@ bflibrust/Cargo.lock
 
 # python
 __pycache__
+

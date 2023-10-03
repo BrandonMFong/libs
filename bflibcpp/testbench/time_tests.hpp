@@ -65,6 +65,7 @@ int test_TimeInit() {
 }
 
 int test_TimeBasicOperations() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BFTime a = BFTimeGetCurrentTime();
@@ -76,7 +77,7 @@ int test_TimeBasicOperations() {
 	Time * tc = tb - ta;
 
 	Delete(tc);
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
