@@ -18,7 +18,7 @@ int main() {
 	float tp = 0, tf = 0;
 
 	printf("\n---------------------------\n");
-
+	
 	array_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -28,7 +28,7 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-
+	
 	list_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -63,7 +63,7 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-
+	
 	printf("Grade - %.2f%% (%d/%d)\n", (tp / (tp + tf)) * 100, (int) tp, (int) (tp + tf));
 
 	return 0;

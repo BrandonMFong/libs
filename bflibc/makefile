@@ -91,7 +91,7 @@ t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
 compile-tests:
-	$(CC) -o $(T_BIN_PATH)/$(T_BFLIBC_OUT) testbench/tests.c $(D_BIN_PATH)/$(D_BFLIBC_OUT) $(D_CFLAGS) -luuid
+	$(CC) -o $(T_BIN_PATH)/$(T_BFLIBC_OUT) testbench/tests.c $(D_BIN_PATH)/$(D_BFLIBC_OUT) $(D_CFLAGS)
 
 clean: r-clean d-clean
 	$(REMOVE) $(REMOVE_FLAGS) build/

@@ -7,7 +7,7 @@
 #define DICTIONARY_HPP
 
 #include "rbtree.hpp"
-#include "accessorspecifiers.hpp"
+#include "access.hpp"
 
 namespace BF {
 

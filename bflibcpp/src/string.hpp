@@ -7,7 +7,7 @@
 #define STRING_HPP
 
 #include "array.hpp"
-#include "accessorspecifiers.hpp"
+#include "access.hpp"
 
 namespace BF {
 

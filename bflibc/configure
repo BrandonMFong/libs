@@ -1,0 +1,85 @@
+#!/bin/bash
+
+function printStd() {
+	printf $1;
+}
+
+function printErr() {
+	printf "error - $1\n";
+}
+
+function installOpenssl() {
+	error=0;
+	if [ ! -d external/openssl ]; then
+		git clone git@github.com:openssl/openssl.git;
+		error=$?;
+		
+		if [ $error -eq 0 ]; then
+			pushd openssl;
+		fi
+	fi
+
+	if [ $error -eq 0 ]; then
+		git checkout openssl-3.0.0;
+		error=$?;
+	fi
+
+	if [ $error -eq 0 ]; then
+		./Configure;
+		error=$?;
+	fi
+
+	if [ $error -eq 0 ]; then
+		make;
+		error=$?;
+	fi
+
+	if [ $error -eq 0 ]; then
+		make install;
+		error=$?;
+	fi
+
+	if [ $error -eq 0 ]; then
+		popd;
+	fi
+
+	return $error;
+}
+
+function checkForRoot() {
+	if [ "$EUID" -ne 0 ]; then 
+		printErr "please run as root";
+		return 1;
+	fi
+	return 0;
+}
+
+function main() {
+	error=0;
+
+	checkForRoot;
+	error=$?;
+
+	if [ $error -eq 0 ]; then
+		if [ ! -d external ]; then 
+			mkdir external;
+			error=$?;
+		else
+			pushd external;
+		fi
+	fi
+
+	if [ $error -eq 0 ]; then
+		installOpenssl;
+		error=$?;
+	fi
+
+	if [ $error -eq 0 ]; then
+		popd;
+	fi
+
+	exit $error;
+}
+
+main;
+

@@ -8,7 +8,8 @@
 
 #include <uuid/uuid.h>
 
-#define kBFStringUUIDStringLength UUID_STR_LEN - 1
+//#define kBFStringUUIDStringLength UUID_STR_LEN - 1
+#define kBFStringUUIDStringLength 36
 
 #define BFStringIntegerToChar(i) i + '0'
 

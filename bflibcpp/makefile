@@ -4,6 +4,7 @@
 
 ## Includes
 include ../makefiles/platforms.mk
+include ../bflibc/makefiles/uuid.mk
 
 ## Compiler definitions
 CPP = g++
@@ -26,10 +27,11 @@ CPPFLAGS += -std=c++20
 CPP_OBJECTS = file string time
 
 ### RELEASE ###
-R_CPPFLAGS = $(CPPFLAGS) -I../bflibc/bin/release/
+R_CPPFLAGS = $(CPPFLAGS) -I../bflibc/bin/release/ $(BF_LIB_C_UUID_FLAGS)
 R_BUILD_PATH = build/release
 R_BIN_PATH = bin/release/bflibcpp
 R_BFLIBCPP_OUT = libbfcpp.a
+R_BFLIBC_BIN_PATH = $(R_BIN_PATH)/libbfc.a
 R_CPP_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/%.o, $(CPP_OBJECTS))
 R_C_OBJ_FILES = ../bflibc/build/release/*.o
 release: r-setup build-release-c $(R_BIN_PATH)/$(R_BFLIBCPP_OUT)
@@ -53,7 +55,7 @@ r-clean:
 	rm -rfv $(R_BIN_PATH)
 
 ### DEBUG ### 
-D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -I../bflibc/bin/debug/
+D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -I../bflibc/bin/debug/ $(BF_LIB_C_UUID_FLAGS)
 D_BUILD_PATH = build/debug
 D_BIN_PATH = bin/debug/bflibcpp
 D_BFLIBCPP_OUT = libbfcpp-debug.a
@@ -92,7 +94,7 @@ t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
 compile-tests:
-	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS) -luuid
+	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS)
 
 clean: r-clean d-clean
 	rm -rfv build/

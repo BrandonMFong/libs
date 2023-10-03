@@ -36,21 +36,26 @@ int test_CopyString(void) {
 }
 
 int test_uuidGen(void) {
+	UNIT_TEST_START;
 	int result = 0;
-	char uuidStr[kBFStringUUIDStringLength];
-	BFStringGetRandomUUIDString(uuidStr);
-	uuid_t bin;
 
-	if (strlen(uuidStr) != kBFStringUUIDStringLength) {
-		printf("Length: %ld != %d\n", strlen(uuidStr), kBFStringUUIDStringLength);
-		result = 1;
-	} else if (uuid_parse(uuidStr, bin)) {
-		result = 2;
+	const long lim = 2 << 32;
+	for (long i = 0; i < lim; i++) {
+		char uuidStr[kBFStringUUIDStringLength];
+		BFStringGetRandomUUIDString(uuidStr);
+		uuid_t bin;
+
+		if (strlen(uuidStr) != kBFStringUUIDStringLength) {
+			printf("Length: %ld != %d\n", strlen(uuidStr), kBFStringUUIDStringLength);
+			result = 1;
+		} else if (uuid_parse(uuidStr, bin)) {
+			result = 2;
+		}
+
+		if (result) break;
 	}
 
-	if (result) { printf("Error: %d\n", result); }
-
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -59,11 +64,8 @@ void stringutils_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_CopyString()) p++;
-	else f++;
-	
-	if (!test_uuidGen()) p++;
-	else f++;
+	LAUNCH_TEST(test_CopyString, p, f);
+	LAUNCH_TEST(test_uuidGen, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
