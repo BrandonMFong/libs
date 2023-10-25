@@ -23,6 +23,11 @@ int main() {
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
+	checksum_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+
 	filesystem_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -44,11 +49,6 @@ int main() {
 	pass = 0; fail = 0;
 
 	thread_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	checksum_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;

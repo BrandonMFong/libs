@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include "free.h"
+#include "bftime.h"
+#include <errno.h>
 
 typedef struct {
 	pthread_mutex_t mutex;
@@ -59,6 +61,32 @@ int BFLockWait(BFLock * lock) {
 	}
 
 	return 0;
+}
+
+int BFLockTimedWait(BFLock * lock, BFTime t) {
+	struct timespec ts;
+	_BFLock * l = 0;
+	if (lock == 0) return 1;
+	else {
+		l = (_BFLock *) *lock;
+		
+		clock_gettime(CLOCK_REALTIME, &ts);
+		ts.tv_sec += (time_t) t;
+		ts.tv_nsec += BFTimeGetNS(t);
+
+		if (pthread_mutex_lock(&l->mutex)) return 2;
+	}
+
+	// Check if wait timedout
+	int result = 0;
+	int err = pthread_cond_timedwait(&l->cond, &l->mutex, &ts);
+	if ((err == ETIMEDOUT) || (err == EAGAIN)) {
+		result = kBFLockTimedWaitCodeTimedOut;
+	}
+	
+	if (pthread_mutex_unlock(&l->mutex)) result = 4;
+
+	return result;
 }
 
 int BFLockRelease(BFLock * lock) {
