@@ -188,6 +188,35 @@ int test_AsyncDetach(void) {
 	return result;
 }
 
+void CancelingAsyncThreadRun(void * in) {
+	sleep(5);
+}
+
+int test_CancelingAsyncThread(void) {
+	UNIT_TEST_START;
+	int result = 0;
+	bool flag = false;
+
+	BFThreadAsyncID id;
+	if (!result) {
+		id = BFThreadAsync(CancelingAsyncThreadRun, &flag);
+		result = BFThreadAsyncIDError(id);
+	}
+
+	if (!result) {
+		result = BFThreadAsyncCancel(id);
+	}
+
+	if (!result) {
+		if (flag) result = 1;
+	}
+	
+	BFThreadAsyncIDDestroy(id);
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void thread_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -199,6 +228,7 @@ void thread_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_LockAndUnlock, p, f);
 	LAUNCH_TEST(test_ReleasingAsyncID, p, f);
 	LAUNCH_TEST(test_AsyncDetach, p, f);
+	LAUNCH_TEST(test_CancelingAsyncThread, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

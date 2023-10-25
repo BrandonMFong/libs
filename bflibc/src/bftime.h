@@ -11,6 +11,13 @@
 #include "typebftime.h"
 #include "typebfdatetime.h"
 
+#define BFTimeMS(x) ((BFTime) (x / 1000))
+#define BFTimeUS(x) ((BFTime) (x / (1000*1000)))
+#define BFTimeNS(x) ((BFTime) (x / (1000*1000*1000)))
+
+#define BFTimeGetS(x) ((unsigned int) x)
+#define BFTimeGetNS(x) ((x - (unsigned int) x) * (1000*1000*1000))
+
 extern const char * kBFTimeMonthStringJanuaryFull;
 extern const char * kBFTimeMonthStringFebruaryFull;
 extern const char * kBFTimeMonthStringMarchFull;
@@ -30,6 +37,16 @@ extern const char * kBFTimeMonthStringDecemberFull;
 BFTime BFTimeGetCurrentTime();
 
 /**
+ * Converts time to struct tm expressed in user's local time
+ */
+int BFTimeGetStructTMLocal(BFTime time, struct tm * tm);
+
+/**
+ * Converts time to struct tm expressed in UTC
+ */
+int BFTimeGetStructTMUTC(BFTime time, struct tm * tm);
+
+/**
  * Returns date for user's current timezone
  */
 int BFTimeGetCurrentDateTime(BFDateTime * dt);
@@ -37,17 +54,12 @@ int BFTimeGetCurrentDateTime(BFDateTime * dt);
 /**
  * Returns date for user's current timezone
  */
-int BFTimeGetDateTimeFromTime(BFTime t, BFDateTime * dt);
+int BFTimeGetDateTimeLocal(BFTime t, BFDateTime * dt);
 
 /**
- * Returns month string representation for time
+ * sleeps for BFTime
  */
-const char * BFTimeGetMonthStringFromTime(const BFTime t);
-
-/**
- * Returns month string representation for date time
- */
-const char * BFTimeGetMonthStringFromDateTime(const BFDateTime * dt);
+void BFTimeSleep(BFTime);
 
 #endif // BFTIME_H
 

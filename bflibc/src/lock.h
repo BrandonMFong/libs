@@ -7,6 +7,7 @@
 #define LOCK_H
 
 #include <stdbool.h>
+#include "typebftime.h"
 
 /**
  * Lock object
@@ -34,6 +35,16 @@ int BFLockDestroy(BFLock * lock);
  * Waits until BFLockRelease is called on object
  */
 int BFLockWait(BFLock * lock);
+
+#define kBFLockTimedWaitCodeTimedOut 0xff
+
+/**
+ * Waits for a specific amount of time before continuing
+ *
+ * if elapsed time reaches t, kBFLockTimedWaitCodeTimedOut
+ * returns
+ */
+int BFLockTimedWait(BFLock * l, BFTime t);
 
 /**
  * Releases BFLock waiting on BFLockWait

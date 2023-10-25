@@ -8,7 +8,7 @@
 
 #include <time.h>
 
-typedef time_t BFTime;
+typedef double BFTime;
 
 #endif // TYPETIME_H
 

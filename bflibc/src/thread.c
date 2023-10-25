@@ -33,11 +33,16 @@ typedef struct {
 		_BFThreadSyncID * sync;
 		_BFThreadAsyncID * async;
 	} id;
-} _BFThreadStartRoutineParams;
+} _BFThreadRoutineParams;
 
 void * _BFThreadStartRoutine(void * _params) {
 	if (_params) {
-		_BFThreadStartRoutineParams * params = _params;
+		_BFThreadRoutineParams * params = _params;
+		
+		if (params->type == _BFThreadTypeAsync) {
+			pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+			pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+		}
 
 		if (params->callback) params->callback(params->args);
 
@@ -81,8 +86,10 @@ void BFThreadAsyncIDDestroy(BFThreadAsyncID in) {
 
 		pthread_mutex_unlock(&id->m);
 
-		if (doRelease)
+		if (doRelease) {
+			pthread_mutex_destroy(&id->m);
 			BFFree(id);
+		}
 	}
 }
 
@@ -99,9 +106,9 @@ BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args) {
 		}
 	}
 
-	_BFThreadStartRoutineParams * params = NULL;
+	_BFThreadRoutineParams * params = NULL;
 	if (!error) {
-		params = malloc(sizeof(_BFThreadStartRoutineParams)); // _BFThreadStartRoutine will free memory
+		params = malloc(sizeof(_BFThreadRoutineParams)); // _BFThreadStartRoutine will free memory
 		if (params == NULL) {
 			error = 1;
 		} else {
@@ -117,13 +124,11 @@ BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args) {
 	error = pthread_attr_init(&attr);
 	if (!error)
 		error = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-	
-	if (!error)
-		pthread_create(&result->p, &attr, _BFThreadStartRoutine, (void *) params);
 
 	if (!error) {
 		result->isRunning = true;
 		result->error = error;
+		pthread_create(&result->p, &attr, _BFThreadStartRoutine, (void *) params);
 	}
 
 	return result;
@@ -147,11 +152,20 @@ bool BFThreadAsyncIDIsRunning(BFThreadAsyncID in) {
 	return result;
 }
 
+int BFThreadAsyncCancel(BFThreadAsyncID in) {
+	if (!in) return 1;
+	else {
+		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
+		id->isRunning = false;
+		return pthread_cancel(id->p);
+	}
+}
+
 int BFThreadSync(void (* callback)(void *), void * args) {
 	int error = 0;
 	
 	// _BFThreadStartRoutine will free memory
-	_BFThreadStartRoutineParams * params = malloc(sizeof(_BFThreadStartRoutineParams));
+	_BFThreadRoutineParams * params = malloc(sizeof(_BFThreadRoutineParams));
 
 	error = params == NULL ? 1 : 0;
 	if (!error) {
@@ -180,7 +194,7 @@ int BFThreadAsyncDetach(void (* callback)(void *), void * args) {
 	int error = 0;
 	
 	// _BFThreadStartRoutine will free memory
-	_BFThreadStartRoutineParams * params = malloc(sizeof(_BFThreadStartRoutineParams));
+	_BFThreadRoutineParams * params = malloc(sizeof(_BFThreadRoutineParams));
 
 	error = params == NULL ? 1 : 0;
 	if (!error) {

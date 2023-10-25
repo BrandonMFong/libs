@@ -4,6 +4,7 @@
  */
 
 #include "bftime.h"
+#include <unistd.h>
 
 const char * kBFTimeMonthStringJanuaryFull = "January";
 const char * kBFTimeMonthStringFebruaryFull = "February";
@@ -18,18 +19,41 @@ const char * kBFTimeMonthStringOctoberFull = "October";
 const char * kBFTimeMonthStringNovemberFull = "November";
 const char * kBFTimeMonthStringDecemberFull = "December";
 
-
 BFTime BFTimeGetCurrentTime() {
 	return (BFTime) time(NULL);
 }
 
-int BFTimeGetCurrentDateTime(BFDateTime * dt) {
-	return BFTimeGetDateTimeFromTime(BFTimeGetCurrentTime(), dt);
+int BFTimeGetStructTMLocal(BFTime time, struct tm * tm) {
+	if (tm == 0) return 1;
+	time_t t = (time_t) time;
+	if (localtime_r(&t, tm) == NULL) return 2;
+	return 0;
 }
 
-int BFTimeGetDateTimeFromTime(BFTime t, BFDateTime * dt) {
+int BFTimeGetStructTMUTC(BFTime time, struct tm * tm) {
+	if (tm == 0) return 1;
+	time_t t = (time_t) time;
+	if (gmtime_r(&t, tm) == NULL) return 2;
+	return 0;
+}
+
+int BFTimeGetCurrentDateTime(BFDateTime * dt) {
+	return BFTimeGetDateTimeLocal(BFTimeGetCurrentTime(), dt);
+}
+
+void _BFTimeCastTMToBFDateTime(struct tm * tm, BFDateTime * dt) {
+	dt->year = tm->tm_year + 1900;
+	dt->month = tm->tm_mon + 1;
+	dt->day = tm->tm_mday;
+	dt->hour = tm->tm_hour;
+	dt->minute = tm->tm_min;
+	dt->second = tm->tm_sec;
+}
+
+int BFTimeGetDateTimeUTC(BFTime tin, BFDateTime * dt) {
 	int result = 0;
 	struct tm tm = {0};
+	time_t t = (time_t) tin;
 
 	if (dt == NULL) {
 		result = -1;
@@ -38,30 +62,33 @@ int BFTimeGetDateTimeFromTime(BFTime t, BFDateTime * dt) {
 	}
 
 	if (result == 0) {
-		dt->year = tm.tm_year + 1900;
-		dt->month = tm.tm_mon + 1;
-		dt->day = tm.tm_mday;
-		dt->hour = tm.tm_hour;
-		dt->minute = tm.tm_min;
-		dt->second = tm.tm_sec;
+		_BFTimeCastTMToBFDateTime(&tm, dt);
 	}
 
 	return result;
 }
 
-// TODO: delete if we do not need
-const char * BFTimeGetMonthStringFromTime(const BFTime t) {
-	BFDateTime dt = {0};
+int BFTimeGetDateTimeLocal(BFTime tin, BFDateTime * dt) {
+	int result = 0;
+	struct tm tm = {0};
+	time_t t = (time_t) tin;
 
-	if (BFTimeGetDateTimeFromTime(t, &dt)) {
-		return 0;
+	if (dt == NULL) {
+		result = -1;
+	} else if (localtime_r(&t, &tm) == NULL) {
+		result = -2;
 	}
 
-	// TODO: finish function
-	return 0;
+	if (result == 0) {
+		_BFTimeCastTMToBFDateTime(&tm, dt);
+	}
+
+	return result;
 }
 
-const char * BFTimeGetMonthStringFromDateTime(const BFDateTime * dt) {
-	return 0;
+void BFTimeSleep(BFTime t) {
+	unsigned int ut = (t - (unsigned int) t) * 1000 * 1000;
+	sleep((time_t) t);
+	usleep(ut);
 }
 
