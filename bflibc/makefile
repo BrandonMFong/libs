@@ -5,6 +5,7 @@
 ## Includes
 include ../makefiles/platforms.mk
 include makefiles/checksum.mk
+include ../bflibc/makefiles/uuid.mk
 
 ## tools
 CC = gcc # compiler
@@ -23,7 +24,7 @@ CFLAGS += -Wall -I.
 #
 # All objects defined in headers should be copied to 
 # bin
-C_OBJECTS = filesystem coreutils stringutils bftime checksum
+C_OBJECTS = filesystem coreutils stringutils bftime checksum thread lock
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)
@@ -77,7 +78,7 @@ d-clean:
 T_BFLIBC_OUT = test-bflibc
 T_BIN_PATH = bin/test/bflibc
 
-test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS)
+test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS) $(BF_LIB_C_UUID_FLAGS)
 test: CC = @gcc
 test: AR = @ar
 test: COPY = @cp
@@ -91,7 +92,7 @@ t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
 compile-tests:
-	$(CC) -o $(T_BIN_PATH)/$(T_BFLIBC_OUT) testbench/tests.c $(D_BIN_PATH)/$(D_BFLIBC_OUT) $(D_CFLAGS)
+	$(CC) -o $(T_BIN_PATH)/$(T_BFLIBC_OUT) testbench/tests.c $(D_BIN_PATH)/$(D_BFLIBC_OUT) $(D_CFLAGS) -lpthread
 
 clean: r-clean d-clean
 	$(REMOVE) $(REMOVE_FLAGS) build/
