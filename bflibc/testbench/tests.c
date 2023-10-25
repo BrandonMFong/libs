@@ -8,6 +8,8 @@
 #include "stringutils_tests.h"
 #include "time_tests.h"
 #include "checksum_tests.h"
+#include "thread_tests.h"
+#include "lock_tests.h"
 #include <stdio.h>
 
 int main() {
@@ -36,6 +38,16 @@ int main() {
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 	
+	lock_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+
+	thread_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+
 	checksum_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;

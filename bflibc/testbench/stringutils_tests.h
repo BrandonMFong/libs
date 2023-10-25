@@ -39,7 +39,7 @@ int test_uuidGen(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	const long lim = 2 << 32;
+	const long lim = (long) 2 << 16;
 	for (long i = 0; i < lim; i++) {
 		char uuidStr[kBFStringUUIDStringLength];
 		BFStringGetRandomUUIDString(uuidStr);
