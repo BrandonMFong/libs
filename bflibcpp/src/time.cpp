@@ -27,8 +27,8 @@ void Time::set(BFTime t) {
 	this->_time = t;
 	this->_dateTime = {0};
 
-	if (BFTimeGetDateTimeFromTime(this->_time, &this->_dateTime)) {
-		BFDLog("There was an issue calculating the datetime for %ld", this->_time);
+	if (BFTimeGetDateTimeLocal(this->_time, &this->_dateTime)) {
+		BFDLog("There was an issue calculating the datetime for %f", this->_time);
 	}
 }
 
@@ -46,10 +46,6 @@ int Time::year() const {
 
 int Time::month() const {
 	return this->_dateTime.month;
-}
-
-const char * Time::monthString() const {
-	return BFTimeGetMonthStringFromDateTime(&this->_dateTime);
 }
 
 int Time::day() const {

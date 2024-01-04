@@ -32,9 +32,6 @@ PUBLIC:
 	/// 1 - 12
 	int month() const;
 
-	/// Returns the string rep for month
-	const char * monthString() const;
-
 	/// 1 - 31
 	int day() const;
 
