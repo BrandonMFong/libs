@@ -190,7 +190,26 @@ int BFFileSystemPathGetName(const char * path, char * ret) {
 	}
 
 	strcpy(ret, "");
-	char * t1 = NULL, * t2 = NULL, t3[PATH_MAX];
+
+	char t1[PATH_MAX], * t2 = NULL;
+
+	int error = BFFileSystemPathGetFullname(path, t1);
+	if (!error) {
+		if ((t2 = strrchr(t1, '.'))) {
+			t2[0] = '\0';
+		}
+		strcpy(ret, t1);
+	}
+	return error;
+}
+
+int BFFileSystemPathGetFullname(const char * path, char * ret) {
+	if ((ret == NULL) || (path == NULL)) {
+		return -1;
+	}
+
+	strcpy(ret, "");
+	char * t1 = NULL, t3[PATH_MAX];
 
 	strcpy(t3, path);
 
@@ -198,15 +217,11 @@ int BFFileSystemPathGetName(const char * path, char * ret) {
 		BFDLog("The path is empty");
 	} else if ((t1 = basename(t3)) == NULL) {
 		BFDLog("Could not get base name: %s", path);
-	} else if ((t2 = strrchr(t1, '.')) == NULL) {
-		BFDLog("Could not find '.' in '%s'", path);
 	} else {
-		t2[0] = '\0';
 		strcpy(ret, t1);
 	}
 
 	return 0;
-
 }
 
 int BFFileSystemPathGetExtension(const char * path, char * buf) {

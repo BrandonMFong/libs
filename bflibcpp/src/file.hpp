@@ -7,12 +7,13 @@
 #define FILE_HPP
 
 #include <stdio.h>
+#include "path.hpp"
 
 #define kReservationSize 128
 
 namespace BF {
 
-class File {
+class File : public Path {
 public:
 	/**
 	 * If path is null, an error will be returned
@@ -20,16 +21,6 @@ public:
 	File(const char * path, int * err);
 	virtual ~File();
 
-	/**
-	 * Will return the entire path to file
-	 */
-	const char * path() {
-		if (this->_path) {
-			return (const char *) this->_path;
-		} else {
-			return "";
-		}
-	}
 
 	/** 
 	 * Returns base name of the file
@@ -39,6 +30,13 @@ public:
 	 * Recommended to copy the result once received
 	 */
 	const char * name();
+
+	/**
+	 * returns name with base name and extension
+	 *
+	 * Recommended to copy the result once received
+	 */
+	const char * fullname();
 
 	/** 
 	 * Returns the file extension of the path
@@ -67,13 +65,6 @@ protected:
 	FILE * _fileHandler;
 
 private:
-	/** 
-	 * Holds the full path
-	 *
-	 * When this function is initialized, the path is 
-	 * set the real path
-	 */
-	char * _path;
 
 	/**
 	 * Reserved memory for path string examination

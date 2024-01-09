@@ -24,7 +24,7 @@ CPPFLAGS += -std=c++20
 #
 # All objects defined in headers should be copied to 
 # bin
-CPP_OBJECTS = file string time
+CPP_OBJECTS = file string time path directory
 
 ### RELEASE ###
 R_CPPFLAGS = $(CPPFLAGS) -I../bflibc/bin/release/ $(BF_LIB_C_UUID_FLAGS)
