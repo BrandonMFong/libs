@@ -125,6 +125,53 @@ int test_GettingNameWithoutExtension() {
 	return result;
 }
 
+int test_GettingLeafComponent() {
+	int result = 0;
+	char buf[PATH_MAX];
+
+	for (int i = 0; i < (2 << 4); i++) {
+		char path[PATH_MAX];
+		const char * tname = "name";
+		sprintf(path, "/text/path/%s%d", tname, i);
+		result = BFFileSystemPathGetName(path, buf);
+		if (result == 0) {
+			char tmp[PATH_MAX];
+			sprintf(tmp, "%s%d", tname, i);
+			if (strcmp(buf, tmp)) {
+				result = 1;
+				break;
+			}
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+
+}
+
+int test_GettingFullname() {
+	int result = 0;
+	char buf[PATH_MAX];
+
+	for (int i = 0; i < (2 << 4); i++) {
+		char path[PATH_MAX];
+		const char * tname = "name";
+		sprintf(path, "/text/path/%s%d.txt", tname, i);
+		result = BFFileSystemPathGetFullname(path, buf);
+		if (result == 0) {
+			char tmp[PATH_MAX];
+			sprintf(tmp, "%s%d.txt", tname, i);
+			if (strcmp(buf, tmp)) {
+				result = 1;
+				break;
+			}
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
+
 int test_RemoveFullDirectory(void) {
 	int result = 0;
 	char tmpdir[PATH_MAX];
@@ -185,6 +232,8 @@ void filesystem_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_RemoveFullDirectory, p, f);
 	LAUNCH_TEST(test_tmpdir, p, f);
 	LAUNCH_TEST(test_GettingNameWithoutExtension, p, f);
+	LAUNCH_TEST(test_GettingFullname, p, f);
+	LAUNCH_TEST(test_GettingLeafComponent, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

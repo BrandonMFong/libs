@@ -143,7 +143,7 @@ int test_extension() {
 
 	if (!result) {
 		if (strcmp(file->extension(), "")) {
-			printf("extension should be an empty string\n");
+			printf("extension should be an empty string but '%s'\n", file->extension());
 			result = 1;
 		}
 	}
@@ -157,7 +157,7 @@ int test_extension() {
 
 	if (!result) {
 		if (strcmp(file->extension(), "")) {
-			printf("extension should be an empty string\n");
+			printf("extension should be an empty string but '%s'\n", file->extension());
 			result = 1;
 		}
 	}
@@ -176,7 +176,7 @@ int test_extension() {
 
 	if (!result) {
 		if (strcmp(file->extension(), "")) {
-			printf("extension should be an empty string\n");
+			printf("extension should be an empty string but '%s'\n", file->extension());
 			result = 1;
 		}
 	}
@@ -241,7 +241,7 @@ int test_directory() {
 
 	if (!result) {
 		if (strcmp(file->extension(), "")) {
-			printf("extension should be an empty string\n");
+			printf("extension should be an empty string but '%s'\n", file->extension());
 			result = 1;
 		}
 	}

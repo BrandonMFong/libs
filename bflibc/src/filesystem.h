@@ -76,9 +76,15 @@ int BFFileSystemGetOSTempDirectory(char * path);
 int BFFileSystemPathGetExtension(const char * path, char * buf);
 
 /**
- * returns basename without file extension
+ * if file, returns basename without file extension
+ * else, returns leaf component
  */
 int BFFileSystemPathGetName(const char * path, char * ret);
+
+/**
+ * returns basename + extension
+ */
+int BFFileSystemPathGetFullname(const char * path, char * ret);
 
 /**
  * Recursively removes path
