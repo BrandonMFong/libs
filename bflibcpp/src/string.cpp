@@ -5,6 +5,7 @@
 
 #include "string.hpp"
 #include <bflibc/bflibc.h>
+#include <stdexcept>
 
 using namespace BF;
 
@@ -31,6 +32,7 @@ String::String(char * str) : Array<char, size_t>() {
 String::String(long int nullstr) : String((int) nullstr) {}
 
 String::String(int nullstr) {
+	if (nullstr != 0) throw std::invalid_argument("cannot set BF::String object to a nonzero integer");
 	this->setAllocationCallback(StringAllocate);
 	this->setDeallocationCallback(StringDeallocate);
 	this->set("", 1);

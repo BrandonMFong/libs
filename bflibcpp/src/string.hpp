@@ -13,13 +13,17 @@ namespace BF {
 
 class String : protected Array<char, size_t> {
 PUBLIC:
+	virtual ~String();
+
 	String();
 	String(const char * str);
 	String(char * str);
 	String(const String & str);
+
+	// both integer param constructors throw 
+	// std::invalid_argument if nullstr != 0
 	String(long int nullstr);
 	String(int nullstr);
-	virtual ~String();
 
 	// Returns raw c string
 	const char * cString() const;

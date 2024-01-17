@@ -134,8 +134,19 @@ int test_nullstring(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	String str = NULL;
-	String str0 = "";
+	String str0 = NULL;
+	String str1 = 0;
+
+	if (str0.length()) result = 1;
+	else if (str1.length()) result = 2;
+
+	if (!result) {
+		try {
+			String str2 = 1;
+			result = 3;
+			printf("exception not thrown or caught");
+		} catch (const std::invalid_argument & e) { }
+	}
 
 	UNIT_TEST_END(!result, result);
 	return result;
