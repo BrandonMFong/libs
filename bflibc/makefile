@@ -40,7 +40,7 @@ r-setup:
 	@mkdir -p $(R_BIN_PATH)
 
 $(R_BIN_PATH)/$(R_BFLIBC_OUT): $(R_C_OBJ_FILES)
-	cp -afv src/*.h $(R_BIN_PATH)
+	$(COPY) $(COPY_FLAGS) src/*.h $(R_BIN_PATH)
 	$(AR) -rsc $(R_BIN_PATH)/$(R_BFLIBC_OUT) $^
 
 $(R_BUILD_PATH)/%.o: src/%.c src/%.h
