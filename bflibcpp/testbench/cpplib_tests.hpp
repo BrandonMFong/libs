@@ -7,7 +7,7 @@
 #define CPPLIB_TESTS_HPP
 
 extern "C" {
-#include "../../bflibc/testbench/clib_tests.h"
+#include "../../bflibc/bin/debug/bflibc/bftests.h"
 }
 
 #endif // CPPLIB_TESTS_HPP

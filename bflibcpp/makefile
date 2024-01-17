@@ -87,7 +87,7 @@ T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
 
 test: D_CPPFLAGS += $(CPPFLAGS) -DTESTING -Isrc/
-test: t-setup d-clean debug compile-tests
+test: d-clean t-setup debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBCPP_OUT)
 
 t-setup:
