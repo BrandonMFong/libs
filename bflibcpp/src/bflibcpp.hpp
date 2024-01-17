@@ -17,6 +17,8 @@ extern "C" {
 #include "file.hpp"
 #include "time.hpp"
 #include "string.hpp"
+#include "bintree.hpp"
+#include "rbtree.hpp"
 
 #endif // CPPLIB_HPP
 
