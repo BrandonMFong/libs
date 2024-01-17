@@ -17,6 +17,8 @@ PUBLIC:
 	String(const char * str);
 	String(char * str);
 	String(const String & str);
+	String(long int nullstr);
+	String(int nullstr);
 	virtual ~String();
 
 	// Returns raw c string

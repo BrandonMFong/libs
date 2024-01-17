@@ -28,6 +28,14 @@ String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
 }
 
+String::String(long int nullstr) : String((int) nullstr) {}
+
+String::String(int nullstr) {
+	this->setAllocationCallback(StringAllocate);
+	this->setDeallocationCallback(StringDeallocate);
+	this->set("", 1);
+}
+
 String::~String() {}
 
 const char * String::cString() const {
