@@ -140,6 +140,7 @@ static int test_BSTDelete() {
 	t.insert(13);
 	t.insert(1);
 	t.insert(3);
+	t.insert(24);
 
 	result = t.remove(3);
 	if (result) printf("Error removing 3\n");

@@ -20,7 +20,7 @@ namespace BF {
  * Left most node is the least value comparison
  */
 template <typename T, typename S = int> class BinTree {
-PROTECTED:
+PUBLIC:
 	// TODO: rename BinNode to Node
 	class BinNode {
 		friend class BinTree<T,S>;
@@ -197,8 +197,6 @@ PROTECTED:
 		BinNode * _left;
 		BinNode * _right;
 	};
-
-PUBLIC:
 
 	/**
 	 * Iterates through the nodes in tree to return their objects
@@ -422,7 +420,7 @@ PUBLIC:
 	 *
 	 * Caller does not own node
 	 */
-	const BinNode * getNodeForObject(T obj) {
+	virtual const BinNode * getNodeForObject(T obj) {
 		return this->getNodeForObject(obj, this->root());
 	}
 
@@ -431,12 +429,12 @@ PROTECTED:
 	BinNode * getNodeForObject(T obj, BinNode * node) {
 		if (!node) return NULL;
 		
-		switch (this->runCompare(obj, node->_obj)) {
+		switch (this->runCompare(node->_obj, obj)) {
 		case 0:
 			return node;
-		case -1:
-			return this->getNodeForObject(obj, node->_left);
 		case 1:
+			return this->getNodeForObject(obj, node->_left);
+		case -1:
 			return this->getNodeForObject(obj, node->_right);
 		default:
 			return NULL;
