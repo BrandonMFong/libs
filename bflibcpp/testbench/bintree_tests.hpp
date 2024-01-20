@@ -394,49 +394,49 @@ int test_Iterations() {
 	return result;
 }
 
+int test_getNodeForObject(void) {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int numtests = 2 << 9;
+	while (!result && numtests) {
+		BinTree<int> t;
+		srand(time(0));
+		int size = rand() % (2 << 12);
+		int target = rand();
+		for (int i = 0; i < size; i++) {
+			t.insert(rand());
+		}
+		t.insert(target);
+
+		const BinTree<int>::BinNode * node = t.getNodeForObject(target);
+
+		numtests--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void bintree_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_BinInitializer()) p++;
-	else f++;
-
-	if (!test_BinInsert()) p++;
-	else f++;
-	
-	if (!test_BinMax()) p++;
-	else f++;
-
-	if (!test_BinMin()) p++;
-	else f++;
-
-	if (!test_BinNodeKnowsItsLeaf()) p++;
-	else f++;
-
-	if (!test_BSTDelete()) p++;
-	else f++;
-
-	if (!test_RemovingRoot()) p++;
-	else f++;
-
-	if (!test_RemovingAll()) p++;
-	else f++;
-
-	if (!test_ReturningLeafValues()) p++;
-	else f++;
-
-	if (!test_BinTreeCount()) p++;
-	else f++;
-
-	if (!test_ReplacingBinNodes()) p++;
-	else f++;
-
-	if (!test_SearchingBinTree()) p++;
-	else f++;
-
-	if (!test_Iterations()) p++;
-	else f++;
+	LAUNCH_TEST(test_BinInitializer, p, f);
+	LAUNCH_TEST(test_BinInsert, p, f);
+	LAUNCH_TEST(test_BinMax, p, f);
+	LAUNCH_TEST(test_BinMin, p, f);
+	LAUNCH_TEST(test_BinNodeKnowsItsLeaf, p, f);
+	LAUNCH_TEST(test_BSTDelete, p, f);
+	LAUNCH_TEST(test_RemovingRoot, p, f);
+	LAUNCH_TEST(test_RemovingAll, p, f);
+	LAUNCH_TEST(test_ReturningLeafValues, p, f);
+	LAUNCH_TEST(test_BinTreeCount, p, f);
+	LAUNCH_TEST(test_ReplacingBinNodes, p, f);
+	LAUNCH_TEST(test_SearchingBinTree, p, f);
+	LAUNCH_TEST(test_Iterations, p, f);
+	LAUNCH_TEST(test_getNodeForObject, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

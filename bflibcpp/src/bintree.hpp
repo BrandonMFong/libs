@@ -414,7 +414,34 @@ PUBLIC:
 		return result;
 	}
 
+	/**
+	 * Returns nonnull pointer to BinNode
+	 *
+	 * Returns NULL if node with obj could not
+	 * be found
+	 *
+	 * Caller does not own node
+	 */
+	const BinNode * getNodeForObject(T obj) {
+		return this->getNodeForObject(obj, this->root());
+	}
+
 PROTECTED:
+
+	BinNode * getNodeForObject(T obj, BinNode * node) {
+		if (!node) return NULL;
+		
+		switch (this->runCompare(obj, node->_obj)) {
+		case 0:
+			return node;
+		case -1:
+			return this->getNodeForObject(obj, node->_left);
+		case 1:
+			return this->getNodeForObject(obj, node->_right);
+		default:
+			return NULL;
+		}
+	}
 
 	/// Root accessors
 	BinNode ** rootAddr() { return (BinNode **) &this->_root; }
@@ -444,27 +471,6 @@ PROTECTED:
 	BinNode * getNodeParent(const BinNode * node) { return node->_parent; }
 	void setNodeParent(BinNode * node, BinNode * parent) { node->_parent = parent; }
 	
-	/**
-	 * Returns nonnull pointer to BinNode
-	 *
-	 * Returns NULL if node with obj could not
-	 * be found
-	 */
-	BinNode * getNodeForObject(T obj, BinNode * node) {
-		if (!node) return NULL;
-		
-		switch (this->runCompare(obj, node->_obj)) {
-		case 0:
-			return node;
-		case -1:
-			return this->getNodeForObject(obj, node->_left);
-		case 1:
-			return this->getNodeForObject(obj, node->_right);
-		default:
-			return NULL;
-		}
-	}
-
 	/**
 	 * Inserts newNode into parent's children
 	 *
