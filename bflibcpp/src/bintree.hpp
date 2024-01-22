@@ -424,6 +424,26 @@ PUBLIC:
 		return this->getNodeForObject(obj, this->root());
 	}
 
+	/**
+	 * If the _compare function pointer was not set, then 
+	 * we will default by comparing its literal value
+	 *
+	 * 0xFFFFFFFF returned if comparison errored
+	 *
+	 * a == b -> 0
+	 * a < b -> ret < 0
+	 * a > b -> ret > 0
+	 */
+	int runCompare(T a, T b) const {
+		if (this->_compare) return this->_compare(a, b);
+		else {
+			if (a == b) return 0;
+			else if (a < b) return -1;
+			else if (a > b) return 1;
+			else return ~0;
+		}
+	}
+
 PROTECTED:
 
 	BinNode * getNodeForObject(T obj, BinNode * node) {
@@ -690,22 +710,6 @@ PROTECTED:
 	}
 
 PRIVATE:
-
-	/**
-	 * If the _compare function pointer was not set, then 
-	 * we will default by comparing its literal value
-	 *
-	 * 0xFFFFFFFF returned if comparison errored
-	 */
-	int runCompare(T a, T b) {
-		if (this->_compare) return this->_compare(a, b);
-		else {
-			if (a == b) return 0;
-			else if (a < b) return -1;
-			else if (a > b) return 1;
-			else return ~0;
-		}
-	}
 
 	/**
 	 * Traverses through tree to remove everything
