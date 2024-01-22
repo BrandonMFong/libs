@@ -19,7 +19,6 @@ int main() {
 
 	printf("\n---------------------------\n");
 
-	/*
 	array_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -39,14 +38,12 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	*/
 	
 	rbtree_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
-/*	
 	dictionary_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -66,7 +63,6 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	*/
 
 	PRINT_GRADE(tp, tf);	
 
