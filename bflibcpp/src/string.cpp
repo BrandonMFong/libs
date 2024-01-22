@@ -4,8 +4,11 @@
  */
 
 #include "string.hpp"
-#include <bflibc/bflibc.h>
 #include <stdexcept>
+
+extern "C" {
+#include <bflibc/bflibc.h>
+}
 
 using namespace BF;
 
@@ -43,6 +46,10 @@ String::~String() {}
 
 const char * String::cString() const {
 	return (const char *) this->address();
+}
+
+char * String::cStringCopy() const {
+	return BFStringCopyString((const char *) this->address(), 0);
 }
 
 int String::copy(String & s) const {

@@ -28,6 +28,11 @@ PUBLIC:
 	// Returns raw c string
 	const char * cString() const;
 
+	// returns a copy of string
+	//
+	// caller must free()
+	char * cStringCopy() const;
+
 	/**
 	 * Struns strcmp() on this and s
 	 */

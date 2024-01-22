@@ -152,6 +152,19 @@ int test_nullstring(void) {
 	return result;
 }
 
+int test_copyingString(void) {
+	UNIT_TEST_START;
+	int result = 0;
+
+	String str = "hello world";
+	char * cstr = str.cStringCopy();
+	if (cstr == NULL) result = 1;
+	BFFree(cstr);
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -163,6 +176,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_StringCopy, p, f);
 	LAUNCH_TEST(test_PassingStringToFunction, p, f);
 	LAUNCH_TEST(test_nullstring, p, f);
+	LAUNCH_TEST(test_copyingString, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
