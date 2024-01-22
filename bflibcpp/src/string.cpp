@@ -35,7 +35,8 @@ String::String(int nullstr) {
 	if (nullstr != 0) throw std::invalid_argument("cannot set BF::String object to a nonzero integer");
 	this->setAllocationCallback(StringAllocate);
 	this->setDeallocationCallback(StringDeallocate);
-	this->set("", 1);
+
+	this->set((char *) "", 1);
 }
 
 String::~String() {}
