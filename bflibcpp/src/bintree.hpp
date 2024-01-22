@@ -428,17 +428,16 @@ PROTECTED:
 
 	BinNode * getNodeForObject(T obj, BinNode * node) {
 		if (!node) return NULL;
-		
-		switch (this->runCompare(node->_obj, obj)) {
-		case 0:
-			return node;
-		case 1:
-			return this->getNodeForObject(obj, node->_left);
-		case -1:
+	
+		int cmp = this->runCompare(node->_obj, obj);
+		if (cmp < 0) {
 			return this->getNodeForObject(obj, node->_right);
-		default:
-			return NULL;
+		} else if (cmp > 0) {
+			return this->getNodeForObject(obj, node->_left);
+		} else {
+			return node;
 		}
+		return NULL;
 	}
 
 	/// Root accessors
@@ -483,16 +482,11 @@ PROTECTED:
 		if (!newNode) return 1;
 		else if (!parent) return 2;
 		else {
-			switch (this->runCompare(newNode->_obj, parent->_obj)) {
-				case 0:
-				case -1:
-					newLocation = &parent->_left;
-					break;
-				case 1:
-					newLocation = &parent->_right;
-					break;
-				default:
-					return 3;
+			int cmp = this->runCompare(newNode->_obj, parent->_obj);
+			if (cmp > 0) {
+				newLocation = &parent->_right;
+			} else {
+				newLocation = &parent->_left;
 			}
 		}
 
@@ -762,8 +756,8 @@ PRIVATE:
 
 	/**
 	 * a1 == a2 -> 0
-	 * a1 < a2 -> -1
-	 * a1 > a2 -> 1
+	 * a1 < a2 -> ret < 0
+	 * a1 > a2 -> ret > 0
 	 */
 	int (* _compare) (T a1, T a2);
 
