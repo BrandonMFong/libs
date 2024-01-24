@@ -17,12 +17,18 @@ extern "C" {
 
 using namespace BF;
 
+typedef struct {
+	Atomic<double> d;
+} AtomicInit;
+
 int test_atomicinit() {
 	int result = 0;
 
 	Atomic<int> a;
 	Atomic<int> b(5);
 	Atomic<int> c = 10;
+	AtomicInit sa;
+	sa.d = 15;
 
 	PRINT_TEST_RESULTS(!result);
 	return result;
