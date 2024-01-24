@@ -13,6 +13,7 @@
 #include "free.h"
 #include "bftime.h"
 #include "checksum.h"
+#include "thread.h"
 
 #endif // CLIB_H
 
