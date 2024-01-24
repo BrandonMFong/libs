@@ -34,15 +34,18 @@ int test_loadandunloadQueue(void) {
 		q.push(i);
 	}
 
-	for (int i = 0; i < max; i++) {
-		int n = q.front();
-		if (n != i) {
-			result = 1;
-			break;
-		}
-		q.pop();
-	}
+	if (q.size() != max) result = 2;
 
+	if (!result) {
+		for (int i = 0; i < max; i++) {
+			int n = q.front();
+			if (n != i) {
+				result = 1;
+				break;
+			}
+			q.pop();
+		}
+	}
 
 	PRINT_TEST_RESULTS(!result);
 	return result;

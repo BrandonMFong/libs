@@ -41,6 +41,10 @@ public:
 		if (n) return n->object();
 		return 0;
 	}
+
+	S size() { return this->count(); }
+
+	bool empty() { return this->count() == 0; };
 };
 
 } // namespace BF
