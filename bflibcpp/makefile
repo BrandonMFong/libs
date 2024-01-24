@@ -55,7 +55,7 @@ r-clean:
 	rm -rfv $(R_BIN_PATH)
 
 ### DEBUG ### 
-D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -I../bflibc/bin/debug/ $(BF_LIB_C_UUID_FLAGS)
+D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -I../bflibc/bin/debug/ 
 D_BUILD_PATH = build/debug
 D_BIN_PATH = bin/debug/bflibcpp
 D_BFLIBCPP_OUT = libbfcpp-debug.a
@@ -86,7 +86,7 @@ d-clean:
 T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
 
-test: D_CPPFLAGS += $(CPPFLAGS) -DTESTING -Isrc/
+test: D_CPPFLAGS += $(CPPFLAGS) -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS)
 test: d-clean t-setup debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBCPP_OUT)
 

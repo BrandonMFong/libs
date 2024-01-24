@@ -13,6 +13,7 @@
 #include "stack_tests.hpp"
 #include "time_tests.hpp"
 #include "queue_tests.hpp"
+#include "atomic_tests.hpp"
 
 int main() {
 	int pass = 0, fail = 0;
@@ -70,6 +71,11 @@ int main() {
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 	
+	atomic_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+
 	printf("Grade - %.2f%% (%d/%d)\n", (tp / (tp + tf)) * 100, (int) tp, (int) (tp + tf));
 
 	return 0;
