@@ -12,6 +12,7 @@
 #include "string_tests.hpp"
 #include "stack_tests.hpp"
 #include "time_tests.hpp"
+#include "queue_tests.hpp"
 
 int main() {
 	int pass = 0, fail = 0;
@@ -59,6 +60,11 @@ int main() {
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 	
+	queue_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+
 	time_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;

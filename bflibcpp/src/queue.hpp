@@ -12,12 +12,13 @@
 namespace BF {
 
 template <typename T, typename S = int>
-class Queue : public List<T,S> {
-	Stack() : List<T,S>() {
+class Queue : protected List<T,S> {
+public:
+	Queue() : List<T,S>() {
 
 	}
 
-	~Stack() {
+	~Queue() {
 
 	}
 
@@ -26,7 +27,19 @@ class Queue : public List<T,S> {
 	}
 
 	int pop() {
-		return this->deleteNode(this->last());
+		return this->deleteNode(this->first());
+	}
+
+	T front() const {
+		typename List<T,S>::Node * n = this->first();
+		if (n) return n->object();
+		return 0;
+	}
+
+	T back() const {
+		typename List<T,S>::Node * n = this->last();
+		if (n) return n->object();
+		return 0;
 	}
 };
 
