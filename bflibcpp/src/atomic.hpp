@@ -7,7 +7,6 @@
 #define ATOMIC_HPP
 
 #include "access.hpp"
-#include <pthread.h>
 #include <stdbool.h>
 #include <mutex>
 
