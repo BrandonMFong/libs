@@ -27,7 +27,7 @@ CPPFLAGS += -std=c++20
 CPP_OBJECTS = file string time path directory
 
 ### RELEASE ###
-R_CPPFLAGS = $(CPPFLAGS) -I../bflibc/bin/release/ $(BF_LIB_C_UUID_FLAGS)
+R_CPPFLAGS = $(CPPFLAGS) -Ibin/release/ $(BF_LIB_C_UUID_FLAGS)
 R_BUILD_PATH = build/release
 R_BIN_PATH = bin/release/bflibcpp
 R_BFLIBCPP_OUT = libbfcpp.a
@@ -47,7 +47,8 @@ r-setup:
 
 $(R_BIN_PATH)/$(R_BFLIBCPP_OUT): $(R_CPP_OBJ_FILES)
 	cp -afv src/*.hpp $(R_BIN_PATH)
-	$(AR) -rsc $(R_BIN_PATH)/$(R_BFLIBCPP_OUT) $^ $(R_BFLIBC_BIN_PATH)
+	$(AR) rsc $(R_BIN_PATH)/$(R_BFLIBCPP_OUT) $^ 
+	$(AR) rsc $(R_BIN_PATH)/$(R_BFLIBCPP_OUT) $(R_BFLIBC_BIN_PATH)
 
 $(R_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(R_CPPFLAGS)
@@ -57,7 +58,7 @@ r-clean:
 	rm -rfv $(R_BIN_PATH)
 
 ### DEBUG ### 
-D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -I../bflibc/bin/debug/ 
+D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -Ibin/debug/ 
 D_BUILD_PATH = build/debug
 D_BIN_PATH = bin/debug/bflibcpp
 D_BFLIBCPP_OUT = libbfcpp-debug.a
@@ -77,7 +78,8 @@ d-setup:
 
 $(D_BIN_PATH)/$(D_BFLIBCPP_OUT): $(D_CPP_OBJ_FILES)
 	cp -afv src/*.hpp $(D_BIN_PATH)
-	$(AR) -rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $^ $(D_BFLIBC_BIN_PATH)
+	$(AR) rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $^ 
+	$(AR) rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_BFLIBC_BIN_PATH)
 
 $(D_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(D_CPPFLAGS)
@@ -90,7 +92,7 @@ d-clean:
 T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
 
-test: D_CPPFLAGS += $(CPPFLAGS) -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS)
+test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS)
 test: d-clean t-setup debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBCPP_OUT)
 
