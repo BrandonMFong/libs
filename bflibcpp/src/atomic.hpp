@@ -8,7 +8,10 @@
 
 #include "access.hpp"
 #include <stdbool.h>
+
+extern "C" {
 #include <bflibc/lock.h>
+}
 
 namespace BF {
 
