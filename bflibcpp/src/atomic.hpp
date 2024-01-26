@@ -28,29 +28,32 @@ public:
 	}
 
 	void set(T obj) {
-		this->lock();
+		if (!this->_locked) this->lock();
 		this->_obj = obj; 
-		this->unlock();
+		if (!this->_locked) this->unlock();
 	}
 
 	T get() {
-		this->lock();
+		if (!this->_locked) this->lock();
 		T res = this->_obj; 
-		this->unlock();
+		if (!this->_locked) this->unlock();
 		return res;
 	}
 
 	void lock() {
+		this->_locked = true;
 		pthread_mutex_lock(&this->_mut);
 	}
 
 	void unlock() {
+		this->_locked = false;
 		pthread_mutex_unlock(&this->_mut);
 	}
 
 private:
 	T _obj;
 	pthread_mutex_t _mut;
+	bool _locked;
 };
 
 }

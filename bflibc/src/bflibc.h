@@ -14,6 +14,7 @@
 #include "bftime.h"
 #include "checksum.h"
 #include "thread.h"
+#include "lock.h"
 
 #endif // CLIB_H
 
