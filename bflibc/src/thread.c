@@ -179,7 +179,9 @@ int BFThreadSync(void (* callback)(void *), void * args) {
 	}
 	
 	pthread_attr_t attr;
-	error = pthread_attr_init(&attr);
+	if (!error)
+		error = pthread_attr_init(&attr);
+
 	if (!error)
 		pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	
