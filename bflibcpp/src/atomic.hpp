@@ -8,7 +8,7 @@
 
 #include "access.hpp"
 #include <stdbool.h>
-#include <mutex>
+#include <bflibc/lock.h>
 
 namespace BF {
 
@@ -16,6 +16,7 @@ template <typename T>
 class Atomic {
 public:
 	Atomic() {
+		BFLockCreate(&this->_lock);
 		this->_locked = false;
 	}
 
@@ -25,29 +26,33 @@ public:
 	}
 
 	~Atomic() {
+		BFLockDestroy(&this->_lock);
 	}
 
 	void set(T obj) {
-		std::lock_guard<std::mutex> l(this->_mut);
+		if (!this->_locked) BFLockLock(&this->_lock);
 		this->_obj = obj; 
+		if (!this->_locked) BFLockUnlock(&this->_lock);
 	}
 
 	// returns a reference to object
 	//
 	// caller does NOT own
 	T & get() {
-		std::lock_guard<std::mutex> l(this->_mut);
-		return this->_obj;
+		if (!this->_locked) BFLockLock(&this->_lock);
+		T & res = this->_obj;
+		if (!this->_locked) BFLockUnlock(&this->_lock);
+		return res;
 	}
 
 	void lock() {
-		std::lock_guard<std::mutex> l(this->_mut);
+		BFLockLock(&this->_lock);
 		this->_locked = true;
 	}
 
 	void unlock() {
 		this->_locked = false;
-		this->_mut.unlock();
+		BFLockUnlock(&this->_lock);
 	}
 
 	Atomic <T> & operator=(const T & obj) {
@@ -57,8 +62,8 @@ public:
 
 private:
 	T _obj;
-	std::mutex _mut;
 	bool _locked;
+	BFLock _lock;
 };
 
 }
