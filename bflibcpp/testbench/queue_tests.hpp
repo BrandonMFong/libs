@@ -47,10 +47,10 @@ int test_loadandunloadQueue(void) {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
-
 }
+
 void queue_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	

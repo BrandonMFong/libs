@@ -33,7 +33,7 @@ typedef void * BFThreadAsyncID;
  *
  * us async id to query the async thread
  *
- * Caller owns return object
+ * Caller owns return object, destroy using BFThreadAsyncIDDestroy
  */
 BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
 
