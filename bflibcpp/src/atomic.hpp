@@ -9,6 +9,7 @@
 #include "access.hpp"
 #include <pthread.h>
 #include <stdbool.h>
+#include <mutex>
 
 namespace BF {
 
@@ -16,43 +17,48 @@ template <typename T>
 class Atomic {
 public:
 	Atomic() {
-		pthread_mutex_init(&this->_mut, 0);
+		this->_locked = false;
 	}
 
+	// initializes with object
 	Atomic(T obj) : Atomic() {
 		this->set(obj);
 	}
 
 	~Atomic() {
-		pthread_mutex_destroy(&this->_mut);
 	}
 
 	void set(T obj) {
-		if (!this->_locked) pthread_mutex_lock(&this->_mut);
+		std::lock_guard<std::mutex> l(this->_mut);
 		this->_obj = obj; 
-		if (!this->_locked) pthread_mutex_unlock(&this->_mut);
 	}
 
-	T get() {
-		if (!this->_locked) pthread_mutex_lock(&this->_mut);
-		T res = this->_obj; 
-		if (!this->_locked) pthread_mutex_unlock(&this->_mut);
-		return res;
+	// returns a reference to object
+	//
+	// caller does NOT own
+	T & get() {
+		std::lock_guard<std::mutex> l(this->_mut);
+		return this->_obj;
 	}
 
 	void lock() {
+		std::lock_guard<std::mutex> l(this->_mut);
 		this->_locked = true;
-		pthread_mutex_lock(&this->_mut);
 	}
 
 	void unlock() {
 		this->_locked = false;
-		pthread_mutex_unlock(&this->_mut);
+		this->_mut.unlock();
+	}
+
+	Atomic <T> & operator=(const T & obj) {
+		this->set(obj);
+		return *this;
 	}
 
 private:
 	T _obj;
-	pthread_mutex_t _mut;
+	std::mutex _mut;
 	bool _locked;
 };
 
