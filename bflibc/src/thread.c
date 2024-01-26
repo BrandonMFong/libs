@@ -22,6 +22,7 @@ typedef struct {
 	pthread_t p;
 	bool isRunning;
 	pthread_mutex_t m;
+	pthread_attr_t attr;
 	bool ownerQueuedRelease;
 } _BFThreadAsyncID;
 
@@ -120,15 +121,17 @@ BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args) {
 	}
 
 	// Set attribute
-	pthread_attr_t attr;
-	error = pthread_attr_init(&attr);
+	//pthread_attr_t attr;
 	if (!error)
-		error = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+		error = pthread_attr_init(&result->attr);
+
+	if (!error)
+		error = pthread_attr_setdetachstate(&result->attr, PTHREAD_CREATE_JOINABLE);
 
 	if (!error) {
 		result->isRunning = true;
 		result->error = error;
-		pthread_create(&result->p, &attr, _BFThreadStartRoutine, (void *) params);
+		pthread_create(&result->p, &result->attr, _BFThreadStartRoutine, (void *) params);
 	}
 
 	return result;
