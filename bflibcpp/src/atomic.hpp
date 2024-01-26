@@ -28,15 +28,15 @@ public:
 	}
 
 	void set(T obj) {
-		if (!this->_locked) this->lock();
+		if (!this->_locked) pthread_mutex_lock(&this->_mut);
 		this->_obj = obj; 
-		if (!this->_locked) this->unlock();
+		if (!this->_locked) pthread_mutex_unlock(&this->_mut);
 	}
 
 	T get() {
-		if (!this->_locked) this->lock();
+		if (!this->_locked) pthread_mutex_lock(&this->_mut);
 		T res = this->_obj; 
-		if (!this->_locked) this->unlock();
+		if (!this->_locked) pthread_mutex_unlock(&this->_mut);
 		return res;
 	}
 
