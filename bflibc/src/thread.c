@@ -45,7 +45,10 @@ void * _BFThreadStartRoutine(void * _params) {
 			pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
 		}
 
-		if (params->callback) params->callback(params->args);
+		// run the caller defined function on current
+		// thread
+		if (params->callback)
+			params->callback(params->args);
 
 		if (params->type == _BFThreadTypeAsync) {
 			bool doRelease = false;
@@ -94,7 +97,12 @@ void BFThreadAsyncIDDestroy(BFThreadAsyncID in) {
 	}
 }
 
-BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args) {
+BFThreadAsyncID BFThreadAsync(
+	void (* callback)(void *),
+	void * args
+) {
+	// result can get released by caller or automatically by
+	// async thread
 	_BFThreadAsyncID * result = malloc(sizeof(_BFThreadAsyncID));
 	int error = result == NULL ? 1 : 0;
 

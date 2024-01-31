@@ -33,7 +33,8 @@ typedef void * BFThreadAsyncID;
  *
  * us async id to query the async thread
  *
- * Caller owns return object, destroy using BFThreadAsyncIDDestroy
+ * Caller DOES NOT own return object but has the ability to destroy async id.
+ * To destroy use BFThreadAsyncIDDestroy
  */
 BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
 
