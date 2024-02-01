@@ -39,6 +39,11 @@ PUBLIC:
 	 */
 	int copy(String & s) const;
 
+	/**
+	 * Adds char c to the end of the string
+	 */
+	void push_back(char c);
+
 // Overloading operators
 PUBLIC:
 	friend std::ostream& operator<<(std::ostream& out, const String & s) {

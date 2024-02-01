@@ -78,6 +78,7 @@ PUBLIC:
 	 *
 	 * By default free store is utilized
 	 */
+	[[deprecated]]
 	void setAllocationCallback(T * (* cb) (S size)) {
 		this->_allocationCallback = cb;
 	}
@@ -87,6 +88,7 @@ PUBLIC:
 	 *
 	 * By default free store is utilized
 	 */
+	[[deprecated]]
 	void setDeallocationCallback(void (* cb) (T * value)) {
 		this->_deallocationCallback = cb;
 	}
@@ -248,9 +250,11 @@ PRIVATE:
 	int (* _callback) (T a, T b);
 
 	/// Defines how _address is allocated
+	[[deprecated]]
 	T * (* _allocationCallback) (S size);
 
 	/// Defines how _address is deallocated
+	[[deprecated]]
 	void (* _deallocationCallback) (T * value);
 
 PUBLIC:
