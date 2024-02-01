@@ -130,25 +130,42 @@ int test_PassingStringToFunction() {
 	return result;
 }
 
+int test_addingCharacterToString() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	const char * s = "hello world";
+	const char * e = "hello world!";
+
+	int max = 2 << 10;
+	while (!result && max) {
+		String str = s;
+
+		str.addChar('!');
+
+		if (str.compareString(e)) {
+			printf("\n%s != %s\n", str.cString(), e);
+			result = max;
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_StringInit()) p++;
-	else f++;
-
-	if (!test_comparingString()) p++;
-	else f++;
-
-	if (!test_StringLength()) p++;
-	else f++;
-
-	if (!test_StringCopy()) p++;
-	else f++;
-
-	if (!test_PassingStringToFunction()) p++;
-	else f++;
+	LAUNCH_TEST(test_StringInit, p, f);
+	LAUNCH_TEST(test_comparingString, p, f);
+	LAUNCH_TEST(test_StringLength, p, f);
+	LAUNCH_TEST(test_StringCopy, p, f);
+	LAUNCH_TEST(test_PassingStringToFunction, p, f);
+	LAUNCH_TEST(test_addingCharacterToString, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

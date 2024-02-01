@@ -41,8 +41,10 @@ PUBLIC:
 
 	/**
 	 * Adds char c to the end of the string
+	 *
+	 * similar to std::string::push_back
 	 */
-	void push_back(char c);
+	void addChar(char c);
 
 // Overloading operators
 PUBLIC:

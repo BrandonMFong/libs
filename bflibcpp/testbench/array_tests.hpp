@@ -252,6 +252,7 @@ int test_deletingObjectAtRandomIndex() {
 				}
 				if (a[i] != (i + off)) {
 					result = 3;
+					break;
 				}
 			}
 		}
@@ -262,6 +263,71 @@ int test_deletingObjectAtRandomIndex() {
 	UNIT_TEST_END(!result, result);
 	return result;
 }
+
+int test_insertingAtRandomIndex() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 8;
+	while (!result && max) {
+		int objcount = 2 << 16;
+		Array<int, int> a;
+
+		// add
+		for (int i = 0; i < objcount; i++) {
+			result = a.add(i);
+			if (result) break;
+		}
+
+		// compare
+		if (!result) {
+			for (int i = 0; i < objcount; i++) {
+				if (a[i] != i) {
+					result = 2;
+					break;
+				}
+			}
+		}
+
+		// delete at random index
+		unsigned int randindex = 0;
+		int randnum = 0;
+		if (!result) {
+			srand(time(0));
+			randindex = ((unsigned int) rand() % objcount) - 1;
+			randnum = rand();
+			result = a.insertObjectAtIndex(randnum, randindex);
+		}
+
+		if (!result) {
+			// scan objects
+			for (int i = 0; i < a.count(); i++) {
+				if (i == (int) randindex) {
+					if (a[i] != (int) randnum) {
+						result = 4;
+						break;
+					}
+				} else {
+					int off = 0;
+					if (i > (int) randindex) {
+						off = 1;
+					}
+
+					if (a[i] != (i - off)) {
+						result = 3;
+						break;
+					}
+				}
+			}
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 
 void array_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
@@ -276,7 +342,8 @@ void array_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_indexForObject, p, f);
 	LAUNCH_TEST(test_addanddelete, p, f);
 	LAUNCH_TEST(test_deletingObjectAtRandomIndex, p, f);
-	
+	LAUNCH_TEST(test_insertingAtRandomIndex, p, f);
+
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }

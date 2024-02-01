@@ -182,8 +182,28 @@ PUBLIC:
 		return 0;
 	}
 
+	int insertObjectAtIndex(T obj, S index) {
+		this->_address = this->reallocate(this->_address, this->_count + 1);
+		if (this->_address == NULL) {
+			this->_count = 0;
+			return -4;
+		}
+
+		// shift
+		this->_count++;
+		for (S i = this->_count - 1; i > index; i--) {
+			this->_address[i] = this->_address[i - 1];
+		}
+
+		this->_address[index] = obj;
+
+		return 0;
+	}
+
 	/**
 	 * removes object at index
+	 *
+	 * this dynamically adjusts the memory
 	 */
 	int removeObjectAtIndex(S index) {
 		// shift objects
