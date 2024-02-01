@@ -29,8 +29,8 @@ int String::copy(String & s) const {
 	return this->count() == s.count() ? 0 : 1;
 }
 
-void String::addChar(char c) {
-	this->add(c);
+int String::addChar(char c) {
+	return this->insertObjectAtIndex(c, this->count() - 1);
 }
 
 String::operator const char * () const {

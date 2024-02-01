@@ -137,7 +137,7 @@ int test_addingCharacterToString() {
 	const char * s = "hello world";
 	const char * e = "hello world!";
 
-	int max = 2 << 10;
+	int max = 2 << 24;
 	while (!result && max) {
 		String str = s;
 

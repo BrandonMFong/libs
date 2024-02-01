@@ -44,7 +44,7 @@ PUBLIC:
 	 *
 	 * similar to std::string::push_back
 	 */
-	void addChar(char c);
+	int addChar(char c);
 
 // Overloading operators
 PUBLIC:
