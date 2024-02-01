@@ -8,14 +8,6 @@
 
 using namespace BF;
 
-char * StringAllocate(size_t size) {
-	return (char *) malloc(size);
-}
-
-void StringDeallocate(char * string) {
-	BFFree(string);
-}
-
 String::String(const String & str) : String(str.cString()) {}
 
 String:: String() : String("") {}
@@ -23,8 +15,6 @@ String:: String() : String("") {}
 String::String(const char * str) : String((char *) str) {}
 
 String::String(char * str) : Array<char, size_t>() {
-	this->setAllocationCallback(StringAllocate);
-	this->setDeallocationCallback(StringDeallocate);
 	this->set(str, strlen(str) + 1);
 }
 

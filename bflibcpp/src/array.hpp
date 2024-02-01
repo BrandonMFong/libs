@@ -31,8 +31,8 @@ PUBLIC:
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
-		this->_allocationCallback = 0;
-		this->_deallocationCallback = 0;
+		//this->_allocationCallback = 0;
+		//this->_deallocationCallback = 0;
 	}
 
 	/**
@@ -78,9 +78,9 @@ PUBLIC:
 	 *
 	 * By default free store is utilized
 	 */
-	[[deprecated]]
+	[[deprecated("allocation is no longer configurable")]]
 	void setAllocationCallback(T * (* cb) (S size)) {
-		this->_allocationCallback = cb;
+		//this->_allocationCallback = cb;
 	}
 
 	/**
@@ -88,9 +88,9 @@ PUBLIC:
 	 *
 	 * By default free store is utilized
 	 */
-	[[deprecated]]
+	[[deprecated("allocation is no longer configurable")]]
 	void setDeallocationCallback(void (* cb) (T * value)) {
-		this->_deallocationCallback = cb;
+		//this->_deallocationCallback = cb;
 	}
 
 	/**
@@ -184,8 +184,9 @@ PRIVATE:
 	 * By default we are using the free store
 	 */
 	T * allocate(S size) {
-		if (this->_allocationCallback) return this->_allocationCallback(size);
-		else return new T[size];
+		//if (this->_allocationCallback) return this->_allocationCallback(size);
+		//else return new T[size];
+		return (T *) malloc(sizeof(T) * size);
 	}
 
 	/**
@@ -193,10 +194,13 @@ PRIVATE:
 	 * by allocate()
 	 */
 	void deallocate(T * value) {
+		/*
 		if (this->_deallocationCallback) this->_deallocationCallback(value);
 		else {
 			Delete(value);
 		}
+		*/
+		free((void *) value);
 	}
 
 	/**
@@ -250,12 +254,10 @@ PRIVATE:
 	int (* _callback) (T a, T b);
 
 	/// Defines how _address is allocated
-	[[deprecated]]
-	T * (* _allocationCallback) (S size);
+	//T * (* _allocationCallback) (S size);
 
 	/// Defines how _address is deallocated
-	[[deprecated]]
-	void (* _deallocationCallback) (T * value);
+	//void (* _deallocationCallback) (T * value);
 
 PUBLIC:
 

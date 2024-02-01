@@ -99,38 +99,44 @@ int test_ObjectAtIndex() {
 }
 
 int test_indexForObject() {
+	UNIT_TEST_START;
+
 	int result = 0;
+	int max = 2 << 20;
+	while (!result && max) {
+		Array<int> arr({1, 2, 3, 4});
 
-	Array<int> arr({1, 2, 3, 4});
+		if (arr.indexForObject(3) != 2) {
+			result = 1;
+			printf("index should be 2 but is %ld\n", arr.indexForObject(3));
+		}
 
-	if (arr.indexForObject(3) != 2) {
-		result = 1;
-		printf("index should be 2 but is %ld\n", arr.indexForObject(3));
+		Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
+		ch.setComparator(strcmp);
+		
+		char buf[100];
+		strcpy(buf, "world");
+		if (ch.indexForObject(buf) != 1) {
+			result = 1;
+			printf("index should be 1 but is %ld\n", ch.indexForObject(buf));
+		}
+		
+		strcpy(buf, "Hello");
+		if (ch.indexForObject(buf) != 0) {
+			result = 1;
+			printf("index should be 0 but is %ld\n", ch.indexForObject(buf));
+		}
+		
+		strcpy(buf, "hello");
+		if (ch.indexForObject(buf) != -1UL) {
+			result = 1;
+			printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
+		}
+
+		max--;
 	}
 
-	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
-	ch.setComparator(strcmp);
-	
-	char buf[100];
-	strcpy(buf, "world");
-	if (ch.indexForObject(buf) != 1) {
-		result = 1;
-		printf("index should be 1 but is %ld\n", ch.indexForObject(buf));
-	}
-	
-	strcpy(buf, "Hello");
-	if (ch.indexForObject(buf) != 0) {
-		result = 1;
-		printf("index should be 0 but is %ld\n", ch.indexForObject(buf));
-	}
-	
-	strcpy(buf, "hello");
-	if (ch.indexForObject(buf) != -1UL) {
-		result = 1;
-		printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
-	}
-
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
 
