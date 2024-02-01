@@ -167,6 +167,18 @@ PUBLIC:
 		memcpy(this->_address, arr->address(), this->_count);
 	}
 
+	int add(T obj) {
+		this->_address = this->reallocate(this->_address, this->_count + 1);
+		if (this->_address == NULL) {
+			this->_count = 0;
+			return -1;
+		}
+
+		this->_count++;
+		this->_address[this->_count - 1] = obj;
+		return 0;
+	}
+
 PROTECTED:
 
 	/**
@@ -177,12 +189,17 @@ PROTECTED:
 PRIVATE:
 
 	/**
-	 * Derived classes can override if they want to use the heap
-	 *
-	 * By default we are using the free store
+	 * uses malloc to allocate mem
 	 */
 	static T * allocate(S size) {
 		return (T *) malloc(sizeof(T) * size);
+	}
+
+	/**
+	 * returns modified `addr` with `newsize`
+	 */
+	static T * reallocate(T * addr, S newsize) {
+		return (T *) realloc(addr, sizeof(T) * newsize);
 	}
 
 	/**

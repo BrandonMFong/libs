@@ -173,29 +173,51 @@ int test_Setter() {
 	return result;
 }
 
+int test_add() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 10;
+	while (!result && max) {
+		int objcount = 2 << 16;
+		Array<int> a;
+
+		// add
+		for (int i = 0; i < objcount; i++) {
+			result = a.add(i);
+			if (result) break;
+		}
+
+		// compare
+		if (!result) {
+			for (int i = 0; i < objcount; i++) {
+				if (a[i] != i) {
+					result = 2;
+					break;
+				}
+			}
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return 0;
+}
+
 void array_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_Initializer()) p++;
-	else f++;
+	LAUNCH_TEST(test_Initializer, p, f);
+	LAUNCH_TEST(test_Contains, p, f);
+	LAUNCH_TEST(test_ObjectAtIndex, p, f);
+	LAUNCH_TEST(test_Count, p, f);
+	LAUNCH_TEST(test_Setter, p, f);
+	LAUNCH_TEST(test_indexForObject, p, f);
+	LAUNCH_TEST(test_add, p, f);
 	
-	if (!test_Contains()) p++;
-	else f++;
-
-	if (!test_ObjectAtIndex()) p++;
-	else f++;
-
-	if (!test_Count()) p++;
-	else f++;
-	
-	if (!test_Setter()) p++;
-	else f++;
-
-	if (!test_indexForObject()) p++;
-	else f++;
-
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }
