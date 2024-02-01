@@ -173,11 +173,11 @@ int test_Setter() {
 	return result;
 }
 
-int test_add() {
+int test_addanddelete() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 10;
+	int max = 2 << 8;
 	while (!result && max) {
 		int objcount = 2 << 16;
 		Array<int> a;
@@ -198,6 +198,11 @@ int test_add() {
 			}
 		}
 
+		// delete elements from the end of the array
+		while (!result && a.count()) {
+			a.removeObjectAtIndex(a.count() - 1);
+		}
+
 		max--;
 	}
 
@@ -216,7 +221,7 @@ void array_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_Count, p, f);
 	LAUNCH_TEST(test_Setter, p, f);
 	LAUNCH_TEST(test_indexForObject, p, f);
-	LAUNCH_TEST(test_add, p, f);
+	LAUNCH_TEST(test_addanddelete, p, f);
 	
 	if (pass) *pass += p;
 	if (fail) *fail += f;

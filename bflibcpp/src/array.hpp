@@ -17,13 +17,13 @@
 namespace BF {
 
 /**
- * Immutable Array
+ * Mutable Array
  *
- * This class allows you to access the array in readonly.  This class 
+ * This class allows you to access the array.  This class 
  * is meant to provide you the basic functionality of an array class
  *
- * Notes:
- * 	I feel that I can derive binary trees and linked lists from this class
+ * Objects stored in array are assumed to be owned by owner of array 
+ * object
  */
 template <typename T, typename S = size_t> class Array {
 PUBLIC:
@@ -167,6 +167,9 @@ PUBLIC:
 		memcpy(this->_address, arr->address(), this->_count);
 	}
 
+	/**
+	 * Adds object at the end of the array
+	 */
 	int add(T obj) {
 		this->_address = this->reallocate(this->_address, this->_count + 1);
 		if (this->_address == NULL) {
@@ -176,6 +179,26 @@ PUBLIC:
 
 		this->_count++;
 		this->_address[this->_count - 1] = obj;
+		return 0;
+	}
+
+	/**
+	 * removes object at index
+	 */
+	int removeObjectAtIndex(S index) {
+		// shift objects
+		for (S i = index; i < (this->_count - 1); i++) {
+			this->_address[i] = this->_address[i + 1];
+		}
+
+		// adjust array
+		this->_count--;
+		this->_address = this->reallocate(this->_address, this->_count);
+		if (this->_address == NULL) {
+			this->_count = 0;
+			return -1;
+		}
+
 		return 0;
 	}
 
