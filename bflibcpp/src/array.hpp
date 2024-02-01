@@ -174,7 +174,7 @@ PUBLIC:
 		this->_address = this->reallocate(this->_address, this->_count + 1);
 		if (this->_address == NULL) {
 			this->_count = 0;
-			return -1;
+			return -3;
 		}
 
 		this->_count++;
@@ -194,9 +194,11 @@ PUBLIC:
 		// adjust array
 		this->_count--;
 		this->_address = this->reallocate(this->_address, this->_count);
-		if (this->_address == NULL) {
+
+		// if count == 0, then realloc will return NULL
+		if (this->_count && (this->_address == NULL)) {
 			this->_count = 0;
-			return -1;
+			return -5;
 		}
 
 		return 0;

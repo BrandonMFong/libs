@@ -200,14 +200,67 @@ int test_addanddelete() {
 
 		// delete elements from the end of the array
 		while (!result && a.count()) {
-			a.removeObjectAtIndex(a.count() - 1);
+			result = a.removeObjectAtIndex(a.count() - 1);
 		}
 
 		max--;
 	}
 
 	UNIT_TEST_END(!result, result);
-	return 0;
+	return result;
+}
+
+int test_deletingObjectAtRandomIndex() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 10;
+	while (!result && max) {
+		int objcount = 2 << 12;
+		Array<int, int> a;
+
+		// add
+		for (int i = 0; i < objcount; i++) {
+			result = a.add(i);
+			if (result) break;
+		}
+
+		// compare
+		if (!result) {
+			for (int i = 0; i < objcount; i++) {
+				if (a[i] != i) {
+					result = 2;
+					break;
+				}
+			}
+		}
+
+		// delete at random index
+		unsigned int randindex = 0;
+		if (!result) {
+			srand(time(0));
+			randindex = ((unsigned int) rand() % objcount) - 1;
+			result = a.removeObjectAtIndex(randindex);
+		}
+
+		if (!result) {
+			// scan objects
+			for (int i = 0; i < a.count(); i++) {
+				int off = 0;
+				if (i >= (int) randindex) {
+					off = 1;
+				}
+				if (a[i] != (i + off)) {
+					result = 3;
+				}
+			}
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
 }
 
 void array_tests(int * pass, int * fail) {
@@ -222,6 +275,7 @@ void array_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_Setter, p, f);
 	LAUNCH_TEST(test_indexForObject, p, f);
 	LAUNCH_TEST(test_addanddelete, p, f);
+	LAUNCH_TEST(test_deletingObjectAtRandomIndex, p, f);
 	
 	if (pass) *pass += p;
 	if (fail) *fail += f;
