@@ -31,8 +31,6 @@ PUBLIC:
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
-		//this->_allocationCallback = 0;
-		//this->_deallocationCallback = 0;
 	}
 
 	/**
@@ -183,9 +181,7 @@ PRIVATE:
 	 *
 	 * By default we are using the free store
 	 */
-	T * allocate(S size) {
-		//if (this->_allocationCallback) return this->_allocationCallback(size);
-		//else return new T[size];
+	static T * allocate(S size) {
 		return (T *) malloc(sizeof(T) * size);
 	}
 
@@ -193,13 +189,7 @@ PRIVATE:
 	 * Derived must make sure this follows the standard established
 	 * by allocate()
 	 */
-	void deallocate(T * value) {
-		/*
-		if (this->_deallocationCallback) this->_deallocationCallback(value);
-		else {
-			Delete(value);
-		}
-		*/
+	static void deallocate(T * value) {
 		free((void *) value);
 	}
 
@@ -252,12 +242,6 @@ PRIVATE:
 	 * How we compare each item in the array
 	 */
 	int (* _callback) (T a, T b);
-
-	/// Defines how _address is allocated
-	//T * (* _allocationCallback) (S size);
-
-	/// Defines how _address is deallocated
-	//void (* _deallocationCallback) (T * value);
 
 PUBLIC:
 
