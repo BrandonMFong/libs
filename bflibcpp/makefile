@@ -6,11 +6,11 @@
 include ../makefiles/platforms.mk
 include ../bflibc/makefiles/uuid.mk
 
-## Compiler definitions
+## tools
 CPP = g++
-
-## Archiver
 AR = ar
+CP = cp
+RM = rm
 
 ## Compile Flags
 
@@ -72,21 +72,25 @@ d-setup:
 	@mkdir -p $(D_BIN_PATH)
 
 $(D_BIN_PATH)/$(D_BFLIBCPP_OUT): $(D_CPP_OBJ_FILES)
-	cp -afv src/*.hpp $(D_BIN_PATH)
+	$(CP) -afv src/*.hpp $(D_BIN_PATH)
 	$(AR) rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $^ $(D_C_OBJ_FILES)
 
 $(D_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(D_CPPFLAGS)
 
 d-clean:
-	rm -rfv $(D_BUILD_PATH)
-	rm -rfv $(D_BIN_PATH)
+	$(RM) -rfv $(D_BUILD_PATH)
+	$(RM) -rfv $(D_BIN_PATH)
 
 ### TESTS ###
 T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
 
 test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS)
+test: CPP = @g++
+test: AR = @ar
+test: CP = @cp
+test: RM = @rm
 test: d-clean t-setup debug compile-tests
 	./$(T_BIN_PATH)/$(T_BFLIBCPP_OUT)
 
@@ -97,6 +101,6 @@ compile-tests:
 	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS)
 
 clean: r-clean d-clean
-	rm -rfv build/
-	rm -rfv bin
+	$(RM) -rfv build/
+	$(RM) -rfv bin
 
