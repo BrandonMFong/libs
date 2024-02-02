@@ -167,8 +167,13 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 	if (!in) return 1;
 	else {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
-		id->isRunning = false;
-		return pthread_cancel(id->p);
+
+		if (id->isRunning) {
+			id->isRunning = false;
+			return pthread_cancel(id->p);
+		} else {
+			return 0;
+		}
 	}
 }
 

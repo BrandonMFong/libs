@@ -217,6 +217,34 @@ int test_CancelingAsyncThread(void) {
 	return result;
 }
 
+int test_CancelingAsyncThreadThatHasAlreadyFinished() {
+	UNIT_TEST_START;
+	int result = 0;
+	bool flag = false;
+
+	BFThreadAsyncID id;
+	if (!result) {
+		id = BFThreadAsync(CancelingAsyncThreadRun, &flag);
+		result = BFThreadAsyncIDError(id);
+	}
+
+	if (!result) {
+		while (BFThreadAsyncIDIsRunning(id)) {}
+		sleep(1);
+		result = BFThreadAsyncCancel(id);
+	}
+
+	if (!result) {
+		if (flag) result = 1;
+	}
+	
+	BFThreadAsyncIDDestroy(id);
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
 void thread_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -229,6 +257,7 @@ void thread_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_ReleasingAsyncID, p, f);
 	LAUNCH_TEST(test_AsyncDetach, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThread, p, f);
+	LAUNCH_TEST(test_CancelingAsyncThreadThatHasAlreadyFinished, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
