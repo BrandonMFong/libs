@@ -10,6 +10,7 @@ extern "C" {
 #include <bflibc/bflibc.h>
 }
 
+#include "object.hpp"
 #include "delete.hpp"
 #include "release.hpp"
 #include "access.hpp"
