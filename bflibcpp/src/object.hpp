@@ -13,8 +13,10 @@ public:
 	Object();
 	virtual ~Object();
 
-	static void retain(Object & obj);
-	static void release(Object & obj);
+	static void retain(Object * obj);
+	static void release(Object * obj);
+
+	int retainCount() const;
 
 private:
 	int _retainCount;

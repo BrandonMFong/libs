@@ -17,11 +17,63 @@ extern "C" {
 using namespace BF;
 
 int test_objectinit() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Object o;
 
-	PRINT_TEST_RESULTS(!result);
+	if (o.retainCount() != 1)
+		result = 1;
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_objectretainer() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	Object * o = new Object;
+
+	if (o == NULL)
+		result = 1;
+	else if (o->retainCount() != 1)
+		result = 2;
+
+	int max = 2 << 8;
+	while (!result && max) {
+		srand(time(0));
+		int retain = rand() % (2 << 16);
+
+		for (int i = 0; i < retain; i++) {
+			Object::retain(o);
+		}
+
+		if (o->retainCount() != (retain + 1)) {
+			result = max;
+		}
+
+		if (!result) {
+			for (int i = 0; i < retain; i++) {
+				Object::release(o);
+			}
+
+			if (o->retainCount() != 1) {
+				result = max;
+			}
+		}
+
+		max--;
+	}
+
+	if (!result) {
+		Object::release(o);
+		try {
+			o->retainCount();
+		} catch (...) { }
+	}
+
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -31,6 +83,7 @@ void object_tests(int * pass, int * fail) {
 	INTRO_TEST_FUNCTION;
 
 	LAUNCH_TEST(test_objectinit, p, f);
+	LAUNCH_TEST(test_objectretainer, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
