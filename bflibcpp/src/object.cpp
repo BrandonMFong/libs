@@ -31,7 +31,12 @@ void Object::release(Object * obj) {
 	}
 }
 
-int Object::retainCount() const {
-	return this->_retainCount;
+int Object::retainCount(Object * obj) {
+	if (obj) return obj->_retainCount;
+	return 0;
+}
+
+int Object::retainCount(Object & obj) {
+	return obj._retainCount;
 }
 

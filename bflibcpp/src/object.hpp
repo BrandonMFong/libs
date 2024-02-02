@@ -16,7 +16,8 @@ public:
 	static void retain(Object * obj);
 	static void release(Object * obj);
 
-	int retainCount() const;
+	static int retainCount(Object * obj);
+	static int retainCount(Object & obj);
 
 private:
 	int _retainCount;

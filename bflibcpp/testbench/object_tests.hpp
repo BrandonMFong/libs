@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include "object.hpp"
+#include "release.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -22,7 +23,7 @@ int test_objectinit() {
 
 	Object o;
 
-	if (o.retainCount() != 1)
+	if (Object::retainCount(o) != 1)
 		result = 1;
 
 	UNIT_TEST_END(!result, result);
@@ -37,7 +38,7 @@ int test_objectretainer() {
 
 	if (o == NULL)
 		result = 1;
-	else if (o->retainCount() != 1)
+	else if (Object::retainCount(o) != 1)
 		result = 2;
 
 	int max = 2 << 8;
@@ -49,7 +50,7 @@ int test_objectretainer() {
 			Object::retain(o);
 		}
 
-		if (o->retainCount() != (retain + 1)) {
+		if (Object::retainCount(o) != (retain + 1)) {
 			result = max;
 		}
 
@@ -58,7 +59,7 @@ int test_objectretainer() {
 				Object::release(o);
 			}
 
-			if (o->retainCount() != 1) {
+			if (Object::retainCount(o) != 1) {
 				result = max;
 			}
 		}
@@ -69,7 +70,7 @@ int test_objectretainer() {
 	if (!result) {
 		Object::release(o);
 		try {
-			o->retainCount();
+			Object::retainCount(o);
 		} catch (...) { }
 	}
 

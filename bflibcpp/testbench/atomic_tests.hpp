@@ -67,7 +67,7 @@ int test_atomicqueue() {
 	int result = 0;
 
 	Atomic<Queue<int>> q;
-	const int max = 2 << 11;
+	const int max = 2 << 12;
 	for (int i = 0; i < max; i++) {
 		q.get().push(i);
 	}
