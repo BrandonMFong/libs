@@ -7,6 +7,7 @@
 #define ATOMIC_HPP
 
 #include "access.hpp"
+#include "object.hpp"
 #include <stdbool.h>
 
 extern "C" {
@@ -16,9 +17,9 @@ extern "C" {
 namespace BF {
 
 template <typename T>
-class Atomic {
+class Atomic : public Object {
 public:
-	Atomic() {
+	Atomic() : Object() {
 		BFLockCreate(&this->_lock);
 		this->_locked = false;
 	}

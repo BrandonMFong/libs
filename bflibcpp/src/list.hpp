@@ -7,6 +7,7 @@
 #define LIST_HPP
 
 #include "access.hpp"
+#include "object.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -37,13 +38,13 @@ typedef enum {
  * object memory will not be deallocated.
  */
 template <typename L, typename S = int>
-class List {
+class List : public Object {
 PUBLIC:
 	
 	/**
 	 * Bi-directional node
 	 */
-	class Node {
+	class Node : public Object {
 		friend List<L, S>;
 	PUBLIC:
 		Node * next() const {
@@ -59,7 +60,7 @@ PUBLIC:
 		}
 
 	PRIVATE:
-		Node() {
+		Node() : Object() {
 			this->left = 0;
 			this->right = 0;
 			this->obj = 0;
@@ -83,7 +84,7 @@ PUBLIC:
 
 PUBLIC:
 
-	List() {
+	List() : Object() {
 		this->_head = 0;
 		this->_tail = 0;
 		this->_count = 0;
