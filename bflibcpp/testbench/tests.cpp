@@ -14,6 +14,7 @@
 #include "time_tests.hpp"
 #include "queue_tests.hpp"
 #include "atomic_tests.hpp"
+#include "object_tests.hpp"
 
 int main() {
 	int pass = 0, fail = 0;
@@ -72,6 +73,11 @@ int main() {
 	pass = 0; fail = 0;
 
 	atomic_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+	
+	object_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
