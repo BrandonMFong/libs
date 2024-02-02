@@ -9,7 +9,7 @@
 #include "object.hpp"
 
 #define BFRelease(x) if (x != 0) {\
-	int rc = BF::Object::retainCount(o);\
+	int rc = BF::Object::retainCount(x);\
 	BF::Object::release(x);\
 	if (rc == 1) x = 0;\
 }\
