@@ -56,7 +56,7 @@ int test_objectretainer() {
 
 		if (!result) {
 			for (int i = 0; i < retain; i++) {
-				Object::release(o);
+				BFRelease(o);
 			}
 
 			if (Object::retainCount(o) != 1) {
@@ -68,10 +68,10 @@ int test_objectretainer() {
 	}
 
 	if (!result) {
-		Object::release(o);
-		try {
-			Object::retainCount(o);
-		} catch (...) { }
+		BFRelease(o);
+		int i = Object::retainCount(o);
+		if (i) result = 4;
+		else if (o) result = 5;
 	}
 
 	UNIT_TEST_END(!result, result);
