@@ -13,6 +13,7 @@ extern "C" {
 #include "object.hpp"
 #include "delete.hpp"
 #include "release.hpp"
+#include "retain.hpp"
 #include "access.hpp"
 #include "array.hpp"
 #include "list.hpp"

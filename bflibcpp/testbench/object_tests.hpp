@@ -10,6 +10,7 @@
 
 #include "object.hpp"
 #include "release.hpp"
+#include "retain.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -47,7 +48,7 @@ int test_objectretainer() {
 		int retain = rand() % (2 << 16);
 
 		for (int i = 0; i < retain; i++) {
-			Object::retain(o);
+			BFRetain(o);
 		}
 
 		if (Object::retainCount(o) != (retain + 1)) {
