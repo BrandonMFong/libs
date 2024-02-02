@@ -19,6 +19,8 @@ using namespace BF;
 int test_objectinit() {
 	int result = 0;
 
+	Object o;
+
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }

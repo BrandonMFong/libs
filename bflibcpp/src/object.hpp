@@ -12,6 +12,12 @@ class Object {
 public:
 	Object();
 	virtual ~Object();
+
+	static void retain(Object & obj);
+	static void release(Object & obj);
+
+private:
+	int _retainCount;
 };
 
 }
