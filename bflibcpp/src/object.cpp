@@ -3,7 +3,7 @@
  * date: 2/2/24
  */
 
-#include "bfobject.hpp"
+#include "object.hpp"
 
 using namespace BF;
 

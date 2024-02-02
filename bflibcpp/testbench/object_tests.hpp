@@ -8,6 +8,8 @@
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
+#include "object.hpp"
+
 extern "C" {
 #include <bflibc/bflibc.h>
 }
