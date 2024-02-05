@@ -450,6 +450,8 @@ PROTECTED:
 	 *
 	 * Returns NULL if node with obj could not
 	 * be found
+	 *
+	 * TODO: remove recursion
 	 */
 	BinNode * getNodeForObject(T obj, BinNode * node) {
 		if (!node) return NULL;
@@ -623,7 +625,6 @@ PROTECTED:
 		if (result == 0) {	
 			if (childCount == 0) {
 				// Right is null anyways
-				// result = node->replaceWithNode(node->left());
 				result = this->replaceNodeWithNode(node, node->left());
 			} else if (childCount == 1) {
 				result = this->replaceNodeWithTheOnlyChild(node);
