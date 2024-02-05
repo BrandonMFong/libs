@@ -7,6 +7,7 @@
 #define THREAD_H
 
 #include <stdbool.h>
+#include "typethreadid.h"
 
 /**
  * Launches thread and returns when thread terminates
@@ -20,11 +21,6 @@ int BFThreadSync(void (* callback)(void *), void * args);
  * consider using BFThreadAsync
  */
 int BFThreadAsyncDetach(void (* callback)(void *), void * args);
-
-/**
- * Object that describes an async thread 
- */
-typedef void * BFThreadAsyncID;
 
 /**
  * Launches and detaches `callback` on a separate thread
