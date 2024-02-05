@@ -163,7 +163,7 @@ bool BFThreadAsyncIDIsRunning(BFThreadAsyncID in) {
 	return result;
 }
 
-int BFThreadAsyncCancelForce(BFThreadAsyncID in) {
+int BFThreadAsyncCancel(BFThreadAsyncID in) {
 	if (!in) return 1;
 	else {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;

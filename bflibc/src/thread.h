@@ -52,7 +52,7 @@ bool BFThreadAsyncIDIsRunning(BFThreadAsyncID);
 /**
  * Cancels async thread
  */
-int BFThreadAsyncCancelForce(BFThreadAsyncID);
+int BFThreadAsyncCancel(BFThreadAsyncID);
 
 #endif // THREAD_H
 
