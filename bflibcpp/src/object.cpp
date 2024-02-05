@@ -10,23 +10,32 @@ using namespace BF;
 
 Object::Object() {
 	this->_retainCount = 1;
+	BFLockCreate(&this->_lock);
 }
 
 Object::~Object() {
 	this->_retainCount = 0;
+	BFLockDestroy(&this->_lock);
 }
 
 void Object::retain(Object * obj) {
-	if (obj)
+	if (obj) {
+		BFLockLock(&obj->_lock);
 		obj->_retainCount++;
+		BFLockUnlock(&obj->_lock);
+	}
 }
 
 void Object::release(Object * obj) {
 	if (obj) {
+		BFLockLock(&obj->_lock);
 		obj->_retainCount--;
 
 		if (obj->_retainCount == 0) {
+			BFLockUnlock(&obj->_lock);
 			Delete(obj);
+		} else {
+			BFLockUnlock(&obj->_lock);
 		}
 	}
 }

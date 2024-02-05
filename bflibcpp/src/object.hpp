@@ -6,6 +6,10 @@
 #ifndef BF_OBJECT_HPP
 #define BF_OBJECT_HPP
 
+extern "C" {
+#include <bflibc/lock.h>
+}
+
 namespace BF {
 
 /**
@@ -38,6 +42,8 @@ public:
 
 private:
 	int _retainCount;
+
+	BFLock _lock;
 };
 
 }
