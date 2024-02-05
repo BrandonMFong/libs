@@ -13,6 +13,14 @@ Object::Object() {
 	BFLockCreate(&this->_lock);
 }
 
+/** 
+ * if someone is doing a shallow copy of 
+ * this object, I want to make sure
+ * the new copy has their own lock and
+ * a retain count that is reset
+ */
+Object::Object(Object & obj) : Object() {}
+
 Object::~Object() {
 	this->_retainCount = 0;
 	BFLockDestroy(&this->_lock);

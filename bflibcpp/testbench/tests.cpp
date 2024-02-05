@@ -22,7 +22,6 @@ int main() {
 
 	printf("\n---------------------------\n");
 
-	/*
 	array_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -37,14 +36,12 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	*/
 	
 	bintree_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
 
-	/*
 	rbtree_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -84,7 +81,6 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	*/
 
 	printf("Grade - %.2f%% (%d/%d)\n", (tp / (tp + tf)) * 100, (int) tp, (int) (tp + tf));
 

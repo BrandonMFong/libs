@@ -21,6 +21,7 @@ namespace BF {
 class Object {
 public:
 	Object();
+	Object(Object & obj);
 	virtual ~Object();
 
 	/**
