@@ -203,9 +203,9 @@ void filewriter_tests(int * pass, int * fail) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	//LAUNCH_TEST(test_creatingfilewriter, p, f);
+	LAUNCH_TEST(test_creatingfilewriter, p, f);
 	LAUNCH_TEST(test_writingwithfilewriter, p, f);
-	//LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
+	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
