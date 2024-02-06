@@ -9,24 +9,32 @@
 #include "lock.h"
 #include "thread.h"
 
-typedef struct LineQueueItem {
+typedef struct _LineQueueItem {
 	struct LineQueueItem * next;
 	char * line;
-} LineQueueItem;
+} _LineQueueItem;
 
 typedef struct {
-	LineQueueItem * top;
+	_LineQueueItem * top;
 	size_t size;	
-} LineQueue;
+} _LineQueue;
+
+int _LineQueuePush(const char * line) {
+	return 0;
+}
+
+int _LineQueuePop() {
+	return 0;
+}
 
 typedef struct {
 	FILE * file;
 	BFLock qlock;
-	LineQueue q;
+	_LineQueue q;
 	BFThreadAsyncID tid;
 } _FileWriter;
 
-void FileWriterQueueThread(void * in) {
+void _FileWriterQueueThread(void * in) {
 }
 
 int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
@@ -48,7 +56,7 @@ int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
 	fw->q.top = NULL;
 
 	// init thread
-	fw->tid = BFThreadAsync(FileWriterQueueThread, (void *) fw);
+	fw->tid = BFThreadAsync(_FileWriterQueueThread, (void *) fw);
 	error = BFThreadAsyncIDError(fw->tid);
 	if (error) return error;
 
