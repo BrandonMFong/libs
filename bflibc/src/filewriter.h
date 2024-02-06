@@ -18,6 +18,8 @@ int FileWriterCreate(FileWriter * filewriter, const char * filepath);
  */
 int FileWriterQueueLine(FileWriter * filewriter, const char * line);
 
+int FileWriterFlush(FileWriter * filewriter);
+
 /**
  * closes file writing access
  */

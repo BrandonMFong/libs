@@ -46,6 +46,9 @@ int BFThreadAsyncIDError(BFThreadAsyncID);
 
 /**
  * true if callback from BFThreadAsync is still running
+ *
+ * thread safe.  you can use this function to poll the async
+ * thread if it's still running
  */
 bool BFThreadAsyncIDIsRunning(BFThreadAsyncID);
 
