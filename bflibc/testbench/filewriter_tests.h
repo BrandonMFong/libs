@@ -117,6 +117,8 @@ void TestFileWriterThreads(void * in) {
 
 		if (error) break;
 	}
+
+	FileWriterFlush(tools->fw);
 }
 
 int test_writingfromdifferentthreads(void) {
@@ -127,7 +129,7 @@ int test_writingfromdifferentthreads(void) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	int max = 2 << 16;
+	int max = 2 << 8;
 	while (!result && max) {
 		FileWriter fw;
 		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
@@ -136,14 +138,39 @@ int test_writingfromdifferentthreads(void) {
 		BFThreadAsyncID tid1 = 0;
 		TestFileWriterThreadsTools tools;
 		if (!result) {
-			tools.fw = fw;
+			tools.fw = &fw;
 			srand(time(0));
-			tools.lines2write = rand();
+			tools.lines2write = rand() % (2 << 14);
 			tid0 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 			tid1 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 
-			while (BFThreadAsyncIDIsRunning(tid0) && BFThreadAsyncIDIsRunning(tid1)) {}
+			while (BFThreadAsyncIDIsRunning(tid0) || BFThreadAsyncIDIsRunning(tid1)) {}
+
+			BFThreadAsyncIDDestroy(tid0);
+			BFThreadAsyncIDDestroy(tid1);
 		}
+
+		FILE * f = 0;
+		if (!result) {
+			f = fopen(FILE_WRITER_FILE_PATH, "r");
+			if (!f) result = max;
+		}
+
+		// read line by line and compare
+		if (!result) {
+			char * line = 0;
+			int i = 0;
+			size_t s = 0;
+			while ((getline(&line, &s, f) != -1)) {
+				i++;
+			}
+			free(line);
+
+			if (i != (tools.lines2write * 2))
+				result = 1;
+		}
+
+		fclose(f);
 
 		if (!result) {
 			result = FileWriterClose(&fw);
@@ -167,7 +194,7 @@ void filewriter_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_creatingfilewriter, p, f);
 	LAUNCH_TEST(test_writingwithfilewriter, p, f);
-	//LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
+	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
