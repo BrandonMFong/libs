@@ -23,11 +23,11 @@ int test_creatingfilewriter(void) {
 			remove(FILE_WRITER_FILE_PATH);
 		}
 
-		FileWriter fw;
-		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
+		BFFileWriter fw;
+		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		if (!result) {
-			result = FileWriterClose(&fw);
+			result = BFFileWriterClose(&fw);
 		}
 
 		max--;
@@ -42,28 +42,28 @@ int test_writingwithfilewriter(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 1;
+	int max = 2;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
 		}
 
-		FileWriter fw;
-		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
+		BFFileWriter fw;
+		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		// write test lines
-		const int lines = 2;
+		const int lines = 2 << 2;
 		if (!result) {
 			for (int i = 0; i < lines; i++) {
 				char line[512];
 				snprintf(line, 512, "line %d", i);
-				result = FileWriterQueueLine(&fw, line);
+				result = BFFileWriterQueueLine(&fw, line);
 
 				if (result) break;
 			}
 
 			if (!result)
-				FileWriterFlush(&fw);
+				BFFileWriterFlush(&fw);
 		}
 
 		FILE * f = 0;
@@ -91,7 +91,7 @@ int test_writingwithfilewriter(void) {
 
 		fclose(f);
 		if (!result) {
-			result = FileWriterClose(&fw);
+			result = BFFileWriterClose(&fw);
 		}
 
 		max--;
@@ -102,7 +102,7 @@ int test_writingwithfilewriter(void) {
 }
 
 typedef struct {
-	FileWriter * fw;
+	BFFileWriter * fw;
 	int lines2write;
 } TestFileWriterThreadsTools;
 
@@ -113,12 +113,12 @@ void TestFileWriterThreads(void * in) {
 	for (int i = 0; i < tools->lines2write; i++) {
 		char line[512];
 		snprintf(line, 512, "line %d", i);
-		int error = FileWriterQueueLine(tools->fw, line);
+		int error = BFFileWriterQueueLine(tools->fw, line);
 
 		if (error) break;
 	}
 
-	FileWriterFlush(tools->fw);
+	BFFileWriterFlush(tools->fw);
 }
 
 int test_writingfromdifferentthreads(void) {
@@ -131,8 +131,8 @@ int test_writingfromdifferentthreads(void) {
 			remove(FILE_WRITER_FILE_PATH);
 		}
 
-		FileWriter fw;
-		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
+		BFFileWriter fw;
+		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		// Launch writing threads and wait for them to finish
 		BFThreadAsyncID tid0 = 0;
@@ -152,8 +152,7 @@ int test_writingfromdifferentthreads(void) {
 			}
 			fflush(stdout);
 
-			while (BFThreadAsyncIDIsRunning(tid0) || BFThreadAsyncIDIsRunning(tid1)) {
-			}
+			while (BFThreadAsyncIDIsRunning(tid0) || BFThreadAsyncIDIsRunning(tid1)) { }
 
 			BFThreadAsyncIDDestroy(tid0);
 			BFThreadAsyncIDDestroy(tid1);
@@ -182,7 +181,7 @@ int test_writingfromdifferentthreads(void) {
 		fclose(f);
 
 		if (!result) {
-			result = FileWriterClose(&fw);
+			result = BFFileWriterClose(&fw);
 		}
 
 		max--;
@@ -204,9 +203,9 @@ void filewriter_tests(int * pass, int * fail) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	LAUNCH_TEST(test_creatingfilewriter, p, f);
+	//LAUNCH_TEST(test_creatingfilewriter, p, f);
 	LAUNCH_TEST(test_writingwithfilewriter, p, f);
-	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
+	//LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);

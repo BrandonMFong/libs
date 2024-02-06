@@ -217,8 +217,11 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 	else {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 
-		if (id->isRunning) {
+		if (BFThreadAsyncIDIsRunning(id)) {
+			pthread_mutex_lock(&id->m);
 			id->isRunning = false;
+			pthread_mutex_unlock(&id->m);
+
 			return pthread_cancel(id->p);
 		} else {
 			return 0;

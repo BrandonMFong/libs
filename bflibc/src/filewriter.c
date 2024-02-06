@@ -78,7 +78,9 @@ const char * _LineQueueGetTopLine(_LineQueue * q) {
 	if (!q) return 0;
 	const char * result = 0;
 	BFLockLock(&q->lock);
-	result = q->first->line;
+	if (q->size > 0) {
+		result = q->first->line;
+	}
 	BFLockUnlock(&q->lock);
 	return result;
 }
@@ -100,7 +102,7 @@ typedef struct {
 
 void _FileWriterQueueThread(void * in) {
 	_FileWriter * fw = in;
-	while (!fw) {
+	while (fw) {
 		if (_LineQueueGetSize(&fw->q) > 0) {
 			const char * line = _LineQueueGetTopLine(&fw->q);
 			fprintf(fw->file, "%s\n", line);
@@ -109,7 +111,7 @@ void _FileWriterQueueThread(void * in) {
 	}
 }
 
-int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
+int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 	if (!filewriter || !filepath) return -1;
 
 	_FileWriter * fw = malloc(sizeof(_FileWriter));
@@ -133,12 +135,12 @@ int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
 	error = BFThreadAsyncIDError(fw->tid);
 	if (error) return error;
 
-	*filewriter = (FileWriter *) fw;
+	*filewriter = (BFFileWriter *) fw;
 
 	return 0;
 }
 
-int FileWriterClose(FileWriter * filewriter) {
+int BFFileWriterClose(BFFileWriter * filewriter) {
 	if (!filewriter) return -3;
 	_FileWriter * fw = *filewriter;
 
@@ -158,14 +160,14 @@ int FileWriterClose(FileWriter * filewriter) {
 	return 0;
 }
 
-int FileWriterQueueLine(FileWriter * filewriter, const char * line) {
+int BFFileWriterQueueLine(BFFileWriter * filewriter, const char * line) {
 	if (!filewriter || !line) return -2;
 	_FileWriter * fw = *filewriter;
 	return _LineQueuePush(&fw->q, line);
 }
 
-int FileWriterFlush(FileWriter * filewriter) {
-	if (!filewriter) return -2;
+int BFFileWriterFlush(BFFileWriter * filewriter) {
+	if (!filewriter) return -4;
 	_FileWriter * fw = *filewriter;
 
 	while (_LineQueueGetSize(&fw->q)) {
