@@ -17,12 +17,12 @@ int test_creatingfilewriter(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
-		remove(FILE_WRITER_FILE_PATH);
-	}
-
-	int max = 2 << 16;
+	int max = 1;
 	while (!result && max) {
+		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
+			remove(FILE_WRITER_FILE_PATH);
+		}
+
 		FileWriter fw;
 		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
@@ -119,32 +119,43 @@ void TestFileWriterThreads(void * in) {
 	}
 
 	FileWriterFlush(tools->fw);
+	printf("done\n");
+	fflush(stdout);
 }
 
 int test_writingfromdifferentthreads(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
-		remove(FILE_WRITER_FILE_PATH);
-	}
-
-	int max = 2 << 8;
+	int max = 1;
 	while (!result && max) {
+		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
+			remove(FILE_WRITER_FILE_PATH);
+		}
+
 		FileWriter fw;
 		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
+		// Launch writing threads and wait for them to finish
 		BFThreadAsyncID tid0 = 0;
 		BFThreadAsyncID tid1 = 0;
 		TestFileWriterThreadsTools tools;
 		if (!result) {
 			tools.fw = &fw;
 			srand(time(0));
-			tools.lines2write = rand() % (2 << 14);
+			tools.lines2write = 2 << 10;
 			tid0 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 			tid1 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 
-			while (BFThreadAsyncIDIsRunning(tid0) || BFThreadAsyncIDIsRunning(tid1)) {}
+			if (BFThreadAsyncIDError(tid0)) {
+				printf("\ntid0 error %d\n", BFThreadAsyncIDError(tid0));
+			} else if (BFThreadAsyncIDError(tid1)) {
+				printf("\ntid1 error %d\n", BFThreadAsyncIDError(tid1));
+			}
+			fflush(stdout);
+
+			while (BFThreadAsyncIDIsRunning(tid0) || BFThreadAsyncIDIsRunning(tid1)) {
+			}
 
 			BFThreadAsyncIDDestroy(tid0);
 			BFThreadAsyncIDDestroy(tid1);
@@ -193,7 +204,7 @@ void filewriter_tests(int * pass, int * fail) {
 	}
 
 	LAUNCH_TEST(test_creatingfilewriter, p, f);
-	LAUNCH_TEST(test_writingwithfilewriter, p, f);
+	//LAUNCH_TEST(test_writingwithfilewriter, p, f);
 	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {

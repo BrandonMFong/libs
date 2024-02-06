@@ -10,6 +10,28 @@
 #include "typethreadid.h"
 
 /**
+ * returns the count of how many sync/async threads have been launched
+ * in current process
+ */
+int BFThreadGetStartedCount();
+
+/**
+ * resets the thread launch count
+ */
+void BFThreadResetStartedCount();
+
+/**
+ * returns the count of how many sync/async threads have been finished
+ * in current process
+ */
+int BFThreadGetStoppedCount();
+
+/**
+ * resets the thread stop count
+ */
+void BFThreadResetStoppedCount();
+
+/**
  * Launches thread and returns when thread terminates
  */
 int BFThreadSync(void (* callback)(void *), void * args);

@@ -242,7 +242,33 @@ int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 
 	UNIT_TEST_END(!result, result);
 	return result;
+}
 
+void TestThreadCountThread(void * in) {
+
+}
+
+int test_threadCount() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	BFThreadResetStartedCount();
+	BFThreadResetStoppedCount();
+	int threadcount = 2 << 14;
+	for (int i = 0; i < threadcount; i++) {
+		result = BFThreadSync(TestThreadCountThread, 0);
+		if (result) break;
+	}
+
+	if (!result) {
+		if (BFThreadGetStartedCount() != threadcount) {
+			result = 2;
+			printf("\n%d != %d\n", BFThreadGetStartedCount(), threadcount);
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
 }
 
 void thread_tests(int * pass, int * fail) {
@@ -258,6 +284,7 @@ void thread_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_AsyncDetach, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThread, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThreadThatHasAlreadyFinished, p, f);
+	LAUNCH_TEST(test_threadCount, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

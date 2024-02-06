@@ -36,7 +36,54 @@ typedef struct {
 	} id;
 } _BFThreadRoutineParams;
 
+static pthread_mutex_t _threadsStartedMut = PTHREAD_MUTEX_INITIALIZER;
+int _threadsStarted = 0;
+
+int BFThreadGetStartedCount() {
+	int result = 0;
+	pthread_mutex_lock(&_threadsStartedMut);
+	result = _threadsStarted;
+	pthread_mutex_unlock(&_threadsStartedMut);
+	return result;
+}
+
+void _BFThreadIncrementStartedCount() {
+	pthread_mutex_lock(&_threadsStartedMut);
+	_threadsStarted++;
+	pthread_mutex_unlock(&_threadsStartedMut);
+}
+
+void BFThreadResetStartedCount() {
+	pthread_mutex_lock(&_threadsStartedMut);
+	_threadsStarted = 0;
+	pthread_mutex_unlock(&_threadsStartedMut);
+}
+
+static pthread_mutex_t _threadsStoppedMut = PTHREAD_MUTEX_INITIALIZER;
+int _threadsStopped = 0;
+
+int BFThreadGetStoppedCount() {
+	int result = 0;
+	pthread_mutex_lock(&_threadsStoppedMut);
+	result = _threadsStopped;
+	pthread_mutex_unlock(&_threadsStoppedMut);
+	return result;
+}
+
+void _BFThreadIncrementStoppedCount() {
+	pthread_mutex_lock(&_threadsStoppedMut);
+	_threadsStopped++;
+	pthread_mutex_unlock(&_threadsStoppedMut);
+}
+
+void BFThreadResetStoppedCount() {
+	pthread_mutex_lock(&_threadsStoppedMut);
+	_threadsStopped = 0;
+	pthread_mutex_unlock(&_threadsStoppedMut);
+}
+
 void * _BFThreadStartRoutine(void * _params) {
+	_BFThreadIncrementStartedCount();
 	if (_params) {
 		_BFThreadRoutineParams * params = _params;
 		
@@ -68,6 +115,9 @@ void * _BFThreadStartRoutine(void * _params) {
 		// We own memory
 		BFFree(_params);
 	}
+	
+	_BFThreadIncrementStoppedCount();
+
 	return NULL;
 }
 
@@ -129,7 +179,6 @@ BFThreadAsyncID BFThreadAsync(
 	}
 
 	// Set attribute
-	//pthread_attr_t attr;
 	if (!error)
 		error = pthread_attr_init(&result->attr);
 
