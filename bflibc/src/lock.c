@@ -42,11 +42,14 @@ int BFLockDestroy(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_destroy(&l->mutex)) return 2;
-		else if (pthread_cond_destroy(&l->cond)) return 3;
-		else {
-			BFFree(l);
-		}
+
+		int error = pthread_mutex_destroy(&l->mutex);
+		if (error) return error;
+	
+		error = pthread_cond_destroy(&l->cond);
+		if (error) return error;
+		
+		BFFree(l);
 	}
 	return 0;
 }
@@ -55,7 +58,7 @@ int BFLockWait(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 2;
+		if (pthread_mutex_lock(&l->mutex)) return 202;
 		else if (pthread_cond_wait(&l->cond, &l->mutex)) return 3;
 		else if (pthread_mutex_unlock(&l->mutex)) return 4;
 	}
@@ -74,7 +77,7 @@ int BFLockTimedWait(BFLock * lock, BFTime t) {
 		ts.tv_sec += (time_t) t;
 		ts.tv_nsec += BFTimeGetNS(t);
 
-		if (pthread_mutex_lock(&l->mutex)) return 2;
+		if (pthread_mutex_lock(&l->mutex)) return 203;
 	}
 
 	// Check if wait timedout
@@ -93,7 +96,7 @@ int BFLockRelease(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 2;
+		if (pthread_mutex_lock(&l->mutex)) return 204;
 		else if (pthread_cond_signal(&l->cond)) return 3;
 		else if (pthread_mutex_unlock(&l->mutex)) return 4;
 	}
@@ -105,7 +108,7 @@ int BFLockLock(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 2;
+		if (pthread_mutex_lock(&l->mutex)) return 205;
 	}
 	return 0;
 }
@@ -114,7 +117,7 @@ int BFLockUnlock(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_unlock(&l->mutex)) return 2;
+		if (pthread_mutex_unlock(&l->mutex)) return 206;
 	}
 	return 0;
 }

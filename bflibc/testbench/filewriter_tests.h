@@ -69,7 +69,7 @@ int test_writingwithfilewriter(void) {
 		FILE * f = 0;
 		if (!result) {
 			f = fopen(FILE_WRITER_FILE_PATH, "r");
-			if (!f) result = max;
+			if (!f) result = max + 1000;
 		}
 
 		// read line by line and compare
@@ -81,7 +81,7 @@ int test_writingwithfilewriter(void) {
 				snprintf(line1, s, "line %d\n", i);
 
 				if (strcmp(line0, line1)) {
-					result = max;
+					result = max + 1000;
 				}
 				
 				i++;

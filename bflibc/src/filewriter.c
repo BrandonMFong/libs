@@ -182,17 +182,21 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 	// tell workloop to stop looping
 	_FileWriterSetDoWork(fw, false);
 
+	while (BFThreadAsyncIDIsRunning(fw->tid)) { }
+
 	// destroy thread
 	BFThreadAsyncCancel(fw->tid);
 	BFThreadAsyncIDDestroy(fw->tid);
 	
 	// release q lock
 	int error = BFLockDestroy(&fw->q.lock);
-	if (error) return error;
+	if (error)
+		return error;
 	
 	// release our lock
 	error = BFLockDestroy(&fw->lock);
-	if (error) return error;
+	if (error)
+		return error;
 	
 	// close file
 	fclose(fw->file);

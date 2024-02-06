@@ -22,7 +22,7 @@
 	if (result) {system("printf \"[\033[0;32m Pass \033[0m] \"");}\
 	else {system("printf \"[\033[0;31m Fail \033[0m] \"");}\
 	printf("%s", __func__);\
-	if (!result) printf(" - %d", errcode);\
+	if (!result) printf(" - [%d]", errcode);\
 	printf("\n")
 
 /**
