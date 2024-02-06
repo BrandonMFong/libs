@@ -27,7 +27,6 @@ typedef struct {
 } _FileWriter;
 
 void FileWriterQueueThread(void * in) {
-	printf("\n%s\n", __func__);
 }
 
 int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
@@ -50,7 +49,7 @@ int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
 
 	// init thread
 	fw->tid = BFThreadAsync(FileWriterQueueThread, (void *) fw);
-	//error = BFThreadAsyncIDError(fw->tid);
+	error = BFThreadAsyncIDError(fw->tid);
 	if (error) return error;
 
 	*filewriter = (FileWriter *) fw;
@@ -63,8 +62,8 @@ int FileWriterClose(FileWriter * filewriter) {
 	_FileWriter * fw = *filewriter;
 
 	// destroy thread
-	//BFThreadAsyncCancel(fw->tid);
-	//BFThreadAsyncIDDestroy(fw->tid);
+	BFThreadAsyncCancel(fw->tid);
+	BFThreadAsyncIDDestroy(fw->tid);
 	
 	// release lock
 	int error = BFLockDestroy(&fw->qlock);

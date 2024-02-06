@@ -17,7 +17,7 @@ int test_creatingfilewriter(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 1;
+	int max = 2 << 14;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -119,15 +119,13 @@ void TestFileWriterThreads(void * in) {
 	}
 
 	FileWriterFlush(tools->fw);
-	printf("done\n");
-	fflush(stdout);
 }
 
 int test_writingfromdifferentthreads(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 1;
+	int max = 2 << 8;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -199,12 +197,15 @@ void filewriter_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
+	BFThreadResetStartedCount();
+	BFThreadResetStoppedCount();
+
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
 	LAUNCH_TEST(test_creatingfilewriter, p, f);
-	//LAUNCH_TEST(test_writingwithfilewriter, p, f);
+	LAUNCH_TEST(test_writingwithfilewriter, p, f);
 	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {

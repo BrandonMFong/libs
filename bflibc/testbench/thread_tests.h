@@ -244,9 +244,7 @@ int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 	return result;
 }
 
-void TestThreadCountThread(void * in) {
-
-}
+void TestThreadCountThread(void * in) { }
 
 int test_threadCount() {
 	UNIT_TEST_START;

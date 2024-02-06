@@ -183,7 +183,7 @@ BFThreadAsyncID BFThreadAsync(
 		error = pthread_attr_init(&result->attr);
 
 	if (!error)
-		error = pthread_attr_setdetachstate(&result->attr, PTHREAD_CREATE_JOINABLE);
+		error = pthread_attr_setdetachstate(&result->attr, PTHREAD_CREATE_DETACHED);
 
 	if (!error) {
 		result->isRunning = true;
