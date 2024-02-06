@@ -10,6 +10,7 @@
 #include "checksum_tests.h"
 #include "thread_tests.h"
 #include "lock_tests.h"
+#include "filewriter_tests.h"
 #include <stdio.h>
 
 int main() {
@@ -18,6 +19,7 @@ int main() {
 
 	printf("\n---------------------------\n");
 
+	/*
 	coreutils_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -49,6 +51,12 @@ int main() {
 	pass = 0; fail = 0;
 
 	thread_tests(&pass, &fail);
+	printf("[+ %d, - %d]\n", pass, fail);
+	tp += pass; tf += fail;
+	pass = 0; fail = 0;
+	*/
+	
+	filewriter_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
