@@ -98,14 +98,41 @@ typedef struct {
 	FILE * file;
 	_LineQueue q;
 	BFThreadAsyncID tid;
+	
+	// lock access for this object
+	BFLock lock;
+
+	bool dowork;
 } _FileWriter;
 
+bool _FileWriterGetDoWork(_FileWriter * fw) {
+	if (!fw) return false;
+	BFLockLock(&fw->lock);
+	bool result = fw->dowork;
+	BFLockUnlock(&fw->lock);
+	return result;
+}
+
+void _FileWriterSetDoWork(_FileWriter * fw, bool val) {
+	if (!fw) return;
+	BFLockLock(&fw->lock);
+	fw->dowork = val;
+	BFLockUnlock(&fw->lock);
+}
+
+/**
+ * dedicated thread that will write into file
+ */
 void _FileWriterQueueThread(void * in) {
 	_FileWriter * fw = in;
-	while (fw) {
+	while (fw && _FileWriterGetDoWork(fw)) {
 		if (_LineQueueGetSize(&fw->q) > 0) {
 			const char * line = _LineQueueGetTopLine(&fw->q);
+		
+			BFLockLock(&fw->lock);
 			fprintf(fw->file, "%s\n", line);
+			BFLockUnlock(&fw->lock);
+	
 			_LineQueuePop(&fw->q);
 		}
 	}
@@ -117,12 +144,20 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 	_FileWriter * fw = malloc(sizeof(_FileWriter));
 	if (!fw) return -1;
 
+	// true to make sure _FileWriterQueueThread continues
+	// to loop
+	fw->dowork = true;
+
 	// open the file
 	fw->file = fopen(filepath, "w");
 	if (!fw->file) return -1;
 
-	// init lock
+	// init queue lock
 	int error = BFLockCreate(&fw->q.lock);
+	if (error) return error;
+
+	// init our lock
+	error = BFLockCreate(&fw->lock);
 	if (error) return error;
 
 	// init queue
@@ -144,14 +179,21 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 	if (!filewriter) return -3;
 	_FileWriter * fw = *filewriter;
 
+	// tell workloop to stop looping
+	_FileWriterSetDoWork(fw, false);
+
 	// destroy thread
 	BFThreadAsyncCancel(fw->tid);
 	BFThreadAsyncIDDestroy(fw->tid);
 	
-	// release lock
+	// release q lock
 	int error = BFLockDestroy(&fw->q.lock);
 	if (error) return error;
-
+	
+	// release our lock
+	error = BFLockDestroy(&fw->lock);
+	if (error) return error;
+	
 	// close file
 	fclose(fw->file);
 
@@ -172,7 +214,9 @@ int BFFileWriterFlush(BFFileWriter * filewriter) {
 
 	while (_LineQueueGetSize(&fw->q)) {
 	}
+	BFLockLock(&fw->lock);
 	fflush(fw->file);
+	BFLockUnlock(&fw->lock);
 	return 0;
 }
 

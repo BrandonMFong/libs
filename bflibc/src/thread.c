@@ -87,6 +87,7 @@ void * _BFThreadStartRoutine(void * _params) {
 	if (_params) {
 		_BFThreadRoutineParams * params = _params;
 		
+		// allow this thread to be canceled
 		if (params->type == _BFThreadTypeAsync) {
 			pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 			pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
