@@ -4,11 +4,11 @@
  */
 
 #include "filewriter.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include "lock.h"
 #include "thread.h"
 #include "stringutils.h"
+#include <stdio.h>
 
 typedef struct _LineQueueItem {
 	struct _LineQueueItem * next;
@@ -23,18 +23,20 @@ typedef struct {
 } _LineQueue;
 
 int _LineQueuePush(_LineQueue * q, const char * line) {
-	if (!q || !line) return -2;
+	if (!q || !line) return -30;
 	
 	// create item
 	_LineQueueItem * item = malloc(sizeof(_LineQueueItem));
-	if (!item) return -1;
+	if (!item) return -31;
 
 	// copy line
 	int error = 0;
+	item->next = NULL;
 	item->line = BFStringCopyString(line, &error);
 	if (error) return error;
 
 	// load queue
+	BFLockLock(&q->lock);
 	if (!q->first && !q->last) { // first item in queue
 		q->first = item;
 		q->last = item;
@@ -44,12 +46,40 @@ int _LineQueuePush(_LineQueue * q, const char * line) {
 		q->last = item;
 		q->size++;
 	}
+	BFLockUnlock(&q->lock);
 
 	return 0;
 }
 
 int _LineQueuePop(_LineQueue * q) {
+	if (!q) return -40;
+
+	BFLockLock(&q->lock);
+	_LineQueueItem * item = q->first;
+	q->first = item->next;
+	q->size--;
+	free(item);
+	BFLockUnlock(&q->lock);
+
 	return 0;
+}
+
+const char * _LineQueueGetTopLine(_LineQueue * q) {
+	if (!q) return 0;
+	const char * result = 0;
+	BFLockLock(&q->lock);
+	result = q->first->line;
+	BFLockUnlock(&q->lock);
+	return result;
+}
+
+int _LineQueueGetSize(_LineQueue * q) {
+	if (!q) return 0;
+	int result = 0;
+	BFLockLock(&q->lock);
+	result = q->size;
+	BFLockUnlock(&q->lock);
+	return result;
 }
 
 typedef struct {
@@ -59,6 +89,14 @@ typedef struct {
 } _FileWriter;
 
 void _FileWriterQueueThread(void * in) {
+	_FileWriter * fw = in;
+	while (!fw) {
+		if (_LineQueueGetSize(&fw->q) > 0) {
+			const char * line = _LineQueueGetTopLine(&fw->q);
+			fprintf(fw->file, "%s\n", line);
+			_LineQueuePop(&fw->q);
+		}
+	}
 }
 
 int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
@@ -114,16 +152,18 @@ int FileWriterQueueLine(FileWriter * filewriter, const char * line) {
 	if (!filewriter || !line) return -2;
 	_FileWriter * fw = *filewriter;
 
+	/*
 	BFLockLock(&fw->q.lock);
 	fprintf(fw->file, "%s\n", line);
 	BFLockUnlock(&fw->q.lock);
-
-	return 0;
+	*/
+	return _LineQueuePush(&fw->q, line);
 }
 
 int FileWriterFlush(FileWriter * filewriter) {
 	if (!filewriter) return -2;
 	_FileWriter * fw = *filewriter;
+
 	BFLockLock(&fw->q.lock);
 	fflush(fw->file);
 	BFLockUnlock(&fw->q.lock);
