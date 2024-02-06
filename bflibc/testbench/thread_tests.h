@@ -263,7 +263,8 @@ int test_threadCount() {
 	if (!result) {
 		if (BFThreadGetStartedCount() != threadcount) {
 			result = 2;
-			printf("\n%d != %d\n", BFThreadGetStartedCount(), threadcount);
+		} else if (BFThreadGetStoppedCount() != threadcount) {
+			result = 3;
 		}
 	}
 
