@@ -10,7 +10,7 @@
 
 typedef struct {
 	FILE * file;
-	BFLock lock;
+	BFLock qlock;
 } _FileWriter;
 
 int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
@@ -22,7 +22,7 @@ int FileWriterCreate(FileWriter * filewriter, const char * filepath) {
 	fw->file = fopen(filepath, "w");
 	if (!fw->file) return -1;
 
-	int error = BFLockCreate(&fw->lock);
+	int error = BFLockCreate(&fw->qlock);
 	if (error) return error;
 
 	*filewriter = (FileWriter *) fw;
@@ -34,9 +34,9 @@ int FileWriterQueueLine(FileWriter * filewriter, const char * line) {
 	if (!filewriter || !line) return -2;
 	_FileWriter * fw = *filewriter;
 
-	BFLockLock(&fw->lock);
+	BFLockLock(&fw->qlock);
 	fprintf(fw->file, "%s\n", line);
-	BFLockUnlock(&fw->lock);
+	BFLockUnlock(&fw->qlock);
 
 	return 0;
 }
@@ -44,9 +44,9 @@ int FileWriterQueueLine(FileWriter * filewriter, const char * line) {
 int FileWriterFlush(FileWriter * filewriter) {
 	if (!filewriter) return -2;
 	_FileWriter * fw = *filewriter;
-	BFLockLock(&fw->lock);
+	BFLockLock(&fw->qlock);
 	fflush(fw->file);
-	BFLockUnlock(&fw->lock);
+	BFLockUnlock(&fw->qlock);
 	return 0;
 }
 
@@ -56,7 +56,7 @@ int FileWriterClose(FileWriter * filewriter) {
 
 	fclose(fw->file);
 
-	int error = BFLockDestroy(&fw->lock);
+	int error = BFLockDestroy(&fw->qlock);
 	if (error) return error;
 
 	free(fw);
