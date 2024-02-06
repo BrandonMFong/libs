@@ -5,6 +5,7 @@
 
 #include "filewriter.h"
 #include <stdlib.h>
+#include <unistd.h>
 #include "lock.h"
 #include "thread.h"
 #include "stringutils.h"
@@ -55,10 +56,19 @@ int _LineQueuePop(_LineQueue * q) {
 	if (!q) return -40;
 
 	BFLockLock(&q->lock);
-	_LineQueueItem * item = q->first;
-	q->first = item->next;
-	q->size--;
-	free(item);
+	_LineQueueItem * item = 0;
+	if (q->first && q->last && q->size) { // if not empty
+		item = q->first;
+		if (q->first == q->last) { // if only one item
+			q->first = 0;
+			q->last = 0;
+			q->size = 0;
+		} else {
+			q->first = item->next;
+			q->size--;
+		}
+	}
+	if (item) free(item);
 	BFLockUnlock(&q->lock);
 
 	return 0;
@@ -151,12 +161,6 @@ int FileWriterClose(FileWriter * filewriter) {
 int FileWriterQueueLine(FileWriter * filewriter, const char * line) {
 	if (!filewriter || !line) return -2;
 	_FileWriter * fw = *filewriter;
-
-	/*
-	BFLockLock(&fw->q.lock);
-	fprintf(fw->file, "%s\n", line);
-	BFLockUnlock(&fw->q.lock);
-	*/
 	return _LineQueuePush(&fw->q, line);
 }
 
@@ -164,9 +168,9 @@ int FileWriterFlush(FileWriter * filewriter) {
 	if (!filewriter) return -2;
 	_FileWriter * fw = *filewriter;
 
-	BFLockLock(&fw->q.lock);
+	while (_LineQueueGetSize(&fw->q)) {
+	}
 	fflush(fw->file);
-	BFLockUnlock(&fw->q.lock);
 	return 0;
 }
 

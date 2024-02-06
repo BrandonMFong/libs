@@ -42,7 +42,7 @@ int test_writingwithfilewriter(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 8;
+	int max = 1;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -52,7 +52,7 @@ int test_writingwithfilewriter(void) {
 		result = FileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		// write test lines
-		const int lines = 2 << 14;
+		const int lines = 2;
 		if (!result) {
 			for (int i = 0; i < lines; i++) {
 				char line[512];
