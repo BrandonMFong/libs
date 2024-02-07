@@ -7,8 +7,8 @@
 #define STRING_UTILS_H
 
 #include <uuid/uuid.h>
+#include <stdarg.h>
 
-//#define kBFStringUUIDStringLength UUID_STR_LEN - 1
 #define kBFStringUUIDStringLength 36
 
 #define BFStringIntegerToChar(i) i + '0'
@@ -31,6 +31,11 @@ void BFStringGetRandomUUIDString(char * uuidString);
  * creates a string defined by format
  */
 char * BFStringCreateFormatString(const char * format, ...);
+
+/**
+ * see `BFStringCreateFormatString`
+ */
+char * BFStringCreateFormatArgListString(const char * format, va_list valist);
 
 #endif // STRING_UTILS_H
 

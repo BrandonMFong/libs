@@ -230,9 +230,14 @@ int BFFileWriterQueueFormatLine(BFFileWriter * filewriter, const char * format, 
 	_FileWriter * fw = *filewriter;
 	va_list valist;
 	va_start(valist, format);
+
+	char * line = BFStringCreateFormatArgListString(format, valist);
+	int result = _LineQueuePush(&fw->q, line);
+
+	free(line);
+
 	va_end(valist);
 
-	return 0;
-	//return _LineQueuePush(&fw->q, line);
+	return result;
 }
 

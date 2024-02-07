@@ -191,6 +191,68 @@ int test_writingfromdifferentthreads(void) {
 	return result;
 }
 
+int test_writingwithformat(void) {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 8;
+	while (!result && max) {
+		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
+			remove(FILE_WRITER_FILE_PATH);
+		}
+
+		BFFileWriter fw;
+		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
+
+		// write test lines
+		const int lines = 2 << 10;
+		if (!result) {
+			for (int i = 0; i < lines; i++) {
+				result = BFFileWriterQueueFormatLine(&fw, "line %d", i);
+				if (result) break;
+			}
+
+			if (!result)
+				BFFileWriterFlush(&fw);
+		}
+
+		FILE * f = 0;
+		if (!result) {
+			f = fopen(FILE_WRITER_FILE_PATH, "r");
+			if (!f) result = max + 1000;
+		}
+
+		// read line by line and compare
+		if (!result) {
+			size_t s = 512;
+			char * line0 = 0, line1[s];
+			int i = 0;
+			while (!result && (getline(&line0, &s, f) != -1)) {
+				snprintf(line1, s, "line %d\n", i);
+
+				if (strcmp(line0, line1)) {
+					printf("\n%s\n%s\n", line0, line1);
+					result = max + 2000;
+				}
+				
+				i++;
+			}
+			free(line0);
+		}
+
+		fclose(f);
+		if (!result) {
+			result = BFFileWriterClose(&fw);
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
 void filewriter_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -206,6 +268,7 @@ void filewriter_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_creatingfilewriter, p, f);
 	LAUNCH_TEST(test_writingwithfilewriter, p, f);
 	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
+	LAUNCH_TEST(test_writingwithformat, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
