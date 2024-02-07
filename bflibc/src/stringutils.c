@@ -30,15 +30,7 @@ void BFStringGetRandomUUIDString(char * uuidString) {
 	uuid_unparse_lower(bin, uuidString);
 }
 
-char * BFStringCopyFormatArgListString(const char * format, va_list valist) {
-	
-	return NULL;
-}
-
-char * BFStringCreateFormatString(const char * format, ...) {
-	va_list valist;
-	va_start(valist, format);
-
+char * BFStringCreateFormatArgListString(const char * format, va_list valist) {
 	// get size
 	int size = vsnprintf(0, 0, format, valist);
 
@@ -51,6 +43,13 @@ char * BFStringCreateFormatString(const char * format, ...) {
 		return NULL;
 	}
 
+	return result;
+}
+
+char * BFStringCreateFormatString(const char * format, ...) {
+	va_list valist;
+	va_start(valist, format);
+	char * result = BFStringCreateFormatArgListString(format, valist);
 	va_end(valist);
 	return result;
 }
