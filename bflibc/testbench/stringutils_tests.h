@@ -16,7 +16,9 @@ int test_CopyString(void) {
 	int result = 0;
 	const char * string = "Hello world!";
 	int error = 0;
-	char * output = BFStringCopyString(string, &error);
+	char * output = BFStringCopyString(string);
+	if (!output)
+		error = 2;
 
 	if (error != 0) {
 		printf("CopyString error code: %d\n", error);
@@ -59,6 +61,28 @@ int test_uuidGen(void) {
 	return result;
 }
 
+int test_creatingstringfromformat(void) {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int numstr = 2 << 20;
+	for (int i = 0; i < numstr; i++) {
+		const char * fmt = "string %d";
+		char * str = BFStringCreateFormatString(fmt, i);
+		char tmpstr[512];
+		snprintf(tmpstr, 512, fmt, i);
+		if (strcmp(str, tmpstr)) {
+			result = i;
+			break;
+		}
+
+		free(str);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void stringutils_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -66,6 +90,7 @@ void stringutils_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_CopyString, p, f);
 	LAUNCH_TEST(test_uuidGen, p, f);
+	LAUNCH_TEST(test_creatingstringfromformat, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

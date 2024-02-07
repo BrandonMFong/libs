@@ -18,6 +18,8 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath);
  */
 int BFFileWriterQueueLine(BFFileWriter * filewriter, const char * line);
 
+int BFFileWriterQueueFormatLine(BFFileWriter * filewriter, const char * format, ...);
+
 /**
  * Flushes buffer to file
  */

@@ -10,6 +10,8 @@
 #include "thread.h"
 #include "stringutils.h"
 #include <stdio.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 typedef struct _LineQueueItem {
 	struct _LineQueueItem * next;
@@ -31,10 +33,9 @@ int _LineQueuePush(_LineQueue * q, const char * line) {
 	if (!item) return -31;
 
 	// copy line
-	int error = 0;
 	item->next = NULL;
-	item->line = BFStringCopyString(line, &error);
-	if (error) return error;
+	item->line = BFStringCopyString(line);
+	if (!item->line) return -32;
 
 	// load queue
 	BFLockLock(&q->lock);
@@ -222,5 +223,16 @@ int BFFileWriterFlush(BFFileWriter * filewriter) {
 	fflush(fw->file);
 	BFLockUnlock(&fw->lock);
 	return 0;
+}
+
+int BFFileWriterQueueFormatLine(BFFileWriter * filewriter, const char * format, ...) {
+	if (!filewriter || !format) return -2;
+	_FileWriter * fw = *filewriter;
+	va_list valist;
+	va_start(valist, format);
+	va_end(valist);
+
+	return 0;
+	//return _LineQueuePush(&fw->q, line);
 }
 
