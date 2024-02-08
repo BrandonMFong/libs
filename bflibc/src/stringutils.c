@@ -31,14 +31,18 @@ void BFStringGetRandomUUIDString(char * uuidString) {
 }
 
 char * BFStringCreateFormatArgListString(const char * format, va_list valist) {
+	va_list args0, args1;
+	va_copy(args0, valist);
+	va_copy(args1, valist);
+
 	// get size
-	int size = vsnprintf(0, 0, format, valist);
+	int size = vsnprintf(0, 0, format, args0);
 
 	// create buffer
 	char * result = malloc(sizeof(char) * (size + 1));
 	if (!result) return NULL;
 
-	if (vsnprintf(result, size + 1, format, valist) < 0) {
+	if (vsnprintf(result, size + 1, format, args1) < 0) {
 		free(result);
 		return NULL;
 	}

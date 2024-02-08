@@ -231,6 +231,7 @@ int BFFileWriterQueueFormatLine(BFFileWriter * filewriter, const char * format, 
 	va_list valist;
 	va_start(valist, format);
 
+	// TODO: https://stackoverflow.com/questions/36881533/passing-va-list-to-other-functions
 	char * line = BFStringCreateFormatArgListString(format, valist);
 	int result = _LineQueuePush(&fw->q, line);
 

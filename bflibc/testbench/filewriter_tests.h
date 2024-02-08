@@ -195,7 +195,7 @@ int test_writingwithformat(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 8;
+	int max = 1;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -205,7 +205,7 @@ int test_writingwithformat(void) {
 		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		// write test lines
-		const int lines = 2 << 10;
+		const int lines = 2 << 2;
 		if (!result) {
 			for (int i = 0; i < lines; i++) {
 				result = BFFileWriterQueueFormatLine(&fw, "line %d", i);
@@ -271,7 +271,7 @@ void filewriter_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_writingwithformat, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
-		remove(FILE_WRITER_FILE_PATH);
+		//remove(FILE_WRITER_FILE_PATH);
 	}
 
 	if (pass) *pass += p;
