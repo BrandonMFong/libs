@@ -71,7 +71,10 @@ int _LineQueuePop(_LineQueue * q) {
 			q->size--;
 		}
 	}
-	if (item) free(item);
+	if (item) {
+		free(item->line);
+		free(item);
+	}
 	BFLockUnlock(&q->lock);
 
 	return 0;
@@ -261,7 +264,6 @@ int BFFileWriterQueueFormatLine(BFFileWriter * filewriter, const char * format, 
 	va_list valist;
 	va_start(valist, format);
 
-	// TODO: https://stackoverflow.com/questions/36881533/passing-va-list-to-other-functions
 	char * line = BFStringCreateFormatArgListString(format, valist);
 	int result = _LineQueuePush(&fw->q, line);
 
