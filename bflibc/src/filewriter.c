@@ -250,8 +250,8 @@ int BFFileWriterFlush(BFFileWriter * filewriter) {
 	if (!filewriter) return -4;
 	_FileWriter * fw = *filewriter;
 
-	while (_LineQueueGetSize(&fw->q)) {
-	}
+	while (_LineQueueGetSize(&fw->q)) { }
+
 	BFLockLock(&fw->lock);
 	fflush(fw->file);
 	BFLockUnlock(&fw->lock);

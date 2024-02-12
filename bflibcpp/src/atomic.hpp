@@ -20,8 +20,8 @@ template <typename T>
 class Atomic : public Object {
 public:
 	Atomic() : Object() {
-		BFLockCreate(&this->_lock);
-		this->_locked = false;
+		BFLockCreate(&this->_objlock);
+		this->_islocked = false;
 	}
 
 	// initializes with object
@@ -30,33 +30,33 @@ public:
 	}
 
 	~Atomic() {
-		BFLockDestroy(&this->_lock);
+		BFLockDestroy(&this->_objlock);
 	}
 
 	void set(T obj) {
-		if (!this->_locked) BFLockLock(&this->_lock);
+		if (!this->_islocked) BFLockLock(&this->_objlock);
 		this->_obj = obj; 
-		if (!this->_locked) BFLockUnlock(&this->_lock);
+		if (!this->_islocked) BFLockUnlock(&this->_objlock);
 	}
 
 	// returns a reference to object
 	//
 	// caller does NOT own
 	T & get() {
-		if (!this->_locked) BFLockLock(&this->_lock);
+		if (!this->_islocked) BFLockLock(&this->_objlock);
 		T & res = this->_obj;
-		if (!this->_locked) BFLockUnlock(&this->_lock);
+		if (!this->_islocked) BFLockUnlock(&this->_objlock);
 		return res;
 	}
 
 	void lock() {
-		BFLockLock(&this->_lock);
-		this->_locked = true;
+		BFLockLock(&this->_objlock);
+		this->_islocked = true;
 	}
 
 	void unlock() {
-		this->_locked = false;
-		BFLockUnlock(&this->_lock);
+		this->_islocked = false;
+		BFLockUnlock(&this->_objlock);
 	}
 
 	Atomic <T> & operator=(const T & obj) {
@@ -66,8 +66,8 @@ public:
 
 private:
 	T _obj;
-	bool _locked;
-	BFLock _lock;
+	bool _islocked;
+	BFLock _objlock;
 };
 
 }
