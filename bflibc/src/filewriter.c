@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
+#include <limits.h>
 
 typedef struct _LineQueueItem {
 	struct _LineQueueItem * next;
@@ -97,6 +99,10 @@ int _LineQueueGetSize(_LineQueue * q) {
 
 typedef struct {
 	FILE * file;
+
+	// the path `file` is writing to
+	char path[PATH_MAX];
+
 	_LineQueue q;
 	BFThreadAsyncID tid;
 	
@@ -153,6 +159,9 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 	fw->file = fopen(filepath, "a");
 	if (!fw->file) return -1;
 
+	// save path
+	strncpy(fw->path, filepath, PATH_MAX);
+
 	// init queue lock
 	int error = BFLockCreate(&fw->q.lock);
 	if (error) return error;
@@ -205,6 +214,25 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 	// close file & free mem
 	fclose(fw->file);
 	free(fw);
+
+	return 0;
+}
+
+int BFFileWriterTruncate(BFFileWriter * filewriter) {
+	if (!filewriter) return -2;
+	_FileWriter * fw = *filewriter;
+
+	// make sure all lines are written
+	//
+	// is this efficient?
+	int error = BFFileWriterFlush(filewriter);
+
+	if (!error) {
+		BFLockLock(&fw->lock);
+		FILE * f = fopen(fw->path, "w");
+		fclose(f);
+		BFLockUnlock(&fw->lock);
+	}
 
 	return 0;
 }

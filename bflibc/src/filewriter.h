@@ -14,6 +14,11 @@ typedef void * BFFileWriter;
 int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath);
 
 /**
+ * clears file of contents
+ */
+int BFFileWriterTruncate(BFFileWriter * filewriter);
+
+/**
  * queues up `line` to be written
  */
 int BFFileWriterQueueLine(BFFileWriter * filewriter, const char * line);

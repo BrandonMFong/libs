@@ -315,6 +315,67 @@ int test_filewritingisappending() {
 	return result;
 }
 
+int test_filetruncation() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 8;
+	while (!result && max) {
+		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
+			remove(FILE_WRITER_FILE_PATH);
+		}
+		
+		BFFileWriter fw;
+		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
+
+		// write test lines
+		const int lines = 2 << 10;
+		if (!result) {
+			for (int i = 0; i < lines; i++) {
+				char line[512];
+				snprintf(line, 512, "line %d", i);
+
+				if (!result)
+					result = BFFileWriterQueueLine(&fw, line);
+
+				if (result) break;
+			}
+		}
+
+		// truncate
+		if (!result) {
+			result = BFFileWriterTruncate(&fw);
+		}
+
+		if (!result)
+			result = BFFileWriterClose(&fw);
+
+		FILE * f = 0;
+		if (!result) {
+			f = fopen(FILE_WRITER_FILE_PATH, "r");
+			if (!f) result = max + 4000;
+		}
+
+		int size = 0;
+		if (!result) {
+			fseek(f, 0, SEEK_END);
+			size = ftell(f);
+			fseek(f, 0, SEEK_SET);
+
+			if (size != 0) {
+				result = size + 5000;
+			}
+		}
+
+		fclose(f);
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void filewriter_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -332,6 +393,7 @@ void filewriter_tests(int * pass, int * fail) {
 	//LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
 	//LAUNCH_TEST(test_writingwithformat, p, f);
 	LAUNCH_TEST(test_filewritingisappending, p, f);
+	LAUNCH_TEST(test_filetruncation, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		//remove(FILE_WRITER_FILE_PATH);
