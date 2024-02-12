@@ -256,7 +256,7 @@ int test_filewritingisappending() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 1;
+	int max = 2 << 4;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);

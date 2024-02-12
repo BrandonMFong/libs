@@ -150,7 +150,7 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 	fw->dowork = true;
 
 	// open the file
-	fw->file = fopen(filepath, "w");
+	fw->file = fopen(filepath, "a");
 	if (!fw->file) return -1;
 
 	// init queue lock
@@ -180,28 +180,30 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 	if (!filewriter) return -3;
 	_FileWriter * fw = *filewriter;
 
-	// tell workloop to stop looping
-	_FileWriterSetDoWork(fw, false);
+	// make sure all lines are written
+	int error = BFFileWriterFlush(filewriter);
 
-	while (BFThreadAsyncIDIsRunning(fw->tid)) { }
+	if (!error) {
+		// tell workloop to stop looping
+		_FileWriterSetDoWork(fw, false);
 
-	// destroy thread
-	BFThreadAsyncCancel(fw->tid);
-	BFThreadAsyncIDDestroy(fw->tid);
+		while (BFThreadAsyncIDIsRunning(fw->tid)) { }
+
+		// destroy thread
+		BFThreadAsyncCancel(fw->tid);
+		BFThreadAsyncIDDestroy(fw->tid);
+	}
 	
 	// release q lock
-	int error = BFLockDestroy(&fw->q.lock);
-	if (error)
-		return error;
+	if (!error)
+		error = BFLockDestroy(&fw->q.lock);
 	
 	// release our lock
-	error = BFLockDestroy(&fw->lock);
-	if (error)
-		return error;
+	if (!error)
+		error = BFLockDestroy(&fw->lock);
 	
-	// close file
+	// close file & free mem
 	fclose(fw->file);
-
 	free(fw);
 
 	return 0;
