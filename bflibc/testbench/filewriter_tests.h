@@ -388,15 +388,15 @@ void filewriter_tests(int * pass, int * fail) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	//LAUNCH_TEST(test_creatingfilewriter, p, f);
-	//LAUNCH_TEST(test_writingwithfilewriter, p, f);
-	//LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
-	//LAUNCH_TEST(test_writingwithformat, p, f);
+	LAUNCH_TEST(test_creatingfilewriter, p, f);
+	LAUNCH_TEST(test_writingwithfilewriter, p, f);
+	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
+	LAUNCH_TEST(test_writingwithformat, p, f);
 	LAUNCH_TEST(test_filewritingisappending, p, f);
 	LAUNCH_TEST(test_filetruncation, p, f);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
-		//remove(FILE_WRITER_FILE_PATH);
+		remove(FILE_WRITER_FILE_PATH);
 	}
 
 	if (pass) *pass += p;
