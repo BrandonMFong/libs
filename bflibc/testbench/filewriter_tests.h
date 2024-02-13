@@ -145,17 +145,17 @@ int test_writingfromdifferentthreads(void) {
 			tid0 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 			tid1 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 
-			if (BFThreadAsyncIDError(tid0)) {
-				printf("\ntid0 error %d\n", BFThreadAsyncIDError(tid0));
-			} else if (BFThreadAsyncIDError(tid1)) {
-				printf("\ntid1 error %d\n", BFThreadAsyncIDError(tid1));
+			if (BFThreadAsyncError(tid0)) {
+				printf("\ntid0 error %d\n", BFThreadAsyncError(tid0));
+			} else if (BFThreadAsyncError(tid1)) {
+				printf("\ntid1 error %d\n", BFThreadAsyncError(tid1));
 			}
 			fflush(stdout);
 
-			while (BFThreadAsyncIDIsRunning(tid0) || BFThreadAsyncIDIsRunning(tid1)) { }
+			while (BFThreadAsyncIsRunning(tid0) || BFThreadAsyncIsRunning(tid1)) { }
 
-			BFThreadAsyncIDDestroy(tid0);
-			BFThreadAsyncIDDestroy(tid1);
+			BFThreadAsyncDestroy(tid0);
+			BFThreadAsyncDestroy(tid1);
 		}
 
 		FILE * f = 0;

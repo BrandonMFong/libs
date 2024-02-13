@@ -60,12 +60,12 @@ BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
 /**
  * Releases BFThreadAsyncID
  */
-void BFThreadAsyncIDDestroy(BFThreadAsyncID in);
+void BFThreadAsyncDestroy(BFThreadAsyncID in);
 
 /**
  * returns the error code, if any, for BFThreadAsync
  */
-int BFThreadAsyncIDError(BFThreadAsyncID);
+int BFThreadAsyncError(BFThreadAsyncID);
 
 /**
  * true if callback from BFThreadAsync is still running
@@ -73,7 +73,7 @@ int BFThreadAsyncIDError(BFThreadAsyncID);
  * thread safe.  you can use this function to poll the async
  * thread if it's still running
  */
-bool BFThreadAsyncIDIsRunning(BFThreadAsyncID);
+bool BFThreadAsyncIsRunning(BFThreadAsyncID);
 
 /**
  * Cancels async thread

@@ -181,7 +181,7 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 
 	// init thread
 	fw->tid = BFThreadAsync(_FileWriterQueueThread, (void *) fw);
-	error = BFThreadAsyncIDError(fw->tid);
+	error = BFThreadAsyncError(fw->tid);
 	if (error) return error;
 
 	*filewriter = (BFFileWriter *) fw;
@@ -201,11 +201,11 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 		// tell workloop to stop looping
 		_FileWriterSetDoWork(fw, false);
 
-		while (BFThreadAsyncIDIsRunning(fw->tid)) { }
+		while (BFThreadAsyncIsRunning(fw->tid)) { }
 
 		// destroy thread
 		BFThreadAsyncCancel(fw->tid);
-		BFThreadAsyncIDDestroy(fw->tid);
+		BFThreadAsyncDestroy(fw->tid);
 	}
 	
 	// release q lock

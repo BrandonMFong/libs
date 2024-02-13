@@ -156,7 +156,7 @@ void * _BFThreadStartRoutine(void * _params) {
 	return NULL;
 }
 
-void BFThreadAsyncIDDestroy(BFThreadAsyncID in) {
+void BFThreadAsyncDestroy(BFThreadAsyncID in) {
 	if (in) {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 		pthread_mutex_lock(&id->m);
@@ -230,12 +230,12 @@ BFThreadAsyncID BFThreadAsync(
 	return result;
 }
 
-int BFThreadAsyncIDError(BFThreadAsyncID id) {
+int BFThreadAsyncError(BFThreadAsyncID id) {
 	if (id) return ((_BFThreadAsyncID *) id)->error;
 	return 0;
 }
 
-bool BFThreadAsyncIDIsRunning(BFThreadAsyncID in) {
+bool BFThreadAsyncIsRunning(BFThreadAsyncID in) {
 	bool result = false;
 
 	if (in) {
@@ -253,7 +253,7 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 	else {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 
-		if (BFThreadAsyncIDIsRunning(id)) {
+		if (BFThreadAsyncIsRunning(id)) {
 			pthread_mutex_lock(&id->m);
 			IS_RUNNING_SET_OFF(id->flags);
 			pthread_mutex_unlock(&id->m);
