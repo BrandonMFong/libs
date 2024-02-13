@@ -189,7 +189,9 @@ int test_AsyncDetach(void) {
 }
 
 void CancelingAsyncThreadRun(void * in) {
-	sleep(5);
+	while (1) {
+		sleep(5);
+	}
 }
 
 int test_CancelingAsyncThread(void) {
@@ -229,9 +231,9 @@ int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 	}
 
 	if (!result) {
+		result = BFThreadAsyncCancel(id);
 		while (BFThreadAsyncIsRunning(id)) {}
 		sleep(1);
-		result = BFThreadAsyncCancel(id);
 	}
 
 	if (!result) {

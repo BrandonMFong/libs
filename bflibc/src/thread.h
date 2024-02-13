@@ -58,6 +58,15 @@ int BFThreadAsyncDetach(void (* callback)(void *), void * args);
 BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
 
 /**
+ * returns current thread id
+ *
+ * caller is not responsible for the memory
+ *
+ * returns 0 if there was an error
+ */
+const BFThreadAsyncID BFThreadAsyncGetID();
+
+/**
  * Releases BFThreadAsyncID
  */
 void BFThreadAsyncDestroy(BFThreadAsyncID in);
@@ -76,7 +85,11 @@ int BFThreadAsyncError(BFThreadAsyncID);
 bool BFThreadAsyncIsRunning(BFThreadAsyncID);
 
 /**
- * Cancels async thread
+ * Sets a flag that is readable 
+ *
+ * If called, `BFThreadAsyncIsCanceled` will always return true
+ *
+ * The result of the function is not reversible
  */
 int BFThreadAsyncCancel(BFThreadAsyncID);
 
@@ -85,7 +98,7 @@ int BFThreadAsyncCancel(BFThreadAsyncID);
  *
  * caller can safely call this on running thread
  */
-int BFThreadAsyncIsCanceled(BFThreadAsyncID);
+bool BFThreadAsyncIsCanceled(BFThreadAsyncID);
 
 #endif // THREAD_H
 
