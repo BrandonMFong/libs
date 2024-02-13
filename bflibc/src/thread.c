@@ -18,15 +18,40 @@
 typedef void * _BFThreadSyncID;
 
 typedef struct {
-	int error;
-	pthread_t p;
-	bool isRunning;
+	/**
+	 * mutex for accessing our members
+	 */
 	pthread_mutex_t m;
+
+	/**
+	 * holds any error code that gets passed during
+	 * creation of this object
+	 */
+	int error;
+
+	/**
+	 * main pthread object
+	 */
+	pthread_t p;
+	
+	/**
+	 * holds attributes for `p`
+	 */	
 	pthread_attr_t attr;
+
+	/**
+	 * true if callback has not returned
+	 */
+	bool isRunning;
+
+	/**
+	 * flag that marks if owner destroyed us
+	 */
 	bool ownerQueuedRelease;
 } _BFThreadAsyncID;
 
 typedef struct {
+	/// the function that will run on its dedicated thread
 	void (* callback)(void *);
 	void * args;
 	char type; // sync = _BFThreadTypeSync, async = _BFThreadTypeAsync
@@ -38,6 +63,8 @@ typedef struct {
 
 static pthread_mutex_t _threadsStartedMut = PTHREAD_MUTEX_INITIALIZER;
 int _threadsStarted = 0;
+static pthread_mutex_t _threadsStoppedMut = PTHREAD_MUTEX_INITIALIZER;
+int _threadsStopped = 0;
 
 int BFThreadGetStartedCount() {
 	int result = 0;
@@ -58,9 +85,6 @@ void BFThreadResetStartedCount() {
 	_threadsStarted = 0;
 	pthread_mutex_unlock(&_threadsStartedMut);
 }
-
-static pthread_mutex_t _threadsStoppedMut = PTHREAD_MUTEX_INITIALIZER;
-int _threadsStopped = 0;
 
 int BFThreadGetStoppedCount() {
 	int result = 0;
