@@ -189,7 +189,8 @@ int test_AsyncDetach(void) {
 }
 
 void CancelingAsyncThreadRun(void * in) {
-	while (1) {
+	const BFThreadAsyncID tid = BFThreadAsyncGetID();
+	while (BFThreadAsyncIDIsValid(tid) && !BFThreadAsyncIsCanceled(tid)) {
 		sleep(5);
 	}
 }

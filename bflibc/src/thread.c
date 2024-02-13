@@ -181,7 +181,7 @@ int _ThreadIDTablePopID() {
 	return error;
 }
 
-void * _ThreadIDTableGetID() {
+const void * _ThreadIDTableGetID() {
 	pthread_mutex_lock(&_tidtable.mut);
 	pid_t tid = gettid();
 	for (int i = 0; i < _tidtable.size; i++) {
@@ -313,7 +313,7 @@ void * _BFThreadStartRoutine(void * _params) {
 }
 
 const BFThreadAsyncID BFThreadAsyncGetID() {
-	return _ThreadIDTableGetID();
+	return (const BFThreadAsyncID) _ThreadIDTableGetID();
 }
 
 void BFThreadAsyncDestroy(BFThreadAsyncID in) {
@@ -392,6 +392,11 @@ BFThreadAsyncID BFThreadAsync(
 	return result;
 }
 
+bool BFThreadAsyncIDIsValid(BFThreadAsyncID id) {
+	if (id) return true;
+	return false;
+}
+
 int BFThreadAsyncError(BFThreadAsyncID id) {
 	if (id) return ((_BFThreadAsyncID *) id)->error;
 	return 0;
@@ -417,6 +422,7 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 		pthread_mutex_lock(&id->m);
 		IS_CANCELED_SET_ON(id->flags);
 		pthread_mutex_unlock(&id->m);
+		return 0;
 	}
 }
 

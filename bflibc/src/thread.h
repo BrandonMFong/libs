@@ -58,6 +58,11 @@ int BFThreadAsyncDetach(void (* callback)(void *), void * args);
 BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
 
 /**
+ * true if we can safely use id
+ */
+bool BFThreadAsyncIDIsValid(BFThreadAsyncID);
+
+/**
  * returns current thread id
  *
  * caller is not responsible for the memory
