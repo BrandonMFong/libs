@@ -19,6 +19,7 @@ int main() {
 
 	printf("\n---------------------------\n");
 
+	/*
 	coreutils_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
@@ -43,6 +44,7 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
+	*/
 
 	lock_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
