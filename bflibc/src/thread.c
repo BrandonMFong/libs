@@ -208,6 +208,8 @@ const void * _ThreadIDTableGetID() {
 				result = ent->id.sync;
 			}
 		}
+
+		if (result) break;
 	}
 	pthread_mutex_unlock(&_tidtable.mut);
 	return result;
