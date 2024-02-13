@@ -16,12 +16,16 @@
 
 #define _BFThreadTypeSync 1
 #define _BFThreadTypeAsync -1
-#define _BFThreadTypeAsyncDetached -2
+#define _BFThreadTypeAsyncDetached -2 // TODO: remove
 
 /** start THREAD IDS **/
 
+/// sync thread id
 typedef void * _BFThreadSyncID;
 
+/**
+ * async id
+ */
 typedef struct {
 	/**
 	 * mutex for accessing our members
@@ -182,22 +186,21 @@ int _ThreadIDTablePopID() {
 }
 
 const void * _ThreadIDTableGetID() {
+	const void * result = NULL;
 	pthread_mutex_lock(&_tidtable.mut);
 	pid_t tid = gettid();
 	for (int i = 0; i < _tidtable.size; i++) {
 		if (_tidtable.entries[i]->posix_tid == tid) {
 			_ThreadIDEntry * ent = _tidtable.entries[i];
 			if (ent->type == _BFThreadTypeAsync) {
-				return ent->id.async;
+				result = ent->id.async;
 			} else if (ent->type == _BFThreadTypeSync) {
-				return ent->id.sync;
-			} else {
-				return 0; // return null because we couldn't get type
+				result = ent->id.sync;
 			}
 		}
 	}
 	pthread_mutex_unlock(&_tidtable.mut);
-	return 0;
+	return result;
 }
 
 /** end THREAD ID TABLE **/

@@ -52,7 +52,6 @@ int BFThreadAsyncDetach(void (* callback)(void *), void * args);
  *
  * us async id to query the async thread
  *
- * Caller DOES NOT own return object but has the ability to destroy async id.
  * To destroy use BFThreadAsyncIDDestroy
  */
 BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
