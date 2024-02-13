@@ -472,27 +472,6 @@ int BFThreadSync(void (* callback)(void *), void * args) {
 }
 
 int BFThreadAsyncDetach(void (* callback)(void *), void * args) {
-	int error = 0;
-	
-	// _BFThreadStartRoutine will free memory
-	_BFThreadRoutineParams * params = malloc(sizeof(_BFThreadRoutineParams));
-
-	error = params == NULL ? 1 : 0;
-	if (!error) {
-		params->callback = callback;
-		params->args = args;
-		params->type = _BFThreadTypeAsyncDetached;
-	}
-	
-	pthread_attr_t attr;
-	error = pthread_attr_init(&attr);
-	if (!error)
-		pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-	
-	pthread_t p;
-	if (!error)
-		error = pthread_create(&p, &attr, _BFThreadStartRoutine, (void *) params);
-
-	return error;
+	return 0;
 }
 

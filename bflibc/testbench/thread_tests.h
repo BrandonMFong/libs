@@ -176,18 +176,6 @@ int test_ReleasingAsyncID(void) {
 	return result;
 }
 
-void AsyncDetachRun(void * in) {}
-
-int test_AsyncDetach(void) {
-	UNIT_TEST_START;
-	int result = 0;
-
-	result = BFThreadAsyncDetach(AsyncDetachRun, NULL);
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
 void CancelingAsyncThreadRun(void * in) {
 	const BFThreadAsyncID tid = BFThreadAsyncGetID();
 	while (BFThreadAsyncIDIsValid(tid) && !BFThreadAsyncIsCanceled(tid)) {
@@ -273,6 +261,14 @@ int test_threadCount() {
 	return result;
 }
 
+int test_threadwait() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void thread_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -283,10 +279,10 @@ void thread_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_WaitingOnThreadLock, p, f);
 	LAUNCH_TEST(test_LockAndUnlock, p, f);
 	LAUNCH_TEST(test_ReleasingAsyncID, p, f);
-	LAUNCH_TEST(test_AsyncDetach, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThread, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThreadThatHasAlreadyFinished, p, f);
 	LAUNCH_TEST(test_threadCount, p, f);
+	LAUNCH_TEST(test_threadwait, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

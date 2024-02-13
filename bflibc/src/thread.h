@@ -41,6 +41,8 @@ int BFThreadSync(void (* callback)(void *), void * args);
  *
  * If you want to manage and query an async thread, please
  * consider using BFThreadAsync
+ *
+ * NOTICE: this funciton will do nothing
  */
 __attribute__((deprecated("detach state is now the default behavior. this function is no longer supported")))
 int BFThreadAsyncDetach(void (* callback)(void *), void * args);
@@ -103,6 +105,13 @@ int BFThreadAsyncCancel(BFThreadAsyncID);
  * caller can safely call this on running thread
  */
 bool BFThreadAsyncIsCanceled(BFThreadAsyncID);
+
+/**
+ * Waits for thread to finished if `BFThreadAsyncIsRunning` is true
+ *
+ * this will block function until thread is finished
+ */
+int BFThreadAsyncWait(BFThreadAsyncID);
 
 #endif // THREAD_H
 
