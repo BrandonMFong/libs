@@ -42,6 +42,7 @@ int BFThreadSync(void (* callback)(void *), void * args);
  * If you want to manage and query an async thread, please
  * consider using BFThreadAsync
  */
+__attribute__((deprecated("detach state is now the default behavior. this function is no longer supported")))
 int BFThreadAsyncDetach(void (* callback)(void *), void * args);
 
 /**
