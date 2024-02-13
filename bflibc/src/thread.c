@@ -64,6 +64,11 @@ typedef struct {
 	 * this gets released when callback is returned in _BFThreadStartRoutine
 	 */
 	BFLock waitlock;
+
+	/**
+	 * nonzero 
+	 */
+	int retaincount;
 } _BFThreadAsyncID;
 
 #define FLAGS_GET(flags, bit) (flags & (1 << bit))
@@ -307,18 +312,18 @@ void * _BFThreadStartRoutine(void * _params) {
 			pthread_mutex_lock(&params->id.async->m);
 
 			// release if owner is waiting on us
-			BFLockRelease(params->id.async->waitlock);
+			BFLockRelease(&params->id.async->waitlock);
 
 			IS_RUNNING_SET_OFF(params->id.async->flags);
+			/*
 
 			// See if user called BFThreadAsyncIDDestroy
 			bool doRelease = RELEASE_QUEUED_GET(params->id.async->flags);
+			*/
 
 			pthread_mutex_unlock(&params->id.async->m);
 
-			if (doRelease) {
-				BFThreadAsyncDestroy(params->id.async);
-			}
+			BFThreadAsyncDestroy(params->id.async);
 		}
 
 		// We own memory
@@ -339,15 +344,17 @@ void BFThreadAsyncDestroy(BFThreadAsyncID in) {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 		pthread_mutex_lock(&id->m);
 
-		// free the id if the thread is not running
-		//
-		// if the thread is running then the thread
-		// will be released by _BFThreadStartRoutine
 		bool doRelease = false;
+		/*
 		if (IS_RUNNING_GET(id->flags)) {
 			// This flag will get checked when the thread terminates
 			RELEASE_QUEUED_SET_ON(id->flags);
 		} else {
+			doRelease = true;
+		}
+		*/
+
+		if (--id->retaincount == 0) {
 			doRelease = true;
 		}
 
@@ -407,6 +414,8 @@ BFThreadAsyncID BFThreadAsync(
 
 
 	if (!error) {
+		// 1 for caller and 1 for the running thread
+		result->retaincount = 2;
 		IS_RUNNING_SET_ON(result->flags);
 		result->error = error;
 		pthread_create(&result->p, &result->attr, _BFThreadStartRoutine, (void *) params);
@@ -466,6 +475,7 @@ int BFThreadAsyncWait(BFThreadAsyncID in) {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 		// if thread is running, then we will wait
 		if (BFThreadAsyncIsRunning(id)) {
+			// set flag
 			BFLockWait(id->waitlock);
 		}
 	}
