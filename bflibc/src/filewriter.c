@@ -135,6 +135,7 @@ void _FileWriterSetDoWork(_FileWriter * fw, bool val) {
  */
 void _FileWriterQueueThread(void * in) {
 	_FileWriter * fw = in;
+	if (!fw) return;
 	while (fw && _FileWriterGetDoWork(fw)) {
 		if (_LineQueueGetSize(&fw->q) > 0) {
 			const char * line = _LineQueueGetTopLine(&fw->q);
@@ -191,6 +192,7 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 int BFFileWriterClose(BFFileWriter * filewriter) {
 	if (!filewriter) return -3;
 	_FileWriter * fw = *filewriter;
+	if (!fw) return -3;
 
 	// make sure all lines are written
 	int error = BFFileWriterFlush(filewriter);
@@ -224,6 +226,7 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 int BFFileWriterTruncate(BFFileWriter * filewriter) {
 	if (!filewriter) return -2;
 	_FileWriter * fw = *filewriter;
+	if (!fw) return -3;
 
 	// make sure all lines are written
 	//
@@ -243,12 +246,14 @@ int BFFileWriterTruncate(BFFileWriter * filewriter) {
 int BFFileWriterQueueLine(BFFileWriter * filewriter, const char * line) {
 	if (!filewriter || !line) return -2;
 	_FileWriter * fw = *filewriter;
+	if (!fw) return -3;
 	return _LineQueuePush(&fw->q, line);
 }
 
 int BFFileWriterFlush(BFFileWriter * filewriter) {
 	if (!filewriter) return -4;
 	_FileWriter * fw = *filewriter;
+	if (!fw) return -3;
 
 	while (_LineQueueGetSize(&fw->q)) { }
 
@@ -261,6 +266,8 @@ int BFFileWriterFlush(BFFileWriter * filewriter) {
 int BFFileWriterQueueFormatLine(BFFileWriter * filewriter, const char * format, ...) {
 	if (!filewriter || !format) return -2;
 	_FileWriter * fw = *filewriter;
+	if (!fw) return -3;
+
 	va_list valist;
 	va_start(valist, format);
 
