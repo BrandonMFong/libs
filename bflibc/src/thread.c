@@ -40,21 +40,25 @@ typedef struct {
 	pthread_attr_t attr;
 
 	/**
-	 * flag that marks if owner destroyed us
-	 */
-	bool ownerQueuedRelease;
-
-	/**
-	 * ||||||||isRunning|
+	 * |||||||releaseQueued|isRunning|
 	 *
 	 * isRunning: true if callback has not returned
+	 * releaseQueued: true if own has called destroy while we were running the callback
 	 */
 	unsigned char flags;
 } _BFThreadAsyncID;
 
-#define IS_RUNNING_GET(flags) (flags & (1 << 0))
-#define IS_RUNNING_SET_ON(flags) flags |= (1 << 0)
-#define IS_RUNNING_SET_OFF(flags) flags &= ~(1 << 0)
+#define FLAGS_GET(flags, bit) (flags & (1 << bit))
+#define FLAGS_SET_ON(flags, bit) flags |= (1 << bit)
+#define FLAGS_SET_OFF(flags, bit) flags &= ~(1 << bit)
+
+#define IS_RUNNING_GET(flags) FLAGS_GET(flags, 0)
+#define IS_RUNNING_SET_ON(flags) FLAGS_SET_ON(flags, 0)
+#define IS_RUNNING_SET_OFF(flags) FLAGS_SET_OFF(flags, 0)
+
+#define RELEASE_QUEUED_GET(flags) FLAGS_GET(flags, 1)
+#define RELEASE_QUEUED_SET_ON(flags) FLAGS_SET_ON(flags, 1)
+#define RELEASE_QUEUED_SET_OFF(flags) FLAGS_SET_OFF(flags, 1)
 
 typedef struct {
 	/// the function that will run on its dedicated thread
@@ -136,7 +140,8 @@ void * _BFThreadStartRoutine(void * _params) {
 			IS_RUNNING_SET_OFF(params->id.async->flags);
 
 			// See if user called BFThreadAsyncIDDestroy
-			doRelease = params->id.async->ownerQueuedRelease;
+			//doRelease = params->id.async->ownerQueuedRelease;
+			doRelease = RELEASE_QUEUED_GET(params->id.async->flags);
 
 			pthread_mutex_unlock(&params->id.async->m);
 
@@ -166,7 +171,8 @@ void BFThreadAsyncIDDestroy(BFThreadAsyncID in) {
 		//if (id->isRunning) {
 		if (IS_RUNNING_GET(id->flags)) {
 			// This flag will get checked when the thread terminates
-			id->ownerQueuedRelease = true;
+			//id->ownerQueuedRelease = true;
+			RELEASE_QUEUED_SET_ON(id->flags);
 		} else {
 			doRelease = true;
 		}
@@ -195,7 +201,8 @@ BFThreadAsyncID BFThreadAsync(
 			result->error = 0;
 			//result->isRunning = false;
 			IS_RUNNING_SET_OFF(result->flags);
-			result->ownerQueuedRelease = false;
+			//result->ownerQueuedRelease = false;
+			RELEASE_QUEUED_SET_OFF(result->flags);
 		}
 	}
 
