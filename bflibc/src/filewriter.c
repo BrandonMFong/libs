@@ -119,7 +119,7 @@ typedef struct {
 void _FileWriterQueueThread(void * in) {
 	_FileWriter * fw = in;
 	if (!fw) return;
-	while (fw && BFThreadAsyncIsCanceled(fw->tid)) {
+	while (fw && !BFThreadAsyncIsCanceled(fw->tid)) {
 		if (_LineQueueGetSize(&fw->q) > 0) {
 			const char * line = _LineQueueGetTopLine(&fw->q);
 		
