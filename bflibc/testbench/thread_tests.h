@@ -261,9 +261,32 @@ int test_threadCount() {
 	return result;
 }
 
+void TestThreadWait(void * in) {
+	const BFThreadAsyncID tid = BFThreadAsyncGetID();
+	while (BFThreadAsyncIDIsValid(tid) && !BFThreadAsyncIsCanceled(tid)) {
+		sleep(2);
+	}
+
+	sleep(2);
+}
+
 int test_threadwait() {
 	UNIT_TEST_START;
 	int result = 0;
+
+	BFThreadAsyncID tid = BFThreadAsync(TestThreadWait, 0);
+	result = BFThreadAsyncError(tid);
+
+	if (!result) {
+		BFThreadAsyncCancel(tid);
+		BFThreadAsyncWait(tid);
+
+		if (BFThreadAsyncIsRunning(tid)) {
+			result = 1;
+		}
+	}
+
+	BFThreadAsyncDestroy(tid);
 
 	UNIT_TEST_END(!result, result);
 	return result;

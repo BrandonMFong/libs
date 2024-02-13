@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <stdbool.h>
 #include "free.h"
+#include "lock.h"
 
 #define _BFThreadTypeSync 1
 #define _BFThreadTypeAsync -1
@@ -56,6 +57,13 @@ typedef struct {
 	 * isCanceled: true if owner called `BFThreadAsyncCancel`
 	 */
 	unsigned char flags;
+
+	/**
+	 * used by user if they want to wait for thread to finish
+	 *
+	 * this gets released when callback is returned in _BFThreadStartRoutine
+	 */
+	BFLock waitlock;
 } _BFThreadAsyncID;
 
 #define FLAGS_GET(flags, bit) (flags & (1 << bit))
@@ -181,6 +189,8 @@ int _ThreadIDTablePopID() {
 		free(ent);
 	}
 
+	_tidtable.size--;
+
 	pthread_mutex_unlock(&_tidtable.mut);
 	return error;
 }
@@ -263,7 +273,7 @@ void BFThreadResetStoppedCount() {
 	pthread_mutex_unlock(&_threadsStoppedMut);
 }
 
-/** start THREAD COUNTERS **/
+/** end THREAD COUNTERS **/
 
 void * _BFThreadStartRoutine(void * _params) {
 	_BFThreadIncrementStartedCount();
@@ -291,9 +301,11 @@ void * _BFThreadStartRoutine(void * _params) {
 		// pop id from the thread table
 		_ThreadIDTablePopID();
 
-		// memory management
 		if (params->type == _BFThreadTypeAsync) {
 			pthread_mutex_lock(&params->id.async->m);
+
+			// release if owner is waiting on us
+			BFLockRelease(params->id.async->waitlock);
 
 			IS_RUNNING_SET_OFF(params->id.async->flags);
 
@@ -302,8 +314,9 @@ void * _BFThreadStartRoutine(void * _params) {
 
 			pthread_mutex_unlock(&params->id.async->m);
 
-			if (doRelease)
-				BFFree(params->id.async);
+			if (doRelease) {
+				BFThreadAsyncDestroy(params->id.async);
+			}
 		}
 
 		// We own memory
@@ -329,7 +342,6 @@ void BFThreadAsyncDestroy(BFThreadAsyncID in) {
 		// if the thread is running then the thread
 		// will be released by _BFThreadStartRoutine
 		bool doRelease = false;
-		//if (id->isRunning) {
 		if (IS_RUNNING_GET(id->flags)) {
 			// This flag will get checked when the thread terminates
 			RELEASE_QUEUED_SET_ON(id->flags);
@@ -340,6 +352,7 @@ void BFThreadAsyncDestroy(BFThreadAsyncID in) {
 		pthread_mutex_unlock(&id->m);
 
 		if (doRelease) {
+			BFLockDestroy(&id->waitlock);
 			pthread_mutex_destroy(&id->m);
 			BFFree(id);
 		}
@@ -363,6 +376,11 @@ BFThreadAsyncID BFThreadAsync(
 			RELEASE_QUEUED_SET_OFF(result->flags);
 			IS_CANCELED_SET_OFF(result->flags);
 		}
+	}
+
+	// initialize waitlock
+	if (!error) {
+		error = BFLockCreate(&result->waitlock);
 	}
 
 	_BFThreadRoutineParams * params = NULL;
@@ -438,6 +456,19 @@ bool BFThreadAsyncIsCanceled(BFThreadAsyncID in) {
 		pthread_mutex_unlock(&id->m);
 		return result;
 	}
+}
+
+int BFThreadAsyncWait(BFThreadAsyncID in) {
+	if (!in) return 70;
+	else {
+		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
+		// if thread is running, then we will wait
+		if (BFThreadAsyncIsRunning(id)) {
+			BFLockWait(id->waitlock);
+		}
+	}
+
+	return 0;
 }
 
 int BFThreadSync(void (* callback)(void *), void * args) {
