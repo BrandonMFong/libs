@@ -110,6 +110,9 @@ bool BFThreadAsyncIsCanceled(BFThreadAsyncID);
  * Waits for thread to finished if `BFThreadAsyncIsRunning` is true
  *
  * this will block function until thread is finished
+ *
+ * be careful when you call this.  be sure that you know the thread
+ * WILL end soon or else this will hang
  */
 int BFThreadAsyncWait(BFThreadAsyncID);
 
