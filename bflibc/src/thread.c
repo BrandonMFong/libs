@@ -98,6 +98,8 @@ typedef struct {
 	char type; // sync = _BFThreadTypeSync, async = _BFThreadTypeAsync
 
 	// we don't own this memory
+	//
+	// at the moment, sync ids are not supported
 	union {
 		const _BFThreadSyncID * sync;
 		const _BFThreadAsyncID * async;
@@ -187,17 +189,13 @@ int _ThreadIDTablePopID() {
 	}
 
 	// free memory
-	int error = 0;
-	if (ent == NULL) {
-		error = 61;
-	} else {
+	if (ent) {
 		free(ent);
+		_tidtable.size--;
 	}
 
-	_tidtable.size--;
-
 	pthread_mutex_unlock(&_tidtable.mut);
-	return error;
+	return 0;
 }
 
 const void * _ThreadIDTableGetID() {
@@ -296,8 +294,6 @@ void * _BFThreadStartRoutine(void * _params) {
 		// can be called by caller anytime
 		if (params->type == _BFThreadTypeAsync) {
 			_ThreadIDTablePushID(params->id.async, params->type);
-		} else if (params->type == _BFThreadTypeSync) {
-			_ThreadIDTablePushID(params->id.sync, params->type);
 		}
 
 		// run the caller defined function on current
@@ -476,7 +472,7 @@ int BFThreadAsyncWait(BFThreadAsyncID in) {
 		// if thread is running, then we will wait
 		if (BFThreadAsyncIsRunning(id)) {
 			// set flag
-			BFLockWait(id->waitlock);
+			BFLockWait(&id->waitlock);
 		}
 	}
 
