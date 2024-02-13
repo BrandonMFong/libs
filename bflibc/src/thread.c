@@ -124,7 +124,7 @@ void * _BFThreadStartRoutine(void * _params) {
 		// allow this thread to be canceled
 		if (params->type == _BFThreadTypeAsync) {
 			pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-			pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+			pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 		}
 
 		// run the caller defined function on current
@@ -133,13 +133,12 @@ void * _BFThreadStartRoutine(void * _params) {
 			params->callback(params->args);
 
 		if (params->type == _BFThreadTypeAsync) {
-			bool doRelease = false;
-			
 			pthread_mutex_lock(&params->id.async->m);
+
 			IS_RUNNING_SET_OFF(params->id.async->flags);
 
 			// See if user called BFThreadAsyncIDDestroy
-			doRelease = RELEASE_QUEUED_GET(params->id.async->flags);
+			bool doRelease = RELEASE_QUEUED_GET(params->id.async->flags);
 
 			pthread_mutex_unlock(&params->id.async->m);
 
@@ -219,7 +218,7 @@ BFThreadAsyncID BFThreadAsync(
 		error = pthread_attr_init(&result->attr);
 
 	if (!error)
-		error = pthread_attr_setdetachstate(&result->attr, PTHREAD_CREATE_DETACHED);
+		error = pthread_attr_setdetachstate(&result->attr, PTHREAD_CREATE_JOINABLE);
 
 	if (!error) {
 		IS_RUNNING_SET_ON(result->flags);
@@ -252,7 +251,19 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 	if (!in) return 1;
 	else {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
+		int error = pthread_cancel(id->p);
 
+		if (!error) {
+			void * res = 0;
+			error = pthread_join(id->p, &res);
+
+			if (res != PTHREAD_CANCELED)
+				return 20;
+		}
+
+		return 0;
+
+		/*
 		if (BFThreadAsyncIsRunning(id)) {
 			pthread_mutex_lock(&id->m);
 			IS_RUNNING_SET_OFF(id->flags);
@@ -262,6 +273,15 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 		} else {
 			return 0;
 		}
+		*/
+	}
+}
+
+int BFThreadAsyncIsCanceled(BFThreadAsyncID in) {
+	if (!in) return 1;
+	else {
+		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
+		return 0;
 	}
 }
 

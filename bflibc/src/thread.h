@@ -80,5 +80,12 @@ bool BFThreadAsyncIsRunning(BFThreadAsyncID);
  */
 int BFThreadAsyncCancel(BFThreadAsyncID);
 
+/**
+ * If thread has been canceled
+ *
+ * caller can safely call this on running thread
+ */
+int BFThreadAsyncIsCanceled(BFThreadAsyncID);
+
 #endif // THREAD_H
 
