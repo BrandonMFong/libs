@@ -136,11 +136,9 @@ void * _BFThreadStartRoutine(void * _params) {
 			bool doRelease = false;
 			
 			pthread_mutex_lock(&params->id.async->m);
-			//params->id.async->isRunning = false;
 			IS_RUNNING_SET_OFF(params->id.async->flags);
 
 			// See if user called BFThreadAsyncIDDestroy
-			//doRelease = params->id.async->ownerQueuedRelease;
 			doRelease = RELEASE_QUEUED_GET(params->id.async->flags);
 
 			pthread_mutex_unlock(&params->id.async->m);
@@ -171,7 +169,6 @@ void BFThreadAsyncIDDestroy(BFThreadAsyncID in) {
 		//if (id->isRunning) {
 		if (IS_RUNNING_GET(id->flags)) {
 			// This flag will get checked when the thread terminates
-			//id->ownerQueuedRelease = true;
 			RELEASE_QUEUED_SET_ON(id->flags);
 		} else {
 			doRelease = true;
@@ -199,9 +196,7 @@ BFThreadAsyncID BFThreadAsync(
 		if (pthread_mutex_init(&result->m, NULL)) error = 1;
 		else {
 			result->error = 0;
-			//result->isRunning = false;
 			IS_RUNNING_SET_OFF(result->flags);
-			//result->ownerQueuedRelease = false;
 			RELEASE_QUEUED_SET_OFF(result->flags);
 		}
 	}
@@ -227,7 +222,6 @@ BFThreadAsyncID BFThreadAsync(
 		error = pthread_attr_setdetachstate(&result->attr, PTHREAD_CREATE_DETACHED);
 
 	if (!error) {
-		//result->isRunning = true;
 		IS_RUNNING_SET_ON(result->flags);
 		result->error = error;
 		pthread_create(&result->p, &result->attr, _BFThreadStartRoutine, (void *) params);
@@ -247,7 +241,6 @@ bool BFThreadAsyncIDIsRunning(BFThreadAsyncID in) {
 	if (in) {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 		pthread_mutex_lock(&id->m);
-		//result = id->isRunning;
 		result = IS_RUNNING_GET(id->flags);
 		pthread_mutex_unlock(&id->m);
 	}
@@ -262,7 +255,6 @@ int BFThreadAsyncCancel(BFThreadAsyncID in) {
 
 		if (BFThreadAsyncIDIsRunning(id)) {
 			pthread_mutex_lock(&id->m);
-			//id->isRunning = false;
 			IS_RUNNING_SET_OFF(id->flags);
 			pthread_mutex_unlock(&id->m);
 
