@@ -155,6 +155,39 @@ int test_addingCharacterToString() {
 	return result;
 }
 
+int test_clearstring() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	int max = 2 << 10;
+	while (!result && max) {
+		String str;
+
+		srand(time(0));
+		int size = rand() % (2 << 10);
+
+		for (int i = 0; i < size; i++) {
+			str.addChar('.');
+		}
+
+		if (str.length() == 0) {
+			result = max;
+		}
+
+		if (!result) {
+			str.clear();
+			if (str.length() == 0) {
+				result = max;
+			}
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -166,6 +199,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_StringCopy, p, f);
 	LAUNCH_TEST(test_PassingStringToFunction, p, f);
 	LAUNCH_TEST(test_addingCharacterToString, p, f);
+	LAUNCH_TEST(test_clearstring, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

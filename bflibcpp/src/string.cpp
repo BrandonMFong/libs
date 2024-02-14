@@ -33,6 +33,14 @@ int String::addChar(char c) {
 	return this->insertObjectAtIndex(c, this->count() - 1);
 }
 
+int String::clear() {
+	char str[2];
+	str[0] = '\0';
+	str[1] = '\0';
+	this->set(str, 2);
+	return 0;
+}
+
 String::operator const char * () const {
 	return this->cString();
 }

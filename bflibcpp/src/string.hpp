@@ -46,6 +46,11 @@ PUBLIC:
 	 */
 	int addChar(char c);
 
+	/**
+	 * makes empty string
+	 */
+	int clear();
+
 // Overloading operators
 PUBLIC:
 	friend std::ostream& operator<<(std::ostream& out, const String & s) {
