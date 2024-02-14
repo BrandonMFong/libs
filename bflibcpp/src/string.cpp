@@ -35,9 +35,8 @@ int String::addChar(char c) {
 
 int String::clear() {
 	char str[2];
-	str[0] = '\0';
-	str[1] = '\0';
-	this->set(str, 2);
+	strncpy(str, "", 2);
+	this->set(str, strlen(str) + 1);
 	return 0;
 }
 

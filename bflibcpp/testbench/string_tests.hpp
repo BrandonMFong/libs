@@ -160,11 +160,9 @@ int test_clearstring() {
 	int result = 0;
 	
 	int max = 2 << 10;
+	String str;
 	while (!result && max) {
-		String str;
-
-		srand(time(0));
-		int size = rand() % (2 << 10);
+		int size = (2 << 10);
 
 		for (int i = 0; i < size; i++) {
 			str.addChar('.');
@@ -176,7 +174,8 @@ int test_clearstring() {
 
 		if (!result) {
 			str.clear();
-			if (str.length() == 0) {
+			if (str.length() > 0) {
+				printf("\nlen=%ld, '%s'\n", str.length(), str.cString());
 				result = max;
 			}
 		}
