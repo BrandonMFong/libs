@@ -48,8 +48,20 @@ PUBLIC:
 
 	/**
 	 * removes char at the end of the string
+	 *
+	 * similar to std::string::pop_back
 	 */
 	int remChar();
+
+	/**
+	 * adds a character at index
+	 */
+	int addCharAtIndex(char c, size_t index);
+
+	/**
+	 * removes a character at index
+	 */
+	int remCharAtIndex(size_t index);
 
 	/**
 	 * makes empty string
@@ -68,6 +80,7 @@ PUBLIC:
 	bool operator>(const String & s);
 	bool operator!=(const String & s);
 	String & operator=(const String & str);
+	const char operator[](size_t index);
 };
 
 } // namespace BF

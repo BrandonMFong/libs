@@ -33,8 +33,23 @@ int String::addChar(char c) {
 	return this->insertObjectAtIndex(c, this->count() - 1);
 }
 
+int String::addCharAtIndex(char c, size_t index) {
+	if (index < (this->count() - 1)) {
+		return this->insertObjectAtIndex(c, index);
+	}
+	return 81;
+}
+
 int String::remChar() {
 	return this->removeObjectAtIndex(this->count() - 2);
+}
+
+int String::remCharAtIndex(size_t index) {
+	if (index < (this->count() - 2)) {
+		return this->removeObjectAtIndex(index);
+	}
+
+	return 80;
 }
 
 int String::clear() {
@@ -75,5 +90,9 @@ size_t String::length() const {
 String & String::operator=(const String & str) {
 	str.copy(*this);
 	return *this;
+}
+
+const char String::operator[](size_t index) {
+	return this->objectAtIndex(index);
 }
 

@@ -212,6 +212,66 @@ int test_clearstring() {
 	return result;
 }
 
+int test_indexingstring() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	const char * s = "Honorificabilitudinitatibus";
+
+	int max = 2 << 24;
+	while (!result && max) {
+		String str = s;
+
+		for (size_t i = 0; i < str.length(); i++) {
+			if (str[i] != s[i]) {
+				result = max;
+			}
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_addandremovecharactersatindices() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	char s[128];
+	strncpy(s, "Honorificabilitudinitatibus", sizeof(s));
+
+	int max = 2 << 12;
+	while (!result && max) {
+		String str = s;
+
+		srand(time(0));
+		size_t index = rand() % (str.length() - 1);
+
+		str.remCharAtIndex(index);
+
+		char * tmp = s;
+		for (size_t i = 0; i < str.length(); i++) {
+			if (i == index)
+				tmp++;
+
+			if (str[i] != tmp[0]) {
+				printf("\n%s != %s\n", str.cString(), s);
+				printf("\n%c != %c\n", str[i], tmp[0]);
+				result = max;
+				break;
+			}
+			tmp++;
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -225,6 +285,8 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_addingCharacterToString, p, f);
 	LAUNCH_TEST(test_clearstring, p, f);
 	LAUNCH_TEST(test_removingCharacterFromString, p, f);
+	LAUNCH_TEST(test_addandremovecharactersatindices, p, f);
+	LAUNCH_TEST(test_indexingstring, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
