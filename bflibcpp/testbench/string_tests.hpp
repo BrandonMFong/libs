@@ -235,7 +235,7 @@ int test_indexingstring() {
 	return result;
 }
 
-int test_addandremovecharactersatindices() {
+int test_removingcharatindex() {
 	UNIT_TEST_START;
 	int result = 0;
 	
@@ -272,6 +272,41 @@ int test_addandremovecharactersatindices() {
 	return result;
 }
 
+int test_addandremove() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	const char * s = "Honorificabilitudinitatibus";
+
+	int max = 2 << 12;
+	while (!result && max) {
+		String str;
+
+		for (int i = strlen(s) - 1; i >= 0; i--) {
+			str.addCharAtIndex(s[i], 0);
+		}
+
+		if (str.compareString(s)) {
+			result = max;
+		}
+
+		while (!result && str.length()) {
+			str.remCharAtIndex(0);
+		}
+
+		if (!result) {
+			if (str.length()) {
+				result = max;
+			}
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -285,8 +320,9 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_addingCharacterToString, p, f);
 	LAUNCH_TEST(test_clearstring, p, f);
 	LAUNCH_TEST(test_removingCharacterFromString, p, f);
-	LAUNCH_TEST(test_addandremovecharactersatindices, p, f);
+	LAUNCH_TEST(test_removingcharatindex, p, f);
 	LAUNCH_TEST(test_indexingstring, p, f);
+	LAUNCH_TEST(test_addandremove, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

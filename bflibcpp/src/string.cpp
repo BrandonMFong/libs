@@ -34,7 +34,7 @@ int String::addChar(char c) {
 }
 
 int String::addCharAtIndex(char c, size_t index) {
-	if (index < (this->count() - 1)) {
+	if (index <= (this->count() - 1)) {
 		return this->insertObjectAtIndex(c, index);
 	}
 	return 81;
@@ -45,7 +45,7 @@ int String::remChar() {
 }
 
 int String::remCharAtIndex(size_t index) {
-	if (index < (this->count() - 2)) {
+	if (index <= (this->count() - 2)) {
 		return this->removeObjectAtIndex(index);
 	}
 
