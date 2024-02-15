@@ -47,6 +47,11 @@ PUBLIC:
 	int addChar(char c);
 
 	/**
+	 * removes char at the end of the string
+	 */
+	int remChar();
+
+	/**
 	 * makes empty string
 	 */
 	int clear();

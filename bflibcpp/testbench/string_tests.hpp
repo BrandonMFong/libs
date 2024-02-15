@@ -130,6 +130,31 @@ int test_PassingStringToFunction() {
 	return result;
 }
 
+int test_removingCharacterFromString() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	const char * s = "hello world!";
+	const char * e = "hello world";
+
+	int max = 2 << 24;
+	while (!result && max) {
+		String str = s;
+
+		str.remChar();
+
+		if (str.compareString(e)) {
+			printf("\n%s != %s\n", str.cString(), e);
+			result = max;
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 int test_addingCharacterToString() {
 	UNIT_TEST_START;
 	int result = 0;
@@ -199,6 +224,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_PassingStringToFunction, p, f);
 	LAUNCH_TEST(test_addingCharacterToString, p, f);
 	LAUNCH_TEST(test_clearstring, p, f);
+	LAUNCH_TEST(test_removingCharacterFromString, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

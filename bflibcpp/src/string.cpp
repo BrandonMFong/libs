@@ -33,6 +33,10 @@ int String::addChar(char c) {
 	return this->insertObjectAtIndex(c, this->count() - 1);
 }
 
+int String::remChar() {
+	return this->removeObjectAtIndex(this->count() - 2);
+}
+
 int String::clear() {
 	char str[2];
 	strncpy(str, "", 2);
