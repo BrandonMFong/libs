@@ -34,5 +34,15 @@
 
 #define PRINT_GRADE(p, f) printf("Grade - %.2f%% (%d/%d)\n", (float) ((p/(p+f)) * 100), (int) p, (int) (p+f));
 
+#define TEST_SUITE_START int pass = 0, fail = 0;\
+						float tp = 0, tf = 0;
+
+#define LAUNCH_TEST_SET(foo) foo(&pass, &fail);\
+	printf("[+ %d, - %d]\n", pass, fail);\
+	tp += pass; tf += fail;\
+	pass = 0; fail = 0;
+ 
+#define TEST_SUITE_END PRINT_GRADE(tp, tf)
+
 #endif // BF_TESTS_H
 
