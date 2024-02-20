@@ -17,72 +17,22 @@
 #include "object_tests.hpp"
 
 int main() {
-	int pass = 0, fail = 0;
-	float tp = 0, tf = 0;
+	TEST_SUITE_START;
 
-	printf("\n---------------------------\n");
+	LAUNCH_TEST_SET(array_tests);
+	LAUNCH_TEST_SET(file_tests);
+	LAUNCH_TEST_SET(list_tests);
+	LAUNCH_TEST_SET(bintree_tests);
+	LAUNCH_TEST_SET(rbtree_tests);
+	LAUNCH_TEST_SET(dictionary_tests);
+	LAUNCH_TEST_SET(string_tests);
+	LAUNCH_TEST_SET(stack_tests);
+	LAUNCH_TEST_SET(queue_tests);
+	LAUNCH_TEST_SET(time_tests);
+	LAUNCH_TEST_SET(atomic_tests);
+	LAUNCH_TEST_SET(object_tests);
 
-	array_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	file_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	list_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	bintree_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	rbtree_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	dictionary_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	string_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	stack_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	queue_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	time_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	atomic_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	object_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	printf("Grade - %.2f%% (%d/%d)\n", (tp / (tp + tf)) * 100, (int) tp, (int) (tp + tf));
+	TEST_SUITE_END;
 
 	return 0;
 }

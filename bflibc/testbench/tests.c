@@ -16,7 +16,6 @@
 int main() {
 	TEST_SUITE_START;
 
-	printf("\n---------------------------\n");
 	LAUNCH_TEST_SET(coreutils_tests);
 	LAUNCH_TEST_SET(checksum_tests);
 	LAUNCH_TEST_SET(filesystem_tests);
