@@ -55,8 +55,8 @@ int test_atomisetandget() {
 
 	while (a.get() < 1024) {}
 
-	BFThreadAsyncIDDestroy(tid0);
-	BFThreadAsyncIDDestroy(tid1);
+	BFThreadAsyncDestroy(tid0);
+	BFThreadAsyncDestroy(tid1);
 
 	UNIT_TEST_END(!result, result);
 	return result;

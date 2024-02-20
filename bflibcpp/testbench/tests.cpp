@@ -56,7 +56,7 @@ int main() {
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;
 	pass = 0; fail = 0;
-	
+
 	stack_tests(&pass, &fail);
 	printf("[+ %d, - %d]\n", pass, fail);
 	tp += pass; tf += fail;

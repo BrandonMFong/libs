@@ -111,24 +111,7 @@ typedef struct {
 	
 	// lock access for this object
 	BFLock lock;
-
-	bool dowork;
 } _FileWriter;
-
-bool _FileWriterGetDoWork(_FileWriter * fw) {
-	if (!fw) return false;
-	BFLockLock(&fw->lock);
-	bool result = fw->dowork;
-	BFLockUnlock(&fw->lock);
-	return result;
-}
-
-void _FileWriterSetDoWork(_FileWriter * fw, bool val) {
-	if (!fw) return;
-	BFLockLock(&fw->lock);
-	fw->dowork = val;
-	BFLockUnlock(&fw->lock);
-}
 
 /**
  * dedicated thread that will write into file
@@ -136,7 +119,7 @@ void _FileWriterSetDoWork(_FileWriter * fw, bool val) {
 void _FileWriterQueueThread(void * in) {
 	_FileWriter * fw = in;
 	if (!fw) return;
-	while (fw && _FileWriterGetDoWork(fw)) {
+	while (fw && !BFThreadAsyncIsCanceled(fw->tid)) {
 		if (_LineQueueGetSize(&fw->q) > 0) {
 			const char * line = _LineQueueGetTopLine(&fw->q);
 		
@@ -154,10 +137,6 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 
 	_FileWriter * fw = malloc(sizeof(_FileWriter));
 	if (!fw) return -1;
-
-	// true to make sure _FileWriterQueueThread continues
-	// to loop
-	fw->dowork = true;
 
 	// open the file
 	fw->file = fopen(filepath, "a");
@@ -199,12 +178,11 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 
 	if (!error) {
 		// tell workloop to stop looping
-		_FileWriterSetDoWork(fw, false);
+		BFThreadAsyncCancel(fw->tid);
 
 		while (BFThreadAsyncIsRunning(fw->tid)) { }
 
 		// destroy thread
-		BFThreadAsyncCancel(fw->tid);
 		BFThreadAsyncDestroy(fw->tid);
 	}
 	

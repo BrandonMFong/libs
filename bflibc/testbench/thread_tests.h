@@ -176,20 +176,11 @@ int test_ReleasingAsyncID(void) {
 	return result;
 }
 
-void AsyncDetachRun(void * in) {}
-
-int test_AsyncDetach(void) {
-	UNIT_TEST_START;
-	int result = 0;
-
-	result = BFThreadAsyncDetach(AsyncDetachRun, NULL);
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
 void CancelingAsyncThreadRun(void * in) {
-	sleep(5);
+	const BFThreadAsyncID tid = BFThreadAsyncGetID();
+	while (BFThreadAsyncIDIsValid(tid) && !BFThreadAsyncIsCanceled(tid)) {
+		sleep(5);
+	}
 }
 
 int test_CancelingAsyncThread(void) {
@@ -229,9 +220,9 @@ int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 	}
 
 	if (!result) {
+		result = BFThreadAsyncCancel(id);
 		while (BFThreadAsyncIsRunning(id)) {}
 		sleep(1);
-		result = BFThreadAsyncCancel(id);
 	}
 
 	if (!result) {
@@ -270,6 +261,41 @@ int test_threadCount() {
 	return result;
 }
 
+void TestThreadWait(void * in) {
+	const BFThreadAsyncID tid = BFThreadAsyncGetID();
+	while (BFThreadAsyncIDIsValid(tid) && !BFThreadAsyncIsCanceled(tid)) {
+		usleep(20000);
+	}
+
+	usleep(20000);
+}
+
+int test_threadwait() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 4;
+	while (max) {
+		BFThreadAsyncID tid = BFThreadAsync(TestThreadWait, 0);
+		result = BFThreadAsyncError(tid);
+
+		if (!result) {
+			BFThreadAsyncCancel(tid);
+			BFThreadAsyncWait(tid);
+
+			if (BFThreadAsyncIsRunning(tid)) {
+				result = 1;
+			}
+		}
+
+		BFThreadAsyncDestroy(tid);
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void thread_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -280,10 +306,10 @@ void thread_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_WaitingOnThreadLock, p, f);
 	LAUNCH_TEST(test_LockAndUnlock, p, f);
 	LAUNCH_TEST(test_ReleasingAsyncID, p, f);
-	LAUNCH_TEST(test_AsyncDetach, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThread, p, f);
 	LAUNCH_TEST(test_CancelingAsyncThreadThatHasAlreadyFinished, p, f);
 	LAUNCH_TEST(test_threadCount, p, f);
+	LAUNCH_TEST(test_threadwait, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
