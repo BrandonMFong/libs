@@ -47,8 +47,8 @@ int test_uuidGen(void) {
 		BFStringGetRandomUUIDString(uuidStr);
 		uuid_t bin;
 
-		if (strlen(uuidStr) != kBFStringUUIDStringLength) {
-			printf("Length: %ld != %d\n", strlen(uuidStr), kBFStringUUIDStringLength);
+		if (strlen(uuidStr) != kBFStringUUIDStringLength - 1) {
+			printf("Length: %ld != %d\n", strlen(uuidStr), kBFStringUUIDStringLength - 1);
 			result = 1;
 		} else if (uuid_parse(uuidStr, bin)) {
 			result = 2;
@@ -79,13 +79,13 @@ int test_uuidcompare(void) {
 		
 			uuid_t bin;
 
-			if (strlen(uuid0) != kBFStringUUIDStringLength) {
+			if (strlen(uuid0) != kBFStringUUIDStringLength - 1) {
 				printf("Length: %ld != %d\n", strlen(uuid0), kBFStringUUIDStringLength);
 				result = 1;
-			} else if (strlen(uuid1) != kBFStringUUIDStringLength) {
+			} else if (strlen(uuid1) != kBFStringUUIDStringLength - 1) {
 				printf("Length: %ld != %d\n", strlen(uuid1), kBFStringUUIDStringLength);
 				result = 2;
-			} else if (strlen(uuid2) != kBFStringUUIDStringLength) {
+			} else if (strlen(uuid2) != kBFStringUUIDStringLength - 1) {
 				printf("Length: %ld != %d\n", strlen(uuid2), kBFStringUUIDStringLength);
 				result = 3;
 			} else if (!BFStringCompareUUID(uuid0, uuid1)) {

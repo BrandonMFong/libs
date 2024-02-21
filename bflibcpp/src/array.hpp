@@ -208,7 +208,7 @@ PUBLIC:
 	 */
 	int removeObjectAtIndex(S index) {
 		// shift objects
-		for (S i = index; i <= (this->_count - 1); i++) {
+		for (S i = index; (i+1) < this->_count; i++) {
 			this->_address[i] = this->_address[i + 1];
 		}
 
