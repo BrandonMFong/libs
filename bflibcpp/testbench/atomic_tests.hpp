@@ -111,6 +111,53 @@ int test_atomicvaluechange() {
 	return result;
 }
 
+void SetValueWay1(void * in) {
+	Atomic<int *> * val = (Atomic<int *> *) in;
+	for (int i = 0; i < (2 << 4); i++) {
+		int * v  = val->get();
+		(*v)++;
+	}
+}
+
+void SetValueWay2(void * in) {
+	Atomic<int *> * val = (Atomic<int *> *) in;
+	for (int i = 0; i < (2 << 4); i++) {
+		val->lock();
+		int * v  = val->unsafeget();
+		(*v)++;
+		val->unlock();
+	}
+}
+
+int test_settingvaluesindifferentwaysonthreads() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 1;
+	while (!result && max) {
+		int ia = 0;
+
+		Atomic<int *> a(&ia);
+		BFThreadAsyncID tid0 = BFThreadAsync(SetValueWay1, &a);
+		BFThreadAsyncID tid1 = BFThreadAsync(SetValueWay2, &a);
+
+		BFThreadAsyncWait(tid0);
+		BFThreadAsyncWait(tid1);
+
+		BFThreadAsyncDestroy(tid0);
+		BFThreadAsyncDestroy(tid1);
+
+		if (ia != (2 * (2 << 4))) {
+			result = max;
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void atomic_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -120,6 +167,7 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_atomisetandget, p, f);
 	LAUNCH_TEST(test_atomicqueue, p, f);
 	LAUNCH_TEST(test_atomicvaluechange, p, f);
+	LAUNCH_TEST(test_settingvaluesindifferentwaysonthreads, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

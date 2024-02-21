@@ -33,19 +33,27 @@ public:
 		BFLockDestroy(&this->_objlock);
 	}
 
-	void set(T obj) {
-		if (!this->_islocked) BFLockLock(&this->_objlock);
+	void unsafeset(T obj) {
 		this->_obj = obj; 
-		if (!this->_islocked) BFLockUnlock(&this->_objlock);
+	}
+
+	T & unsafeget() {
+		return this->_obj; 
+	}
+
+	void set(T obj) {
+		BFLockLock(&this->_objlock);
+		this->unsafeset(obj);
+		BFLockUnlock(&this->_objlock);
 	}
 
 	// returns a reference to object
 	//
 	// caller does NOT own
 	T & get() {
-		if (!this->_islocked) BFLockLock(&this->_objlock);
-		T & res = this->_obj;
-		if (!this->_islocked) BFLockUnlock(&this->_objlock);
+		BFLockLock(&this->_objlock);
+		T & res = this->unsafeget();
+		BFLockUnlock(&this->_objlock);
 		return res;
 	}
 
