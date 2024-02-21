@@ -28,6 +28,15 @@ char * BFStringCopyString(const char * string);
 void BFStringGetRandomUUIDString(char * uuidString);
 
 /**
+ * compares uuid0 with uuid1
+ *
+ * if params are null, undefined behavior will occur
+ *
+ * returns memcmp results. see memcmp documentation
+ */
+int BFStringCompareUUID(const char * uuid0, const char * uuid1);
+
+/**
  * creates a string defined by format
  */
 char * BFStringCreateFormatString(const char * format, ...);

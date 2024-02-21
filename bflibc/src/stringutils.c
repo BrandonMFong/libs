@@ -30,6 +30,10 @@ void BFStringGetRandomUUIDString(char * uuidString) {
 	uuid_unparse_lower(bin, uuidString);
 }
 
+int BFStringCompareUUID(const char * uuid0, const char * uuid1) {
+	return memcmp(uuid0, uuid1, kBFStringUUIDStringLength);
+}
+
 char * BFStringCreateFormatArgListString(const char * format, va_list valist) {
 	va_list args0, args1;
 	va_copy(args0, valist);
