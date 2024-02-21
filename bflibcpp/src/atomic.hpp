@@ -21,7 +21,6 @@ class Atomic : public Object {
 public:
 	Atomic() : Object() {
 		BFLockCreate(&this->_objlock);
-		this->_islocked = false;
 	}
 
 	// initializes with object
@@ -57,13 +56,18 @@ public:
 		return res;
 	}
 
+	/**
+	 * use unsafe getter and setter to access after
+	 * this call
+	 */
 	void lock() {
 		BFLockLock(&this->_objlock);
-		this->_islocked = true;
 	}
 
+	/**
+	 * must call after lock()
+	 */
 	void unlock() {
-		this->_islocked = false;
 		BFLockUnlock(&this->_objlock);
 	}
 
@@ -74,7 +78,6 @@ public:
 
 private:
 	T _obj;
-	bool _islocked;
 	BFLock _objlock;
 };
 
