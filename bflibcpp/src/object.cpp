@@ -49,11 +49,16 @@ void Object::release(Object * obj) {
 }
 
 int Object::retainCount(Object * obj) {
-	if (obj) return obj->_retainCount;
+	if (obj) {
+		BFLockLock(&obj->_lock);
+		int result = obj->_retainCount;
+		BFLockUnlock(&obj->_lock);
+		return result;
+	}
 	return 0;
 }
 
 int Object::retainCount(Object & obj) {
-	return obj._retainCount;
+	return Object::retainCount(&obj);
 }
 
