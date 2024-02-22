@@ -311,11 +311,6 @@ void * _BFThreadStartRoutine(void * _params) {
 			BFLockRelease(&params->id.async->waitlock);
 
 			IS_RUNNING_SET_OFF(params->id.async->flags);
-			/*
-
-			// See if user called BFThreadAsyncIDDestroy
-			bool doRelease = RELEASE_QUEUED_GET(params->id.async->flags);
-			*/
 
 			pthread_mutex_unlock(&params->id.async->m);
 
@@ -341,14 +336,6 @@ void BFThreadAsyncDestroy(BFThreadAsyncID in) {
 		pthread_mutex_lock(&id->m);
 
 		bool doRelease = false;
-		/*
-		if (IS_RUNNING_GET(id->flags)) {
-			// This flag will get checked when the thread terminates
-			RELEASE_QUEUED_SET_ON(id->flags);
-		} else {
-			doRelease = true;
-		}
-		*/
 
 		if (--id->retaincount == 0) {
 			doRelease = true;
