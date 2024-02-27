@@ -20,6 +20,7 @@ extern "C" {
 #include "file.hpp"
 #include "time.hpp"
 #include "string.hpp"
+#include "atomic.hpp"
 
 #endif // CPPLIB_HPP
 
