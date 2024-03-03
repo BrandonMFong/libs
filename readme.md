@@ -1,11 +1,8 @@
-# Library of code I use a lot
+# Best F. Libraries
 
-## Versions
-- 1.0
-	- Introduces standard c and cpp functions/classes
-
-## Libraries
-
-### bflibc
-- Dependencies: uuid lib
+## Contents
+- `bflibc` : standard set of utilites and extensions for C
+- `bflibcpp` : standard library for essential CPP tools like Binary Trees, Dictionaries, Arrays, memory management, etc.
+- `bflibrust` : standard library for rust utilities
+- `bflibpy` : standard library for python 
 
