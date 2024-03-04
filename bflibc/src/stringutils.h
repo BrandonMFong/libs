@@ -46,5 +46,14 @@ char * BFStringCreateFormatString(const char * format, ...);
  */
 char * BFStringCreateFormatArgListString(const char * format, va_list valist);
 
+/**
+ * creates an array from `str` using the `delim`
+ *
+ * caller must free memory
+ *
+ * returns NULL on error
+ */
+char ** BFStringCreateArrayFromString(const char * str, size_t * size, const char * delim);
+
 #endif // STRING_UTILS_H
 

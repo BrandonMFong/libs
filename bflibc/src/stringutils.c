@@ -4,6 +4,7 @@
  */
 
 #include "stringutils.h"
+#include "free.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -59,6 +60,32 @@ char * BFStringCreateFormatString(const char * format, ...) {
 	va_start(valist, format);
 	char * result = BFStringCreateFormatArgListString(format, valist);
 	va_end(valist);
+	return result;
+}
+
+char ** BFStringCreateArrayFromString(const char * str, size_t * size, const char * delim) {
+	if (!str || !size || !delim)
+		return NULL;
+
+	*size = 0;
+	char ** result = NULL;
+	char * buf = BFStringCopyString(str);
+	char * tok = strtok(buf, delim);
+	while (tok) {
+		result = (char **) realloc(result, sizeof(char *) * (*size + 1));
+
+		if (!result)
+			break;
+
+		char * s = BFStringCopyString(tok);
+		if (s)
+			result[(*size)++] = s;
+
+		tok = strtok(0, delim);
+	}
+
+	BFFree(buf);
+
 	return result;
 }
 

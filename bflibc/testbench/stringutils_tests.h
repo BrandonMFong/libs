@@ -7,6 +7,7 @@
 #define STRINGUTILS_TESTS_H
 
 #include "clib_tests.h"
+#include "free.h"
 #include <stringutils.h>
 #include <stdlib.h>
 #include <string.h>
@@ -134,6 +135,50 @@ int test_creatingstringfromformat(void) {
 	return result;
 }
 
+int test_makingarrayfromstring() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 20;
+	while (!result && max) {
+		const char * str = "hello world this is a test";
+		char * exp[] = {"hello", "world", "this", "is", "a", "test"};
+		size_t expsize = (sizeof(exp) / sizeof(exp[0]));
+		const char * delim = " ";
+		size_t size = 0;
+		char ** arr = BFStringCreateArrayFromString(str, &size, delim);
+		if (!arr)
+			result = max;
+
+		if (!result) {
+			if (size != expsize) {
+				result = max;
+				printf("\nsize %ld != %ld\n", size, expsize);
+			} else {
+				for (int i = 0; i < size; i++) {
+					if (strcmp(arr[i], exp[i])) {
+						printf("\n%s != %s\n", arr[i], exp[i]);
+						result = max;
+						break;
+					}
+				}
+			}
+		}
+
+		if (arr) {
+			for (int i = 0; i < size; i++) {
+				BFFree(arr[i]);
+			}
+			BFFree(arr);
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void stringutils_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -143,6 +188,7 @@ void stringutils_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_uuidGen, p, f);
 	LAUNCH_TEST(test_creatingstringfromformat, p, f);
 	LAUNCH_TEST(test_uuidcompare, p, f);
+	LAUNCH_TEST(test_makingarrayfromstring, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
