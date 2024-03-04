@@ -79,6 +79,11 @@ public:
 		return *this;
 	}
 
+	Atomic <T> & operator=(const Atomic<T> & a) {
+		this->set(a._obj);
+		return *this;
+	}
+
 	bool operator==(const Atomic<T> & a) {
 		return this->_obj == a._obj;
 	}
