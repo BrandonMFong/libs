@@ -29,7 +29,10 @@ public:
 	}
 
 	~Atomic() {
-		BFLockDestroy(&this->_objlock);
+		if (this->_objlock) {
+			BFLockDestroy(&this->_objlock);
+			this->_objlock = NULL;
+		}
 	}
 
 	void unsafeset(T obj) {

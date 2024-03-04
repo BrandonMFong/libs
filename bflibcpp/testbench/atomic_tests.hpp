@@ -38,7 +38,8 @@ int test_atomicinit() {
 
 void test_atomisetandget_callback(void * in) {
 	Atomic<int> * a = (Atomic<int> *) in;
-	while (a->get() < 1024) {
+	BFThreadAsyncID tid = BFThreadAsyncGetID();
+	while (!BFThreadAsyncIsCanceled(tid) && (a->get() < 1024)) {
 		int i = a->get();
 		a->set(++i);
 		usleep(500);
@@ -55,6 +56,8 @@ int test_atomisetandget() {
 
 	while (a.get() < 1024) {}
 
+	BFThreadAsyncCancel(tid0);
+	BFThreadAsyncCancel(tid1);
 	BFThreadAsyncDestroy(tid0);
 	BFThreadAsyncDestroy(tid1);
 
