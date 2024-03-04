@@ -76,6 +76,14 @@ public:
 		return *this;
 	}
 
+	bool operator==(const Atomic<T> & a) {
+		return this->_obj == a._obj;
+	}
+
+	bool operator!=(const Atomic<T> & a) {
+		return this->_obj != a._obj;
+	}
+
 private:
 	T _obj;
 	BFLock _objlock;

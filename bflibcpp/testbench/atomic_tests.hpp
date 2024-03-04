@@ -133,7 +133,7 @@ int test_settingvaluesindifferentwaysonthreads() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 1;
+	int max = 2 << 8;
 	while (!result && max) {
 		int ia = 0;
 
@@ -158,6 +158,32 @@ int test_settingvaluesindifferentwaysonthreads() {
 	return result;
 }
 
+int test_equaloverloadop() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 18;
+	while (!result && max) {
+		srand(time(0));
+		int val = rand();
+		Atomic<int> a = val;
+		Atomic<int> b = val;
+
+		result = a == b ? 0 : max;
+
+		if (!result) {
+			a = rand();
+			b = rand();
+			result = a != b ? 0 : max;
+		}
+
+		max--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void atomic_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -168,6 +194,7 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_atomicqueue, p, f);
 	LAUNCH_TEST(test_atomicvaluechange, p, f);
 	LAUNCH_TEST(test_settingvaluesindifferentwaysonthreads, p, f);
+	LAUNCH_TEST(test_equaloverloadop, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
