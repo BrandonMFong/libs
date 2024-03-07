@@ -307,6 +307,26 @@ int test_addandremove() {
 	return result;
 }
 
+int test_stringtoint() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	int max = 2 << 12;
+	while (!result && max--) {
+		char num[1024];
+		snprintf(num, 1024, "%d", max);
+		String str(num);
+		int val = String::toi(str);
+		if (val != max) {
+			result = max;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -323,6 +343,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_removingcharatindex, p, f);
 	LAUNCH_TEST(test_indexingstring, p, f);
 	LAUNCH_TEST(test_addandremove, p, f);
+	LAUNCH_TEST(test_stringtoint, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

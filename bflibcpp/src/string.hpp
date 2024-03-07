@@ -81,6 +81,10 @@ PUBLIC:
 	bool operator!=(const String & s);
 	String & operator=(const String & str);
 	const char operator[](size_t index);
+
+// Conversions
+public:
+	static int toi(const String & s);
 };
 
 } // namespace BF

@@ -96,3 +96,7 @@ const char String::operator[](size_t index) {
 	return this->objectAtIndex(index);
 }
 
+int String::toi(const String & s) {
+	return atoi(s);
+}
+
