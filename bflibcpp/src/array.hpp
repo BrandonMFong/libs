@@ -335,7 +335,7 @@ PRIVATE:
 
 PUBLIC:
 
-	T operator[](S index) {
+	T operator[](S index) const {
 		return this->objectAtIndex(index);
 	}
 
