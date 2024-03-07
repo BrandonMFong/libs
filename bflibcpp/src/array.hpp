@@ -32,6 +32,7 @@ PUBLIC:
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
+		this->_releasecb = NULL;
 	}
 
 	/**
@@ -53,6 +54,17 @@ PUBLIC:
 	}
 
 	void removeAll() {
+		// if there is a release callback
+		// then let's call this
+		//
+		// this callback handles the memory of each element. This
+		// is set by the owner of this object
+		if (this->_releasecb) {
+			for (S i = 0; i < this->_count; i++) {
+				this->_releasecb((this->_address)[i]);
+			}
+		}
+		
 		this->deallocate(this->_address);
 		this->_address = 0;
 		this->_count = 0;
@@ -156,6 +168,13 @@ PUBLIC:
 	 */
 	void setComparator(int (* callback) (T a, T b)) {
 		this->_callback = callback;
+	}
+
+	/**
+	 * sets release callback
+	 */
+	void setReleaseCallback(void (* callback) (T obj)) {
+		this->_releasecb = callback;
 	}
 
 	/**
@@ -305,6 +324,14 @@ PRIVATE:
 	 * How we compare each item in the array
 	 */
 	int (* _callback) (T a, T b);
+
+	/**
+	 * this will determine how each
+	 * element is released
+	 *
+	 * this is set to null by default
+	 */
+	void (* _releasecb) (T obj);
 
 PUBLIC:
 

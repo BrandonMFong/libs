@@ -14,6 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern "C" {
+#include <bflibc/bflibc.h>
+}
+
 using namespace BF;
 
 /**
@@ -328,6 +332,30 @@ int test_insertingAtRandomIndex() {
 	return result;
 }
 
+void TestArrayRelease(char * obj) {
+	BFFree(obj);
+}
+
+int test_releasecallback() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 8;
+	while (!result && max--) {
+		Array<char *> a;
+
+		a.setReleaseCallback(TestArrayRelease);
+
+		srand(time(0));
+		int asize = rand() % (2 << 16);
+		for (int i = 0; i < asize; i++) {
+			a.add(BFStringCopyString("word"));
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
 
 void array_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
@@ -343,6 +371,7 @@ void array_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_addanddelete, p, f);
 	LAUNCH_TEST(test_deletingObjectAtRandomIndex, p, f);
 	LAUNCH_TEST(test_insertingAtRandomIndex, p, f);
+	LAUNCH_TEST(test_releasecallback, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
