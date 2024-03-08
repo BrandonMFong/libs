@@ -181,7 +181,15 @@ PUBLIC:
 	/**
 	 * callback will be a pointer to a function that handles how we will delete object memory
 	 */
+	[[deprecated("please use the setReleaseCallback")]]
 	void setDeallocateCallback(void (* callback)(L obj)) {
+		this->_nodeObjectCleanUpCallback = callback;
+	}
+
+	/**
+	 * sets release callback
+	 */
+	void setReleaseCallback(void (* callback) (L obj)) {
 		this->_nodeObjectCleanUpCallback = callback;
 	}
 
