@@ -217,7 +217,7 @@ PUBLIC:
 	/**
 	 * Checks if there is at least one node with obj
 	 */
-	bool contains(L obj) {
+	bool contains(const L obj) {
 		return this->getNodeForObject(obj, this->_head) != NULL;
 	}
 
