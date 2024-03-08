@@ -92,6 +92,10 @@ public:
 		return this->_obj != a._obj;
 	}
 
+	operator T () {
+		return this->get();
+	}
+
 private:
 	T _obj;
 	BFLock _objlock;

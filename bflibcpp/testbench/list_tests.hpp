@@ -191,7 +191,7 @@ int test_listMemoryHandling() {
 	int result = 0;
 
 	List<int *> * l = new List<int *>;
-	l->setDeallocateCallback(intDelete);
+	l->setReleaseCallback(intDelete);
 
 	int * i = 0;
 

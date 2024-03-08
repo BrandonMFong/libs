@@ -187,6 +187,24 @@ int test_equaloverloadop() {
 	return result;
 }
 
+int test_castingoperator() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 18;
+	while (!result && max--) {
+		srand(time(0));
+		Atomic<int> a = rand();
+
+		int val = a;
+		Atomic<int> b = val;
+		val = b;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void atomic_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -198,6 +216,7 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_atomicvaluechange, p, f);
 	LAUNCH_TEST(test_settingvaluesindifferentwaysonthreads, p, f);
 	LAUNCH_TEST(test_equaloverloadop, p, f);
+	LAUNCH_TEST(test_castingoperator, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
