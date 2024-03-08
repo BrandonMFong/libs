@@ -84,6 +84,8 @@ PUBLIC:
 
 // Conversions
 public:
+
+	/// similar to std::atoi
 	static int toi(const String & s);
 };
 

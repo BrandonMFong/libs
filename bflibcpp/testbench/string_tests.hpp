@@ -320,6 +320,16 @@ int test_stringtoint() {
 		if (val != max) {
 			result = max;
 		}
+
+		// test a non-digit case
+		if (!result) {
+			str = "one";
+			val = String::toi(str);
+
+			if (val != 0) {
+				result = max;
+			}
+		}
 	}
 
 	UNIT_TEST_END(!result, result);
