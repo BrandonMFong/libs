@@ -64,12 +64,12 @@ PUBLIC:
 			this->left = 0;
 			this->right = 0;
 			this->obj = 0;
-			this->objectDeletionCallback = 0;
+			this->list = NULL;
 		}
 
 		virtual ~Node() {
-			if (this->objectDeletionCallback) {
-				this->objectDeletionCallback(this->obj);
+			if (this->list && this->list->_nodeObjectCleanUpCallback) {
+				this->list->_nodeObjectCleanUpCallback(this->obj);
 			}
 
 			this->left = 0;
@@ -79,7 +79,8 @@ PUBLIC:
 		Node * left;
 		Node * right;
 		L obj;
-		void (* objectDeletionCallback)(L obj);
+
+		const List * list;
 	};
 
 PUBLIC:
@@ -108,7 +109,7 @@ PUBLIC:
 
 		Node * n = new Node;
 		n->obj = obj;
-		n->objectDeletionCallback = this->_nodeObjectCleanUpCallback;
+		n->list = this;
 
 		// If we are first adding something
 		if (!this->_head && !this->_tail) {
@@ -130,6 +131,32 @@ PUBLIC:
 			this->_count++;
 
 		return result;
+	}
+
+	/**
+	 * finds object and removes from list
+	 *
+	 * DOES NOT DELETE MEMORY
+	 */
+	int pluckObject(L obj) {
+		for (Node * n = this->first(); n; n = n->next()) {
+			if (!this->runCompare(obj, n->object())) {
+				return this->deleteNode(n);
+			}
+		}
+
+		return 2;
+	}
+
+	/**
+	 * deletes object at the index
+	 *
+	 * index: must not exceed bounds of array
+	 */
+	int deleteObjectAtIndex(S index) {
+		if ((index >= 0) && (index < this->_count))
+			return this->deleteObjectAtIndex(index, this->_head, 0);
+		else return 1;
 	}
 
 	/**
@@ -165,17 +192,6 @@ PUBLIC:
 		Node * n = this->nodeAtIndex(index, this->_head, 0);
 		if (n) return n->object();
 		else return 0;
-	}
-
-	/**
-	 * deletes object at the index
-	 *
-	 * index: must not exceed bounds of array
-	 */
-	int deleteObjectAtIndex(S index) {
-		if ((index >= 0) && (index < this->_count))
-			return this->deleteObjectAtIndex(index, this->_head, 0);
-		else return 1;
 	}
 
 	/**
@@ -283,7 +299,7 @@ PROTECTED:
 			node->right->left = node->left;
 	
 		// This method does not delete the object memory
-		node->objectDeletionCallback = NULL;
+		node->list = NULL;
 
 		// Delete this node at index
 		delete node;
@@ -468,7 +484,7 @@ PRIVATE:
 			} else {
 				Node * n = new Node;
 				n->obj = obj;
-				n->objectDeletionCallback = this->_nodeObjectCleanUpCallback;
+				n->list = this;
 
 				// Make new connection
 				if (currNode->left) currNode->left->right = n;

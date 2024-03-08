@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <list.hpp>
+#include "delete.hpp"
 
 using namespace BF;
 
@@ -555,10 +556,74 @@ int test_ShuffleLargeDataSet() {
 	return result;
 }
 
+bool TestPluckingObjectReleaseWasCalled = false;
+void TestPluckingObjectRelease(int * i) {
+	BFFree(i);
+	TestPluckingObjectReleaseWasCalled = true;
+}
+
+int test_pluckingObject() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 1;
+	while (!result && max--) {
+		srand(time(0));
+
+		// make array and list
+		int size = 10;
+		int * arr[size];
+		List<int *> list;
+		list.setReleaseCallback(TestPluckingObjectRelease);
+		for (int i = 0; i < size; i++) {
+			arr[i] = (int *) malloc(sizeof(int));
+			*arr[i] = rand();
+			list.add(arr[i]);
+		}
+
+		// find a random position to delete from
+		int del = rand() % size;
+		int val = *arr[del];
+		list.pluckObject(arr[del]);
+
+		// test size
+		if (list.count() + 1 != size) {
+			result = max;
+		}
+
+		// make sure value hasn't been altered
+		if (!result) {
+			if (*arr[del] != val) {
+				result = max;
+			}
+		}
+
+		// make sure we can still play around with value
+		if (!result) {
+			for (int i = 0; i < size; i++) {
+				int t = *arr[i];
+				t++;
+			}
+			
+			// see if the release func was called
+			if (TestPluckingObjectReleaseWasCalled) {
+				result = max;
+			}
+		}
+
+		list.setReleaseCallback(0);
+		for (int i = 0; i < size; i++) { BFFree(arr[i]); }
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
+	
 	LAUNCH_TEST(test_Init, p, f);
 	LAUNCH_TEST(test_adding, p, f);
 	LAUNCH_TEST(test_indexing, p, f);
@@ -577,6 +642,7 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_shuffle, p, f);
 	LAUNCH_TEST(test_ListNullSwap, p, f);
 	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
+	LAUNCH_TEST(test_pluckingObject, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
