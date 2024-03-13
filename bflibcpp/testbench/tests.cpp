@@ -19,22 +19,18 @@
 int main() {
 	TEST_SUITE_START;
 
-	/*
 	LAUNCH_TEST_SET(array_tests);
 	LAUNCH_TEST_SET(file_tests);
 	LAUNCH_TEST_SET(list_tests);
 	LAUNCH_TEST_SET(bintree_tests);
 	LAUNCH_TEST_SET(rbtree_tests);
 	LAUNCH_TEST_SET(dictionary_tests);
-	*/
 	LAUNCH_TEST_SET(string_tests);
-	/*
 	LAUNCH_TEST_SET(stack_tests);
 	LAUNCH_TEST_SET(queue_tests);
 	LAUNCH_TEST_SET(time_tests);
 	LAUNCH_TEST_SET(atomic_tests);
 	LAUNCH_TEST_SET(object_tests);
-	*/
 
 	TEST_SUITE_END;
 
