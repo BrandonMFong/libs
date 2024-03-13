@@ -13,6 +13,12 @@ namespace BF {
 
 class String : protected Array<char, size_t> {
 PUBLIC:
+
+	/**
+	 * caller must release
+	 */
+	static String * createWithFormat(const char * format, ...);
+
 	String();
 	String(const char * str);
 	String(char * str);

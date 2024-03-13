@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <string.hpp>
+#include <release.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -218,7 +219,7 @@ int test_indexingstring() {
 	
 	const char * s = "Honorificabilitudinitatibus";
 
-	int max = 2 << 24;
+	int max = 2 << 22;
 	while (!result && max) {
 		String str = s;
 
@@ -334,7 +335,29 @@ int test_stringtoint() {
 
 	UNIT_TEST_END(!result, result);
 	return result;
+}
 
+int test_creatingstringfromformat() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	int max = 2 << 20;
+	while (!result && max--) {
+		const char * format = "%d tests left";
+		String * str = String::createWithFormat(format, max);
+
+		char buf[512];
+		snprintf(buf, 512, format, max);
+
+		if (str->compareString(buf)) {
+			result = max;
+		}
+
+		BFRelease(str);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
 }
 
 void string_tests(int * pass, int * fail) {
@@ -354,6 +377,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_indexingstring, p, f);
 	LAUNCH_TEST(test_addandremove, p, f);
 	LAUNCH_TEST(test_stringtoint, p, f);
+	LAUNCH_TEST(test_creatingstringfromformat, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

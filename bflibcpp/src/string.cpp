@@ -4,7 +4,11 @@
  */
 
 #include "string.hpp"
+#include <stdarg.h>
+
+extern "C" {
 #include <bflibc/bflibc.h>
+}
 
 using namespace BF;
 
@@ -16,6 +20,16 @@ String::String(const char * str) : String((char *) str) {}
 
 String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
+}
+
+String * String::createWithFormat(const char * format, ...) {
+	va_list valist;
+	va_start(valist, format);
+	char * str = BFStringCreateFormatArgListString(format, valist);
+	va_end(valist);
+	String * result = new String(str);
+	BFFree(str);
+	return result;
 }
 
 String::~String() {}
