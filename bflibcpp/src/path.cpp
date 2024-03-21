@@ -9,7 +9,7 @@
 
 using namespace BF;
 
-Path::Path(const char * path) {
+Path::Path(const char * path) : Object() {
 	memset(&this->_path[0], 0, PATH_MAX);
 	memset(&this->_reserved[0], 0, PATH_MAX);
 	if (path) {

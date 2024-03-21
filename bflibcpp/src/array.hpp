@@ -12,27 +12,27 @@
 #include <iostream>
 #include "delete.hpp"
 #include "access.hpp"
+#include "object.hpp"
 #include <string.h>
 
 namespace BF {
 
 /**
- * Immutable Array
+ * Mutable Array
  *
- * This class allows you to access the array in readonly.  This class 
+ * This class allows you to access the array.  This class 
  * is meant to provide you the basic functionality of an array class
  *
- * Notes:
- * 	I feel that I can derive binary trees and linked lists from this class
+ * Objects stored in array are assumed to be owned by owner of array 
+ * object
  */
-template <typename T, typename S = size_t> class Array {
+template <typename T, typename S = size_t> class Array : public Object {
 PUBLIC:
-	Array() {
+	Array() : Object() {
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
-		this->_allocationCallback = 0;
-		this->_deallocationCallback = 0;
+		this->_releasecb = NULL;
 	}
 
 	/**
@@ -54,6 +54,17 @@ PUBLIC:
 	}
 
 	void removeAll() {
+		// if there is a release callback
+		// then let's call this
+		//
+		// this callback handles the memory of each element. This
+		// is set by the owner of this object
+		if (this->_releasecb) {
+			for (S i = 0; i < this->_count; i++) {
+				this->_releasecb((this->_address)[i]);
+			}
+		}
+		
 		this->deallocate(this->_address);
 		this->_address = 0;
 		this->_count = 0;
@@ -78,8 +89,9 @@ PUBLIC:
 	 *
 	 * By default free store is utilized
 	 */
+	[[deprecated("allocation is no longer configurable")]]
 	void setAllocationCallback(T * (* cb) (S size)) {
-		this->_allocationCallback = cb;
+		//this->_allocationCallback = cb;
 	}
 
 	/**
@@ -87,8 +99,9 @@ PUBLIC:
 	 *
 	 * By default free store is utilized
 	 */
+	[[deprecated("allocation is no longer configurable")]]
 	void setDeallocationCallback(void (* cb) (T * value)) {
-		this->_deallocationCallback = cb;
+		//this->_deallocationCallback = cb;
 	}
 
 	/**
@@ -158,6 +171,13 @@ PUBLIC:
 	}
 
 	/**
+	 * sets release callback
+	 */
+	void setReleaseCallback(void (* callback) (T obj)) {
+		this->_releasecb = callback;
+	}
+
+	/**
 	 * Copies content from arr to us
 	 */
 	void copyFromArray(const Array<T> * arr) {
@@ -165,6 +185,63 @@ PUBLIC:
 		this->_address = (T *) this->allocate(arr->count());
 		this->_count = arr->count();
 		memcpy(this->_address, arr->address(), this->_count);
+	}
+
+	/**
+	 * Adds object at the end of the array
+	 */
+	int add(T obj) {
+		this->_address = this->reallocate(this->_address, this->_count + 1);
+		if (this->_address == NULL) {
+			this->_count = 0;
+			return -3;
+		}
+
+		this->_count++;
+		this->_address[this->_count - 1] = obj;
+		return 0;
+	}
+
+	int insertObjectAtIndex(T obj, S index) {
+		this->_address = this->reallocate(this->_address, this->_count + 1);
+		if (this->_address == NULL) {
+			this->_count = 0;
+			return -4;
+		}
+
+		// shift
+		this->_count++;
+		for (S i = this->_count - 1; i > index; i--) {
+			this->_address[i] = this->_address[i - 1];
+		}
+
+		this->_address[index] = obj;
+
+		return 0;
+	}
+
+	/**
+	 * removes object at index
+	 *
+	 * this dynamically adjusts the memory
+	 */
+	int removeObjectAtIndex(S index) {
+		// shift objects
+		for (S i = index; (i+1) < this->_count; i++) {
+			this->_address[i] = this->_address[i + 1];
+		}
+
+		// adjust array
+		this->_count--;
+		this->_address = this->reallocate(this->_address, this->_count);
+
+		// if count == 0, then realloc will return NULL
+		if (this->_count && (this->_address == NULL)) {
+			this->_count = 0;
+			return -5;
+		}
+
+		return 0;
 	}
 
 PROTECTED:
@@ -177,24 +254,25 @@ PROTECTED:
 PRIVATE:
 
 	/**
-	 * Derived classes can override if they want to use the heap
-	 *
-	 * By default we are using the free store
+	 * uses malloc to allocate mem
 	 */
-	T * allocate(S size) {
-		if (this->_allocationCallback) return this->_allocationCallback(size);
-		else return new T[size];
+	static T * allocate(S size) {
+		return (T *) malloc(sizeof(T) * size);
+	}
+
+	/**
+	 * returns modified `addr` with `newsize`
+	 */
+	static T * reallocate(T * addr, S newsize) {
+		return (T *) realloc(addr, sizeof(T) * newsize);
 	}
 
 	/**
 	 * Derived must make sure this follows the standard established
 	 * by allocate()
 	 */
-	void deallocate(T * value) {
-		if (this->_deallocationCallback) this->_deallocationCallback(value);
-		else {
-			Delete(value);
-		}
+	static void deallocate(T * value) {
+		free((void *) value);
 	}
 
 	/**
@@ -247,15 +325,17 @@ PRIVATE:
 	 */
 	int (* _callback) (T a, T b);
 
-	/// Defines how _address is allocated
-	T * (* _allocationCallback) (S size);
-
-	/// Defines how _address is deallocated
-	void (* _deallocationCallback) (T * value);
+	/**
+	 * this will determine how each
+	 * element is released
+	 *
+	 * this is set to null by default
+	 */
+	void (* _releasecb) (T obj);
 
 PUBLIC:
 
-	T operator[](S index) {
+	T operator[](S index) const {
 		return this->objectAtIndex(index);
 	}
 

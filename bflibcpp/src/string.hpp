@@ -13,6 +13,12 @@ namespace BF {
 
 class String : protected Array<char, size_t> {
 PUBLIC:
+
+	/**
+	 * caller must release
+	 */
+	static String * createWithFormat(const char * format, ...);
+
 	String();
 	String(const char * str);
 	String(char * str);
@@ -39,6 +45,35 @@ PUBLIC:
 	 */
 	int copy(String & s) const;
 
+	/**
+	 * Adds char c to the end of the string
+	 *
+	 * similar to std::string::push_back
+	 */
+	int addChar(char c);
+
+	/**
+	 * removes char at the end of the string
+	 *
+	 * similar to std::string::pop_back
+	 */
+	int remChar();
+
+	/**
+	 * adds a character at index
+	 */
+	int addCharAtIndex(char c, size_t index);
+
+	/**
+	 * removes a character at index
+	 */
+	int remCharAtIndex(size_t index);
+
+	/**
+	 * makes empty string
+	 */
+	int clear();
+
 // Overloading operators
 PUBLIC:
 	friend std::ostream& operator<<(std::ostream& out, const String & s) {
@@ -51,6 +86,13 @@ PUBLIC:
 	bool operator>(const String & s);
 	bool operator!=(const String & s);
 	String & operator=(const String & str);
+	const char operator[](size_t index);
+
+// Conversions
+public:
+
+	/// similar to std::atoi
+	static int toi(const String & s);
 };
 
 } // namespace BF

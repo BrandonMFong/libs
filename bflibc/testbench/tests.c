@@ -10,50 +10,22 @@
 #include "checksum_tests.h"
 #include "thread_tests.h"
 #include "lock_tests.h"
+#include "filewriter_tests.h"
 #include <stdio.h>
 
 int main() {
-	int pass = 0, fail = 0;
-	float tp = 0, tf = 0;
+	TEST_SUITE_START;
 
-	printf("\n---------------------------\n");
+	LAUNCH_TEST_SET(coreutils_tests);
+	LAUNCH_TEST_SET(checksum_tests);
+	LAUNCH_TEST_SET(filesystem_tests);
+	LAUNCH_TEST_SET(stringutils_tests);
+	LAUNCH_TEST_SET(time_tests);
+	LAUNCH_TEST_SET(lock_tests);
+	LAUNCH_TEST_SET(thread_tests);
+	LAUNCH_TEST_SET(filewriter_tests);
 	
-	coreutils_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	checksum_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	filesystem_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	stringutils_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	time_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-	
-	lock_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	thread_tests(&pass, &fail);
-	printf("[+ %d, - %d]\n", pass, fail);
-	tp += pass; tf += fail;
-	pass = 0; fail = 0;
-
-	printf("Grade - %.2f%% (%d/%d)\n", (tp / (tp + tf)) * 100, (int) tp, (int) (tp + tf));
+	TEST_SUITE_END;
 
 	return 0;
 }
