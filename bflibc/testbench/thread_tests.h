@@ -56,7 +56,7 @@ void WaitingOnThreadLockRun(void * in) {
 int test_WaitingOnThreadLock(void) {
 	UNIT_TEST_START;
 	int result = 0;
-	BFThreadAsyncID id;
+	BFThreadAsyncID id = 0;
 	BFLock lock;
 	result = BFLockCreate(&lock);
 
@@ -188,11 +188,9 @@ int test_CancelingAsyncThread(void) {
 	int result = 0;
 	bool flag = false;
 
-	BFThreadAsyncID id;
-	if (!result) {
-		id = BFThreadAsync(CancelingAsyncThreadRun, &flag);
-		result = BFThreadAsyncError(id);
-	}
+	BFThreadAsyncID id = 0;
+	id = BFThreadAsync(CancelingAsyncThreadRun, &flag);
+	result = BFThreadAsyncError(id);
 
 	if (!result) {
 		result = BFThreadAsyncCancel(id);

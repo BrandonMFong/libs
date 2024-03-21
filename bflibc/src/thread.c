@@ -94,7 +94,7 @@ typedef struct {
  * pairs posix thread id with our BFThreadID
  */
 typedef struct {
-	pid_t posix_tid;
+	pthread_t posix_tid;
 	char type; // sync = _BFThreadTypeSync, async = _BFThreadTypeAsync
 
 	// we don't own this memory
@@ -136,7 +136,7 @@ int _ThreadIDTablePushID(void * bftid, char type) {
 		if (ent == NULL) {
 			error = 51;
 		} else {
-			ent->posix_tid = gettid(); // save tid
+			ent->posix_tid = pthread_self(); // save tid
 			ent->type = type; // save type
 
 			// save bfid
@@ -170,7 +170,7 @@ int _ThreadIDTablePopID() {
 
 	// get entry and organize table
 	_ThreadIDEntry * ent = NULL;
-	pid_t tid = gettid();
+	pthread_t tid = pthread_self();
 	size_t size = _tidtable.size;
 	for (int i = 0; i < size; i++) {
 		// if we find the entry
@@ -201,7 +201,7 @@ int _ThreadIDTablePopID() {
 const void * _ThreadIDTableGetID() {
 	const void * result = NULL;
 	pthread_mutex_lock(&_tidtable.mut);
-	pid_t tid = gettid();
+	pthread_t tid = pthread_self();
 	for (int i = 0; i < _tidtable.size; i++) {
 		if (_tidtable.entries[i]->posix_tid == tid) {
 			_ThreadIDEntry * ent = _tidtable.entries[i];

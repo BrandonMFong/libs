@@ -8,6 +8,8 @@
 
 #include <uuid/uuid.h>
 #include <stdarg.h>
+#include <sys/types.h>
+#include <stddef.h>
 
 #define kBFStringUUIDStringLength 37
 
