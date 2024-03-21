@@ -19,7 +19,7 @@ Time * Time::createCurrent() {
 
 Time::Time() : Time(0) { }
 
-Time::Time(BFTime t) {
+Time::Time(BFTime t) : Object() {
 	this->set(t);
 }
 

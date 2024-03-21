@@ -11,10 +11,11 @@
 #include <bflibc/typebftime.h>
 #include <bflibc/typebfdatetime.h>
 #include "access.hpp"
+#include "object.hpp"
 
 namespace BF {
 
-class Time {
+class Time : public Object {
 PUBLIC:
 	static Time * createCurrent();
 	Time(BFTime t);

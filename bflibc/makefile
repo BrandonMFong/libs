@@ -24,7 +24,7 @@ CFLAGS += -Wall -I.
 #
 # All objects defined in headers should be copied to 
 # bin
-C_OBJECTS = filesystem coreutils stringutils bftime checksum thread lock
+C_OBJECTS = filesystem coreutils stringutils bftime checksum thread lock filewriter
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)

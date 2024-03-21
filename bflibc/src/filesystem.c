@@ -174,7 +174,9 @@ char * BFFileSystemPathCopyHomePath(int * err) {
 	}
 
 	if (!error) {
-		result = BFStringCopyString(tempPath, &error);
+		result = BFStringCopyString(tempPath);
+		if (!result)
+			error = 2;
 	}
 
 	if (err != 0) {

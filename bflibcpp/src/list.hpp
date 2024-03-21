@@ -7,6 +7,7 @@
 #define LIST_HPP
 
 #include "access.hpp"
+#include "object.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -37,13 +38,13 @@ typedef enum {
  * object memory will not be deallocated.
  */
 template <typename L, typename S = int>
-class List {
+class List : public Object {
 PUBLIC:
 	
 	/**
 	 * Bi-directional node
 	 */
-	class Node {
+	class Node : public Object {
 		friend List<L, S>;
 	PUBLIC:
 		Node * next() const {
@@ -59,16 +60,16 @@ PUBLIC:
 		}
 
 	PRIVATE:
-		Node() {
+		Node() : Object() {
 			this->left = 0;
 			this->right = 0;
 			this->obj = 0;
-			this->objectDeletionCallback = 0;
+			this->list = NULL;
 		}
 
 		virtual ~Node() {
-			if (this->objectDeletionCallback) {
-				this->objectDeletionCallback(this->obj);
+			if (this->list && this->list->_nodeObjectCleanUpCallback) {
+				this->list->_nodeObjectCleanUpCallback(this->obj);
 			}
 
 			this->left = 0;
@@ -78,12 +79,13 @@ PUBLIC:
 		Node * left;
 		Node * right;
 		L obj;
-		void (* objectDeletionCallback)(L obj);
+
+		const List * list;
 	};
 
 PUBLIC:
 
-	List() {
+	List() : Object() {
 		this->_head = 0;
 		this->_tail = 0;
 		this->_count = 0;
@@ -107,7 +109,7 @@ PUBLIC:
 
 		Node * n = new Node;
 		n->obj = obj;
-		n->objectDeletionCallback = this->_nodeObjectCleanUpCallback;
+		n->list = this;
 
 		// If we are first adding something
 		if (!this->_head && !this->_tail) {
@@ -129,6 +131,32 @@ PUBLIC:
 			this->_count++;
 
 		return result;
+	}
+
+	/**
+	 * finds object and removes from list
+	 *
+	 * DOES NOT DELETE MEMORY
+	 */
+	int pluckObject(L obj) {
+		for (Node * n = this->first(); n; n = n->next()) {
+			if (!this->runCompare(obj, n->object())) {
+				return this->deleteNode(n);
+			}
+		}
+
+		return 2;
+	}
+
+	/**
+	 * deletes object at the index
+	 *
+	 * index: must not exceed bounds of array
+	 */
+	int deleteObjectAtIndex(S index) {
+		if ((index >= 0) && (index < this->_count))
+			return this->deleteObjectAtIndex(index, this->_head, 0);
+		else return 1;
 	}
 
 	/**
@@ -167,20 +195,17 @@ PUBLIC:
 	}
 
 	/**
-	 * deletes object at the index
-	 *
-	 * index: must not exceed bounds of array
+	 * callback will be a pointer to a function that handles how we will delete object memory
 	 */
-	int deleteObjectAtIndex(S index) {
-		if ((index >= 0) && (index < this->_count))
-			return this->deleteObjectAtIndex(index, this->_head, 0);
-		else return 1;
+	[[deprecated("please use the setReleaseCallback")]]
+	void setDeallocateCallback(void (* callback)(L obj)) {
+		this->_nodeObjectCleanUpCallback = callback;
 	}
 
 	/**
-	 * callback will be a pointer to a function that handles how we will delete object memory
+	 * sets release callback
 	 */
-	void setDeallocateCallback(void (* callback)(L obj)) {
+	void setReleaseCallback(void (* callback) (L obj)) {
 		this->_nodeObjectCleanUpCallback = callback;
 	}
 
@@ -208,7 +233,7 @@ PUBLIC:
 	/**
 	 * Checks if there is at least one node with obj
 	 */
-	bool contains(L obj) {
+	bool contains(const L obj) {
 		return this->getNodeForObject(obj, this->_head) != NULL;
 	}
 
@@ -274,7 +299,7 @@ PROTECTED:
 			node->right->left = node->left;
 	
 		// This method does not delete the object memory
-		node->objectDeletionCallback = NULL;
+		node->list = NULL;
 
 		// Delete this node at index
 		delete node;
@@ -459,7 +484,7 @@ PRIVATE:
 			} else {
 				Node * n = new Node;
 				n->obj = obj;
-				n->objectDeletionCallback = this->_nodeObjectCleanUpCallback;
+				n->list = this;
 
 				// Make new connection
 				if (currNode->left) currNode->left->right = n;

@@ -187,8 +187,11 @@ int test_LoadAndUnloadStrings() {
 		char uuidstr[kBFStringUUIDStringLength];
 		//BFStringGetRandomUUIDString(uuidstr);
 		strcpy(uuidstr, "uuid");
-		array[i] = BFStringCopyString(uuidstr, &result);
-		if (result) break;
+		array[i] = BFStringCopyString(uuidstr);
+		if (array[i] == NULL) {
+			result = i;
+			break;
+		}
 		stack.push(array[i]);
 	}
 

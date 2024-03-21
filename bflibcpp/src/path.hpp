@@ -7,6 +7,7 @@
 #define PATH_HPP
 
 #include <limits.h>
+#include "object.hpp"
 
 #ifdef LINUX
 #include <linux/limits.h>
@@ -14,7 +15,7 @@
 
 namespace BF {
 
-class Path {
+class Path : public Object {
 protected:
 	Path(const char * path);
 	virtual ~Path();

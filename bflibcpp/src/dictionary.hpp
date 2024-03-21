@@ -8,6 +8,7 @@
 
 #include "rbtree.hpp"
 #include "access.hpp"
+#include "object.hpp"
 
 namespace BF {
 
@@ -15,13 +16,13 @@ namespace BF {
  * Dictionary whose entries are pair with keys (of type K) and values (of type V)
  */
 template <typename K, typename V, typename S = int>
-class Dictionary {
+class Dictionary : public Object {
 PUBLIC:
 
 	/**
 	 * Holds an entry for value that can be located by key
 	 */
-	class Entry {
+	class Entry : public Object {
 		friend class Dictionary<K,V,S>;
 	PUBLIC:
 		/**
@@ -40,7 +41,7 @@ PUBLIC:
 
 	PRIVATE:
 
-		Entry(K k, V v, Dictionary<K,V,S> * dictRef) {
+		Entry(K k, V v, Dictionary<K,V,S> * dictRef) : Object() {
 			this->_dictRef = dictRef;
 
 			// See how the dict owner wants to retain key and values
@@ -79,7 +80,7 @@ PUBLIC:
 	
 	friend class Entry;
 
-	Dictionary() {
+	Dictionary() : Object() {
 		this->_keyCompare = 0;
 		this->_keyValueRelease = 0;
 		this->_keyValueRetain = 0;

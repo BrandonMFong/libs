@@ -5,14 +5,13 @@
 
 .PHONY: bflibc bflibcpp bflibrust
 
-PROJECTS := bflibc bflibcpp bflibrust
-
-all: setup $(PROJECTS)
-
-$(PROJECTS): setup
-	cd $@ && make clean
-	cd $@ && make debug release
-	cp -afv $@/bin/* bin/
+all: setup 
+	cd bflibc && make debug release
+	cd bflibcpp && make debug release
+	cd bflibrust && make debug release
+	cp -afv bflibc/bin/* bin/
+	cp -afv bflibcpp/bin/* bin/
+	cp -afv bflibrust/bin/* bin/
 
 test:
 	./scripts/runtests
@@ -21,5 +20,8 @@ setup:
 	mkdir -p bin
 
 clean:
+	cd bflibc && make clean
+	cd bflibcpp && make clean
+	cd bflibrust && make clean
 	rm -rfv bin
 
