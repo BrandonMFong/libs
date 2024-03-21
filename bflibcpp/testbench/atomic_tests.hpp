@@ -151,6 +151,7 @@ int test_settingvaluesindifferentwaysonthreads() {
 		BFThreadAsyncDestroy(tid1);
 
 		if (ia != (2 * (2 << 4))) {
+			printf("\n%d != %d\n", ia, (2 * (2 << 4)));
 			result = max;
 		}
 
