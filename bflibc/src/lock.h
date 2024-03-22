@@ -43,6 +43,8 @@ int BFLockWait(BFLock * lock);
  *
  * if elapsed time reaches t, kBFLockTimedWaitCodeTimedOut
  * returns
+ *
+ * t : seconds with nanosecond resolution. e.g. `1.0` is one second
  */
 int BFLockTimedWait(BFLock * l, BFTime t);
 
