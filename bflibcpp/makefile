@@ -85,8 +85,9 @@ d-clean:
 ### TESTS ###
 T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
+#T_SANITIZE_ADDR = -fsanitize=address
 
-test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS)
+test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
 test: CPP = @g++
 test: AR = @ar
 test: CP = @cp
