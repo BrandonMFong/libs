@@ -295,7 +295,7 @@ void * _BFThreadStartRoutine(void * _params) {
 		if (params->type == _BFThreadTypeAsync) {
 			pthread_mutex_lock(&params->id.async->m);
 			_ThreadIDTablePushID(params->id.async, params->type);
-			IS_RUNNING_SET_ON(params->id.async->flags);
+			//IS_RUNNING_SET_ON(params->id.async->flags);
 			pthread_mutex_unlock(&params->id.async->m);
 		}
 
@@ -402,7 +402,7 @@ BFThreadAsyncID BFThreadAsync(
 	if (!error) {
 		// 1 for caller and 1 for the running thread
 		result->retaincount = 2;
-		//IS_RUNNING_SET_ON(result->flags);
+		IS_RUNNING_SET_ON(result->flags);
 		result->error = error;
 		pthread_create(&result->p, &result->attr, _BFThreadStartRoutine, (void *) params);
 	}

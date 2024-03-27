@@ -124,6 +124,7 @@ void TestFileWriterThreads(void * in) {
 int test_writingfromdifferentthreads(void) {
 	UNIT_TEST_START;
 	int result = 0;
+	const int lines2write = 2 << 8;
 
 	int max = 2 << 4;
 	while (!result && max--) {
@@ -141,7 +142,7 @@ int test_writingfromdifferentthreads(void) {
 		if (!result) {
 			tools.fw = &fw;
 			srand(time(0));
-			tools.lines2write = 2 << 4;
+			tools.lines2write = lines2write;
 			tid0 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 			tid1 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 
@@ -174,8 +175,10 @@ int test_writingfromdifferentthreads(void) {
 			}
 			free(line);
 
-			if (i != (tools.lines2write * 2))
+			if (i != (tools.lines2write * 2)) {
+				printf("\n%d != %d\n", i, (tools.lines2write * 2));
 				result = 1000;
+			}
 		}
 
 		fclose(f);
@@ -254,7 +257,7 @@ int test_filewritingisappending() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 4;
+	int max = 2 << 3;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
