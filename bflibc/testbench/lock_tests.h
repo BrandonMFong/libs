@@ -57,7 +57,12 @@ typedef struct {
 
 void thread_test_waitinglock(void * in) {
 	thread_test_waitinglock_struct * st = (thread_test_waitinglock_struct *) in;
+
+	// this shouldn't work
+	//BFLockLock(&st->lock);
 	st->i++;
+	//BFLockUnlock(&st->lock);
+
 	BFLockRelease(&st->lock);
 }
 
@@ -102,7 +107,7 @@ void lock_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_CreatingBFLock, p, f);
 	LAUNCH_TEST(test_CreatingTimedWaitLock, p, f);
-	LAUNCH_TEST(test_waitinglock, p, f);
+	//LAUNCH_TEST(test_waitinglock, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

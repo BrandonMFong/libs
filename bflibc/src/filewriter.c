@@ -120,7 +120,9 @@ void _FileWriterQueueThread(void * in) {
 	_FileWriter * fw = in;
 	if (!fw) return;
 	while (fw && !BFThreadAsyncIsCanceled(fw->tid)) {
-		if (_LineQueueGetSize(&fw->q) > 0) {
+		if (_LineQueueGetSize(&fw->q) == 0) {
+			usleep(500);
+		} else {
 			const char * line = _LineQueueGetTopLine(&fw->q);
 		
 			BFLockLock(&fw->lock);
@@ -180,7 +182,8 @@ int BFFileWriterClose(BFFileWriter * filewriter) {
 		// tell workloop to stop looping
 		BFThreadAsyncCancel(fw->tid);
 
-		while (BFThreadAsyncIsRunning(fw->tid)) { }
+		// wait for the thread to exit
+		BFThreadAsyncWait(fw->tid);
 
 		// destroy thread
 		BFThreadAsyncDestroy(fw->tid);
