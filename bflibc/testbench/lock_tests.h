@@ -70,7 +70,7 @@ int test_waitinglock() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 1;
+	int max = 2 << 4;
 	while (!result && max--) {
 		thread_test_waitinglock_struct st;
 		st.i = 0;
@@ -107,7 +107,7 @@ void lock_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_CreatingBFLock, p, f);
 	LAUNCH_TEST(test_CreatingTimedWaitLock, p, f);
-	//LAUNCH_TEST(test_waitinglock, p, f);
+	LAUNCH_TEST(test_waitinglock, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
