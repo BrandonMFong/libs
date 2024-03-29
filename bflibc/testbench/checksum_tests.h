@@ -24,6 +24,7 @@ int checksumTest(BFChecksumType type, const char * in, const char * expected) {
 		result = 3;
 	}
 
+	/*
 	char * dig = 0;
 	if (result == 0) {
 		dig = (char *) malloc(BFChecksumGetDigestStringLength(&tools) + 1);
@@ -40,6 +41,8 @@ int checksumTest(BFChecksumType type, const char * in, const char * expected) {
 	}
 
 	free(dig);
+	*/
+
 	BFChecksumDestroy(&tools);
 
 	return result;

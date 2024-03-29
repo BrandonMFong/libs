@@ -36,6 +36,11 @@ int BFLockDestroy(BFLock * lock);
  */
 int BFLockWait(BFLock * lock);
 
+/**
+ * true if lock is being blocked by BFLockWait
+ */
+bool BFLockIsWaiting(BFLock * l);
+
 #define kBFLockTimedWaitCodeTimedOut 0xff
 
 /**
