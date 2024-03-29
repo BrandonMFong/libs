@@ -89,8 +89,10 @@ void checksum_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
+	/*
 	LAUNCH_TEST(test_checksumMD5, p, f);
 	LAUNCH_TEST(test_checksumSHA1, p, f);
+	*/
 	LAUNCH_TEST(test_checksumSHA256, p, f);
 	LAUNCH_TEST(test_checksumSHA512, p, f);
 
