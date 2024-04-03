@@ -84,8 +84,6 @@ int test_checksumSHA512() {
 	return result;
 }
 
-//
-// NOTE: There is some sort of bug
 void checksum_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
