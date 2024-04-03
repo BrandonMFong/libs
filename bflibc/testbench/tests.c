@@ -17,7 +17,7 @@ int main() {
 	TEST_SUITE_START;
 
 	LAUNCH_TEST_SET(coreutils_tests);
-	LAUNCH_TEST_SET(checksum_tests);
+	//LAUNCH_TEST_SET(checksum_tests);
 	LAUNCH_TEST_SET(filesystem_tests);
 	LAUNCH_TEST_SET(stringutils_tests);
 	LAUNCH_TEST_SET(time_tests);

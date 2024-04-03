@@ -20,8 +20,8 @@ size_t BFChecksumGetDigestStringLength(BFChecksumTools * tools) {
 
 void BFChecksumDestroy(BFChecksumTools * tools) {
 	if (tools) {
-		BFFree(tools->context);
-		BFFree(tools->digest);
+		free(tools->context);
+		free(tools->digest);
 	}
 }
 
