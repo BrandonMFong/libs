@@ -293,7 +293,10 @@ void * _BFThreadStartRoutine(void * _params) {
 		// push the id to the table so it
 		// can be called by caller anytime
 		if (params->type == _BFThreadTypeAsync) {
+			pthread_mutex_lock(&params->id.async->m);
 			_ThreadIDTablePushID(params->id.async, params->type);
+			//IS_RUNNING_SET_ON(params->id.async->flags);
+			pthread_mutex_unlock(&params->id.async->m);
 		}
 
 		// run the caller defined function on current
@@ -457,9 +460,8 @@ int BFThreadAsyncWait(BFThreadAsyncID in) {
 	else {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 		// if thread is running, then we will wait
-		if (BFThreadAsyncIsRunning(id)) {
-			// set flag
-			BFLockWait(&id->waitlock);
+		while (BFThreadAsyncIsRunning(id)) {
+			usleep(5000);
 		}
 	}
 

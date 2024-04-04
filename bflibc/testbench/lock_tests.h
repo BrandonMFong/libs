@@ -50,6 +50,100 @@ int test_CreatingTimedWaitLock(void) {
 	return result;
 }
 
+typedef struct {
+	BFLock lock;
+	int i;
+} thread_test_waitinglock_struct;
+
+void thread_test_waitinglock(void * in) {
+	thread_test_waitinglock_struct * st = (thread_test_waitinglock_struct *) in;
+
+	// this shouldn't work
+	//BFLockLock(&st->lock);
+	st->i++;
+	//BFLockUnlock(&st->lock);
+
+	BFLockRelease(&st->lock);
+}
+
+int test_waitinglock() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 4;
+	while (!result && max--) {
+		thread_test_waitinglock_struct st;
+		st.i = 0;
+		result = BFLockCreate(&st.lock);
+
+		if (!result) {
+			if (!BFLockIsValid(&st.lock)) result = 1;
+		}
+
+		if (!result) {
+			BFThreadAsyncID tid = BFThreadAsync(thread_test_waitinglock, &st);
+			while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
+			BFLockWait(&st.lock);
+
+			BFThreadAsyncWait(tid);
+
+			if (st.i == 0) {
+				result = 1;
+			}
+			BFThreadAsyncDestroy(tid);
+		}
+
+		if (!result) result = BFLockDestroy(&st.lock);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
+typedef struct {
+	BFLock l;
+	bool ran;
+} test_destroyLockThatIsWaiting_struct;
+
+void thread_test_destroyLockThatIsWaiting(void * in) {
+	test_destroyLockThatIsWaiting_struct * st = (test_destroyLockThatIsWaiting_struct *) in;
+	BFLockWait(&st->l);
+	st->ran = true;
+}
+
+int test_destroyLockThatIsWaiting() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 8;
+	while (!result && max--) {
+		test_destroyLockThatIsWaiting_struct st;
+		BFLockCreate(&st.l);
+		st.ran = false;
+
+		BFThreadAsyncID tid = BFThreadAsync(thread_test_destroyLockThatIsWaiting, &st);
+		while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
+
+		if (BFLockIsWaiting(&st.l)) {
+			result = max;
+		}
+
+		BFLockDestroy(&st.l);
+
+		BFThreadAsyncWait(tid);
+		BFThreadAsyncDestroy(tid);
+
+		if (!result && !st.ran) {
+			result = max;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
 void lock_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -57,6 +151,8 @@ void lock_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_CreatingBFLock, p, f);
 	LAUNCH_TEST(test_CreatingTimedWaitLock, p, f);
+	LAUNCH_TEST(test_waitinglock, p, f);
+	LAUNCH_TEST(test_destroyLockThatIsWaiting, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

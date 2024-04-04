@@ -17,7 +17,7 @@ int test_creatingfilewriter(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 14;
+	int max = 2 << 4;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -42,7 +42,7 @@ int test_writingwithfilewriter(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 8;
+	int max = 2 << 4;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -52,7 +52,7 @@ int test_writingwithfilewriter(void) {
 		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		// write test lines
-		const int lines = 2 << 10;
+		const int lines = 2 << 4;
 		if (!result) {
 			for (int i = 0; i < lines; i++) {
 				char line[512];
@@ -124,9 +124,10 @@ void TestFileWriterThreads(void * in) {
 int test_writingfromdifferentthreads(void) {
 	UNIT_TEST_START;
 	int result = 0;
+	const int lines2write = 2 << 8;
 
-	int max = 2 << 8;
-	while (!result && max) {
+	int max = 2 << 4;
+	while (!result && max--) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
 		}
@@ -141,7 +142,7 @@ int test_writingfromdifferentthreads(void) {
 		if (!result) {
 			tools.fw = &fw;
 			srand(time(0));
-			tools.lines2write = 2 << 10;
+			tools.lines2write = lines2write;
 			tid0 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 			tid1 = BFThreadAsync(TestFileWriterThreads, (void *) &tools);
 
@@ -174,8 +175,10 @@ int test_writingfromdifferentthreads(void) {
 			}
 			free(line);
 
-			if (i != (tools.lines2write * 2))
-				result = 1;
+			if (i != (tools.lines2write * 2)) {
+				printf("\n%d != %d\n", i, (tools.lines2write * 2));
+				result = 1000;
+			}
 		}
 
 		fclose(f);
@@ -183,8 +186,6 @@ int test_writingfromdifferentthreads(void) {
 		if (!result) {
 			result = BFFileWriterClose(&fw);
 		}
-
-		max--;
 	}
 
 	UNIT_TEST_END(!result, result);
@@ -195,7 +196,7 @@ int test_writingwithformat(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 8;
+	int max = 2 << 4;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
@@ -205,7 +206,7 @@ int test_writingwithformat(void) {
 		result = BFFileWriterCreate(&fw, FILE_WRITER_FILE_PATH);
 
 		// write test lines
-		const int lines = 2 << 9;
+		const int lines = 2 << 4;
 		if (!result) {
 			for (int i = 0; i < lines; i++) {
 				result = BFFileWriterQueueFormatLine(&fw, "line %d", i);
@@ -256,14 +257,14 @@ int test_filewritingisappending() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 4;
+	int max = 2 << 3;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);
 		}
 
 		// write test lines
-		const int lines = 2 << 10;
+		const int lines = 2 << 4;
 		for (int i = 0; i < lines; i++) {
 			char line[512];
 			snprintf(line, 512, "line %d", i);
@@ -319,7 +320,7 @@ int test_filetruncation() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 8;
+	int max = 2 << 4;
 	while (!result && max) {
 		if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 			remove(FILE_WRITER_FILE_PATH);

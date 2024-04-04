@@ -36,6 +36,11 @@ int BFLockDestroy(BFLock * lock);
  */
 int BFLockWait(BFLock * lock);
 
+/**
+ * true if lock is being blocked by BFLockWait
+ */
+bool BFLockIsWaiting(BFLock * l);
+
 #define kBFLockTimedWaitCodeTimedOut 0xff
 
 /**
@@ -43,6 +48,8 @@ int BFLockWait(BFLock * lock);
  *
  * if elapsed time reaches t, kBFLockTimedWaitCodeTimedOut
  * returns
+ *
+ * t : seconds with nanosecond resolution. e.g. `1.0` is one second
  */
 int BFLockTimedWait(BFLock * l, BFTime t);
 

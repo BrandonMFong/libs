@@ -13,13 +13,22 @@
 typedef struct {
 	pthread_mutex_t mutex;
 	pthread_cond_t cond;
+	unsigned char flags;
 } _BFLock;
+
+#define FLAGS_GET(flags, bit) (flags & (1 << bit))
+#define FLAGS_SET_ON(flags, bit) flags |= (1 << bit)
+#define FLAGS_SET_OFF(flags, bit) flags &= ~(1 << bit)
+
+#define IS_WAITING_GET(flags) FLAGS_GET(flags, 0)
+#define IS_WAITING_SET_ON(flags) FLAGS_SET_ON(flags, 0)
+#define IS_WAITING_SET_OFF(flags) FLAGS_SET_OFF(flags, 0)
 
 bool BFLockIsValid(BFLock * _lock) {
 	if (_lock == NULL) return false;
 	else {
-		BFLock lock = *_lock;
-		if (lock == NULL) return false;
+		_BFLock * l = (_BFLock *) *_lock;
+		if (l == NULL) return false;
 	}
 	return true;
 }
@@ -59,8 +68,11 @@ int BFLockWait(BFLock * lock) {
 	else {
 		_BFLock * l = (_BFLock *) *lock;
 		if (pthread_mutex_lock(&l->mutex)) return 202;
-		else if (pthread_cond_wait(&l->cond, &l->mutex)) return 3;
-		else if (pthread_mutex_unlock(&l->mutex)) return 4;
+		
+		IS_WAITING_SET_ON(l->flags);
+
+		if (pthread_cond_wait(&l->cond, &l->mutex)) return 3;
+		if (pthread_mutex_unlock(&l->mutex)) return 4;
 	}
 
 	return 0;
@@ -79,6 +91,8 @@ int BFLockTimedWait(BFLock * lock, BFTime t) {
 
 		if (pthread_mutex_lock(&l->mutex)) return 203;
 	}
+	
+	IS_WAITING_SET_ON(l->flags);
 
 	// Check if wait timedout
 	int result = 0;
@@ -97,8 +111,9 @@ int BFLockRelease(BFLock * lock) {
 	else {
 		_BFLock * l = (_BFLock *) *lock;
 		if (pthread_mutex_lock(&l->mutex)) return 204;
-		else if (pthread_cond_signal(&l->cond)) return 3;
-		else if (pthread_mutex_unlock(&l->mutex)) return 4;
+		IS_WAITING_SET_OFF(l->flags);
+		if (pthread_cond_signal(&l->cond)) return 3;
+		if (pthread_mutex_unlock(&l->mutex)) return 4;
 	}
 
 	return 0;
@@ -120,5 +135,16 @@ int BFLockUnlock(BFLock * lock) {
 		if (pthread_mutex_unlock(&l->mutex)) return 206;
 	}
 	return 0;
+}
+
+bool BFLockIsWaiting(BFLock * lock) {
+	if (lock == 0) return false;
+	else {
+		_BFLock * l = (_BFLock *) *lock;
+		pthread_mutex_lock(&l->mutex);
+		bool res = IS_WAITING_GET(l->flags);
+		pthread_mutex_unlock(&l->mutex);
+		return res;
+	}
 }
 

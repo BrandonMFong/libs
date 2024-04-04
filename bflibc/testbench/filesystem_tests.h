@@ -8,6 +8,7 @@
 
 #include "clib_tests.h"
 #include "stringutils.h"
+#include "free.h"
 #include <filesystem.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,6 +55,8 @@ int test_CalculateSizeForAvailability(void) {
 			printf("CalculateSizeForAvailability() returned %d\n", result);
 		}
 	}
+
+	BFFree(home);
 
 	PRINT_TEST_RESULTS(!result);
 	return result;

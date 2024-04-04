@@ -72,7 +72,8 @@ char ** BFStringCreateArrayFromString(const char * str, size_t * size, const cha
 	char * buf = BFStringCopyString(str);
 	char * tok = strtok(buf, delim);
 	while (tok) {
-		result = (char **) realloc(result, sizeof(char *) * (*size + 1));
+		const size_t newsize = *size + 1;
+		result = (char **) realloc(result, sizeof(char *) * newsize);
 
 		if (!result)
 			break;

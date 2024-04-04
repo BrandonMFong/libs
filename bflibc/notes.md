@@ -1,0 +1,1 @@
+- had a bug for a while in checksum.c. I was allocating digest buffers using the length of the variable instead using the variable value.

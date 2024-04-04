@@ -20,8 +20,8 @@ size_t BFChecksumGetDigestStringLength(BFChecksumTools * tools) {
 
 void BFChecksumDestroy(BFChecksumTools * tools) {
 	if (tools) {
-		BFFree(tools->context);
-		BFFree(tools->digest);
+		free(tools->context);
+		free(tools->digest);
 	}
 }
 
@@ -54,7 +54,7 @@ int BFChecksumCreate(BFChecksumTools * tools, BFChecksumType type) {
 				tools->digestLength = MD5_DIGEST_LENGTH;
 				if ((tools->context = malloc(sizeof(MD5_CTX))) == NULL) {
 					result = -1;
-				} else if ((tools->digest = malloc(sizeof(tools->digestLength))) == NULL) {
+				} else if ((tools->digest = malloc(sizeof(unsigned char) * tools->digestLength)) == NULL) {
 					result = -1;
 				} else if (MD5_Init(tools->context) == 0) {
 					result = -1;
@@ -66,7 +66,7 @@ int BFChecksumCreate(BFChecksumTools * tools, BFChecksumType type) {
 				tools->digestLength = SHA_DIGEST_LENGTH;
 				if ((tools->context = malloc(sizeof(SHA_CTX))) == NULL) {
 					result = -1;
-				} else if ((tools->digest = malloc(sizeof(tools->digestLength))) == NULL) {
+				} else if ((tools->digest = malloc(sizeof(unsigned char) * tools->digestLength)) == NULL) {
 					result = -1;
 				} else if (SHA1_Init(tools->context) == 0) {
 					result = -1;
@@ -78,7 +78,7 @@ int BFChecksumCreate(BFChecksumTools * tools, BFChecksumType type) {
 				tools->digestLength = SHA256_DIGEST_LENGTH;
 				if ((tools->context = malloc(sizeof(SHA256_CTX))) == NULL) {
 					result = -1;
-				} else if ((tools->digest = malloc(sizeof(tools->digestLength))) == NULL) {
+				} else if ((tools->digest = malloc(sizeof(unsigned char) * tools->digestLength)) == NULL) {
 					result = -1;
 				} else if (SHA256_Init(tools->context) == 0) {
 					result = -1;
@@ -90,7 +90,7 @@ int BFChecksumCreate(BFChecksumTools * tools, BFChecksumType type) {
 				tools->digestLength = SHA512_DIGEST_LENGTH;
 				if ((tools->context = malloc(sizeof(SHA512_CTX))) == NULL) {
 					result = -1;
-				} else if ((tools->digest = malloc(sizeof(tools->digestLength))) == NULL) {
+				} else if ((tools->digest = malloc(sizeof(unsigned char) * tools->digestLength)) == NULL) {
 					result = -1;
 				} else if (SHA512_Init(tools->context) == 0) {
 					result = -1;
