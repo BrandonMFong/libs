@@ -70,13 +70,13 @@ unsigned long long BFFileSystemDirectoryGetSizeUsed(const char * path, unsigned 
 					}
 				}
 			}
-               }
+		}
 
-               if (closedir(dir)) {
-                       error = !error ? 1 : error;
-                       BFErrorPrint("Could not close directory: '%s'", path);
-               }
-       }
+	   if (closedir(dir)) {
+			   error = !error ? 1 : error;
+			   BFErrorPrint("Could not close directory: '%s'", path);
+	   }
+	}
 
        return result;
 }
@@ -272,6 +272,8 @@ int BFFileSystemRemoveAll(const char * path) {
 				error = remove(path); // remove directory
 			}
 		}
+
+		closedir(dir);
 
 		return error;
 	}

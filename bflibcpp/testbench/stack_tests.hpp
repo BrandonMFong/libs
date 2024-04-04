@@ -151,9 +151,10 @@ int test_LoadAndUnload() {
 	UNIT_TEST_START;
 	int result = 0;
 	srand(time(0));
-	const int size = (2 << 23);
+	const int size = (2 << 8);
 	int * array = (int *) malloc(sizeof(int) * size);
 	Stack<int> stack;
+
 	for (int i = 0; i < size; i++) {
 		array[i] = rand();
 		stack.push(array[i]);

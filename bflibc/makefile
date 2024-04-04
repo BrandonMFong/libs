@@ -77,8 +77,9 @@ d-clean:
 ### TESTS ###
 T_BFLIBC_OUT = test-bflibc
 T_BIN_PATH = bin/test/bflibc
+#T_SANITIZE_ADDR = -fsanitize=address
 
-test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS) $(BF_LIB_C_UUID_FLAGS)
+test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS) $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
 test: CC = @gcc
 test: AR = @ar
 test: COPY = @cp
