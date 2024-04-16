@@ -7,6 +7,7 @@
 #define SOCKET_BUFFER_HPP
 
 #include <bflibcpp/object.hpp>
+#include <sys/types.h>
 
 class SocketConnection;
 
@@ -20,7 +21,7 @@ public:
 	size_t size() const;
 private:
 	void * _data;
-	size_t _size;
+	ssize_t _size;
 };
 
 #endif // SOCKET_BUFFER_HPP
