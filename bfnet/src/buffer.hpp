@@ -11,6 +11,9 @@
 
 class SocketConnection;
 
+namespace BF {
+namespace Net {
+
 class SocketBuffer : public BF::Object {
 	friend class SocketConnection;
 public:
@@ -23,6 +26,9 @@ private:
 	void * _data;
 	ssize_t _size;
 };
+
+}
+}
 
 #endif // SOCKET_BUFFER_HPP
 

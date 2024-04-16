@@ -15,6 +15,9 @@ class Client;
 class Client;
 class SocketBuffer;
 
+namespace BF {
+namespace Net {
+
 class SocketConnection : public BF::Object {
 	friend class Socket;
 	friend class Server;
@@ -82,6 +85,9 @@ private:
 	 */
 	Socket * _sktref;
 };
+
+}
+}
 
 #endif // CONNECTION_HPP
 

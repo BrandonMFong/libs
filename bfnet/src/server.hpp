@@ -12,6 +12,9 @@ extern "C" {
 #include <bflibc/typethreadid.h>
 }
 
+namespace BF {
+namespace Net {
+
 class Server : public Socket {
 public:
 	Server();
@@ -34,6 +37,9 @@ private:
 	 */
 	BFThreadAsyncID _pollt;
 };
+
+}
+}
 
 #endif // SERVER_HPP
 

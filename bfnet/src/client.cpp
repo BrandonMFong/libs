@@ -14,17 +14,17 @@
 #include "connection.hpp"
 #include <arpa/inet.h>
 
-Client::Client() {
+BF::Net::Client::Client() {
 }
 
-Client::~Client() {
+BF::Net::Client::~Client() {
 }
 
-const char Client::mode() const {
+const char BF::Net::Client::mode() const {
 	return SOCKET_MODE_CLIENT;
 }
 
-void Client::init(void * in) {
+void BF::Net::Client::init(void * in) {
 	Client * c = (Client *) in;
 
 	BFRetain(c);
@@ -68,7 +68,7 @@ void Client::init(void * in) {
 	BFRelease(c);
 }
 
-int Client::_start() {
+int BF::Net::Client::_start() {
 	BFThreadAsyncID tid = BFThreadAsync(Client::init, this);
 	BFThreadAsyncDestroy(tid);
 	
@@ -76,7 +76,7 @@ int Client::_start() {
 	return error;
 }
 
-int Client::_stop() {
+int BF::Net::Client::_stop() {
 	return 0;
 }
 

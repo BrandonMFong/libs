@@ -12,6 +12,9 @@
 class SocketConnection;
 class Socket;
 
+namespace BF {
+namespace Net {
+
 class SocketEnvelope : public BF::Object {
 	friend class Socket;
 public:
@@ -24,6 +27,9 @@ private:
 	SocketConnection * _sc;
 	SocketBuffer _buf;
 };
+
+}
+}
 
 #endif // ENVELOPE_HPP
 
