@@ -10,10 +10,13 @@
 #include <bflibcpp/atomic.hpp>
 #include <uuid/uuid.h>
 
-class Socket;
-class Client;
-class Client;
-class SocketBuffer;
+namespace BF {
+namespace Net {
+	class Socket;
+	class Client;
+	class SocketBuffer;
+}
+}
 
 namespace BF {
 namespace Net {

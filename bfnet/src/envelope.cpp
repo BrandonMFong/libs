@@ -8,12 +8,15 @@
 #include "buffer.hpp"
 #include <bflibcpp/bflibcpp.hpp>
 
-BF::Net::SocketEnvelope::SocketEnvelope(SocketConnection * sc, size_t bufsize) : _buf(0, bufsize) {
+using namespace BF;
+using namespace BF::Net;
+
+SocketEnvelope::SocketEnvelope(SocketConnection * sc, size_t bufsize) : _buf(0, bufsize) {
 	this->_sc = sc;
 	BFRetain(this->_sc);
 }
 
-BF::Net::SocketEnvelope::~SocketEnvelope() {
+SocketEnvelope::~SocketEnvelope() {
 	BFRelease(this->_sc);
 }
 

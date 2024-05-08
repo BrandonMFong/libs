@@ -9,10 +9,10 @@
 #include <bflibcpp/object.hpp>
 #include <sys/types.h>
 
-class SocketConnection;
-
 namespace BF {
 namespace Net {
+
+class SocketConnection;
 
 class SocketBuffer : public BF::Object {
 	friend class SocketConnection;

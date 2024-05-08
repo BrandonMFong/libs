@@ -17,6 +17,7 @@
 #include <bflibcpp/bflibcpp.hpp>
 #include <bflibc/bflibc.h>
 
+using namespace BF;
 using namespace BF::Net;
 
 Socket * _sharedSocket = NULL;
@@ -25,7 +26,7 @@ Socket * BF::Net::Socket::shared() {
 	return _sharedSocket;
 }
 
-BF::Net::Socket::Socket() { 
+Socket::Socket() { 
 	this->_cbinstream = NULL;
 	this->_cbnewconn = NULL;
 
@@ -109,7 +110,7 @@ const char * BF::Net::Socket::ipaddr() const {
 class InStreamTools : public Object {
 public:
 	BF::Net::SocketConnection * mainConnection;
-	SBF::Net::ocket * socket;
+	BF::Net::Socket * socket;
 };
 
 void BF::Net::Socket::inStream(void * in) {
