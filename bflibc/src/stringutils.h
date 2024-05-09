@@ -22,5 +22,10 @@ char * BFStringCopyString(const char * string, int * err);
  */
 void BFStringGetRandomUUIDString(char * uuidString);
 
+/**
+ * returns null if there was an error. Caller owns memory, use BFFree
+ */
+char * BFStringCreateFromFile(const char * file);
+
 #endif // STRING_UTILS_H
 

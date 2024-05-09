@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <uuid/uuid.h>
 
 int test_CopyString(void) {
 	int result = 0;
@@ -59,6 +60,27 @@ int test_uuidGen(void) {
 	return result;
 }
 
+void TestStringUtilsRandomFileCreate() {
+
+}
+
+void TestStringUtilsRandomFileDelete() {
+
+}
+
+int test_readingFile(void) {
+	UNIT_TEST_START;
+	int result = 0;
+
+	TestStringUtilsRandomFileCreate();
+	
+	TestStringUtilsRandomFileDelete();
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+
 void stringutils_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -66,6 +88,7 @@ void stringutils_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_CopyString, p, f);
 	LAUNCH_TEST(test_uuidGen, p, f);
+	LAUNCH_TEST(test_readingFile, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
