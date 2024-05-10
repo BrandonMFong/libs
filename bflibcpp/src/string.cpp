@@ -54,6 +54,7 @@ char * String::cStringCopy() const {
 int String::readFromFile(const char * file) {
 	if (!file) return 1;
 	char * buf = BFStringCreateFromFile(file);
+	this->set(buf, strlen(buf) + 1);
 
 	BFFree(buf);
 

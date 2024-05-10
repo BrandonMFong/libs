@@ -395,6 +395,35 @@ int test_creatingstringfromformat() {
 	return result;
 }
 
+#define TEST_STRING_RANDOM_FILE "/tmp/string_tests_random_file"
+#define TEST_STRING_RANDOM_TEXT "abcdefghijklmnopqrstuvwxz"
+#define TEST_STRING_RANDOM_TEXT_OCC  (1024 * 20)
+
+void TestStringRandomFileCreate() {
+	FILE * f = fopen(TEST_STRING_RANDOM_FILE, "w");
+
+	const char * buf = TEST_STRING_RANDOM_TEXT;
+	int max = TEST_STRING_RANDOM_TEXT_OCC;
+	while (max--) {
+		fwrite(buf, sizeof(char), strlen(buf), f);
+	}
+
+	fclose(f);
+}
+
+void TestStringRandomFileDelete() {
+	remove(TEST_STRING_RANDOM_FILE);
+}
+
+int test_readingFromFile() {
+	UNIT_TEST_START;
+	int result = 0;
+	TestStringRandomFileCreate();
+	TestStringRandomFileDelete();
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -415,6 +444,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_addandremove, p, f);
 	LAUNCH_TEST(test_stringtoint, p, f);
 	LAUNCH_TEST(test_creatingstringfromformat, p, f);
+	LAUNCH_TEST(test_readingFromFile, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
