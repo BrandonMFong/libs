@@ -50,6 +50,11 @@ PUBLIC:
 	 */
 	int copy(String & s) const;
 
+	/**
+	 * loads file content into string
+	 */
+	int readFromFile(const char * file);
+
 // Overloading operators
 PUBLIC:
 	friend std::ostream& operator<<(std::ostream& out, const String & s) {

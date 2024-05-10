@@ -52,6 +52,15 @@ char * String::cStringCopy() const {
 	return BFStringCopyString((const char *) this->address(), 0);
 }
 
+int String::readFromFile(const char * file) {
+	if (!file) return 1;
+	char * buf = BFStringCreateFromFile(file);
+
+	BFFree(buf);
+
+	return 0;
+}
+
 int String::copy(String & s) const {
 	s.copyFromArray(this);
 	return this->count() == s.count() ? 0 : 1;
