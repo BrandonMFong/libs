@@ -20,11 +20,18 @@ extern "C" {
 
 #define SOCKET_IP4_ADDR_STRLEN 16
 
-class SocketConnection;
-class SocketEnvelope;
+namespace BF {
+	namespace Net {
+		class SocketConnection;
+		class SocketEnvelope;
+	}
+}
+
+namespace BF {
+namespace Net {
 
 class Socket : public BF::Object {
-	friend class SocketConnection;
+	friend class BF::Net::SocketConnection;
 public: 
 	static Socket * shared();
 
@@ -51,12 +58,12 @@ public:
 	 *
 	 * callback owner MUST copy buffer data because the data will be lost when it returns
 	 */
-	void setInStreamCallback(void (* cb)(SocketEnvelope * envelope));
+	void setInStreamCallback(void (* cb)(BF::Net::SocketEnvelope * envelope));
 
 	/**
 	 * see _cbnewconn
 	 */
-	void setNewConnectionCallback(int (* cb)(SocketConnection * sc));
+	void setNewConnectionCallback(int (* cb)(BF::Net::SocketConnection * sc));
 
 	/**
 	 * buffer length for incoming data
@@ -81,12 +88,12 @@ protected:
 	 *
 	 * 'sd' : socket descriptor
 	 */
-	int startInStreamForConnection(SocketConnection * sc);
+	int startInStreamForConnection(BF::Net::SocketConnection * sc);
 
 	/**
 	 * array of devices we are connected to
 	 */
-	BF::Atomic<BF::List<SocketConnection *>> _connections;
+	BF::Atomic<BF::List<BF::Net::SocketConnection *>> _connections;
 
 	/**
 	 * callback used, if given, when a new connection is made
@@ -94,7 +101,7 @@ protected:
 	 * sc : keep a record of this if you want to send data to the 
 	 * device on the other end.  You do not own memory
 	 */
-	int (* _cbnewconn)(SocketConnection * sc);
+	int (* _cbnewconn)(BF::Net::SocketConnection * sc);
 
 private:
 
@@ -104,7 +111,7 @@ private:
 	 *
 	 * envelope : retain if you plan to use after callback returns
 	 */
-	void (* _cbinstream)(SocketEnvelope * envelope);
+	void (* _cbinstream)(BF::Net::SocketEnvelope * envelope);
 
 	/**
 	 * receives packets and puts them in a queue
@@ -139,6 +146,9 @@ private:
 	uint16_t _portnum;
 	char _ip4addr[SOCKET_IP4_ADDR_STRLEN];
 };
+
+}
+}
 
 #endif // SOCKET_HPP
 

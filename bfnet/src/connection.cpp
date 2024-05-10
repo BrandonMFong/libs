@@ -17,39 +17,39 @@
 
 using namespace BF;
 
-void SocketConnection::ReleaseConnection(SocketConnection * sc) {
+void BF::Net::SocketConnection::ReleaseConnection(SocketConnection * sc) {
 	BFRelease(sc);
 }
 
-SocketConnection::SocketConnection(int sd, Socket * sktref) : Object() {
+BF::Net::SocketConnection::SocketConnection(int sd, Socket * sktref) : Object() {
 	this->_sd = sd;
 	this->_sktref = sktref;
 	BFRetain(this->_sktref);
 	uuid_generate_random(this->_uuid);
 }
 
-SocketConnection::~SocketConnection() {
+BF::Net::SocketConnection::~SocketConnection() {
 	BFRelease(this->_sktref);
 }
 
-void SocketConnection::closeConnection() {
+void BF::Net::SocketConnection::closeConnection() {
 	shutdown(this->_sd, SHUT_RDWR);
 	close(this->_sd);
 }
 
-bool SocketConnection::isready() {
+bool BF::Net::SocketConnection::isready() {
 	return this->_isready.get();
 }
 
-const char SocketConnection::mode() {
+const char BF::Net::SocketConnection::mode() {
 	return this->_sktref->mode();
 }
 
-void SocketConnection::getuuid(uuid_t uuid) {
+void BF::Net::SocketConnection::getuuid(uuid_t uuid) {
 	memcpy(uuid, this->_uuid, sizeof(uuid_t));
 }
 
-int SocketConnection::queueData(const void * data, size_t size) {
+int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
 	if (!data) return -2;
 
 	// make envelope
@@ -61,7 +61,7 @@ int SocketConnection::queueData(const void * data, size_t size) {
 	return error;
 }
 
-int SocketConnection::sendData(const SocketBuffer * buf) {
+int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 	if (!buf)
 		return 1;
 	
@@ -70,7 +70,7 @@ int SocketConnection::sendData(const SocketBuffer * buf) {
 	return 0;
 }
 
-int SocketConnection::recvData(SocketBuffer * buf) {
+int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 	if (!buf)
 		return 1;
 

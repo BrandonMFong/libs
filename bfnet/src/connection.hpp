@@ -10,10 +10,16 @@
 #include <bflibcpp/atomic.hpp>
 #include <uuid/uuid.h>
 
-class Socket;
-class Client;
-class Client;
-class SocketBuffer;
+namespace BF {
+namespace Net {
+	class Socket;
+	class Client;
+	class SocketBuffer;
+}
+}
+
+namespace BF {
+namespace Net {
 
 class SocketConnection : public BF::Object {
 	friend class Socket;
@@ -82,6 +88,9 @@ private:
 	 */
 	Socket * _sktref;
 };
+
+}
+}
 
 #endif // CONNECTION_HPP
 

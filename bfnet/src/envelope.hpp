@@ -9,6 +9,9 @@
 #include <bflibcpp/object.hpp>
 #include "buffer.hpp"
 
+namespace BF {
+namespace Net {
+
 class SocketConnection;
 class Socket;
 
@@ -24,6 +27,9 @@ private:
 	SocketConnection * _sc;
 	SocketBuffer _buf;
 };
+
+}
+}
 
 #endif // ENVELOPE_HPP
 

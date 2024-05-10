@@ -14,20 +14,20 @@
 #include "connection.hpp"
 #include <arpa/inet.h>
 
-Server::Server() : Socket() {
+BF::Net::Server::Server() : Socket() {
 	this->_mainSocket = 0;
 	this->_pollt = NULL;
 }
 
-Server::~Server() {
+BF::Net::Server::~Server() {
 	BFThreadAsyncDestroy(this->_pollt);
 }
 
-const char Server::mode() const {
+const char BF::Net::Server::mode() const {
 	return SOCKET_MODE_SERVER;
 }
 
-void Server::init(void * in) {
+void BF::Net::Server::init(void * in) {
 	Server * s = (Server *) in;
 
 	BFRetain(s);
@@ -55,7 +55,7 @@ void Server::init(void * in) {
 	BFRelease(s);
 }
 
-void Server::pollthread(void * in) {
+void BF::Net::Server::pollthread(void * in) {
 	Server * s = (Server *) in;
 	BFRetain(s);
 
@@ -87,14 +87,14 @@ void Server::pollthread(void * in) {
 	BFRelease(s);
 }
 
-int Server::_start() {
+int BF::Net::Server::_start() {
 	BFThreadAsyncID tid = BFThreadAsync(Server::init, this);
 	BFThreadAsyncDestroy(tid);
 	
 	return 0;
 }
 
-int Server::_stop() {
+int BF::Net::Server::_stop() {
 	shutdown(this->_mainSocket, SHUT_RDWR);
 	close(this->_mainSocket);
 

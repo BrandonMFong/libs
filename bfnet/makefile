@@ -39,6 +39,8 @@ R_CPP_OBJ_FILES = ../bflibcpp/build/release/*.o
 
 release: r-setup build-release-c build-release-cpp $(R_BIN_PATH)/$(R_BFLIBCPP_OUT)
 
+all: release debug
+
 build-release-c:
 	@cd ../bflibc/ && make release
 
@@ -65,7 +67,7 @@ D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -Ibin/debug/ -I../bflibc/bin/debug -I../bfli
 D_BUILD_PATH = build/debug
 D_BIN_PATH = bin/debug/$(LIB_NAME)
 D_BFLIBCPP_OUT = lib$(LIB_NAME)-debug.a
-D_CPP_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/%.o, $(CPP_OBJECTS))
+D_NET_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/%.o, $(CPP_OBJECTS))
 D_C_OBJ_FILES = ../bflibc/build/debug/*.o
 D_CPP_OBJ_FILES = ../bflibcpp/build/debug/*.o
 
@@ -98,7 +100,7 @@ T_BIN_PATH = bin/test/$(LIB_NAME)
 #T_SANITIZE_ADDR = -fsanitize=address
 
 test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
-test: CPP = @g++
+#test: CPP = @g++
 test: AR = @ar
 test: CP = @cp
 test: RM = @rm

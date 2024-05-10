@@ -12,6 +12,9 @@ extern "C" {
 #include <bflibc/typethreadid.h>
 }
 
+namespace BF {
+namespace Net {
+
 class Client : public Socket {
 public:
 	Client();
@@ -24,6 +27,9 @@ protected:
 	int _stop();
 private:
 };
+
+}
+}
 
 #endif // CLIENT_HPP
 

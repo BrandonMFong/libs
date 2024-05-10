@@ -9,6 +9,9 @@
 #include <bflibcpp/object.hpp>
 #include <sys/types.h>
 
+namespace BF {
+namespace Net {
+
 class SocketConnection;
 
 class SocketBuffer : public BF::Object {
@@ -23,6 +26,9 @@ private:
 	void * _data;
 	ssize_t _size;
 };
+
+}
+}
 
 #endif // SOCKET_BUFFER_HPP
 

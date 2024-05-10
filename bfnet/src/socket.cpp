@@ -18,10 +18,11 @@
 #include <bflibc/bflibc.h>
 
 using namespace BF;
+using namespace BF::Net;
 
 Socket * _sharedSocket = NULL;
 
-Socket * Socket::shared() {
+Socket * BF::Net::Socket::shared() {
 	return _sharedSocket;
 }
 
@@ -41,7 +42,7 @@ Socket::Socket() {
 	_sharedSocket = this;
 }
 
-Socket::~Socket() {
+BF::Net::Socket::~Socket() {
 	this->_tidin.lock();
 	List<BFThreadAsyncID>::Node * n = this->_tidin.unsafeget().first();
 	for (; n != NULL; n = n->next()) {
@@ -52,7 +53,7 @@ Socket::~Socket() {
 	BFLockDestroy(&this->_outqlock);
 }
 
-Socket * Socket::create(const char mode, const char * ipaddr, uint16_t port, int * err) {
+Socket * BF::Net::Socket::create(const char mode, const char * ipaddr, uint16_t port, int * err) {
 	Socket * result = NULL;
 	int error = 0;
 
@@ -81,23 +82,23 @@ Socket * Socket::create(const char mode, const char * ipaddr, uint16_t port, int
 	return result;
 }
 
-void Socket::setBufferSize(size_t size) {
+void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
-void Socket::setNewConnectionCallback(int (* cb)(SocketConnection * sc)) {
+void BF::Net::Socket::setNewConnectionCallback(int (* cb)(BF::Net::SocketConnection * sc)) {
 	this->_cbnewconn = cb;
 }
 
-void Socket::setInStreamCallback(void (* cb)(SocketEnvelope * envelope)) {
+void BF::Net::Socket::setInStreamCallback(void (* cb)(BF::Net::SocketEnvelope * envelope)) {
 	this->_cbinstream = cb;
 }
 
-uint16_t Socket::port() const {
+uint16_t BF::Net::Socket::port() const {
 	return this->_portnum;
 }
 
-const char * Socket::ipaddr() const {
+const char * BF::Net::Socket::ipaddr() const {
 	return this->_ip4addr;
 }
 
@@ -108,11 +109,11 @@ const char * Socket::ipaddr() const {
  */
 class InStreamTools : public Object {
 public:
-	SocketConnection * mainConnection;
-	Socket * socket;
+	BF::Net::SocketConnection * mainConnection;
+	BF::Net::Socket * socket;
 };
 
-void Socket::inStream(void * in) {
+void BF::Net::Socket::inStream(void * in) {
 	InStreamTools * tools = (InStreamTools *) in; // we own memory
 	SocketConnection * sc = tools->mainConnection;
 	Socket * skt = tools->socket;
@@ -140,7 +141,7 @@ void Socket::inStream(void * in) {
 }
 
 // called by subclasses whenever they get a new connection
-int Socket::startInStreamForConnection(SocketConnection * sc) {
+int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) {
 	if (!sc) return 1;
 
 	InStreamTools * tools = new InStreamTools;
@@ -153,12 +154,12 @@ int Socket::startInStreamForConnection(SocketConnection * sc) {
 	return 0;
 }
 
-int Socket::start() {
+int BF::Net::Socket::start() {
 	this->_start();
 	return 0;
 }
 
-int Socket::stop() {
+int BF::Net::Socket::stop() {
 	int error = 0;
 
 	// shutdown connections
