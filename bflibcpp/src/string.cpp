@@ -4,6 +4,7 @@
  */
 
 #include "string.hpp"
+#include <stdexcept>
 #include <stdarg.h>
 
 extern "C" {
@@ -22,6 +23,14 @@ String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
 }
 
+String::String(long int nullstr) : String((int) nullstr) {}
+
+String::String(int nullstr) {
+	if (nullstr != 0) throw std::invalid_argument("cannot set BF::String object to a nonzero integer");
+
+	this->set((char *) "", 1);
+}
+
 String * String::createWithFormat(const char * format, ...) {
 	va_list valist;
 	va_start(valist, format);
@@ -36,6 +45,20 @@ String::~String() {}
 
 const char * String::cString() const {
 	return (const char *) this->address();
+}
+
+char * String::cStringCopy() const {
+	return BFStringCopyString((const char *) this->address());
+}
+
+int String::readFromFile(const char * file) {
+	if (!file) return 1;
+	char * buf = BFStringCreateFromFile(file);
+	this->set(buf, strlen(buf) + 1);
+
+	BFFree(buf);
+
+	return 0;
 }
 
 int String::copy(String & s) const {

@@ -226,6 +226,10 @@ PUBLIC:
 	
 	virtual const RBNode * root() const { return (const RBNode *) this->BinTree<T,S>::root(); }
 
+	virtual const RBNode * getNodeForObject(T obj) {
+		return (const RBNode *) this->BinTree<T,S>::getNodeForObject(obj, this->root());
+	}
+
 	/**
 	 * inserts object into tree
 	 */
@@ -254,7 +258,7 @@ PUBLIC:
 	 * 	 When a black node is deleted and replaced by a black child, the child is marked as double black
 	 */	
 	virtual int remove(T obj) {
-		RBNode * node = (RBNode *) this->getNodeForObject(obj, (typename BinTree<T,S>::BinNode *) this->root());
+		RBNode * node = (RBNode *) this->BinTree<T,S>::getNodeForObject(obj, (typename BinTree<T,S>::BinNode *) this->root());
 
 		if (!node) return 101;
 		else return this->deleteNode(node);

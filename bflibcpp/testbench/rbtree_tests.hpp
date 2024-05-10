@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <list.hpp>
+#include <string.hpp>
+#include <math.h>
 
 using namespace BF;
 
@@ -747,55 +749,54 @@ int test_SearchingRBTree() {
 	return result;
 }
 
+int test_insertingStrings(void) {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int numtests = 2 << 4;
+	while (!result && numtests) {
+		RBTree<String> t;
+		char buf[4];
+		for (int i = 0x61; i <= 0x7a; i++) {
+			for (int j = 0x61; j <= 0x7a; j++) {
+				for (int k = 0x61; k <= 0x7a; k++) {
+					snprintf(buf, 4, "%c%c%c", i, j, k);
+					String str = buf;
+					t.insert(str);
+				}
+			}
+		}
+		int expsize = pow(0x7a - 0x60, 3);
+		if (t.count() != expsize) result = 1;
+
+		numtests--;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void rbtree_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_RBInitializer()) p++;
-	else f++;
-
-	if (!test_AccessingNodeHierarchy()) p++;
-	else f++;
-
-	if (!test_NodeColors()) p++;
-	else f++;
-
-	if (!test_RotationCases()) p++;
-	else f++;
-
-	if (!test_NodeLevels()) p++;
-	else f++;
-
-	if (!test_InsertingLLCase()) p++;
-	else f++;
-
-	if (!test_InsertingLRCase()) p++;
-	else f++;
-
-	if (!test_InsertingRRCase()) p++;
-	else f++;
-
-	if (!test_InsertingRLCase()) p++;
-	else f++;
-
-	if (!test_RBTreeChecker()) p++;
-	else f++;
-
-	if (!test_RBTreeMax()) p++;
-	else f++;
-
-	if (!test_RBTreeMin()) p++;
-	else f++;
-
-	if (!test_RBRemove()) p++;
-	else f++;
-
-	if (!test_RBTreeCount()) p++;
-	else f++;
-
-	if (!test_SearchingRBTree()) p++;
-	else f++;
+	LAUNCH_TEST(test_RBInitializer,p, f);
+	LAUNCH_TEST(test_AccessingNodeHierarchy,p, f);
+	LAUNCH_TEST(test_NodeColors,p, f);
+	LAUNCH_TEST(test_RotationCases,p, f);
+	LAUNCH_TEST(test_NodeLevels,p, f);
+	LAUNCH_TEST(test_InsertingLLCase,p, f);
+	LAUNCH_TEST(test_InsertingLRCase,p, f);
+	LAUNCH_TEST(test_InsertingRRCase,p, f);
+	LAUNCH_TEST(test_InsertingRLCase,p, f);
+	LAUNCH_TEST(test_RBTreeChecker,p, f);
+	LAUNCH_TEST(test_RBTreeMax,p, f);
+	LAUNCH_TEST(test_RBTreeMin,p, f);
+	LAUNCH_TEST(test_RBRemove,p, f);
+	LAUNCH_TEST(test_RBTreeCount,p, f);
+	LAUNCH_TEST(test_SearchingRBTree,p, f);
+	LAUNCH_TEST(test_insertingStrings,p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
