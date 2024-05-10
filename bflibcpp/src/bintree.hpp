@@ -21,7 +21,7 @@ namespace BF {
  * Left most node is the least value comparison
  */
 template <typename T, typename S = int> class BinTree : public Object {
-PROTECTED:
+PUBLIC:
 	// TODO: rename BinNode to Node
 	class BinNode : public Object {
 		friend class BinTree<T,S>;
@@ -198,8 +198,6 @@ PROTECTED:
 		BinNode * _left;
 		BinNode * _right;
 	};
-
-PUBLIC:
 
 	/**
 	 * Iterates through the nodes in tree to return their objects
@@ -415,7 +413,61 @@ PUBLIC:
 		return result;
 	}
 
+	/**
+	 * Returns nonnull pointer to BinNode
+	 *
+	 * Returns NULL if node with obj could not
+	 * be found
+	 *
+	 * Caller does not own node
+	 */
+	virtual const BinNode * getNodeForObject(T obj) {
+		return this->getNodeForObject(obj, this->root());
+	}
+
+	/**
+	 * If the _compare function pointer was not set, then 
+	 * we will default by comparing its literal value
+	 *
+	 * 0xFFFFFFFF returned if comparison errored
+	 *
+	 * a == b -> 0
+	 * a < b -> ret < 0
+	 * a > b -> ret > 0
+	 */
+	int runCompare(T a, T b) const {
+		if (this->_compare) return this->_compare(a, b);
+		else {
+			if (a == b) return 0;
+			else if (a < b) return -1;
+			else if (a > b) return 1;
+			else return ~0;
+		}
+	}
+
 PROTECTED:
+	
+	/**
+	 * Returns nonnull pointer to BinNode
+	 *
+	 * Returns NULL if node with obj could not
+	 * be found
+	 *
+	 * TODO: remove recursion
+	 */
+	BinNode * getNodeForObject(T obj, BinNode * node) {
+		if (!node) return NULL;
+	
+		int cmp = this->runCompare(node->_obj, obj);
+		if (cmp < 0) {
+			return this->getNodeForObject(obj, node->_right);
+		} else if (cmp > 0) {
+			return this->getNodeForObject(obj, node->_left);
+		} else {
+			return node;
+		}
+		return NULL;
+	}
 
 	/// Root accessors
 	BinNode ** rootAddr() { return (BinNode **) &this->_root; }
@@ -444,29 +496,6 @@ PROTECTED:
 
 	BinNode * getNodeParent(const BinNode * node) { return node->_parent; }
 	void setNodeParent(BinNode * node, BinNode * parent) { node->_parent = parent; }
-	
-	/**
-	 * Returns nonnull pointer to BinNode
-	 *
-	 * Returns NULL if node with obj could not
-	 * be found
-	 *
-	 * TODO: remove recursion
-	 */
-	BinNode * getNodeForObject(T obj, BinNode * node) {
-		if (!node) return NULL;
-		
-		switch (this->runCompare(obj, node->_obj)) {
-		case 0:
-			return node;
-		case -1:
-			return this->getNodeForObject(obj, node->_left);
-		case 1:
-			return this->getNodeForObject(obj, node->_right);
-		default:
-			return NULL;
-		}
-	}
 
 	/**
 	 * Inserts newNode into parent's children
@@ -482,16 +511,11 @@ PROTECTED:
 		if (!newNode) return 1;
 		else if (!parent) return 2;
 		else {
-			switch (this->runCompare(newNode->_obj, parent->_obj)) {
-				case 0:
-				case -1:
-					newLocation = &parent->_left;
-					break;
-				case 1:
-					newLocation = &parent->_right;
-					break;
-				default:
-					return 3;
+			int cmp = this->runCompare(newNode->_obj, parent->_obj);
+			if (cmp > 0) {
+				newLocation = &parent->_right;
+			} else {
+				newLocation = &parent->_left;
 			}
 		}
 
@@ -696,22 +720,6 @@ PROTECTED:
 PRIVATE:
 
 	/**
-	 * If the _compare function pointer was not set, then 
-	 * we will default by comparing its literal value
-	 *
-	 * 0xFFFFFFFF returned if comparison errored
-	 */
-	int runCompare(T a, T b) {
-		if (this->_compare) return this->_compare(a, b);
-		else {
-			if (a == b) return 0;
-			else if (a < b) return -1;
-			else if (a > b) return 1;
-			else return ~0;
-		}
-	}
-
-	/**
 	 * Traverses through tree to remove everything
 	 */
 	int removeAll(BinNode * node) {
@@ -760,8 +768,8 @@ PRIVATE:
 
 	/**
 	 * a1 == a2 -> 0
-	 * a1 < a2 -> -1
-	 * a1 > a2 -> 1
+	 * a1 < a2 -> ret < 0
+	 * a1 > a2 -> ret > 0
 	 */
 	int (* _compare) (T a1, T a2);
 

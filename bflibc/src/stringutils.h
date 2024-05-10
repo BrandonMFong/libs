@@ -30,6 +30,11 @@ char * BFStringCopyString(const char * string);
 void BFStringGetRandomUUIDString(char * uuidString);
 
 /**
+ * returns null if there was an error. Caller owns memory, use BFFree
+ */
+char * BFStringCreateFromFile(const char * file);
+
+/**
  * compares uuid0 with uuid1
  *
  * if params are null, undefined behavior will occur
