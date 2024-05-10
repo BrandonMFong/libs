@@ -419,6 +419,13 @@ int test_readingFromFile() {
 	UNIT_TEST_START;
 	int result = 0;
 	TestStringRandomFileCreate();
+	
+	String str;
+	str.readFromFile(TEST_STRING_RANDOM_FILE);
+	if (str.length() == 0) {
+		result = 1;
+	}
+
 	TestStringRandomFileDelete();
 	UNIT_TEST_END(!result, result);
 	return result;
