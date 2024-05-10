@@ -135,7 +135,7 @@ char * BFStringCreateBinaryStringForNumber(long long num, int byteSize, int * er
 	int bitSize = byteSize * 8;
 	int resultSize = bitSize + (bitSize % 4);
 	int error = 0;
-	char * result = (char *) malloc(resultSize);
+	char * result = (char *) malloc(resultSize + 1);
 
 	if (result == 0) {
 		error = 1;
@@ -147,6 +147,8 @@ char * BFStringCreateBinaryStringForNumber(long long num, int byteSize, int * er
 				result[i] = '0';
 			}
 		}
+
+		result[resultSize] = '\0';
 	}
 
 	if (err) *err = error;

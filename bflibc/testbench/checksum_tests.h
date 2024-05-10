@@ -7,7 +7,7 @@
 #define CHECKSUM_TESTS_H
 
 #include "clib_tests.h"
-#include <checksum.h>
+#include "checksum.h"
 #include <string.h>
 
 #define kBFChecksumTestString "Hello World!"
@@ -40,6 +40,7 @@ int checksumTest(BFChecksumType type, const char * in, const char * expected) {
 	}
 
 	free(dig);
+
 	BFChecksumDestroy(&tools);
 
 	return result;

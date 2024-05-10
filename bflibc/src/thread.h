@@ -7,6 +7,29 @@
 #define THREAD_H
 
 #include <stdbool.h>
+#include "typethreadid.h"
+
+/**
+ * returns the count of how many sync/async threads have been launched
+ * in current process
+ */
+int BFThreadGetStartedCount();
+
+/**
+ * resets the thread launch count
+ */
+void BFThreadResetStartedCount();
+
+/**
+ * returns the count of how many sync/async threads have been finished
+ * in current process
+ */
+int BFThreadGetStoppedCount();
+
+/**
+ * resets the thread stop count
+ */
+void BFThreadResetStoppedCount();
 
 /**
  * Launches thread and returns when thread terminates
@@ -18,13 +41,11 @@ int BFThreadSync(void (* callback)(void *), void * args);
  *
  * If you want to manage and query an async thread, please
  * consider using BFThreadAsync
+ *
+ * NOTICE: this funciton will do nothing
  */
+__attribute__((deprecated("detach state is now the default behavior. this function is no longer supported")))
 int BFThreadAsyncDetach(void (* callback)(void *), void * args);
-
-/**
- * Object that describes an async thread 
- */
-typedef void * BFThreadAsyncID;
 
 /**
  * Launches and detaches `callback` on a separate thread
@@ -33,29 +54,67 @@ typedef void * BFThreadAsyncID;
  *
  * us async id to query the async thread
  *
- * Caller owns return object
+ * To destroy use BFThreadAsyncIDDestroy
  */
 BFThreadAsyncID BFThreadAsync(void (* callback)(void *), void * args);
 
 /**
+ * true if we can safely use id
+ */
+bool BFThreadAsyncIDIsValid(BFThreadAsyncID);
+
+/**
+ * returns current thread id
+ *
+ * caller is not responsible for the memory
+ *
+ * returns 0 if there was an error
+ */
+const BFThreadAsyncID BFThreadAsyncGetID();
+
+/**
  * Releases BFThreadAsyncID
  */
-void BFThreadAsyncIDDestroy(BFThreadAsyncID in);
+void BFThreadAsyncDestroy(BFThreadAsyncID in);
 
 /**
  * returns the error code, if any, for BFThreadAsync
  */
-int BFThreadAsyncIDError(BFThreadAsyncID);
+int BFThreadAsyncError(BFThreadAsyncID);
 
 /**
  * true if callback from BFThreadAsync is still running
+ *
+ * thread safe.  you can use this function to poll the async
+ * thread if it's still running
  */
-bool BFThreadAsyncIDIsRunning(BFThreadAsyncID);
+bool BFThreadAsyncIsRunning(BFThreadAsyncID);
 
 /**
- * Cancels async thread
+ * Sets a flag that is readable 
+ *
+ * If called, `BFThreadAsyncIsCanceled` will always return true
+ *
+ * The result of the function is not reversible
  */
 int BFThreadAsyncCancel(BFThreadAsyncID);
+
+/**
+ * If thread has been canceled
+ *
+ * caller can safely call this on running thread
+ */
+bool BFThreadAsyncIsCanceled(BFThreadAsyncID);
+
+/**
+ * Waits for thread to finished if `BFThreadAsyncIsRunning` is true
+ *
+ * this will block function until thread is finished
+ *
+ * be careful when you call this.  be sure that you know the thread
+ * WILL end soon or else this will hang
+ */
+int BFThreadAsyncWait(BFThreadAsyncID);
 
 #endif // THREAD_H
 

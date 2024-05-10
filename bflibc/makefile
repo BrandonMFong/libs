@@ -24,7 +24,7 @@ CFLAGS += -Wall -I.
 #
 # All objects defined in headers should be copied to 
 # bin
-C_OBJECTS = filesystem coreutils stringutils bftime checksum thread lock
+C_OBJECTS = filesystem coreutils stringutils bftime checksum thread lock filewriter
 
 ### RELEASE ###
 R_CFLAGS = $(CFLAGS)
@@ -77,8 +77,9 @@ d-clean:
 ### TESTS ###
 T_BFLIBC_OUT = test-bflibc
 T_BIN_PATH = bin/test/bflibc
+#T_SANITIZE_ADDR = -fsanitize=address
 
-test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS) $(BF_LIB_C_UUID_FLAGS)
+test: D_CFLAGS += $(CFLAGS) -DTESTING -Isrc/ $(BF_LIB_C_CHECKSUM_FLAGS) $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
 test: CC = @gcc
 test: AR = @ar
 test: COPY = @cp

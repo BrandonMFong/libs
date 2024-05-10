@@ -87,12 +87,12 @@ int KeyStringCompare(const char * k1, const char * k2) {
 void KeyStringValueStringRetain(const char ** key, const char ** value) {
 	if (key) {
 		const char * k = *key;
-		*key = BFStringCopyString(k, NULL);
+		*key = BFStringCopyString(k);
 	}
 
 	if (value) {
 		const char * v = *value;
-		*value = BFStringCopyString(v, NULL);
+		*value = BFStringCopyString(v);
 	}
 }
 

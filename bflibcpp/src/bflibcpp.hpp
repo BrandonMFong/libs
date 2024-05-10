@@ -10,7 +10,10 @@ extern "C" {
 #include <bflibc/bflibc.h>
 }
 
+#include "object.hpp"
 #include "delete.hpp"
+#include "release.hpp"
+#include "retain.hpp"
 #include "access.hpp"
 #include "array.hpp"
 #include "list.hpp"
@@ -19,6 +22,7 @@ extern "C" {
 #include "string.hpp"
 #include "bintree.hpp"
 #include "rbtree.hpp"
+#include "atomic.hpp"
 
 #endif // CPPLIB_HPP
 

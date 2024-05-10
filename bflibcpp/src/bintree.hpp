@@ -8,6 +8,7 @@
 
 #include "access.hpp"
 #include "delete.hpp"
+#include "object.hpp"
 #include <iostream>
 #include "list.hpp"
 #include "stack.hpp"
@@ -19,10 +20,10 @@ namespace BF {
  *
  * Left most node is the least value comparison
  */
-template <typename T, typename S = int> class BinTree {
+template <typename T, typename S = int> class BinTree : public Object {
 PUBLIC:
 	// TODO: rename BinNode to Node
-	class BinNode {
+	class BinNode : public Object {
 		friend class BinTree<T,S>;
 	PUBLIC:
 		T object() const {
@@ -61,7 +62,7 @@ PUBLIC:
 		}
 
 	PROTECTED:
-		BinNode() {
+		BinNode() : Object() {
 			this->_obj = 0;
 			this->_left = 0;
 			this->_right = 0;
@@ -203,7 +204,7 @@ PUBLIC:
 	 *
 	 * https://www.geeksforgeeks.org/implementing-forward-iterator-in-bst/
 	 */
-	class Iterator {
+	class Iterator : public Object {
 		friend class BinTree<T,S>;
 	PUBLIC:
 		
@@ -253,7 +254,7 @@ PUBLIC:
 			}
 		}
 
-		Iterator() {}
+		Iterator() : Object() {}
 
 		/**
 		 * Assists the iterations
@@ -261,7 +262,7 @@ PUBLIC:
 		Stack<BinNode *> _st;
 	};
 
-	BinTree() {
+	BinTree() : Object() {
 		this->_root = NULL;
 		this->_compare = NULL;
 		this->_count = 0;
@@ -445,7 +446,15 @@ PUBLIC:
 	}
 
 PROTECTED:
-
+	
+	/**
+	 * Returns nonnull pointer to BinNode
+	 *
+	 * Returns NULL if node with obj could not
+	 * be found
+	 *
+	 * TODO: remove recursion
+	 */
 	BinNode * getNodeForObject(T obj, BinNode * node) {
 		if (!node) return NULL;
 	
@@ -487,7 +496,7 @@ PROTECTED:
 
 	BinNode * getNodeParent(const BinNode * node) { return node->_parent; }
 	void setNodeParent(BinNode * node, BinNode * parent) { node->_parent = parent; }
-	
+
 	/**
 	 * Inserts newNode into parent's children
 	 *
@@ -640,7 +649,6 @@ PROTECTED:
 		if (result == 0) {	
 			if (childCount == 0) {
 				// Right is null anyways
-				// result = node->replaceWithNode(node->left());
 				result = this->replaceNodeWithNode(node, node->left());
 			} else if (childCount == 1) {
 				result = this->replaceNodeWithTheOnlyChild(node);

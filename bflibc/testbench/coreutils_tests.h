@@ -70,6 +70,10 @@ int test_CreateBinaryStringFromNumber() {
 
 	string = BFStringCreateBinaryStringForNumber(a, sizeof(unsigned char), &result);
 
+	if (string == 0) {
+		result = 101;
+	}
+
 	if (result == 0) {
 		result = strcmp(string, "00001111");
 		free(string);
@@ -80,11 +84,14 @@ int test_CreateBinaryStringFromNumber() {
 		string = BFStringCreateBinaryStringForNumber(a, sizeof(unsigned char), &result);
 	}
 
+	if (string == 0) {
+		result = 102;
+	}
+
 	if (result == 0) {
 		result = strcmp(string, "11110000");
 		free(string);
 	}
-	
 	
 	PRINT_TEST_RESULTS(!result);
 	return result;

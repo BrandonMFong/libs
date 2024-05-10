@@ -70,13 +70,13 @@ unsigned long long BFFileSystemDirectoryGetSizeUsed(const char * path, unsigned 
 					}
 				}
 			}
-               }
+		}
 
-               if (closedir(dir)) {
-                       error = !error ? 1 : error;
-                       BFErrorPrint("Could not close directory: '%s'", path);
-               }
-       }
+	   if (closedir(dir)) {
+			   error = !error ? 1 : error;
+			   BFErrorPrint("Could not close directory: '%s'", path);
+	   }
+	}
 
        return result;
 }
@@ -174,7 +174,9 @@ char * BFFileSystemPathCopyHomePath(int * err) {
 	}
 
 	if (!error) {
-		result = BFStringCopyString(tempPath, &error);
+		result = BFStringCopyString(tempPath);
+		if (!result)
+			error = 2;
 	}
 
 	if (err != 0) {
@@ -270,6 +272,8 @@ int BFFileSystemRemoveAll(const char * path) {
 				error = remove(path); // remove directory
 			}
 		}
+
+		closedir(dir);
 
 		return error;
 	}
