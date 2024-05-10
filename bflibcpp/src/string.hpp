@@ -13,6 +13,7 @@ namespace BF {
 
 class String : protected Array<char, size_t> {
 PUBLIC:
+	virtual ~String();
 
 	/**
 	 * caller must release
@@ -23,10 +24,19 @@ PUBLIC:
 	String(const char * str);
 	String(char * str);
 	String(const String & str);
-	virtual ~String();
+
+	// both integer param constructors throw 
+	// std::invalid_argument if nullstr != 0
+	String(long int nullstr);
+	String(int nullstr);
 
 	// Returns raw c string
 	const char * cString() const;
+
+	// returns a copy of string
+	//
+	// caller must free()
+	char * cStringCopy() const;
 
 	/**
 	 * Struns strcmp() on this and s
@@ -44,6 +54,11 @@ PUBLIC:
 	 * s will have its own string to worry about
 	 */
 	int copy(String & s) const;
+
+	/**
+	 * loads file content into string
+	 */
+	int readFromFile(const char * file);
 
 	/**
 	 * Adds char c to the end of the string

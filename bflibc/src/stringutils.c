@@ -6,6 +6,7 @@
 #include "stringutils.h"
 #include "free.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -29,6 +30,33 @@ void BFStringGetRandomUUIDString(char * uuidString) {
 
 	uuid_generate_random(bin);
 	uuid_unparse_lower(bin, uuidString);
+}
+
+char * BFStringCreateFromFile(const char * file) {
+	if (!file)
+		return NULL;
+
+	FILE * f = fopen(file, "r");
+	if (!f)
+		return NULL;
+
+	// get size of file
+	fseek(f, 0, SEEK_END);
+	size_t filesize = ftell(f);
+	rewind(f);
+
+	// get buf the size of the file
+	char * buf = (char *) malloc(sizeof(char) * filesize);
+
+	// we will read a certain amount bytes at a time
+	char * tmp = buf; // using this to read
+	size_t bytesread = 0;
+	const size_t readsize = 2 << 10;
+	while ((bytesread = fread(tmp, sizeof(char), readsize, f)) > 0) {
+		tmp += bytesread; // shift the buffer to end of the read bytes
+	}
+
+	return buf;
 }
 
 int BFStringCompareUUID(const char * uuid0, const char * uuid1) {
