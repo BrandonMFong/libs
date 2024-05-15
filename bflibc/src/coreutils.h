@@ -10,10 +10,15 @@
 
 // MACROS
 
-#define kBFByteKiloByte 1024
-#define kBFByteMegaByte (long long) (kBFByteKiloByte * 1024)
-#define kBFByteGigaByte (long long) (kBFByteMegaByte * 1024)
-#define kBFByteTeraByte (long long) (kBFByteGigaByte * 1024)
+#define kBFByteKiloByte 1000
+#define kBFByteMegaByte (long long) (kBFByteKiloByte * kBFByteKiloByte)
+#define kBFByteGigaByte (long long) (kBFByteMegaByte * kBFByteKiloByte)
+#define kBFByteTeraByte (long long) (kBFByteGigaByte * kBFByteKiloByte)
+
+#define kBFByteKibiByte 1024
+#define kBFByteMebiByte (long long) (kBFByteKibiByte * kBFByteKibiByte)
+#define kBFByteGibiByte (long long) (kBFByteMebiByte * kBFByteKibiByte)
+#define kBFByteTebiByte (long long) (kBFByteGibiByte * kBFByteKibiByte)
 
 /**
  * Prints std error
@@ -24,10 +29,11 @@ void BFErrorPrint(const char * format, ...);
  * Creates a string that represents the byteSize
  *
  * outStr needs to be a valid string buffer that can accept at least 10 bytes of data
+ * options : ||||||||0=KiloByte, 1=KibiByte|
  *
  * returns 0 on success, anything else is an error
  */
-int BFByteGetString(unsigned long long byteSize, char * outStr);
+int BFByteGetString(unsigned long long byteSize, unsigned char options, char * outStr);
 
 /**
  * Sweeps the array to see of it contains the string specified by element
