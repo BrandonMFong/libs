@@ -40,13 +40,33 @@ int test_DoesStringArrayContain(void) {
 	return result;
 }
 
-int test_GetByteStringRepresentation(void) {
+int test_GetByteStringRepresentationUsingKilo(void) {
 	int result = 0;
 	char buf[20];
 
-	result = BFByteGetString(1024 * 1024, buf);
+	result = BFByteGetString(1000 * 1000, 0, buf);
 
-	const char * expected = "1.00 mb";
+	const char * expected = "1.00 MB";
+
+	if (result == 0) {
+		if (strcmp(expected, buf)) {
+			result = 1;
+			printf("%s != %s\n", expected, buf);
+		}
+	}
+
+	PRINT_TEST_RESULTS(!result);
+
+	return result;
+}
+
+int test_GetByteStringRepresentationUsingKibi(void) {
+	int result = 0;
+	char buf[20];
+
+	result = BFByteGetString(1024 * 1024, 1, buf);
+
+	const char * expected = "1.00 MiB";
 
 	if (result == 0) {
 		if (strcmp(expected, buf)) {
@@ -133,15 +153,12 @@ void coreutils_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_DoesStringArrayContain()) p++;
-	else f++;
-
-	if (!test_CreateBinaryStringFromNumber()) p++;
-	else f++;
-
-	if (!test_IndexOfStringInArray()) p++;
-	else f++;
-
+	LAUNCH_TEST(test_DoesStringArrayContain, p, f);
+	LAUNCH_TEST(test_CreateBinaryStringFromNumber, p, f);
+	LAUNCH_TEST(test_IndexOfStringInArray, p, f);
+	LAUNCH_TEST(test_GetByteStringRepresentationUsingKibi, p, f);
+	LAUNCH_TEST(test_GetByteStringRepresentationUsingKilo, p, f);
+	
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }

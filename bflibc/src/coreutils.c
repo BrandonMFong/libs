@@ -48,9 +48,19 @@ double ConvertValueToScale(unsigned long long value, long long scale) {
 	return result;
 }
 
-int BFByteGetString(unsigned long long byteSize, char * outStr) {
+int BFByteGetString(unsigned long long byteSize, unsigned char options, char * outStr) {
 	double value = 0.0;
 	char unit[10];
+	const bool usekibi = options & 0x01;
+	const char * b_str = "B";
+	const char * kb_str = usekibi ? "KiB" : "KB";
+	const char * mb_str = usekibi ? "MiB" : "MB";
+	const char * gb_str = usekibi ? "GiB" : "GB";
+	const char * tb_str = usekibi ? "TiB" : "TB";
+	const size_t kb_size = usekibi ? kBFByteKibiByte : kBFByteKiloByte;
+	const size_t mb_size = usekibi ? kBFByteMebiByte : kBFByteMegaByte;
+	const size_t gb_size = usekibi ? kBFByteGibiByte : kBFByteGigaByte;
+	const size_t tb_size = usekibi ? kBFByteTebiByte : kBFByteTeraByte;
 
 	if (outStr == 0) {
 		return 1;
@@ -61,24 +71,24 @@ int BFByteGetString(unsigned long long byteSize, char * outStr) {
 		// 
 		// Default
 		value = byteSize;
-		strcpy(unit, "b");
+		strcpy(unit, b_str);
 
 		// TeraByte
-		if (byteSize >= kBFByteTeraByte) {
-			value = ConvertValueToScale(byteSize, kBFByteTeraByte);
-			strcpy(unit, "tb");
+		if (byteSize >= tb_size) {
+			value = ConvertValueToScale(byteSize, tb_size);
+			strcpy(unit, tb_str);
 		// GigaByte
-		} else if (byteSize >= kBFByteGigaByte) {
-			value = ConvertValueToScale(byteSize, kBFByteGigaByte);
-			strcpy(unit, "gb");
+		} else if (byteSize >= gb_size) {
+			value = ConvertValueToScale(byteSize, gb_size);
+			strcpy(unit, gb_str);
 		// MegaByte
-		} else if (byteSize >= kBFByteMegaByte) {
-			value = ConvertValueToScale(byteSize, kBFByteMegaByte);
-			strcpy(unit, "mb");
+		} else if (byteSize >= mb_size) {
+			value = ConvertValueToScale(byteSize, mb_size);
+			strcpy(unit, mb_str);
 		// KiloByte
-		} else if (byteSize >= kBFByteKiloByte) {
-			value = ConvertValueToScale(byteSize, kBFByteKiloByte);
-			strcpy(unit, "kb");
+		} else if (byteSize >= kb_size) {
+			value = ConvertValueToScale(byteSize, kb_size);
+			strcpy(unit, kb_str);
 		}
 
 		sprintf(outStr, "%.2f %s", value, unit);
