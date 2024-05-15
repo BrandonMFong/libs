@@ -1,0 +1,4 @@
+# In your terminal
+export PYTHONSTARTUP=/Volumes/otashi/brando/sources/repo/libs/bflibpy/startup.py
+export PYTHONPATH="/Volumes/otashi/brando/sources/repo/libs/bflibpy:$PYTHONPATH"
+
