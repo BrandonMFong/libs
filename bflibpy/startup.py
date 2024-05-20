@@ -3,8 +3,7 @@
 # date: 5/13/24
 #
 
-# Import modules
-import math
+import bflib
 
 # Change prompt display
 import sys
