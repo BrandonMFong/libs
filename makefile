@@ -8,9 +8,11 @@
 all: setup 
 	cd bflibc && make debug release
 	cd bflibcpp && make debug release
+	cd bfnet && make debug release
 	cd bflibrust && make debug release
 	cp -afv bflibc/bin/* bin/
 	cp -afv bflibcpp/bin/* bin/
+	cp -afv bfnet/bin/* bin/
 	cp -afv bflibrust/bin/* bin/
 
 test:
@@ -22,6 +24,7 @@ setup:
 clean:
 	cd bflibc && make clean
 	cd bflibcpp && make clean
+	cd bfnet && make clean
 	cd bflibrust && make clean
 	rm -rfv bin
 
