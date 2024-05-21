@@ -20,11 +20,11 @@ SocketEnvelope::~SocketEnvelope() {
 	BFRelease(this->_sc);
 }
 
-SocketBuffer * BF::Net::SocketEnvelope::buf() {
+SocketBuffer * SocketEnvelope::buf() {
 	return &this->_buf;
 }
 
-SocketConnection * BF::Net::SocketEnvelope::connection() {
+SocketConnection * SocketEnvelope::connection() {
 	return this->_sc;
 }
 

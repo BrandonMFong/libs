@@ -11,6 +11,6 @@ BF_LIB_RPATH_RELEASE_C = $(BF_LIB_RPATH_RELEASE)/bflibc/libbfc.a
 BF_LIB_RPATH_DEBUG_CPP = $(BF_LIB_RPATH_DEBUG)/bflibcpp/libbfcpp-debug.a
 BF_LIB_RPATH_RELEASE_CPP = $(BF_LIB_RPATH_RELEASE)/bflibcpp/libbfcpp.a
 
-BF_LIB_RPATH_DEBUG_NET = $(BF_LIB_RPATH_DEBUG)/bflibcpp/libbfnet-debug.a
+BF_LIB_RPATH_DEBUG_NET = $(BF_LIB_RPATH_DEBUG)/bfnet/libbfnet-debug.a
 BF_LIB_RPATH_RELEASE_NET = $(BF_LIB_RPATH_RELEASE)/bfnet/libbfnet.a
 
