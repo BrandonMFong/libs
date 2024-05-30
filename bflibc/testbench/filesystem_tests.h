@@ -224,6 +224,35 @@ int test_RemoveFullDirectory(void) {
 	return result;
 }
 
+int test_directoryWithAPeriod(void) {
+	int result = 0;
+	char tmpdir[PATH_MAX];
+	char file[PATH_MAX];
+
+	// setup
+	if (BFFileSystemGetOSTempDirectory(tmpdir)) {
+		result = 1;
+	} else if (strcat(tmpdir, "/NetFS.Framework") == NULL) {
+		result = 2;
+	} else if (mkdir(tmpdir, 0700)) {
+		result = 3;
+	}
+
+	// test
+	if (result == 0) {
+		if (!BFFileSystemPathExists(tmpdir)) {
+			result = 4;
+		}
+	}
+	
+	// teardown
+	if (BFFileSystemRemoveAll(tmpdir)) {
+		printf("could not remove: %s\n", tmpdir);
+	}
+	
+	PRINT_TEST_RESULTS(!result);
+	return result;
+}
 void filesystem_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -237,6 +266,7 @@ void filesystem_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_GettingNameWithoutExtension, p, f);
 	LAUNCH_TEST(test_GettingFullname, p, f);
 	LAUNCH_TEST(test_GettingLeafComponent, p, f);
+	LAUNCH_TEST(test_directoryWithAPeriod, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
