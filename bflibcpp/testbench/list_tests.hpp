@@ -619,6 +619,23 @@ int test_pluckingObject() {
 	return result;
 }
 
+int test_rangeBasedLooping() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 1;
+	while (!result && max--) {
+		List<int> list({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+
+		for (auto & a : list) {
+
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -643,6 +660,7 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_ListNullSwap, p, f);
 	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
 	LAUNCH_TEST(test_pluckingObject, p, f);
+	LAUNCH_TEST(test_rangeBasedLooping, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
