@@ -584,8 +584,12 @@ PUBLIC:
 		this->set(list);
 	}
 
-	// range-based for loop implementation
 public:
+
+	/**
+	 * Range-Based implementation for our Linked list
+	 * ref: https://en.cppreference.com/w/cpp/language/range-for
+	 */
 	class RangeBasedIter {
 	private:
 		Node * _curr;
@@ -604,13 +608,14 @@ public:
 			return old;
 		}
 		bool operator!=(const RangeBasedIter& i) {
-			return this->_curr != i._curr;
+			return !(*this == i);
 		}
 		bool operator==(const RangeBasedIter& i) {
 			return this->_curr == i._curr;
 		}
 	};
 
+	/// required interfaces: begin() & end()
 	RangeBasedIter begin() { return this->first(); }
 	RangeBasedIter end() { return NULL; }
 };

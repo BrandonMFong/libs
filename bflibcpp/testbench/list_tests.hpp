@@ -623,11 +623,11 @@ int test_rangeBasedLooping() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 1;
+	int max = 2 << 8;
 	while (!result && max--) {
 		List<int> list;
 		srand(time(0));
-		int arrsize = rand() % 64;
+		int arrsize = rand() % 2 << 15;
 		int * arr = (int *) malloc(sizeof(int) * arrsize);
 		for (int i = 0; i < arrsize; i++) {
 			arr[i] = rand();
@@ -656,7 +656,6 @@ void list_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-/*	
 	LAUNCH_TEST(test_Init, p, f);
 	LAUNCH_TEST(test_adding, p, f);
 	LAUNCH_TEST(test_indexing, p, f);
@@ -676,7 +675,6 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_ListNullSwap, p, f);
 	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
 	LAUNCH_TEST(test_pluckingObject, p, f);
-	*/
 	LAUNCH_TEST(test_rangeBasedLooping, p, f);
 
 	if (pass) *pass += p;
