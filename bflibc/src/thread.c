@@ -434,17 +434,13 @@ bool BFThreadAsyncIsRunning(BFThreadAsyncID in) {
 
 int BFThreadAsyncWait(BFThreadAsyncID in) {
 	if (!in) return 70;
-	else {
-		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
-		// if thread is running, then we will wait
-		while (BFThreadAsyncIsRunning(id)) {
-			//printf("\n%ld sleeping...\n", id->p);
-			usleep(5000);
-		}
+	
+	_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
+	// if thread is running, then we will wait
+	while (BFThreadAsyncIsRunning(id)) {
+		//printf("\n%ld sleeping...\n", id->p);
+		usleep(5000);
 	}
-
-	printf("\ndone waiting...\n");
-
 	return 0;
 }
 
