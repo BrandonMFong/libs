@@ -583,6 +583,36 @@ PUBLIC:
 	void operator=(const std::initializer_list<L> & list) {
 		this->set(list);
 	}
+
+	// range-based for loop implementation
+public:
+	class RangeBasedIter {
+	private:
+		Node * _curr;
+	public:
+		RangeBasedIter(Node * n) : _curr(n) {}
+		L operator*() const { 
+			return this->_curr->object();
+		}
+		RangeBasedIter & operator++() { // pre-inc
+			this->_curr = this->_curr->next();
+			return *this;
+		}
+		RangeBasedIter operator++(int) { // post-inc
+			RangeBasedIter old = *this;
+			this->operator++();
+			return old;
+		}
+		bool operator!=(const RangeBasedIter& i) {
+			return this->_curr != i._curr;
+		}
+		bool operator==(const RangeBasedIter& i) {
+			return this->_curr == i._curr;
+		}
+	};
+
+	RangeBasedIter begin() { return this->first(); }
+	RangeBasedIter end() { return NULL; }
 };
 
 } // namespace BF
