@@ -443,6 +443,8 @@ int BFThreadAsyncWait(BFThreadAsyncID in) {
 		}
 	}
 
+	printf("\ndone waiting...\n");
+
 	return 0;
 }
 
