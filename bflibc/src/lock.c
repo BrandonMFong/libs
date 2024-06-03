@@ -123,7 +123,9 @@ int BFLockLock(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 205;
+		if (pthread_mutex_lock(&l->mutex)) {
+			return 205;
+		}
 	}
 	return 0;
 }
@@ -132,7 +134,9 @@ int BFLockUnlock(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_unlock(&l->mutex)) return 206;
+		if (pthread_mutex_unlock(&l->mutex)) {
+			return 206;
+		}
 	}
 	return 0;
 }

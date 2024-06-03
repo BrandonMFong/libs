@@ -295,7 +295,6 @@ void * _BFThreadStartRoutine(void * _params) {
 		if (params->type == _BFThreadTypeAsync) {
 			pthread_mutex_lock(&params->id.async->m);
 			_ThreadIDTablePushID(params->id.async, params->type);
-			//IS_RUNNING_SET_ON(params->id.async->flags);
 			pthread_mutex_unlock(&params->id.async->m);
 		}
 
@@ -433,6 +432,18 @@ bool BFThreadAsyncIsRunning(BFThreadAsyncID in) {
 	return result;
 }
 
+int BFThreadAsyncWait(BFThreadAsyncID in) {
+	if (!in) return 70;
+	
+	_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
+	// if thread is running, then we will wait
+	while (BFThreadAsyncIsRunning(id)) {
+		//printf("\n%ld sleeping...\n", id->p);
+		usleep(5000);
+	}
+	return 0;
+}
+
 int BFThreadAsyncCancel(BFThreadAsyncID in) {
 	if (!in) return 1;
 	else {
@@ -453,19 +464,6 @@ bool BFThreadAsyncIsCanceled(BFThreadAsyncID in) {
 		pthread_mutex_unlock(&id->m);
 		return result;
 	}
-}
-
-int BFThreadAsyncWait(BFThreadAsyncID in) {
-	if (!in) return 70;
-	else {
-		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
-		// if thread is running, then we will wait
-		while (BFThreadAsyncIsRunning(id)) {
-			usleep(5000);
-		}
-	}
-
-	return 0;
 }
 
 int BFThreadSync(void (* callback)(void *), void * args) {

@@ -583,6 +583,41 @@ PUBLIC:
 	void operator=(const std::initializer_list<L> & list) {
 		this->set(list);
 	}
+
+public:
+
+	/**
+	 * Range-Based implementation for our Linked list
+	 * ref: https://en.cppreference.com/w/cpp/language/range-for
+	 */
+	class Iterator {
+	private:
+		Node * _curr;
+	public:
+		Iterator(Node * n) : _curr(n) {}
+		L operator*() const { 
+			return this->_curr->object();
+		}
+		Iterator & operator++() { // pre-inc
+			this->_curr = this->_curr->next();
+			return *this;
+		}
+		Iterator operator++(int) { // post-inc
+			Iterator old = *this;
+			this->operator++();
+			return old;
+		}
+		bool operator!=(const Iterator& i) {
+			return !(*this == i);
+		}
+		bool operator==(const Iterator& i) {
+			return this->_curr == i._curr;
+		}
+	};
+
+	/// required interfaces: begin() & end()
+	Iterator begin() { return this->first(); }
+	Iterator end() { return NULL; }
 };
 
 } // namespace BF
