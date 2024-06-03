@@ -1,4 +1,4 @@
-# Best F. Libraries
+# Best Freaking Libraries
 
 ## Contents
 - `bflibc` : standard set of utilites and extensions for C
