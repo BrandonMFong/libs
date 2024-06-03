@@ -123,8 +123,10 @@ void SetValueWay1(void * in) {
 	for (int i = 0; i < max; i++) {
 		if (i == delaytime)
 			usleep(10);
+
 		int * v  = val->get();
-		(*v)++;
+		(*v)++; // this is not protected
+
 		printf("\n%p - v = %d\n", id, *v);
 	}
 }
