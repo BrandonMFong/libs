@@ -619,11 +619,43 @@ int test_pluckingObject() {
 	return result;
 }
 
+int test_rangeBasedLooping() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 8;
+	while (!result && max--) {
+		List<int> list;
+		srand(time(0));
+		int arrsize = rand() % 2 << 15;
+		int * arr = (int *) malloc(sizeof(int) * arrsize);
+		for (int i = 0; i < arrsize; i++) {
+			arr[i] = rand();
+			list.add(arr[i]);
+		}
+
+		int i = 0;
+		for (int a : list) {
+			if (a != arr[i]) {
+				printf("%d != %d\n", a, arr[i]);
+				result = max;
+				break;
+			}
+			i++;
+		}
+
+		BFFree(arr);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void list_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
 	INTRO_TEST_FUNCTION;
-	
+
 	LAUNCH_TEST(test_Init, p, f);
 	LAUNCH_TEST(test_adding, p, f);
 	LAUNCH_TEST(test_indexing, p, f);
@@ -643,6 +675,7 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_ListNullSwap, p, f);
 	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
 	LAUNCH_TEST(test_pluckingObject, p, f);
+	LAUNCH_TEST(test_rangeBasedLooping, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
