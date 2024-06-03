@@ -625,11 +625,26 @@ int test_rangeBasedLooping() {
 
 	int max = 2 << 1;
 	while (!result && max--) {
-		List<int> list({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
-
-		for (int a : list) {
-			printf("%d\n", a);
+		List<int> list;
+		srand(time(0));
+		int arrsize = rand() % 64;
+		int * arr = (int *) malloc(sizeof(int) * arrsize);
+		for (int i = 0; i < arrsize; i++) {
+			arr[i] = rand();
+			list.add(arr[i]);
 		}
+
+		int i = 0;
+		for (int a : list) {
+			if (a != arr[i]) {
+				printf("%d != %d\n", a, arr[i]);
+				result = max;
+				break;
+			}
+			i++;
+		}
+
+		BFFree(arr);
 	}
 
 	UNIT_TEST_END(!result, result);
