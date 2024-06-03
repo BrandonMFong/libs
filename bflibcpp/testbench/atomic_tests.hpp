@@ -115,16 +115,26 @@ int test_atomicvaluechange() {
 }
 
 void SetValueWay1(void * in) {
+	const int max = 2 << 4;
+	srand(time(0));
+	const int delaytime = rand() % max;
 	Atomic<int *> * val = (Atomic<int *> *) in;
-	for (int i = 0; i < (2 << 4); i++) {
+	for (int i = 0; i < max; i++) {
+		if (i == delaytime)
+			usleep(10);
 		int * v  = val->get();
 		(*v)++;
 	}
 }
 
 void SetValueWay2(void * in) {
+	const int max = 2 << 4;
+	srand(time(0));
+	const int delaytime = rand() % max;
 	Atomic<int *> * val = (Atomic<int *> *) in;
-	for (int i = 0; i < (2 << 4); i++) {
+	for (int i = 0; i < max; i++) {
+		if (i == delaytime)
+			usleep(10);
 		val->lock();
 		int * v  = val->unsafeget();
 		(*v)++;
@@ -150,8 +160,9 @@ int test_settingvaluesindifferentwaysonthreads() {
 		BFThreadAsyncDestroy(tid0);
 		BFThreadAsyncDestroy(tid1);
 
-		if (ia != (2 * (2 << 4))) {
-			printf("\n%d != %d\n", ia, (2 * (2 << 4)));
+		const int exp = 2 * (2 << 4); // expected val
+		if (ia != exp) {
+			printf("\n%d != %d\n", ia, exp);
 			result = max;
 		}
 

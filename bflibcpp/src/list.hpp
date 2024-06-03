@@ -590,34 +590,34 @@ public:
 	 * Range-Based implementation for our Linked list
 	 * ref: https://en.cppreference.com/w/cpp/language/range-for
 	 */
-	class RangeBasedIter {
+	class Iterator {
 	private:
 		Node * _curr;
 	public:
-		RangeBasedIter(Node * n) : _curr(n) {}
+		Iterator(Node * n) : _curr(n) {}
 		L operator*() const { 
 			return this->_curr->object();
 		}
-		RangeBasedIter & operator++() { // pre-inc
+		Iterator & operator++() { // pre-inc
 			this->_curr = this->_curr->next();
 			return *this;
 		}
-		RangeBasedIter operator++(int) { // post-inc
-			RangeBasedIter old = *this;
+		Iterator operator++(int) { // post-inc
+			Iterator old = *this;
 			this->operator++();
 			return old;
 		}
-		bool operator!=(const RangeBasedIter& i) {
+		bool operator!=(const Iterator& i) {
 			return !(*this == i);
 		}
-		bool operator==(const RangeBasedIter& i) {
+		bool operator==(const Iterator& i) {
 			return this->_curr == i._curr;
 		}
 	};
 
 	/// required interfaces: begin() & end()
-	RangeBasedIter begin() { return this->first(); }
-	RangeBasedIter end() { return NULL; }
+	Iterator begin() { return this->first(); }
+	Iterator end() { return NULL; }
 };
 
 } // namespace BF
