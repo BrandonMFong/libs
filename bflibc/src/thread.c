@@ -438,6 +438,7 @@ int BFThreadAsyncWait(BFThreadAsyncID in) {
 		_BFThreadAsyncID * id = (_BFThreadAsyncID *) in;
 		// if thread is running, then we will wait
 		while (BFThreadAsyncIsRunning(id)) {
+			//printf("\n%ld sleeping...\n", id->p);
 			usleep(5000);
 		}
 	}

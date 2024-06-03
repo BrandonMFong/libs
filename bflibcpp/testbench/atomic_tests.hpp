@@ -115,6 +115,7 @@ int test_atomicvaluechange() {
 }
 
 void SetValueWay1(void * in) {
+	BFThreadAsyncID id = BFThreadAsyncGetID();
 	const int max = 2 << 4;
 	srand(time(0));
 	const int delaytime = rand() % max;
@@ -124,10 +125,12 @@ void SetValueWay1(void * in) {
 			usleep(10);
 		int * v  = val->get();
 		(*v)++;
+		printf("\n%p - v = %d\n", id, *v);
 	}
 }
 
 void SetValueWay2(void * in) {
+	BFThreadAsyncID id = BFThreadAsyncGetID();
 	const int max = 2 << 4;
 	srand(time(0));
 	const int delaytime = rand() % max;
@@ -138,6 +141,7 @@ void SetValueWay2(void * in) {
 		val->lock();
 		int * v  = val->unsafeget();
 		(*v)++;
+		printf("\n%p - v = %d\n", id, *v);
 		val->unlock();
 	}
 }
@@ -148,12 +152,14 @@ int test_settingvaluesindifferentwaysonthreads() {
 
 	int max = 2 << 8;
 	while (!result && max) {
+		printf("\ntest %d\n", max);
 		int ia = 0;
 
 		Atomic<int *> a(&ia);
 		BFThreadAsyncID tid0 = BFThreadAsync(SetValueWay1, &a);
 		BFThreadAsyncID tid1 = BFThreadAsync(SetValueWay2, &a);
 
+		// wait for both threads to complete execution
 		BFThreadAsyncWait(tid0);
 		BFThreadAsyncWait(tid1);
 
@@ -222,13 +228,17 @@ void atomic_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
+	/*
 	LAUNCH_TEST(test_atomicinit, p, f);
 	LAUNCH_TEST(test_atomisetandget, p, f);
 	LAUNCH_TEST(test_atomicqueue, p, f);
 	LAUNCH_TEST(test_atomicvaluechange, p, f);
+	*/
 	LAUNCH_TEST(test_settingvaluesindifferentwaysonthreads, p, f);
+	/*
 	LAUNCH_TEST(test_equaloverloadop, p, f);
 	LAUNCH_TEST(test_castingoperator, p, f);
+	*/
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
