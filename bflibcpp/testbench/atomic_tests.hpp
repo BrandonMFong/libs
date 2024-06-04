@@ -211,17 +211,13 @@ void atomic_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	/*
 	LAUNCH_TEST(test_atomicinit, p, f);
 	LAUNCH_TEST(test_atomisetandget, p, f);
 	LAUNCH_TEST(test_atomicqueue, p, f);
 	LAUNCH_TEST(test_atomicvaluechange, p, f);
-	*/
 	LAUNCH_TEST(test_settingvalueonthreads, p, f);
-	/*
 	LAUNCH_TEST(test_equaloverloadop, p, f);
 	LAUNCH_TEST(test_castingoperator, p, f);
-	*/
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
