@@ -11,6 +11,7 @@ CPP = g++
 AR = ar
 CP = cp
 RM = rm
+DOXYGEN = doxygen
 
 ## Compile Flags
 
@@ -33,6 +34,8 @@ R_BIN_PATH = bin/release/bflibcpp
 R_BFLIBCPP_OUT = libbfcpp.a
 R_CPP_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/%.o, $(CPP_OBJECTS))
 R_C_OBJ_FILES = ../bflibc/build/release/*.o
+
+.PHONY: docs
 
 release: r-setup build-release-c $(R_BIN_PATH)/$(R_BFLIBCPP_OUT)
 
@@ -104,4 +107,7 @@ compile-tests:
 clean: r-clean d-clean
 	$(RM) -rfv build/
 	$(RM) -rfv bin
+
+docs:
+	$(DOXYGEN)	
 

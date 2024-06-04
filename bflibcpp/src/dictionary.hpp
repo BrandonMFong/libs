@@ -17,14 +17,14 @@ namespace BF {
  */
 template <typename K, typename V, typename S = int>
 class Dictionary : public Object {
-PUBLIC:
+public:
 
 	/**
 	 * Holds an entry for value that can be located by key
 	 */
 	class Entry : public Object {
 		friend class Dictionary<K,V,S>;
-	PUBLIC:
+	public:
 		/**
 		 * Used for tree to organize
 		 *
@@ -39,7 +39,7 @@ PUBLIC:
 		K key() const { return this->_key; }
 		V value() const { return this->_value; }
 
-	PRIVATE:
+	private:
 
 		Entry(K k, V v, Dictionary<K,V,S> * dictRef) : Object() {
 			this->_dictRef = dictRef;
@@ -185,7 +185,7 @@ PUBLIC:
 	int createIterator(Iterator ** itr) {
 		return this->_tree.createIterator(itr);
 	}
-PRIVATE:
+private:
 
 	/**
 	 * inorder traversal
