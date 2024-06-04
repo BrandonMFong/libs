@@ -39,14 +39,14 @@ typedef enum {
  */
 template <typename L, typename S = int>
 class List : public Object {
-PUBLIC:
+public:
 	
 	/**
 	 * Bi-directional node
 	 */
 	class Node : public Object {
 		friend List<L, S>;
-	PUBLIC:
+	public:
 		Node * next() const {
 			return this->right;
 		}
@@ -59,7 +59,7 @@ PUBLIC:
 			return this->obj;
 		}
 
-	PRIVATE:
+	private:
 		Node() : Object() {
 			this->left = 0;
 			this->right = 0;
@@ -83,7 +83,7 @@ PUBLIC:
 		const List * list;
 	};
 
-PUBLIC:
+public:
 
 	List() : Object() {
 		this->_head = 0;
@@ -280,7 +280,7 @@ PUBLIC:
 		return 0;
 	}
 
-PROTECTED:
+protected:
 
 	/**
 	 * Delete node but does not delete object
@@ -309,7 +309,7 @@ PROTECTED:
 		return 0;
 	}
 
-PRIVATE:
+private:
 
 	/**
 	 * Swaps a and b objects
@@ -578,11 +578,46 @@ PRIVATE:
 	 */
 	int (* _compareCallback) (L a, L b);
 	
-PUBLIC:
+public:
 
 	void operator=(const std::initializer_list<L> & list) {
 		this->set(list);
 	}
+
+public:
+
+	/**
+	 * Range-Based implementation for our Linked list
+	 * ref: https://en.cppreference.com/w/cpp/language/range-for
+	 */
+	class Iterator {
+	private:
+		Node * _curr;
+	public:
+		Iterator(Node * n) : _curr(n) {}
+		L operator*() const { 
+			return this->_curr->object();
+		}
+		Iterator & operator++() { // pre-inc
+			this->_curr = this->_curr->next();
+			return *this;
+		}
+		Iterator operator++(int) { // post-inc
+			Iterator old = *this;
+			this->operator++();
+			return old;
+		}
+		bool operator!=(const Iterator& i) {
+			return !(*this == i);
+		}
+		bool operator==(const Iterator& i) {
+			return this->_curr == i._curr;
+		}
+	};
+
+	/// required interfaces: begin() & end()
+	Iterator begin() { return this->first(); }
+	Iterator end() { return NULL; }
 };
 
 } // namespace BF

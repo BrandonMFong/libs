@@ -16,7 +16,7 @@
 namespace BF {
 
 class Time : public Object {
-PUBLIC:
+public:
 	static Time * createCurrent();
 	Time(BFTime t);
 	Time();
@@ -45,7 +45,7 @@ PUBLIC:
 	/// 0 - 59
 	int second() const;
 
-PRIVATE:
+private:
 
 	void set(BFTime t);
 
@@ -54,7 +54,7 @@ PRIVATE:
 	BFDateTime _dateTime;
 
 /// Overload operators
-PUBLIC:
+public:
 	bool operator==(const Time & t);
 	Time * operator+(const Time & t);
 	Time * operator-(const Time & t);

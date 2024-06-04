@@ -114,25 +114,23 @@ int test_atomicvaluechange() {
 	return result;
 }
 
-void SetValueWay1(void * in) {
+void SetValue(void * in) {
+	const int max = 2 << 4;
+	srand(time(0));
+	const int delaytime = rand() % max;
 	Atomic<int *> * val = (Atomic<int *> *) in;
-	for (int i = 0; i < (2 << 4); i++) {
-		int * v  = val->get();
-		(*v)++;
-	}
-}
+	for (int i = 0; i < max; i++) {
+		if (i == delaytime)
+			usleep(10);
 
-void SetValueWay2(void * in) {
-	Atomic<int *> * val = (Atomic<int *> *) in;
-	for (int i = 0; i < (2 << 4); i++) {
 		val->lock();
-		int * v  = val->unsafeget();
+		int * v = val->unsafeget();
 		(*v)++;
 		val->unlock();
 	}
 }
 
-int test_settingvaluesindifferentwaysonthreads() {
+int test_settingvalueonthreads() {
 	UNIT_TEST_START;
 	int result = 0;
 
@@ -141,17 +139,19 @@ int test_settingvaluesindifferentwaysonthreads() {
 		int ia = 0;
 
 		Atomic<int *> a(&ia);
-		BFThreadAsyncID tid0 = BFThreadAsync(SetValueWay1, &a);
-		BFThreadAsyncID tid1 = BFThreadAsync(SetValueWay2, &a);
+		BFThreadAsyncID tid0 = BFThreadAsync(SetValue, &a);
+		BFThreadAsyncID tid1 = BFThreadAsync(SetValue, &a);
 
+		// wait for both threads to complete execution
 		BFThreadAsyncWait(tid0);
 		BFThreadAsyncWait(tid1);
 
 		BFThreadAsyncDestroy(tid0);
 		BFThreadAsyncDestroy(tid1);
 
-		if (ia != (2 * (2 << 4))) {
-			printf("\n%d != %d\n", ia, (2 * (2 << 4)));
+		const int exp = 2 * (2 << 4); // expected val
+		if (ia != exp) {
+			printf("\n%d != %d\n", ia, exp);
 			result = max;
 		}
 
@@ -215,7 +215,7 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_atomisetandget, p, f);
 	LAUNCH_TEST(test_atomicqueue, p, f);
 	LAUNCH_TEST(test_atomicvaluechange, p, f);
-	LAUNCH_TEST(test_settingvaluesindifferentwaysonthreads, p, f);
+	LAUNCH_TEST(test_settingvalueonthreads, p, f);
 	LAUNCH_TEST(test_equaloverloadop, p, f);
 	LAUNCH_TEST(test_castingoperator, p, f);
 

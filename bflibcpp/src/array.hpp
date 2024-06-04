@@ -27,7 +27,7 @@ namespace BF {
  * object
  */
 template <typename T, typename S = size_t> class Array : public Object {
-PUBLIC:
+public:
 	Array() : Object() {
 		this->_address = 0;
 		this->_count = 0;
@@ -244,14 +244,14 @@ PUBLIC:
 		return 0;
 	}
 
-PROTECTED:
+protected:
 
 	/**
 	 * Returns address of array
 	 */
 	T * address() const { return this->_address; }
 	
-PRIVATE:
+private:
 
 	/**
 	 * uses malloc to allocate mem
@@ -333,7 +333,7 @@ PRIVATE:
 	 */
 	void (* _releasecb) (T obj);
 
-PUBLIC:
+public:
 
 	T operator[](S index) const {
 		return this->objectAtIndex(index);
@@ -352,7 +352,7 @@ PUBLIC:
 	}
 
 // Comparators
-PUBLIC:
+public:
 	/**
 	 * Compares the raw value of a and b
 	 */

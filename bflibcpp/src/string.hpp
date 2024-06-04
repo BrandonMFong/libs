@@ -12,7 +12,7 @@
 namespace BF {
 
 class String : protected Array<char, size_t> {
-PUBLIC:
+public:
 	virtual ~String();
 
 	/**
@@ -90,7 +90,7 @@ PUBLIC:
 	int clear();
 
 // Overloading operators
-PUBLIC:
+public:
 	friend std::ostream& operator<<(std::ostream& out, const String & s) {
 		return out << s.cString();
 	}
