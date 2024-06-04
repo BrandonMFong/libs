@@ -39,14 +39,14 @@ typedef enum {
  */
 template <typename L, typename S = int>
 class List : public Object {
-PUBLIC:
+public:
 	
 	/**
 	 * Bi-directional node
 	 */
 	class Node : public Object {
 		friend List<L, S>;
-	PUBLIC:
+	public:
 		Node * next() const {
 			return this->right;
 		}
@@ -59,7 +59,7 @@ PUBLIC:
 			return this->obj;
 		}
 
-	PRIVATE:
+	private:
 		Node() : Object() {
 			this->left = 0;
 			this->right = 0;
@@ -83,7 +83,7 @@ PUBLIC:
 		const List * list;
 	};
 
-PUBLIC:
+public:
 
 	List() : Object() {
 		this->_head = 0;
@@ -280,7 +280,7 @@ PUBLIC:
 		return 0;
 	}
 
-PROTECTED:
+protected:
 
 	/**
 	 * Delete node but does not delete object
@@ -309,7 +309,7 @@ PROTECTED:
 		return 0;
 	}
 
-PRIVATE:
+private:
 
 	/**
 	 * Swaps a and b objects
@@ -578,7 +578,7 @@ PRIVATE:
 	 */
 	int (* _compareCallback) (L a, L b);
 	
-PUBLIC:
+public:
 
 	void operator=(const std::initializer_list<L> & list) {
 		this->set(list);

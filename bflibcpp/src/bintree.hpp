@@ -21,11 +21,11 @@ namespace BF {
  * Left most node is the least value comparison
  */
 template <typename T, typename S = int> class BinTree : public Object {
-PUBLIC:
+public:
 	// TODO: rename BinNode to Node
 	class BinNode : public Object {
 		friend class BinTree<T,S>;
-	PUBLIC:
+	public:
 		T object() const {
 			return this->_obj;
 		}
@@ -61,7 +61,7 @@ PUBLIC:
 			}
 		}
 
-	PROTECTED:
+	protected:
 		BinNode() : Object() {
 			this->_obj = 0;
 			this->_left = 0;
@@ -186,7 +186,7 @@ PUBLIC:
 		// Holds object
 		T _obj;
 
-		PRIVATE:
+		private:
 
 		// recursively executes until we reach root	
 		int level(BinNode * node, int level) const {
@@ -206,7 +206,7 @@ PUBLIC:
 	 */
 	class Iterator : public Object {
 		friend class BinTree<T,S>;
-	PUBLIC:
+	public:
 		
 		virtual ~Iterator() {
 
@@ -238,7 +238,7 @@ PUBLIC:
 		 */
 		bool finished() { return this->_st.empty(); }
 
-	PROTECTED:
+	protected:
 
 		/**
 		 * Sets stack to every node's left child
@@ -445,7 +445,7 @@ PUBLIC:
 		}
 	}
 
-PROTECTED:
+protected:
 	
 	/**
 	 * Returns nonnull pointer to BinNode
@@ -717,7 +717,7 @@ PROTECTED:
 		else return node;
 	}
 
-PRIVATE:
+private:
 
 	/**
 	 * Traverses through tree to remove everything
