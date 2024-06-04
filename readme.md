@@ -1,9 +1,10 @@
 # Best Freaking Libraries
 
-## Contents
-- `bflibc` : standard set of utilites and extensions for C
-- `bflibcpp` : standard library for essential CPP tools like Binary Trees, Dictionaries, Arrays, memory management, etc.
-- `bflibrust` : standard library for rust utilities
-- `bflibpy` : standard library for python 
-- `bfnet` : socket programming
+## [BFLibCPP](./bflibcpp/docs/html/index.html)
+Personal library for essential CPP utilities like Binary Trees, Dictionaries, Arrays, memory management, etc.
 
+## Build & Use
+```
+make clean all
+```
+*All assets are put into a bin folder*
