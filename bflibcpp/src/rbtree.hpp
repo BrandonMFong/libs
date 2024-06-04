@@ -33,12 +33,12 @@ namespace BF {
  * Left most node is the least value comparison
  */
 template <typename T, typename S = int> class RBTree : public BinTree<T,S> {
-PUBLIC:
+public:
 	// TODO: rename rbnode to node
 	class RBNode : public BinTree<T,S>::BinNode {
 		friend class RBTree<T,S>;
 
-	PUBLIC:
+	public:
 		RBNode() : BinTree<T,S>::BinNode() {
 			this->_colorSpace = 0;
 
@@ -52,7 +52,7 @@ PUBLIC:
 		virtual const RBNode * left() const { return (const RBNode *) this->BinTree<T,S>::BinNode::left(); }
 		virtual const RBNode * right() const { return (const RBNode *) this->BinTree<T,S>::BinNode::right(); }
 
-	PROTECTED:
+	protected:
 
 		virtual void printObject() const { std::cout << this->_obj; }
 
@@ -131,7 +131,7 @@ PUBLIC:
 			this->_colorSpace = (this->_colorSpace & ~kRBTreeNodeMaskColorCount) | ((count << 4) & kRBTreeNodeMaskColorCount);
 		}
 
-	PRIVATE:
+	private:
 
 		/**
 		 * This will hold the color value in 0x0f and the color count in 0xf0
@@ -143,7 +143,7 @@ PUBLIC:
 	 * Every node will start with a null node for their left and right children
 	 */
 	class RBNodeNull : public RBNode {
-	PUBLIC:
+	public:
 		RBNodeNull() : RBNode() {
 			this->setColor(kRBTreeNodeColorBlack);
 		}
@@ -160,7 +160,7 @@ PUBLIC:
 	};
 
 	class RBNodeNonnull : public RBNode {
-	PUBLIC:
+	public:
 		RBNodeNonnull() : RBNode() {
 			this->setColor(kRBTreeNodeColorRed);
 
@@ -177,7 +177,7 @@ PUBLIC:
 			return new RBNodeNonnull(*this);
 		}
 
-	PROTECTED:
+	protected:
 
 		virtual void setLeft(typename BinTree<T,S>::BinNode * left) { 
 			if (left) this->RBNode::setLeft(left);
@@ -200,7 +200,7 @@ PUBLIC:
 	
 	class Iterator : public BinTree<T,S>::Iterator {
 		friend class RBTree<T,S>;
-	PROTECTED:
+	protected:
 		Iterator() : BinTree<T,S>::Iterator() {}
 
 		/**
@@ -304,7 +304,7 @@ PUBLIC:
 		return result;
 	}
 
-PRIVATE:
+private:
 	
 	virtual RBNode * root() { return (RBNode *) this->BinTree<T,S>::root(); }
 
