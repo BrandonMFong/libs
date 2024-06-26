@@ -73,7 +73,7 @@ public:
 	/**
 	 * Initializes with array
 	 */
-	void set(T * array, S size) {
+	void set(const T * array, S size) {
 		this->saveArray(array, size);	
 	}
 
@@ -278,7 +278,7 @@ private:
 	/**
 	 * Copies values from array
 	 */
-	void saveArray(T * array, S size) {
+	void saveArray(const T * array, S size) {
 		this->removeAll();
 		this->_address = (T *) this->allocate(size);
 		this->_count = size;
