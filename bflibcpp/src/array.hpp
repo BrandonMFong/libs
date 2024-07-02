@@ -207,14 +207,13 @@ public:
 	}
 
 	int insertObjectAtIndex(T obj, S index) {
-		this->_address = this->reallocate(this->_address, this->_count + 1);
+		this->adjustMemorySize(this->_count+1);
 		if (this->_address == NULL) {
 			this->_count = 0;
 			return -4;
 		}
 
 		// shift
-		this->_count++;
 		for (S i = this->_count - 1; i > index; i--) {
 			this->_address[i] = this->_address[i - 1];
 		}
@@ -236,8 +235,7 @@ public:
 		}
 
 		// adjust array
-		this->_count--;
-		this->_address = this->reallocate(this->_address, this->_count);
+		this->adjustMemorySize(this->_count-1);
 
 		// if count == 0, then realloc will return NULL
 		if (this->_count && (this->_address == NULL)) {
@@ -249,6 +247,14 @@ public:
 	}
 
 protected:
+
+	/**
+	 * adjusts address memory to size
+	 */
+	void adjustMemorySize(S size) {
+		this->_count = size;
+		this->_address = this->reallocate(this->_address, this->_count);
+	}
 
 	/**
 	 * Returns address of array
