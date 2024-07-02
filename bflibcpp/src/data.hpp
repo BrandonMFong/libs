@@ -28,6 +28,7 @@ public:
 	~Data();
 
 	void * buffer();
+	size_t size();
 
 private:
 };

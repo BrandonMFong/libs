@@ -39,3 +39,7 @@ void * Data::buffer() {
 	return this->address();
 }
 
+size_t Data::size() {
+	return this->count();
+}
+

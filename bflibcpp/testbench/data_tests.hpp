@@ -21,11 +21,25 @@ int test_datainit() {
 	int result = 0;
 
 	Data buf0;
+	if (buf0.size() != 0) {
+		result = 1;
+	}
 
-	unsigned char bytes[10];
-	Data buf1(sizeof(bytes), bytes);
+	if (!result) {
+		unsigned char bytes[10];
+		Data buf1(sizeof(bytes), bytes);
 
-	Data buf2(32);
+		if (buf1.size() != sizeof(bytes)) {
+			result = 2;
+		}
+	}
+
+	if (!result) {
+		Data buf2(32);
+		if (buf2.size() != 32) {
+			result = 3;
+		}
+	}
 
 	UNIT_TEST_END(!result, result);
 	return result;
