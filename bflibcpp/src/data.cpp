@@ -35,7 +35,7 @@ void Data::clear() {
 	memset(this->buffer(), 0, this->count());
 }
 
-void Data::adjustSize(size_t s) {
+void Data::resize(size_t s) {
 	this->adjustMemorySize(s);
 }
 

@@ -65,7 +65,7 @@ public:
 	 *
 	 * calling this requires caution if not used properly
 	 */
-	void adjustSize(size_t s);
+	void resize(size_t s);
 
 private:
 };

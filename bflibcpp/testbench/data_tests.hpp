@@ -81,6 +81,66 @@ int test_clearData() {
 	return result;
 }
 
+int test_decreasingSize() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 12;
+
+	while (!result && max--) {
+		srand(time(0));
+		size_t size = rand() % (2 << 16);
+		char * bytes = (char *) malloc(size);
+		Data buf(size, (unsigned char *) bytes);
+		size_t newsize = size - (rand() % (size / 2));
+		buf.resize(newsize);
+		if (buf.size() != newsize) {
+			result = 1;
+		}
+
+		if (!result) {
+			for (int i = 0; i < (int) newsize; i++) {
+				if (((char *) buf.buffer())[i] != bytes[i]) {
+					result = 2;
+					break;
+				}
+			}
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_increasingSize() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 12;
+
+	while (!result && max--) {
+		srand(time(0));
+		size_t size = rand() % (2 << 16);
+		char * bytes = (char *) malloc(size);
+		Data buf(size, (unsigned char *) bytes);
+		size_t newsize = size + (rand() % (size / 2));
+		buf.resize(newsize);
+		if (buf.size() != newsize) {
+			result = 1;
+		}
+
+		// compare only old size
+		if (!result) {
+			for (int i = 0; i < (int) size; i++) {
+				if (((char *) buf.buffer())[i] != bytes[i]) {
+					result = 2;
+					break;
+				}
+			}
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
 
 void data_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
@@ -89,6 +149,8 @@ void data_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_datainit, p, f);
 	LAUNCH_TEST(test_clearData, p, f);
+	LAUNCH_TEST(test_decreasingSize, p, f);
+	LAUNCH_TEST(test_increasingSize, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
