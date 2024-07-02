@@ -35,6 +35,10 @@ void Data::clear() {
 	memset(this->buffer(), 0, this->count());
 }
 
+void Data::adjustSize(size_t s) {
+	this->adjustMemorySize(s);
+}
+
 int Data::alloc(const size_t size, const unsigned char * data) {
 	const unsigned char * bytes = data;
 	unsigned char * dbytes = NULL;

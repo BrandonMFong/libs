@@ -29,7 +29,14 @@ public:
 
 	~Data();
 
+	/**
+	 * returns address to our memory
+	 */
 	void * buffer();
+
+	/**
+	 * size of the memory returned by buffer()
+	 */
 	size_t size();
 
 	/**
@@ -47,6 +54,18 @@ public:
 	 * data gets copied
 	 */
 	int alloc(const size_t s, const unsigned char * data = NULL);
+
+	/**
+	 * adjusts the size of our buffer's allocated memory
+	 *
+	 * s : new size
+	 *
+	 * if s is greater than our current size, this will act as a padding
+	 * if s is less than our current size, this will trim the memory
+	 *
+	 * calling this requires caution if not used properly
+	 */
+	void adjustSize(size_t s);
 
 private:
 };
