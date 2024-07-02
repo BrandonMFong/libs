@@ -37,6 +37,8 @@ public:
 
 	/**
 	 * Initializes with array
+	 *
+	 * array gets copied
 	 */
 	Array(T * array, S size) : Array() {
 		this->set(array, size);	
@@ -44,6 +46,8 @@ public:
 
 	/**
 	 * Initializes with initializer
+	 *
+	 * list gets copied
 	 */
 	Array(std::initializer_list<T> list) : Array() {
 		this->set(list);

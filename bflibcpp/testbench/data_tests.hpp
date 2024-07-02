@@ -45,6 +45,16 @@ int test_datainit() {
 	return result;
 }
 
+int test_clearData() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	Data buf0;
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+
 void data_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	

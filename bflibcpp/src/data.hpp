@@ -22,13 +22,31 @@ public:
 	 * size: size of the buffer
 	 *
 	 * this will create a buffer with size. Data in buffer is random
+	 *
+	 * the data gets copied
 	 */
-	Data(const size_t s);
-	Data(const size_t s, const unsigned char * data);
+	Data(const size_t s, const unsigned char * data = NULL);
+
 	~Data();
 
 	void * buffer();
 	size_t size();
+
+	/**
+	 * clears buffer with all zeroes
+	 */
+	void clear();
+
+	/**
+	 * allocates buffer with size
+	 *
+	 * if buffer was previously set, this will erase all data
+	 *
+	 * please use with caution
+	 *
+	 * data gets copied
+	 */
+	int alloc(const size_t s, const unsigned char * data = NULL);
 
 private:
 };
