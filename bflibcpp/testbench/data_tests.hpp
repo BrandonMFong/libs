@@ -48,8 +48,34 @@ int test_datainit() {
 int test_clearData() {
 	UNIT_TEST_START;
 	int result = 0;
+	int max = 2 << 4;
+	const size_t maxbufsize = 2 << 16;
 
-	Data buf0;
+	while (max-- && !result) {
+		srand(time(0));
+		const size_t s = rand() % maxbufsize;
+		Data buf(s);
+		if (buf.size() != s) {
+			result = 1;
+		}
+
+		void * bytes = malloc(buf.size());
+		if (!result) {
+			memcpy(buf.buffer(), bytes, buf.size());
+			if (memcmp(buf.buffer(), bytes, buf.size())) {
+				result = 2;
+			}
+		}
+
+		if (!result) {
+			buf.clear();
+			if (!memcmp(buf.buffer(), bytes, buf.size())) {
+				result = 3;
+			}
+		}
+		BFFree(bytes);
+	}
+
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -61,6 +87,7 @@ void data_tests(int * pass, int * fail) {
 	INTRO_TEST_FUNCTION;
 
 	LAUNCH_TEST(test_datainit, p, f);
+	LAUNCH_TEST(test_clearData, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
