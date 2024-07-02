@@ -69,7 +69,8 @@ int test_clearData() {
 
 		if (!result) {
 			buf.clear();
-			if (!memcmp(buf.buffer(), bytes, buf.size())) {
+			memset(bytes, 0, buf.size());
+			if (memcmp(buf.buffer(), bytes, buf.size())) {
 				result = 3;
 			}
 		}
