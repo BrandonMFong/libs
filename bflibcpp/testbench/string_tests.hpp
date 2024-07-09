@@ -135,7 +135,7 @@ int test_nullstring(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	String str0 = NULL;
+	String str0 = 0;
 	String str1 = 0;
 
 	if (str0.length()) result = 1;

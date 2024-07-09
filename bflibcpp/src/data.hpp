@@ -8,6 +8,7 @@
 
 #include <stddef.h>
 #include "array.hpp"
+#include "string.hpp"
 
 namespace BF {
 
@@ -26,6 +27,11 @@ public:
 	 * the data gets copied
 	 */
 	Data(const size_t s, const unsigned char * data = NULL);
+
+	/**
+	 * creates data with string
+	 */
+	Data(BF::String & str);
 
 	virtual ~Data();
 

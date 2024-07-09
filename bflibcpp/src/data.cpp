@@ -12,16 +12,15 @@ extern "C" {
 
 using namespace BF;
 
-Data::Data() : Data(0, 0) {
+Data::Data() : Data(0, 0) { }
 
-}
-
-Data::~Data() {
-}
+Data::~Data() { }
 
 Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char, size_t>() {
 	this->alloc(size, data);
 }
+
+Data::Data(BF::String & str) : Data(str.length() + 1, (const unsigned char *) str.cString()) { }
 
 void * Data::buffer() {
 	return this->address();

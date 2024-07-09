@@ -142,6 +142,28 @@ int test_increasingSize() {
 	return result;
 }
 
+int test_String2Data() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 10;
+
+	while (!result && max--) {
+		String str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+		Data buf = str;
+
+		const char * tmp = (const char *) buf.buffer();
+		if (strlen(tmp) != str.length()) {
+			result = 1;
+		} else if (str.compareString(tmp)) {
+			result = 2;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
 void data_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -151,6 +173,7 @@ void data_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_clearData, p, f);
 	LAUNCH_TEST(test_decreasingSize, p, f);
 	LAUNCH_TEST(test_increasingSize, p, f);
+	LAUNCH_TEST(test_String2Data, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
