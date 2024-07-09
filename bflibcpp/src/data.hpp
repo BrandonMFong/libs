@@ -30,6 +30,8 @@ public:
 
 	/**
 	 * creates data with string
+	 *
+	 * this copies the string data
 	 */
 	Data(BF::String & str);
 
