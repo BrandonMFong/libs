@@ -4,6 +4,7 @@
  */
 
 #include "string.hpp"
+#include "data.hpp"
 #include <stdexcept>
 #include <stdarg.h>
 
@@ -29,6 +30,20 @@ String::String(int nullstr) {
 	if (nullstr != 0) throw std::invalid_argument("cannot set BF::String object to a nonzero integer");
 
 	this->set((char *) "", 1);
+}
+
+String::String(Data & data) : Array<char, size_t>() {
+	this->set((const char *) data.buffer(), data.size());
+
+	/**
+	 * if the last element in the array is not the 
+	 * null terminating character, then I will
+	 * adjust the array add the null terminator
+	 */
+	if (this->address()[this->count() - 1] != '\0') {
+		this->adjustMemorySize(this->count() + 1);
+		this->addChar('\0');
+	}
 }
 
 String * String::createWithFormat(const char * format, ...) {

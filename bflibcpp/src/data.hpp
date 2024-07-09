@@ -8,9 +8,10 @@
 
 #include <stddef.h>
 #include "array.hpp"
-#include "string.hpp"
 
 namespace BF {
+
+class String;
 
 class Data : protected Array<unsigned char, size_t> {
 public:
@@ -33,7 +34,7 @@ public:
 	 *
 	 * this copies the string data
 	 */
-	Data(BF::String & str);
+	Data(String & str);
 
 	virtual ~Data();
 

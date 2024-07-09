@@ -10,6 +10,8 @@
 #include "access.hpp"
 
 namespace BF {
+	
+class Data;
 
 class String : protected Array<char, size_t> {
 public:
@@ -29,6 +31,13 @@ public:
 	// std::invalid_argument if nullstr != 0
 	String(long int nullstr);
 	String(int nullstr);
+
+	/**
+	 * converts data to string
+	 *
+	 * this copies the memory
+	 */
+	String(Data & data);
 
 	// Returns raw c string
 	const char * cString() const;

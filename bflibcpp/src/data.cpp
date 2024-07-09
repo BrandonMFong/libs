@@ -4,6 +4,7 @@
  */
 
 #include "data.hpp"
+#include "string.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -20,7 +21,7 @@ Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char,
 	this->alloc(size, data);
 }
 
-Data::Data(BF::String & str) : Data(str.length() + 1, (const unsigned char *) str.cString()) { }
+Data::Data(String & str) : Data(str.length() + 1, (const unsigned char *) str.cString()) { }
 
 void * Data::buffer() {
 	return this->address();
