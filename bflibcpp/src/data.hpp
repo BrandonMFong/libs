@@ -27,7 +27,7 @@ public:
 	 */
 	Data(const size_t s, const unsigned char * data = NULL);
 
-	~Data();
+	virtual ~Data();
 
 	/**
 	 * returns address to our memory
