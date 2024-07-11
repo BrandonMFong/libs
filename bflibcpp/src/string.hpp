@@ -23,9 +23,11 @@ public:
 	static String * createWithFormat(const char * format, ...);
 
 	String();
-	String(const char * str);
+	//String(const char * str);
 	String(char * str);
 	String(const String & str);
+	String(const char * format, ...);
+	String(const char * format, va_list valist);
 
 	// both integer param constructors throw 
 	// std::invalid_argument if nullstr != 0
