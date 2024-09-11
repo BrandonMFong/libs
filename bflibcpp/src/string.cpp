@@ -32,7 +32,7 @@ String::String(int nullstr) {
 	this->set((char *) "", 1);
 }
 
-String::String(Data & data) : Array<char, size_t>() {
+String::String(const Data & data) : Array<char, size_t>() {
 	this->set((const char *) data.buffer(), data.size());
 
 	/**

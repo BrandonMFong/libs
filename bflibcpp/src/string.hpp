@@ -39,7 +39,7 @@ public:
 	 *
 	 * this copies the memory
 	 */
-	String(Data & data);
+	String(const Data & data);
 
 	// Returns raw c string
 	const char * cString() const;

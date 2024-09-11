@@ -41,12 +41,12 @@ public:
 	/**
 	 * returns address to our memory
 	 */
-	void * buffer();
+	void * buffer() const;
 
 	/**
 	 * size of the memory returned by buffer()
 	 */
-	size_t size();
+	size_t size() const;
 
 	/**
 	 * clears buffer with all zeroes

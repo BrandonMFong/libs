@@ -23,11 +23,11 @@ Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char,
 
 Data::Data(String & str) : Data(str.length() + 1, (const unsigned char *) str.cString()) { }
 
-void * Data::buffer() {
+void * Data::buffer() const {
 	return this->address();
 }
 
-size_t Data::size() {
+size_t Data::size() const {
 	return this->count();
 }
 
