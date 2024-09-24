@@ -126,8 +126,8 @@ char * BFStringCreateStringHexFromArray(unsigned char * byteArray, size_t byteAr
 	char * result = (char *) malloc(byteArraySize * 2 + 1);
 	int index = 0;
 	for (int i = 0; i < byteArraySize; i++) {
-		sprintf(&result[index], "%02X ", byteArray[i]);
-		index += 3;
+		sprintf(&result[index], "%02X", byteArray[i]);
+		index += 2;
 	}
 	
 	return result;

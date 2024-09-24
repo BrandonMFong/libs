@@ -245,9 +245,28 @@ int test_byteArrayToHexString() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 0;
-	while (!result && max) {
-		result = 1;
+	int max = 2 << 20;
+	while (!result && max--) {
+		unsigned char arr[] = {
+			0x00, 0x11, 0x22, 0x33, 0x44,
+			0x55, 0x66, 0x77, 0x88, 0x99,
+			0xaa, 0xbb, 0xcc, 0xdd, 0xee,
+			0xff
+		};
+		size_t size = 0;
+		char * str = BFStringCreateStringHexFromArray(
+			arr,
+			sizeof(arr) / sizeof(arr[0]),
+			&size
+		);
+
+		if (str == NULL) {
+			result = 1;
+		} else if (strcmp(str, "00112233445566778899AABBCCDDEEFF")) {
+			result = 2;
+		}
+
+		BFFree(str);
 	}
 
 	UNIT_TEST_END(!result, result);
