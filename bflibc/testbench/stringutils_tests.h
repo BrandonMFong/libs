@@ -241,6 +241,19 @@ int test_makingarrayfromstring() {
 	return result;
 }
 
+int test_byteArrayToHexString() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 0;
+	while (!result && max) {
+		result = 1;
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void stringutils_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -252,6 +265,7 @@ void stringutils_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_creatingstringfromformat, p, f);
 	LAUNCH_TEST(test_uuidcompare, p, f);
 	LAUNCH_TEST(test_makingarrayfromstring, p, f);
+	LAUNCH_TEST(test_byteArrayToHexString, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
