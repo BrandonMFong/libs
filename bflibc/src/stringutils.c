@@ -118,8 +118,8 @@ char ** BFStringCreateArrayFromString(const char * str, size_t * size, const cha
 	return result;
 }
 
-char * BFStringCreateStringHexFromArray(unsigned char * byteArray, size_t byteArraySize, size_t * size) {
-	if (!byteArray || !size) {
+char * BFStringCreateStringHexFromArray(unsigned char * byteArray, size_t byteArraySize) {
+	if (!byteArray) {
 		return NULL;
 	}
 

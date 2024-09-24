@@ -44,6 +44,11 @@ public:
 	void * buffer() const;
 
 	/**
+	 * returns hex string
+	 */
+	String hex() const;
+
+	/**
 	 * size of the memory returned by buffer()
 	 */
 	size_t size() const;

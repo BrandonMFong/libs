@@ -70,7 +70,7 @@ char ** BFStringCreateArrayFromString(const char * str, size_t * size, const cha
  *
  * returns: hex string. Caller owns memory
  */
-char * BFStringCreateStringHexFromArray(unsigned char * byteArray, size_t byteArraySize, size_t * size);
+char * BFStringCreateStringHexFromArray(unsigned char * byteArray, size_t byteArraySize);
 
 #endif // STRING_UTILS_H
 

@@ -161,7 +161,39 @@ int test_String2Data() {
 
 	UNIT_TEST_END(!result, result);
 	return result;
+}
 
+int test_HexString() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 10;
+
+	while (!result && max--) {
+		srand(time(0));
+		size_t size = rand() % 1024;
+		void * buf = malloc(size);
+		if (buf == NULL) {
+			result = 1;
+		}
+
+		Data * data = NULL;
+		if (!result) {
+			data = new Data(size, (unsigned char *) buf);
+			result = data == NULL ? 2 : result;
+		}
+
+		if (!result) {
+			if (data->hex().length() != (size * 2)) {
+				result = 3;
+			}
+		}
+
+		BFFree(buf);
+		BFDelete(data);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
 }
 
 void data_tests(int * pass, int * fail) {
@@ -174,6 +206,7 @@ void data_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_decreasingSize, p, f);
 	LAUNCH_TEST(test_increasingSize, p, f);
 	LAUNCH_TEST(test_String2Data, p, f);
+	LAUNCH_TEST(test_HexString, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

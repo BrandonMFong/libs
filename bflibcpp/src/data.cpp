@@ -27,6 +27,15 @@ void * Data::buffer() const {
 	return this->address();
 }
 
+String Data::hex() const {
+	char * buf = BFStringCreateStringHexFromArray(
+		(unsigned char *) this->buffer(), this->size()
+	);
+	String res(buf);
+	BFFree(buf);
+	return res;
+}
+
 size_t Data::size() const {
 	return this->count();
 }

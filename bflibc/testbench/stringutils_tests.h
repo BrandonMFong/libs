@@ -253,11 +253,9 @@ int test_byteArrayToHexString() {
 			0xaa, 0xbb, 0xcc, 0xdd, 0xee,
 			0xff
 		};
-		size_t size = 0;
 		char * str = BFStringCreateStringHexFromArray(
 			arr,
-			sizeof(arr) / sizeof(arr[0]),
-			&size
+			sizeof(arr) / sizeof(arr[0])
 		);
 
 		if (str == NULL) {
