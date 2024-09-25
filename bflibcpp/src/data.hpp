@@ -39,6 +39,8 @@ public:
 	virtual ~Data();
 
 	/**
+	 * if size is 0, buffer will be NULL
+	 *
 	 * returns address to our memory
 	 */
 	void * buffer() const;

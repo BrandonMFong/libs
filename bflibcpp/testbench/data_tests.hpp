@@ -23,6 +23,8 @@ int test_datainit() {
 	Data buf0;
 	if (buf0.size() != 0) {
 		result = 1;
+	} else if (buf0.buffer() == NULL) {
+		result = 4;
 	}
 
 	if (!result) {

@@ -20,7 +20,6 @@
 int main() {
 	TEST_SUITE_START;
 
-	/*
 	LAUNCH_TEST_SET(array_tests);
 	LAUNCH_TEST_SET(file_tests);
 	LAUNCH_TEST_SET(list_tests);
@@ -31,7 +30,6 @@ int main() {
 	LAUNCH_TEST_SET(stack_tests);
 	LAUNCH_TEST_SET(queue_tests);
 	LAUNCH_TEST_SET(time_tests);
-	*/
 	LAUNCH_TEST_SET(atomic_tests);
 	LAUNCH_TEST_SET(object_tests);
 	LAUNCH_TEST_SET(data_tests);
