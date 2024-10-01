@@ -446,15 +446,30 @@ int test_data2string() {
 
 		if (s.compareString(str)) {
 			result = 1;
+			break;
 		}
 
-		if (!result) {
-			Data d(size, (const unsigned char *) str);
-			String s(d);
-			if (s.compareString(str)) {
-				result = 2;
-			}
+		Data d0(size, (const unsigned char *) str);
+		String s0(d0);
+		if (s0.compareString(str)) {
+			result = 2;
+			break;
 		}
+
+		srand(time(0));
+		size_t size = 2 << 9;
+		unsigned char * buf = (unsigned char *) malloc(size);
+		Data d1(size, buf);
+		String s1(d1);
+		
+		// I am just making sure we aren't crashing with
+		// a heap overflow
+		//
+		// if it doesn't crash, this should validate the
+		// robustness of the Data to String conversion
+		strlen(s1.cString());
+
+		BFFree(buf);
 	}
 
 	UNIT_TEST_END(!result, result);
