@@ -43,6 +43,18 @@ int test_datainit() {
 		}
 	}
 
+	if (!result) {
+		unsigned char bytes[10];
+		Data buf3(sizeof(bytes), bytes);
+		Data buf4 = buf3;
+
+		if (buf4.size() != sizeof(bytes)) {
+			result = 4;
+		} else if (buf4.size() != buf3.size()) {
+			result = 5;
+		}
+	}
+
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -198,6 +210,56 @@ int test_HexString() {
 	return result;
 }
 
+int test_dataCompare() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 15;
+
+	while (!result && max--) {
+		srand(time(0));
+		int size = rand() % 2048;
+		unsigned char * b0 = (unsigned char *) malloc(size);
+		unsigned char * b1 = (unsigned char *) malloc(size);
+
+		for (int i = 0; i < size; i++) {
+			b0[i] = rand() % (2 << 7);
+			b1[i] = rand() % (2 << 7);
+		}
+
+		if (b0 == NULL) {
+			result = 1;
+			break;
+		} else if (b1 == NULL) {
+			result = 2;
+			break;
+		} else if (memcmp(b0, b1, size) == 0) {
+			result = 6;
+			break;
+		}
+
+		Data d0(size, b0);
+		Data d1(size, b0);
+		Data d2(size, b1);
+
+		if (d0 != d1) {
+			result = 3;
+			break;
+		} else if (d0 == d2) {
+			result = 4;
+			break;
+		} else if (d1 == d2) {
+			result = 5;
+			break;
+		}
+
+		BFFree(b0);
+		BFFree(b1);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void data_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -209,6 +271,7 @@ void data_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_increasingSize, p, f);
 	LAUNCH_TEST(test_String2Data, p, f);
 	LAUNCH_TEST(test_HexString, p, f);
+	LAUNCH_TEST(test_dataCompare, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

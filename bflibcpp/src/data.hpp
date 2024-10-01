@@ -30,6 +30,11 @@ public:
 	Data(const size_t s, const unsigned char * data = NULL);
 
 	/**
+	 * copies in data
+	 */
+	Data(const Data & in);
+
+	/**
 	 * creates data with string
 	 *
 	 * this copies the string data
@@ -83,7 +88,14 @@ public:
 	 */
 	void resize(size_t s);
 
+	/**
+	 * does memcmp
+	 */
+	int compare(const Data & in) const;
+
 private:
+public:
+	bool operator==(const Data & s);
 };
 
 }

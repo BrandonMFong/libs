@@ -15,6 +15,8 @@ using namespace BF;
 
 Data::Data() : Data(0, 0) { }
 
+Data::Data(const Data & in) : Data(in.size(), (unsigned char *) in.buffer()) { }
+
 Data::~Data() { }
 
 Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char, size_t>() {
@@ -34,6 +36,19 @@ String Data::hex() const {
 	String res(buf);
 	BFFree(buf);
 	return res;
+}
+
+int Data::compare(const Data & in) const {
+	if (this->size() < in.size())
+		return -1;
+	else if (this->size() > in.size())
+		return 1;
+	
+	return memcmp(
+		this->buffer(),
+		in.buffer(),
+		this->size()
+	);
 }
 
 size_t Data::size() const {
@@ -64,4 +79,9 @@ int Data::alloc(const size_t size, const unsigned char * data) {
 
 	return 0;
 }
+
+bool Data::operator==(const Data & d) {
+	return this->compare(d) == 0;
+}
+
 
