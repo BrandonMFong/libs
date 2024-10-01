@@ -460,7 +460,7 @@ int test_data2string() {
 		size_t size = 2 << 9;
 		unsigned char * buf = (unsigned char *) malloc(size);
 		Data d1(size, buf);
-		String s1(d1);
+		String s1 = d1;
 		
 		// I am just making sure we aren't crashing with
 		// a heap overflow

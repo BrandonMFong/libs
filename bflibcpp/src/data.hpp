@@ -47,6 +47,9 @@ public:
 	 * if size is 0, buffer will be NULL
 	 *
 	 * returns address to our memory
+	 *
+	 * warning - if you are intending to use this as a string, unless you know for sure this buffer
+	 * contains a null termination, convert this to BF::String using the string's BF::Data constructor
 	 */
 	void * buffer() const;
 
