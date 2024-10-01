@@ -39,7 +39,7 @@ public:
 	 *
 	 * this copies the string data
 	 */
-	Data(String & str);
+	Data(const String & str);
 
 	virtual ~Data();
 

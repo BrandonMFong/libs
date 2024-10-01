@@ -23,7 +23,7 @@ Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char,
 	this->alloc(size, data);
 }
 
-Data::Data(String & str) : Data(str.length() + 1, (const unsigned char *) str.cString()) { }
+Data::Data(const String & str) : Data(str.length() + 1, (const unsigned char *) str.cString()) { }
 
 void * Data::buffer() const {
 	return this->address();

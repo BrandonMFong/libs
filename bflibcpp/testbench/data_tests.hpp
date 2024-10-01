@@ -260,6 +260,27 @@ int test_dataCompare() {
 	return result;
 }
 
+int test_emptyStringDataLength() {
+	UNIT_TEST_START;
+	int result = 0;
+	
+	String str = "";
+	if (str.length() != 0) {
+		result = 1;
+	}
+
+	if (!result) {
+		Data d = str;
+		if (d.size() != 1) {
+			result = 2;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+
+}
+
 void data_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -272,6 +293,7 @@ void data_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_String2Data, p, f);
 	LAUNCH_TEST(test_HexString, p, f);
 	LAUNCH_TEST(test_dataCompare, p, f);
+	LAUNCH_TEST(test_emptyStringDataLength, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
