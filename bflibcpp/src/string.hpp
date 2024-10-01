@@ -38,6 +38,9 @@ public:
 	 * converts data to string
 	 *
 	 * this copies the memory
+	 *
+	 * if data is not null terminated, an extra byte is added to 
+	 * buffer
 	 */
 	String(const Data & data);
 
