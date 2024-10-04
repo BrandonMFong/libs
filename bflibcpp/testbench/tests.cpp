@@ -15,6 +15,7 @@
 #include "queue_tests.hpp"
 #include "atomic_tests.hpp"
 #include "object_tests.hpp"
+#include "data_tests.hpp"
 
 int main() {
 	TEST_SUITE_START;
@@ -31,6 +32,7 @@ int main() {
 	LAUNCH_TEST_SET(time_tests);
 	LAUNCH_TEST_SET(atomic_tests);
 	LAUNCH_TEST_SET(object_tests);
+	LAUNCH_TEST_SET(data_tests);
 
 	TEST_SUITE_END;
 

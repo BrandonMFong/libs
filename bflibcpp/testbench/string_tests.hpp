@@ -9,10 +9,12 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <string.hpp>
+#include <data.hpp>
 #include <release.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
+#include <string.h>
 }
 
 using namespace BF;
@@ -135,7 +137,7 @@ int test_nullstring(void) {
 	UNIT_TEST_START;
 	int result = 0;
 
-	String str0 = NULL;
+	String str0 = 0;
 	String str1 = 0;
 
 	if (str0.length()) result = 1;
@@ -431,6 +433,49 @@ int test_readingFromFile() {
 	return result;
 }
 
+int test_data2string() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 16;
+	const char * str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+	size_t size = strlen(str);
+
+	while (!result && max--) {
+		Data d(size + 1, (const unsigned char *) str);
+		String s(d);
+
+		if (s.compareString(str)) {
+			result = 1;
+			break;
+		}
+
+		Data d0(size, (const unsigned char *) str);
+		String s0(d0);
+		if (s0.compareString(str)) {
+			result = 2;
+			break;
+		}
+
+		srand(time(0));
+		size_t size = 2 << 9;
+		unsigned char * buf = (unsigned char *) malloc(size);
+		Data d1(size, buf);
+		String s1 = d1;
+		
+		// I am just making sure we aren't crashing with
+		// a heap overflow
+		//
+		// if it doesn't crash, this should validate the
+		// robustness of the Data to String conversion
+		strlen(s1.cString());
+
+		BFFree(buf);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void string_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -452,6 +497,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_stringtoint, p, f);
 	LAUNCH_TEST(test_creatingstringfromformat, p, f);
 	LAUNCH_TEST(test_readingFromFile, p, f);
+	LAUNCH_TEST(test_data2string, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
