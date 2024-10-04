@@ -23,6 +23,7 @@ extern "C" {
 #include "bintree.hpp"
 #include "rbtree.hpp"
 #include "atomic.hpp"
+#include "data.hpp"
 
 #endif // CPPLIB_HPP
 

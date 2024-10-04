@@ -4,6 +4,7 @@
  */
 
 #include "string.hpp"
+#include "data.hpp"
 #include <stdexcept>
 #include <stdarg.h>
 
@@ -17,7 +18,7 @@ String::String(const String & str) : String(str.cString()) {}
 
 String:: String() : String("") {}
 
-String::String(const char * str) : String((char *) str) {}
+//String::String(const char * str) : String((char *) str) {}
 
 String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
@@ -31,13 +32,40 @@ String::String(int nullstr) {
 	this->set((char *) "", 1);
 }
 
-String * String::createWithFormat(const char * format, ...) {
+String::String(const Data & data) : Array<char, size_t>() {
+	this->set((const char *) data.buffer(), data.size());
+
+	/**
+	 * if the last element in the array is not the 
+	 * null terminating character, then I will
+	 * adjust the array add the null terminator
+	 */
+	if (this->address()[this->count() - 1] != '\0') {
+		this->adjustMemorySize(this->count() + 1);
+		this->addChar('\0');
+	}
+}
+
+String::String(const char * format, va_list valist) : Array<char, size_t>() {
+	char * str = BFStringCreateFormatArgListString(format, valist);
+	this->set(str, strlen(str) + 1);
+	BFFree(str);
+}
+
+String::String(const char * format, ...) : Array<char, size_t>() {
 	va_list valist;
 	va_start(valist, format);
 	char * str = BFStringCreateFormatArgListString(format, valist);
 	va_end(valist);
-	String * result = new String(str);
+	this->set(str, strlen(str) + 1);
 	BFFree(str);
+}
+
+String * String::createWithFormat(const char * format, ...) {
+	va_list valist;
+	va_start(valist, format);
+	String * result = new String(format, valist);
+	va_end(valist);
 	return result;
 }
 
