@@ -411,6 +411,9 @@ int test_getNodeForObject(void) {
 		t.insert(target);
 
 		const BinTree<int>::BinNode * node = t.getNodeForObject(target);
+		if (!node) {
+			result = 1;
+		}
 
 		numtests--;
 	}

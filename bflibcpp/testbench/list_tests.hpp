@@ -644,6 +644,14 @@ int test_rangeBasedLooping() {
 			i++;
 		}
 
+		if (result) continue;
+
+		if (i != arrsize) {
+			printf("we did not go through the entire list: %d != %d\n", i, arrsize);
+			result = max;
+			continue;
+		}
+
 		BFFree(arr);
 	}
 

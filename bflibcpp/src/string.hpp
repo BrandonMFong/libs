@@ -10,6 +10,8 @@
 #include "access.hpp"
 
 namespace BF {
+	
+class Data;
 
 class String : protected Array<char, size_t> {
 public:
@@ -21,14 +23,26 @@ public:
 	static String * createWithFormat(const char * format, ...);
 
 	String();
-	String(const char * str);
+	//String(const char * str);
 	String(char * str);
 	String(const String & str);
+	String(const char * format, ...);
+	String(const char * format, va_list valist);
 
 	// both integer param constructors throw 
 	// std::invalid_argument if nullstr != 0
 	String(long int nullstr);
 	String(int nullstr);
+
+	/**
+	 * converts data to string
+	 *
+	 * this copies the memory
+	 *
+	 * if data is not null terminated, an extra byte is added to 
+	 * buffer
+	 */
+	String(const Data & data);
 
 	// Returns raw c string
 	const char * cString() const;
