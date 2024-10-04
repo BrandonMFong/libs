@@ -241,6 +241,36 @@ int test_makingarrayfromstring() {
 	return result;
 }
 
+int test_byteArrayToHexString() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 20;
+	while (!result && max--) {
+		unsigned char arr[] = {
+			0x00, 0x11, 0x22, 0x33, 0x44,
+			0x55, 0x66, 0x77, 0x88, 0x99,
+			0xaa, 0xbb, 0xcc, 0xdd, 0xee,
+			0xff
+		};
+		char * str = BFStringCreateStringHexFromArray(
+			arr,
+			sizeof(arr) / sizeof(arr[0])
+		);
+
+		if (str == NULL) {
+			result = 1;
+		} else if (strcmp(str, "00112233445566778899AABBCCDDEEFF")) {
+			result = 2;
+		}
+
+		BFFree(str);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void stringutils_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 
@@ -252,6 +282,7 @@ void stringutils_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_creatingstringfromformat, p, f);
 	LAUNCH_TEST(test_uuidcompare, p, f);
 	LAUNCH_TEST(test_makingarrayfromstring, p, f);
+	LAUNCH_TEST(test_byteArrayToHexString, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
