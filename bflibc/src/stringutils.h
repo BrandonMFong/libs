@@ -62,5 +62,15 @@ char * BFStringCreateFormatArgListString(const char * format, va_list valist);
  */
 char ** BFStringCreateArrayFromString(const char * str, size_t * size, const char * delim);
 
+/**
+ * Creates a string representation of the byteArray
+ *
+ * - byteArraySize : size of the byteArray
+ * - size : size of the return buffer
+ *
+ * returns: hex string. Caller owns memory
+ */
+char * BFStringCreateStringHexFromArray(unsigned char * byteArray, size_t byteArraySize);
+
 #endif // STRING_UTILS_H
 
