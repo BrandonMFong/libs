@@ -74,11 +74,18 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 	if (!buf)
 		return 1;
 
-	buf->_size = recv(this->_sd, buf->_data, this->_sktref->_bufferSize, 0);
-	if (buf->_size == -1) {
-		return errno;
-	} else if (buf->_size == 0) {
-		return -1;
+	size_t bytesReceived = 0;
+	while (bytesReceived < this->_sktref->_bufferSize) {
+		buf->_size = recv(
+			this->_sd,
+			((unsigned char *) buf->_data) + bytesReceived,
+			this->_sktref->_bufferSize - bytesReceived,
+			0);
+		if (buf->_size == -1) {
+			return errno;
+		} else if (buf->_size == 0) {
+			return -1;
+		}
 	}
 
 	return 0;
