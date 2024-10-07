@@ -86,6 +86,8 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 		} else if (buf->_size == 0) {
 			return -1;
 		}
+
+		bytesReceived += buf->_size;
 	}
 
 	return 0;
