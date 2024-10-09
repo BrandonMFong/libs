@@ -21,14 +21,10 @@ extern "C" {
 #define SOCKET_IP4_ADDR_STRLEN 16
 
 namespace BF {
-	namespace Net {
-		class SocketConnection;
-		class SocketEnvelope;
-	}
-}
-
-namespace BF {
 namespace Net {
+
+class SocketConnection;
+class SocketEnvelope;
 
 class Socket : public BF::Object {
 	friend class BF::Net::SocketConnection;

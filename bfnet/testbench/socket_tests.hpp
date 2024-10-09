@@ -9,9 +9,11 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 #define LOCALHOST "127.0.0.1"
 #define PORT 8080
+#define BUFFER_SIZE 1024
 
 #include <bflibcpp/bflibcpp.hpp>
 #include <socket.hpp>
+#include <envelope.hpp>
 #include "bfnet_tests.hpp"
 
 extern "C" {
@@ -19,6 +21,15 @@ extern "C" {
 }
 
 using namespace BF::Net;
+
+void TestSocketPacketReceive(SocketEnvelope * envelope) {
+	BFRetain(envelope);
+	BFRelease(envelope);
+}
+
+int TestSocketNewConnection(SocketConnection * sc) {
+	return 0;
+}
 
 int test_socketinitclient() {
 	UNIT_TEST_START;
@@ -32,7 +43,17 @@ int test_socketinitclient() {
 			result = 1;
 		} else if (skt->mode() != SOCKET_MODE_CLIENT) {
 			result = 2;
-		} else {
+		} else if (skt->isReady()) {
+			result = 3;
+		}
+
+		if (!result) {
+			skt->setInStreamCallback(TestSocketPacketReceive);
+			skt->setNewConnectionCallback(TestSocketNewConnection);
+			skt->setBufferSize(BUFFER_SIZE);
+			if (!skt->isReady()) {
+				result = 4;
+			}
 		}
 
 		BFDelete(skt);
@@ -54,6 +75,17 @@ int test_socketinitserver() {
 			result = 1;
 		} else if (skt->mode() != SOCKET_MODE_SERVER) {
 			result = 2;
+		} else if (skt->isReady()) {
+			result = 3;
+		}
+
+		if (!result) {
+			skt->setInStreamCallback(TestSocketPacketReceive);
+			skt->setNewConnectionCallback(TestSocketNewConnection);
+			skt->setBufferSize(BUFFER_SIZE);
+			if (!skt->isReady()) {
+				result = 4;
+			}
 		}
 
 		BFDelete(skt);

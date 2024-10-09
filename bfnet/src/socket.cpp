@@ -160,6 +160,13 @@ int BF::Net::Socket::start() {
 }
 
 bool BF::Net::Socket::isReady() const {
+	if (this->_bufferSize == 0)
+		return false;
+	else if (this->_cbinstream == NULL)
+		return false;
+	else if (this->_cbnewconn == NULL)
+		return false;
+
 	return true;
 }
 
