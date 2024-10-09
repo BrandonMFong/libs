@@ -22,10 +22,7 @@ extern "C" {
 
 using namespace BF::Net;
 
-void TestSocketPacketReceive(SocketEnvelope * envelope) {
-	BFRetain(envelope);
-	BFRelease(envelope);
-}
+void TestSocketPacketReceive(SocketEnvelope * envelope) { }
 
 int TestSocketNewConnection(SocketConnection * sc) {
 	return 0;
@@ -99,6 +96,39 @@ int test_socketinitserver() {
 	return result;
 }
 
+int test_sendingandreceiving() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 10;
+
+	while (!result && max--) {
+		Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
+		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
+
+		if (!s || !c) {
+			result = 1;
+		} else {
+			s->setInStreamCallback(TestSocketPacketReceive);
+			s->setNewConnectionCallback(TestSocketNewConnection);
+			s->setBufferSize(BUFFER_SIZE);
+
+			c->setInStreamCallback(TestSocketPacketReceive);
+			c->setNewConnectionCallback(TestSocketNewConnection);
+			c->setBufferSize(BUFFER_SIZE);
+
+			if (!s->isReady() || !c->isReady()) {
+				result = 2;
+			}
+		}
+
+		BFDelete(s);
+		BFDelete(c);
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void socket_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -106,6 +136,7 @@ void socket_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_socketinitclient, p, f);
 	LAUNCH_TEST(test_socketinitserver, p, f);
+	LAUNCH_TEST(test_sendingandreceiving, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

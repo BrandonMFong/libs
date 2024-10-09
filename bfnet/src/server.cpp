@@ -68,13 +68,8 @@ void BF::Net::Server::pollthread(void * in) {
 			err = 1;
 		}
 
-		if (!err) {
-			if (s->_cbnewconn)
-				err = s->_cbnewconn(sc);
-
-			if (err) {
-			}
-		}
+		if (!err && s->_cbnewconn)
+			err = s->_cbnewconn(sc);
 
 		// if there are no errors with connection then
 		// we will add it to our connections list

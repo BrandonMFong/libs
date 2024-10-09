@@ -55,10 +55,8 @@ void BF::Net::Client::init(void * in) {
 		sc = new SocketConnection(sock, c);
 	}
 
-	if (!err) {
-		if (c->_cbnewconn)
-			err = c->_cbnewconn(sc);
-	}
+	if (!err && c->_cbnewconn)
+		err = c->_cbnewconn(sc);
 
 	if (!err) {
 		c->_connections.get().add(sc);
