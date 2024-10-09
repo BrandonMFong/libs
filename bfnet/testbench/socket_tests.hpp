@@ -23,8 +23,19 @@ using namespace BF::Net;
 int test_socketinitclient() {
 	UNIT_TEST_START;
 	int result = 0;
-	Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
-	BFDelete(skt);
+	int max = 2 << 10;
+
+	while (!result && max--) {
+		Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
+
+		if (!skt) {
+			result = 1;
+		} else if (skt->mode() != SOCKET_MODE_CLIENT) {
+			result = 2;
+		}
+
+		BFDelete(skt);
+	}
 
 	UNIT_TEST_END(!result, result);
 	return result;
@@ -33,8 +44,19 @@ int test_socketinitclient() {
 int test_socketinitserver() {
 	UNIT_TEST_START;
 	int result = 0;
-	Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
-	BFDelete(skt);
+	int max = 2 << 10;
+
+	while (!result && max--) {
+		Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
+
+		if (!skt) {
+			result = 1;
+		} else if (skt->mode() != SOCKET_MODE_SERVER) {
+			result = 2;
+		}
+
+		BFDelete(skt);
+	}
 
 	UNIT_TEST_END(!result, result);
 	return result;
