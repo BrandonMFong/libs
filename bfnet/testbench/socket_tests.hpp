@@ -32,6 +32,7 @@ int test_socketinitclient() {
 			result = 1;
 		} else if (skt->mode() != SOCKET_MODE_CLIENT) {
 			result = 2;
+		} else {
 		}
 
 		BFDelete(skt);
