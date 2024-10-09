@@ -70,8 +70,7 @@ int BF::Net::Client::_start() {
 	BFThreadAsyncID tid = BFThreadAsync(Client::init, this);
 	BFThreadAsyncDestroy(tid);
 	
-	int error = 0;
-	return error;
+	return 0;
 }
 
 int BF::Net::Client::_stop() {

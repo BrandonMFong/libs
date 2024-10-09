@@ -94,6 +94,11 @@ int test_socketinitserver() {
 	return result;
 }
 
+void test_sendingandreceiving_server_receive(SocketEnvelope * envelope) { }
+void test_sendingandreceiving_server_new(SocketConnection * sc) { }
+void test_sendingandreceiving_client_receive(SocketEnvelope * envelope) { }
+void test_sendingandreceiving_client_new(SocketConnection * sc) { }
+
 int test_sendingandreceiving() {
 	UNIT_TEST_START;
 	int result = 0;
@@ -106,17 +111,33 @@ int test_sendingandreceiving() {
 		if (!s || !c) {
 			result = 1;
 		} else {
-			s->setInStreamCallback(TestSocketPacketReceive);
-			s->setNewConnectionCallback(TestSocketNewConnection);
+			s->setInStreamCallback(test_sendingandreceiving_server_receive);
+			s->setNewConnectionCallback(test_sendingandreceiving_server_new);
 			s->setBufferSize(BUFFER_SIZE);
 
-			c->setInStreamCallback(TestSocketPacketReceive);
-			c->setNewConnectionCallback(TestSocketNewConnection);
+			c->setInStreamCallback(test_sendingandreceiving_client_receive);
+			c->setNewConnectionCallback(test_sendingandreceiving_client_new);
 			c->setBufferSize(BUFFER_SIZE);
 
 			if (!s->isReady() || !c->isReady()) {
 				result = 2;
 			}
+		}
+
+		if (!result) {
+			result = s->start();
+		}
+
+		if (!result) {
+			result = c->start();
+		}
+
+		if (!result) {
+			result = c->stop();
+		}
+
+		if (!result) {
+			result = s->stop();
 		}
 
 		BFDelete(s);
