@@ -68,12 +68,12 @@ void BF::Net::Server::pollthread(void * in) {
 			err = 1;
 		}
 
-		if (!err && s->_cbnewconn)
-			err = s->_cbnewconn(sc);
-
 		// if there are no errors with connection then
 		// we will add it to our connections list
 		if (!err) {
+			if (s->_cbnewconn)
+				s->_cbnewconn(sc);
+
 			s->_connections.get().add(sc);
 			s->startInStreamForConnection(sc);
 		}

@@ -59,7 +59,7 @@ public:
 	/**
 	 * see _cbnewconn
 	 */
-	void setNewConnectionCallback(int (* cb)(BF::Net::SocketConnection * sc));
+	void setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc));
 
 	/**
 	 * buffer length for incoming data
@@ -102,7 +102,7 @@ protected:
 	 * sc : keep a record of this if you want to send data to the 
 	 * device on the other end.  You do not own memory
 	 */
-	int (* _cbnewconn)(BF::Net::SocketConnection * sc);
+	void (* _cbnewconn)(BF::Net::SocketConnection * sc);
 
 private:
 

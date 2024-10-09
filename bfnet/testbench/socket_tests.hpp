@@ -24,9 +24,7 @@ using namespace BF::Net;
 
 void TestSocketPacketReceive(SocketEnvelope * envelope) { }
 
-int TestSocketNewConnection(SocketConnection * sc) {
-	return 0;
-}
+void TestSocketNewConnection(SocketConnection * sc) { }
 
 int test_socketinitclient() {
 	UNIT_TEST_START;

@@ -86,7 +86,7 @@ void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
-void BF::Net::Socket::setNewConnectionCallback(int (* cb)(BF::Net::SocketConnection * sc)) {
+void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc)) {
 	this->_cbnewconn = cb;
 }
 
