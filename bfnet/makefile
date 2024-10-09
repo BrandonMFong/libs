@@ -99,8 +99,7 @@ T_BFLIBCPP_OUT = test-$(LIB_NAME)
 T_BIN_PATH = bin/test/$(LIB_NAME)
 #T_SANITIZE_ADDR = -fsanitize=address
 
-test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
-#test: CPP = @g++
+test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR) -I../bflibcpp/src
 test: AR = @ar
 test: CP = @cp
 test: RM = @rm
