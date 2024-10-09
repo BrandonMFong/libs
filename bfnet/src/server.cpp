@@ -20,7 +20,7 @@ BF::Net::Server::Server() : Socket() {
 }
 
 BF::Net::Server::~Server() {
-	BFThreadAsyncDestroy(this->_pollt);
+	BFThreadAsyncDestroy(this->_pollt.get());
 }
 
 const char BF::Net::Server::mode() const {
@@ -44,10 +44,10 @@ void BF::Net::Server::init(void * in) {
     servAddr.sin_addr.s_addr = inet_addr(s->ipaddr());
 
     // bind socket to the specified IP and port
-    bind(s->_mainSocket, (struct sockaddr *) &servAddr, sizeof(servAddr));
+    bind(s->_mainSocket.get(), (struct sockaddr *) &servAddr, sizeof(servAddr));
 
     // listen for connections
-    listen(s->_mainSocket, 5);
+    listen(s->_mainSocket.get(), 5);
 
 	// launch thread that will constantly accept multiple connections
 	s->_pollt = BFThreadAsync(Server::pollthread, s);
@@ -59,8 +59,8 @@ void BF::Net::Server::pollthread(void * in) {
 	Server * s = (Server *) in;
 	BFRetain(s);
 
-	while (!BFThreadAsyncIsCanceled(s->_pollt)) {
-		int csock = accept(s->_mainSocket, NULL, NULL); // this blocks
+	while (!BFThreadAsyncIsCanceled(s->_pollt.get())) {
+		int csock = accept(s->_mainSocket.get(), NULL, NULL); // this blocks
 
 		int err = 0;
 		SocketConnection * sc = new SocketConnection(csock, s);
@@ -82,6 +82,15 @@ void BF::Net::Server::pollthread(void * in) {
 	BFRelease(s);
 }
 
+bool BF::Net::Server::isRunning() const {
+	if (!BFThreadAsyncIDIsValid(this->_pollt.get()))
+		return false;
+	else if (!BFThreadAsyncIsRunning(this->_pollt.get()))
+		return false;
+
+	return true;
+}
+
 int BF::Net::Server::_start() {
 	BFThreadAsyncID tid = BFThreadAsync(Server::init, this);
 	BFThreadAsyncDestroy(tid);
@@ -90,12 +99,12 @@ int BF::Net::Server::_start() {
 }
 
 int BF::Net::Server::_stop() {
-	shutdown(this->_mainSocket, SHUT_RDWR);
-	close(this->_mainSocket);
+	shutdown(this->_mainSocket.get(), SHUT_RDWR);
+	close(this->_mainSocket.get());
 
 	// thread break down
-	BFThreadAsyncCancel(this->_pollt);
-	BFThreadAsyncWait(this->_pollt);
+	BFThreadAsyncCancel(this->_pollt.get());
+	BFThreadAsyncWait(this->_pollt.get());
 
 	return 0;
 }

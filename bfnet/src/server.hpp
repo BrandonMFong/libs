@@ -7,6 +7,7 @@
 #define SERVER_HPP
 
 #include "socket.hpp"
+#include <bflibcpp/atomic.hpp>
 
 extern "C" {
 #include <bflibc/typethreadid.h>
@@ -20,6 +21,7 @@ public:
 	Server();
 	virtual ~Server();
 	const char mode() const;
+	bool isRunning() const;
 
 protected:
 	static void init(void * in);
@@ -29,13 +31,13 @@ protected:
 	static void pollthread(void * in);
 
 private:
-	int _mainSocket;
+	BF::Atomic<int> _mainSocket;
 
 	/**
 	 * polling thread that handles incoming connection
 	 * requests
 	 */
-	BFThreadAsyncID _pollt;
+	BF::Atomic<BFThreadAsyncID> _pollt;
 };
 
 }

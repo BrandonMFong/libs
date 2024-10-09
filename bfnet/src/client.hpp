@@ -20,6 +20,7 @@ public:
 	Client();
 	virtual ~Client();
 	const char mode() const;
+	bool isRunning() const;
 protected:
 	static void init(void * in);
 	int _start();

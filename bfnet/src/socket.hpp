@@ -48,7 +48,13 @@ public:
 
 	int start();
 	int stop();
-	
+
+	/**
+	 * true if start() finished kicking off all
+	 * working threads
+	 */
+	virtual bool isRunning() const = 0;
+
 	/**
 	 * sets callback that gets invoked when incoming data is ready to be handled
 	 *

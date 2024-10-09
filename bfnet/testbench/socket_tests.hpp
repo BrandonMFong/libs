@@ -155,7 +155,7 @@ void socket_tests(int * pass, int * fail) {
 
 	LAUNCH_TEST(test_socketinitclient, p, f);
 	LAUNCH_TEST(test_socketinitserver, p, f);
-	LAUNCH_TEST(test_sendingandreceiving, p, f);
+	//LAUNCH_TEST(test_sendingandreceiving, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

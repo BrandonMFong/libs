@@ -66,6 +66,10 @@ void BF::Net::Client::init(void * in) {
 	BFRelease(c);
 }
 
+bool BF::Net::Client::isRunning() const {
+	return true;
+}
+
 int BF::Net::Client::_start() {
 	BFThreadAsyncID tid = BFThreadAsync(Client::init, this);
 	BFThreadAsyncDestroy(tid);
