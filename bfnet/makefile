@@ -109,7 +109,7 @@ test: d-clean t-setup debug compile-tests
 t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
-compile-tests:
+compile-tests: testbench/*.hpp
 	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS)
 
 clean: r-clean d-clean

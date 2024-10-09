@@ -7,7 +7,10 @@
 #define SOCKET_TESTS_HPP
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
+#define LOCALHOST "127.0.0.1"
+#define PORT 8080
 
+#include <bflibcpp/bflibcpp.hpp>
 #include <socket.hpp>
 #include "bfnet_tests.hpp"
 
@@ -15,11 +18,24 @@ extern "C" {
 //#include <bflibc/bflibc.h>
 }
 
-using namespace BF;
+using namespace BF::Net;
 
-int test_socketinit() {
+int test_socketinitclient() {
 	UNIT_TEST_START;
 	int result = 0;
+	Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
+	BFDelete(skt);
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_socketinitserver() {
+	UNIT_TEST_START;
+	int result = 0;
+	Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
+	BFDelete(skt);
+
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -29,7 +45,8 @@ void socket_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	LAUNCH_TEST(test_socketinit, p, f);
+	LAUNCH_TEST(test_socketinitclient, p, f);
+	LAUNCH_TEST(test_socketinitserver, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
