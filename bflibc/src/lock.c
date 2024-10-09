@@ -25,7 +25,7 @@ typedef struct {
 #define IS_WAITING_SET_ON(flags) FLAGS_SET_ON(flags, 0)
 #define IS_WAITING_SET_OFF(flags) FLAGS_SET_OFF(flags, 0)
 
-bool BFLockIsValid(BFLock * _lock) {
+bool BFLockIsValid(const BFLock * _lock) {
 	if (_lock == NULL) return false;
 	else {
 		_BFLock * l = (_BFLock *) *_lock;
@@ -64,7 +64,7 @@ int BFLockDestroy(BFLock * lock) {
 	return 0;
 }
 
-int BFLockWait(BFLock * lock) {
+int BFLockWait(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
@@ -79,7 +79,7 @@ int BFLockWait(BFLock * lock) {
 	return 0;
 }
 
-int BFLockTimedWait(BFLock * lock, BFTime t) {
+int BFLockTimedWait(const BFLock * lock, BFTime t) {
 	struct timespec ts;
 	_BFLock * l = 0;
 	if (lock == 0) return 1;
@@ -107,7 +107,7 @@ int BFLockTimedWait(BFLock * lock, BFTime t) {
 	return result;
 }
 
-int BFLockRelease(BFLock * lock) {
+int BFLockRelease(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
@@ -120,7 +120,7 @@ int BFLockRelease(BFLock * lock) {
 	return 0;
 }
 
-int BFLockLock(BFLock * lock) {
+int BFLockLock(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
@@ -131,7 +131,7 @@ int BFLockLock(BFLock * lock) {
 	return 0;
 }
 
-int BFLockUnlock(BFLock * lock) {
+int BFLockUnlock(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
@@ -142,7 +142,7 @@ int BFLockUnlock(BFLock * lock) {
 	return 0;
 }
 
-bool BFLockIsWaiting(BFLock * lock) {
+bool BFLockIsWaiting(const BFLock * lock) {
 	if (lock == 0) return false;
 	else {
 		_BFLock * l = (_BFLock *) *lock;

@@ -20,7 +20,7 @@ typedef void * BFLock;
 /**
  * Validates BFLock object
  */
-bool BFLockIsValid(BFLock * _lock);
+bool BFLockIsValid(const BFLock * _lock);
 
 /**
  * Caller owns
@@ -35,12 +35,12 @@ int BFLockDestroy(BFLock * lock);
 /**
  * Waits until BFLockRelease is called on object
  */
-int BFLockWait(BFLock * lock);
+int BFLockWait(const BFLock * lock);
 
 /**
  * true if lock is being blocked by BFLockWait
  */
-bool BFLockIsWaiting(BFLock * l);
+bool BFLockIsWaiting(const BFLock * l);
 
 #define kBFLockTimedWaitCodeTimedOut 0xff
 
@@ -52,22 +52,22 @@ bool BFLockIsWaiting(BFLock * l);
  *
  * t : seconds with nanosecond resolution. e.g. `1.0` is one second
  */
-int BFLockTimedWait(BFLock * l, BFTime t);
+int BFLockTimedWait(const BFLock * l, BFTime t);
 
 /**
  * Releases BFLock waiting on BFLockWait
  */
-int BFLockRelease(BFLock * lock);
+int BFLockRelease(const BFLock * lock);
 
 /**
  * Activates a mutex lock
  */
-int BFLockLock(BFLock * lock);
+int BFLockLock(const BFLock * lock);
 
 /**
  * Unlocks a mutex lock
  */
-int BFLockUnlock(BFLock * lock);
+int BFLockUnlock(const BFLock * lock);
 
 #endif // LOCK_H
 
