@@ -19,7 +19,6 @@ class Client : public Socket {
 public:
 	Client();
 	virtual ~Client();
-	const int descriptor() const;
 	const char mode() const;
 protected:
 	static void init(void * in);

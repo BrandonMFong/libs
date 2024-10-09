@@ -75,6 +75,10 @@ int test_socketinitserver() {
 			result = 1;
 		} else if (skt->mode() != SOCKET_MODE_SERVER) {
 			result = 2;
+		} else if (skt->port() != PORT) {
+			result = 2;
+		} else if (strcmp(skt->ipaddr(), LOCALHOST)) {
+			result = 2;
 		} else if (skt->isReady()) {
 			result = 3;
 		}
