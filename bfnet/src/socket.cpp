@@ -159,6 +159,10 @@ int BF::Net::Socket::start() {
 	return 0;
 }
 
+bool BF::Net::Socket::isReady() const {
+	return true;
+}
+
 int BF::Net::Socket::stop() {
 	int error = 0;
 

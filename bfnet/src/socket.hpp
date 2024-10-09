@@ -75,6 +75,11 @@ public:
 	uint16_t port() const;
 	const char * ipaddr() const;
 
+	/**
+	 * checks if everything is ready to go
+	 */
+	bool isReady() const;
+
 protected:
 	Socket();
 
