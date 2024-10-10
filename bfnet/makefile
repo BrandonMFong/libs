@@ -116,3 +116,7 @@ clean: r-clean d-clean
 	$(RM) -rfv build/
 	$(RM) -rfv bin
 
+clean-all: clean
+	@cd ../bflibc/ && make clean
+	@cd ../bflibcpp/ && make clean
+
