@@ -39,11 +39,13 @@ public:
 		this->_obj = obj; 
 	}
 
+	/*
 	T & unsafeget() {
 		return this->_obj; 
 	}
+	*/
 
-	T unsafeget() const {
+	T & unsafeget() const {
 		return this->_obj; 
 	}
 
@@ -56,16 +58,18 @@ public:
 	// returns a reference to object
 	//
 	// caller does NOT own
+	/*
 	T & get() {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
 		BFLockUnlock(&this->_objlock);
 		return res;
 	}
+	*/
 
-	T get() const {
+	T & get() const {
 		BFLockLock(&this->_objlock);
-		T res = this->unsafeget();
+		T & res = this->unsafeget();
 		BFLockUnlock(&this->_objlock);
 		return res;
 	}
@@ -107,12 +111,14 @@ public:
 		return this->get();
 	}
 
+	/*
 	operator T () {
 		return this->get();
 	}
+	*/
 
 private:
-	T _obj;
+	mutable T _obj;
 	BFLock _objlock;
 };
 
