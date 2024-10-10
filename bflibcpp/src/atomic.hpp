@@ -43,6 +43,10 @@ public:
 		return this->_obj; 
 	}
 
+	T unsafeget() const {
+		return this->_obj; 
+	}
+
 	void set(T obj) {
 		BFLockLock(&this->_objlock);
 		this->unsafeset(obj);
@@ -55,6 +59,13 @@ public:
 	T & get() {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
+		BFLockUnlock(&this->_objlock);
+		return res;
+	}
+
+	T get() const {
+		BFLockLock(&this->_objlock);
+		T res = this->unsafeget();
 		BFLockUnlock(&this->_objlock);
 		return res;
 	}
@@ -90,6 +101,10 @@ public:
 
 	bool operator!=(const Atomic<T> & a) {
 		return this->_obj != a._obj;
+	}
+
+	operator T () const {
+		return this->get();
 	}
 
 	operator T () {
