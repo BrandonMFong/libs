@@ -63,14 +63,14 @@ public:
 	 * use unsafe getter and setter to access after
 	 * this call
 	 */
-	void lock() {
+	void lock() const {
 		BFLockLock(&this->_objlock);
 	}
 
 	/**
 	 * must call after lock()
 	 */
-	void unlock() {
+	void unlock() const {
 		BFLockUnlock(&this->_objlock);
 	}
 
