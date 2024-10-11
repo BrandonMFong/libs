@@ -67,6 +67,13 @@ void BF::Net::Client::init(void * in) {
 }
 
 bool BF::Net::Client::isRunning() const {
+	if (this->_tidin.get().count() != 1) { // assuming client will only connct to 1 server
+		return false;
+	} else if (!BFThreadAsyncIDIsValid(this->_tidin.get().first()->object()))
+		return false;
+	else if (!BFThreadAsyncIsRunning(this->_tidin.get().first()->object()))
+		return false;
+
 	return true;
 }
 

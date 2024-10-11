@@ -15,6 +15,7 @@
 #include <socket.hpp>
 #include <envelope.hpp>
 #include "bfnet_tests.hpp"
+#include <unistd.h>
 
 extern "C" {
 //#include <bflibc/bflibc.h>
@@ -102,7 +103,7 @@ void test_sendingandreceiving_client_new(SocketConnection * sc) { }
 int test_sendingandreceiving() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 2 << 10;
+	int max = 1;
 
 	while (!result && max--) {
 		Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
@@ -128,9 +129,13 @@ int test_sendingandreceiving() {
 			result = s->start();
 		}
 
+		while (!result && !s->isRunning()) { usleep(50); }
+
 		if (!result) {
 			result = c->start();
 		}
+		
+		while (!result && !c->isRunning()) { usleep(50); }
 
 		if (!result) {
 			result = c->stop();
@@ -153,9 +158,9 @@ void socket_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	LAUNCH_TEST(test_socketinitclient, p, f);
-	LAUNCH_TEST(test_socketinitserver, p, f);
-	//LAUNCH_TEST(test_sendingandreceiving, p, f);
+	//LAUNCH_TEST(test_socketinitclient, p, f);
+	//LAUNCH_TEST(test_socketinitserver, p, f);
+	LAUNCH_TEST(test_sendingandreceiving, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

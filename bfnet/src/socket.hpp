@@ -50,8 +50,13 @@ public:
 	int stop();
 
 	/**
+	 * true if socket is ready to take connections (server) or
+	 * is actively connected (client)
+	 *
 	 * true if start() finished kicking off all
 	 * working threads
+	 *
+	 * is thread safe
 	 */
 	virtual bool isRunning() const = 0;
 
@@ -78,7 +83,8 @@ public:
 	const char * ipaddr() const;
 
 	/**
-	 * checks if everything is ready to go
+	 * checks if everything is ready to go before 
+	 * calling start()
 	 */
 	bool isReady() const;
 
@@ -110,6 +116,8 @@ protected:
 	 */
 	void (* _cbnewconn)(BF::Net::SocketConnection * sc);
 
+	BF::Atomic<BF::List<BFThreadAsyncID>> _tidin;
+
 private:
 
 	/**
@@ -124,8 +132,6 @@ private:
 	 * receives packets and puts them in a queue
 	 */
 	static void inStream(void * in);
-
-	BF::Atomic<BF::List<BFThreadAsyncID>> _tidin;
 
 	/**
 	 * holds expected buffer size for all incoming and outcoming data
