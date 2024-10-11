@@ -14,6 +14,8 @@
 #include <bflibcpp/bflibcpp.hpp>
 #include <socket.hpp>
 #include <envelope.hpp>
+#include <connection.hpp>
+#include <buffer.hpp>
 #include "bfnet_tests.hpp"
 #include <unistd.h>
 
@@ -21,6 +23,7 @@ extern "C" {
 //#include <bflibc/bflibc.h>
 }
 
+using namespace BF;
 using namespace BF::Net;
 
 void TestSocketPacketReceive(SocketEnvelope * envelope) { }
@@ -95,10 +98,38 @@ int test_socketinitserver() {
 	return result;
 }
 
-void test_sendingandreceiving_server_receive(SocketEnvelope * envelope) { }
-void test_sendingandreceiving_server_new(SocketConnection * sc) { }
-void test_sendingandreceiving_client_receive(SocketEnvelope * envelope) { }
-void test_sendingandreceiving_client_new(SocketConnection * sc) { }
+Atomic<SocketConnection *> serverConn = NULL;
+Atomic<SocketConnection *> clientConn = NULL;
+Data serverIn;
+Atomic<bool> serverInReceived = false;
+Data clientIn;
+Atomic<bool> clientInReceived = false;
+
+void test_sendingandreceiving_receive(SocketEnvelope * envelope, Data & in, Atomic<SocketConnection *> & conn, Atomic<bool> & received) {
+	uuid_t u0, u1;
+	envelope->connection()->getuuid(u0);
+	conn.get()->getuuid(u1);
+	if ((conn.get() != NULL) && !uuid_compare(u0, u1)) {
+		in.alloc(envelope->buf()->size(), (unsigned char *) envelope->buf()->data());
+		received = true;
+	}
+}
+
+void test_sendingandreceiving_server_receive(SocketEnvelope * envelope) {
+	test_sendingandreceiving_receive(envelope, serverIn, serverConn, serverInReceived);
+}
+
+void test_sendingandreceiving_server_new(SocketConnection * sc) {
+	serverConn = sc;
+}
+
+void test_sendingandreceiving_client_receive(SocketEnvelope * envelope) {
+	test_sendingandreceiving_receive(envelope, clientIn, clientConn, clientInReceived);
+}
+
+void test_sendingandreceiving_client_new(SocketConnection * sc) {
+	clientConn = sc;
+}
 
 int test_sendingandreceiving() {
 	UNIT_TEST_START;
@@ -106,6 +137,13 @@ int test_sendingandreceiving() {
 	int max = 1;
 
 	while (!result && max--) {
+		Data data(2 << 9); // test data
+		srand(time(0));
+		for (size_t i = 0; i < data.size(); i++) {
+			unsigned char * buf = (unsigned char *) data.buffer();
+			buf[i] = rand() % 256;
+		}
+
 		Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
 		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
 
@@ -125,17 +163,57 @@ int test_sendingandreceiving() {
 			}
 		}
 
+		// start the connection
+		
 		if (!result) {
 			result = s->start();
 		}
 
-		while (!result && !s->isRunning()) { usleep(50); }
+		while (!result && !s->isRunning() && (serverConn.get() == NULL)) { usleep(50); }
 
 		if (!result) {
 			result = c->start();
 		}
 		
-		while (!result && !c->isRunning()) { usleep(50); }
+		while (!result && !c->isRunning() && (clientConn.get() == NULL)) { usleep(50); }
+
+		// send test data
+
+		// client -> server
+		if (!result) {
+			serverInReceived = false; // reset
+			result = clientConn.get()->queueData(data.buffer(), data.size());
+		}
+		
+		while (
+			!result && !s->isRunning()
+			&& (serverConn.get() == NULL)
+			&& !serverInReceived)
+		{ usleep(50); }
+
+		if (!result) {
+			if (data != serverIn) {
+				result = 3;
+			}
+		}
+
+		// server -> client
+		if (!result) {
+			clientInReceived = false; // reset
+			result = serverConn.get()->queueData(data.buffer(), data.size());
+		}
+
+		while (
+			!result && !c->isRunning()
+			&& (clientConn.get() == NULL)
+			&& !clientInReceived)
+		{ usleep(50); }
+
+		if (!result) {
+			if (data != clientIn) {
+				result = 4;
+			}
+		}
 
 		if (!result) {
 			result = c->stop();
