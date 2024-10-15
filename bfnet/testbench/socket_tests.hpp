@@ -148,6 +148,7 @@ int test_sendingandreceiving() {
 		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
 
 		if (!s || !c) {
+			printf("\n%d", __LINE__);
 			result = 1;
 		} else {
 			s->setInStreamCallback(test_sendingandreceiving_server_receive);
@@ -159,6 +160,7 @@ int test_sendingandreceiving() {
 			c->setBufferSize(BUFFER_SIZE);
 
 			if (!s->isReady() || !c->isReady()) {
+				printf("\n%d", __LINE__);
 				result = 2;
 			}
 		}
@@ -166,12 +168,14 @@ int test_sendingandreceiving() {
 		// start the connection
 		
 		if (!result) {
+			printf("\n%d", __LINE__);
 			result = s->start();
 		}
 
 		while (!result && !s->isRunning() && (serverConn.get() == NULL)) { usleep(50); }
 
 		if (!result) {
+			printf("\n%d", __LINE__);
 			result = c->start();
 		}
 		
@@ -181,6 +185,7 @@ int test_sendingandreceiving() {
 
 		// client -> server
 		if (!result) {
+			printf("\n%d", __LINE__);
 			serverInReceived = false; // reset
 			result = clientConn.get()->queueData(data.buffer(), data.size());
 		}
@@ -192,13 +197,17 @@ int test_sendingandreceiving() {
 		{ usleep(50); }
 
 		if (!result) {
+			printf("\n%d", __LINE__);
 			if (data != serverIn) {
+				printf("\n%s != \n%s", data.hex().cString(), serverIn.hex().cString());
+				printf("\n%ld != \n%ld", data.size(), serverIn.size());
 				result = 3;
 			}
 		}
 
 		// server -> client
 		if (!result) {
+			printf("\n%d", __LINE__);
 			clientInReceived = false; // reset
 			result = serverConn.get()->queueData(data.buffer(), data.size());
 		}
@@ -210,16 +219,19 @@ int test_sendingandreceiving() {
 		{ usleep(50); }
 
 		if (!result) {
+			printf("\n%d", __LINE__);
 			if (data != clientIn) {
 				result = 4;
 			}
 		}
 
 		if (!result) {
+			printf("\n%d", __LINE__);
 			result = c->stop();
 		}
 
 		if (!result) {
+			printf("\n%d", __LINE__);
 			result = s->stop();
 		}
 
