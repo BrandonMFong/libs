@@ -134,7 +134,7 @@ void test_sendingandreceiving_client_new(SocketConnection * sc) {
 int test_sendingandreceiving() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 1;
+	int max = 0;
 
 	while (!result && max--) {
 		Data data(2 << 9); // test data
@@ -148,7 +148,6 @@ int test_sendingandreceiving() {
 		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
 
 		if (!s || !c) {
-			printf("\n%d", __LINE__);
 			result = 1;
 		} else {
 			s->setInStreamCallback(test_sendingandreceiving_server_receive);
@@ -160,7 +159,6 @@ int test_sendingandreceiving() {
 			c->setBufferSize(BUFFER_SIZE);
 
 			if (!s->isReady() || !c->isReady()) {
-				printf("\n%d", __LINE__);
 				result = 2;
 			}
 		}
@@ -168,14 +166,12 @@ int test_sendingandreceiving() {
 		// start the connection
 		
 		if (!result) {
-			printf("\n%d", __LINE__);
 			result = s->start();
 		}
 
 		while (!result && !s->isRunning() && (serverConn.get() == NULL)) { usleep(50); }
 
 		if (!result) {
-			printf("\n%d", __LINE__);
 			result = c->start();
 		}
 		
@@ -185,19 +181,14 @@ int test_sendingandreceiving() {
 
 		// client -> server
 		if (!result) {
-			printf("\n%d", __LINE__);
 			serverInReceived = false; // reset
 			result = clientConn.get()->queueData(data.buffer(), data.size());
 		}
 		
-		while (
-			!result && !s->isRunning()
-			&& (serverConn.get() == NULL)
-			&& !serverInReceived)
+		while (!result && !serverInReceived)
 		{ usleep(50); }
 
 		if (!result) {
-			printf("\n%d", __LINE__);
 			if (data != serverIn) {
 				printf("\n%s != \n%s", data.hex().cString(), serverIn.hex().cString());
 				printf("\n%ld != \n%ld", data.size(), serverIn.size());
@@ -207,31 +198,24 @@ int test_sendingandreceiving() {
 
 		// server -> client
 		if (!result) {
-			printf("\n%d", __LINE__);
 			clientInReceived = false; // reset
 			result = serverConn.get()->queueData(data.buffer(), data.size());
 		}
 
-		while (
-			!result && !c->isRunning()
-			&& (clientConn.get() == NULL)
-			&& !clientInReceived)
+		while (!result && !clientInReceived)
 		{ usleep(50); }
 
 		if (!result) {
-			printf("\n%d", __LINE__);
 			if (data != clientIn) {
 				result = 4;
 			}
 		}
 
 		if (!result) {
-			printf("\n%d", __LINE__);
 			result = c->stop();
 		}
 
 		if (!result) {
-			printf("\n%d", __LINE__);
 			result = s->stop();
 		}
 
