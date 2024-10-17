@@ -6,6 +6,7 @@
 
 #include "lock.h"
 #include <stdlib.h>
+#include <unistd.h>
 #include <pthread.h>
 #include "free.h"
 #include "bftime.h"
@@ -51,6 +52,16 @@ int BFLockCreate(BFLock * lock) {
 int BFLockDestroy(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
+		if (BFLockIsWaiting(lock)) {
+			BFLockRelease(lock);
+
+			// wait for BFLockWait to release
+			// its mutex
+			while (BFLockIsWaiting(lock)) {
+				usleep(50);
+			}
+		}
+
 		_BFLock * l = (_BFLock *) *lock;
 
 		int error = pthread_mutex_destroy(&l->mutex);
@@ -64,35 +75,57 @@ int BFLockDestroy(BFLock * lock) {
 	return 0;
 }
 
+int BFLockRelease(const BFLock * lock) {
+	if (lock == 0) return 1;
+	else {
+		_BFLock * l = (_BFLock *) *lock;
+		
+		pthread_mutex_lock(&l->mutex);
+		int err = pthread_cond_signal(&l->cond);
+		pthread_mutex_unlock(&l->mutex);
+
+		return err;
+	}
+}
+
+bool BFLockIsWaiting(const BFLock * lock) {
+	if (lock == 0) return false;
+	else {
+		_BFLock * l = (_BFLock *) *lock;
+		pthread_mutex_lock(&l->mutex);
+		bool res = IS_WAITING_GET(l->flags);
+		pthread_mutex_unlock(&l->mutex);
+		return res;
+	}
+}
+
 int BFLockWait(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 202;
 		
+		pthread_mutex_lock(&l->mutex);
 		IS_WAITING_SET_ON(l->flags);
+		int err = pthread_cond_wait(&l->cond, &l->mutex);
+		IS_WAITING_SET_OFF(l->flags); // reset regardless of error
+		pthread_mutex_unlock(&l->mutex);
 
-		if (pthread_cond_wait(&l->cond, &l->mutex)) return 3;
-		if (pthread_mutex_unlock(&l->mutex)) return 4;
+		return err;
 	}
-
-	return 0;
 }
 
 int BFLockTimedWait(const BFLock * lock, BFTime t) {
 	struct timespec ts;
 	_BFLock * l = 0;
 	if (lock == 0) return 1;
-	else {
-		l = (_BFLock *) *lock;
-		
-		clock_gettime(CLOCK_REALTIME, &ts);
-		ts.tv_sec += (time_t) t;
-		ts.tv_nsec += BFTimeGetNS(t);
-
-		if (pthread_mutex_lock(&l->mutex)) return 203;
-	}
 	
+	l = (_BFLock *) *lock;
+	
+	clock_gettime(CLOCK_REALTIME, &ts);
+	ts.tv_sec += (time_t) t;
+	ts.tv_nsec += BFTimeGetNS(t);
+
+	pthread_mutex_lock(&l->mutex);
 	IS_WAITING_SET_ON(l->flags);
 
 	// Check if wait timedout
@@ -102,22 +135,10 @@ int BFLockTimedWait(const BFLock * lock, BFTime t) {
 		result = kBFLockTimedWaitCodeTimedOut;
 	}
 	
-	if (pthread_mutex_unlock(&l->mutex)) result = 4;
+	IS_WAITING_SET_OFF(l->flags); // reset regardless of error
+	pthread_mutex_unlock(&l->mutex);
 
 	return result;
-}
-
-int BFLockRelease(const BFLock * lock) {
-	if (lock == 0) return 1;
-	else {
-		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 204;
-		IS_WAITING_SET_OFF(l->flags);
-		if (pthread_cond_signal(&l->cond)) return 3;
-		if (pthread_mutex_unlock(&l->mutex)) return 4;
-	}
-
-	return 0;
 }
 
 int BFLockLock(const BFLock * lock) {
@@ -140,16 +161,5 @@ int BFLockUnlock(const BFLock * lock) {
 		}
 	}
 	return 0;
-}
-
-bool BFLockIsWaiting(const BFLock * lock) {
-	if (lock == 0) return false;
-	else {
-		_BFLock * l = (_BFLock *) *lock;
-		pthread_mutex_lock(&l->mutex);
-		bool res = IS_WAITING_GET(l->flags);
-		pthread_mutex_unlock(&l->mutex);
-		return res;
-	}
 }
 

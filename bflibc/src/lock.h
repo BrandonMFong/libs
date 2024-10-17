@@ -48,7 +48,7 @@ bool BFLockIsWaiting(const BFLock * l);
  * Waits for a specific amount of time before continuing
  *
  * if elapsed time reaches t, kBFLockTimedWaitCodeTimedOut
- * returns
+ * returns (not necessarily an error)
  *
  * t : seconds with nanosecond resolution. e.g. `1.0` is one second
  */

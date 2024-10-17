@@ -227,7 +227,6 @@ int test_RemoveFullDirectory(void) {
 int test_directoryWithAPeriod(void) {
 	int result = 0;
 	char tmpdir[PATH_MAX];
-	char file[PATH_MAX];
 
 	// setup
 	if (BFFileSystemGetOSTempDirectory(tmpdir)) {

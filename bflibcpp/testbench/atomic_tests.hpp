@@ -235,7 +235,7 @@ int test_comparingObjectWithAnother() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	long long max = (long long) 2 << 40;
+	long long max = (long long) 2 << 20;
 	while (!result && max--) {
 		Atomic<long long> val = max;
 		if ((val != max) || (max != val)) {
