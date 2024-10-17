@@ -134,7 +134,7 @@ void test_sendingandreceiving_client_new(SocketConnection * sc) {
 int test_sendingandreceiving() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 0;
+	int max = 2;
 
 	while (!result && max--) {
 		Data data(2 << 9); // test data
@@ -182,6 +182,7 @@ int test_sendingandreceiving() {
 		// client -> server
 		if (!result) {
 			serverInReceived = false; // reset
+			serverIn.clear();
 			result = clientConn.get()->queueData(data.buffer(), data.size());
 		}
 		
@@ -199,6 +200,7 @@ int test_sendingandreceiving() {
 		// server -> client
 		if (!result) {
 			clientInReceived = false; // reset
+			clientIn.clear();
 			result = serverConn.get()->queueData(data.buffer(), data.size());
 		}
 

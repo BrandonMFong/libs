@@ -26,7 +26,7 @@ CPPFLAGS += -std=c++20
 #
 # All objects defined in headers should be copied to 
 # bin
-CPP_OBJECTS = client server socket envelope connection buffer
+CPP_OBJECTS = client server socket envelope connection buffer log
 
 ### RELEASE ###
 R_CPPFLAGS = $(CPPFLAGS) -Ibin/release/ -I../bflibc/bin/release -I../bflibcpp/bin/release $(BF_LIB_C_UUID_FLAGS)

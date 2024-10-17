@@ -4,6 +4,7 @@
  */
 
 #include "log.hpp"
+#include "internal/log.hpp"
 #include <pthread.h>
 #include <stdarg.h>
 #include <stdlib.h>
