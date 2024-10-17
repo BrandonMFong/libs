@@ -25,6 +25,7 @@ protected:
 	static void init(void * in);
 	int _start();
 	int _stop();
+	BFThreadAsyncID inStreamThreadID() const;
 private:
 };
 

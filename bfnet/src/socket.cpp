@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <bflibcpp/bflibcpp.hpp>
 #include <bflibc/bflibc.h>
+#include "internal/log.hpp"
 
 using namespace BF;
 using namespace BF::Net;
@@ -142,7 +143,10 @@ void BF::Net::Socket::inStream(void * in) {
 
 // called by subclasses whenever they get a new connection
 int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) {
-	if (!sc) return 1;
+	if (!sc) {
+		BFNetLogDebug("%s - null socket connection");
+		return 1;
+	}
 
 	InStreamTools * tools = new InStreamTools;
 	tools->mainConnection = sc;

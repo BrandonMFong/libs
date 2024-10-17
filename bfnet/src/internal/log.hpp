@@ -6,6 +6,12 @@
 #ifndef BF_NET_INTERNAL_LOG_HPP
 #define BF_NET_INTERNAL_LOG_HPP
 
+#ifdef DEBUG
+#define BFNetLogDebug(...) BF::Net::Log::Write(__VA_ARGS__)
+#else
+#define BFNetLogDebug(...)
+#endif
+
 namespace BF {
 namespace Net {
 namespace Log {
