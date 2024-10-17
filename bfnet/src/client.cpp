@@ -13,12 +13,13 @@
 #include <bflibcpp/bflibcpp.hpp>
 #include "connection.hpp"
 #include <arpa/inet.h>
+#include "internal/log.hpp"
 
-BF::Net::Client::Client() {
-}
+using namespace BF::Net;
 
-BF::Net::Client::~Client() {
-}
+BF::Net::Client::Client() { }
+
+BF::Net::Client::~Client() { }
 
 const char BF::Net::Client::mode() const {
 	return SOCKET_MODE_CLIENT;
@@ -47,7 +48,7 @@ void BF::Net::Client::init(void * in) {
 	int err = 0;
     if (connectStatus == -1) {
 		err = errno;
-        printf("Error... %d\n", err);
+		Log::Write("Error... %d\n", err);
 	}
 
 	SocketConnection * sc = NULL;
