@@ -76,13 +76,21 @@ void BF::Net::Server::pollthread(void * in) {
 	Server * s = (Server *) in;
 	BFRetain(s);
 
-	while (!BFThreadAsyncIsCanceled(s->_pollt.get())) {
+	int err = 0;
+	while (!err && !BFThreadAsyncIsCanceled(s->_pollt.get())) {
 		int csock = accept(s->_mainSocket.get(), NULL, NULL); // this blocks
-
-		int err = 0;
-		SocketConnection * sc = new SocketConnection(csock, s);
-		if (!sc) {
+		if (csock == -1) {
+			BFNetLogDebug("%s - accept() returned %d", __FUNCTION__, errno);
 			err = 1;
+		}
+
+		SocketConnection * sc = NULL;
+		if (!err) {
+			sc = new SocketConnection(csock, s);
+			if (!sc) {
+				BFNetLogDebug("%s - could not create SocketConnection", __FUNCTION__);
+				err = 1;
+			}
 		}
 
 		// if there are no errors with connection then
