@@ -33,7 +33,7 @@ void TestSocketNewConnection(SocketConnection * sc) { }
 int test_socketinitclient() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 2 << 10;
+	int max = 2 << 20;
 
 	while (!result && max--) {
 		Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
@@ -65,7 +65,7 @@ int test_socketinitclient() {
 int test_socketinitserver() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 2 << 10;
+	int max = 2 << 20;
 
 	while (!result && max--) {
 		Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
@@ -134,9 +134,41 @@ void test_sendingandreceiving_client_new(SocketConnection * sc) {
 int test_sendingandreceiving() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 2;
-	int portoffset = 0;
+	
+	Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
+	Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
 
+	if (!s || !c) {
+		result = 1;
+	} else {
+		s->setInStreamCallback(test_sendingandreceiving_server_receive);
+		s->setNewConnectionCallback(test_sendingandreceiving_server_new);
+		s->setBufferSize(BUFFER_SIZE);
+
+		c->setInStreamCallback(test_sendingandreceiving_client_receive);
+		c->setNewConnectionCallback(test_sendingandreceiving_client_new);
+		c->setBufferSize(BUFFER_SIZE);
+
+		if (!s->isReady() || !c->isReady()) {
+			result = 2;
+		}
+	}
+
+	// start the connection
+	
+	if (!result) {
+		result = s->start();
+	}
+
+	while (!result && !s->isRunning() && (serverConn.get() == NULL)) { usleep(50); }
+
+	if (!result) {
+		result = c->start();
+	}
+	
+	while (!result && !c->isRunning() && (clientConn.get() == NULL)) { usleep(50); }
+
+	int max = 2 << 12;
 	while (!result && max--) {
 		Data data(2 << 9); // test data
 		srand(time(0));
@@ -144,40 +176,6 @@ int test_sendingandreceiving() {
 			unsigned char * buf = (unsigned char *) data.buffer();
 			buf[i] = rand() % 256;
 		}
-
-		Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT + portoffset, &result);
-		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT + portoffset, &result);
-		portoffset++;
-
-		if (!s || !c) {
-			result = 1;
-		} else {
-			s->setInStreamCallback(test_sendingandreceiving_server_receive);
-			s->setNewConnectionCallback(test_sendingandreceiving_server_new);
-			s->setBufferSize(BUFFER_SIZE);
-
-			c->setInStreamCallback(test_sendingandreceiving_client_receive);
-			c->setNewConnectionCallback(test_sendingandreceiving_client_new);
-			c->setBufferSize(BUFFER_SIZE);
-
-			if (!s->isReady() || !c->isReady()) {
-				result = 2;
-			}
-		}
-
-		// start the connection
-		
-		if (!result) {
-			result = s->start();
-		}
-
-		while (!result && !s->isRunning() && (serverConn.get() == NULL)) { usleep(50); }
-
-		if (!result) {
-			result = c->start();
-		}
-		
-		while (!result && !c->isRunning() && (clientConn.get() == NULL)) { usleep(50); }
 
 		// send test data
 
@@ -214,18 +212,18 @@ int test_sendingandreceiving() {
 				result = 4;
 			}
 		}
-
-		if (!result) {
-			result = c->stop();
-		}
-
-		if (!result) {
-			result = s->stop();
-		}
-
-		BFRelease(s);
-		BFRelease(c);
 	}
+
+	if (!result) {
+		result = c->stop();
+	}
+
+	if (!result) {
+		result = s->stop();
+	}
+
+	BFRelease(s);
+	BFRelease(c);
 
 	UNIT_TEST_END(!result, result);
 	return result;
@@ -236,8 +234,8 @@ void socket_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	//LAUNCH_TEST(test_socketinitclient, p, f);
-	//LAUNCH_TEST(test_socketinitserver, p, f);
+	LAUNCH_TEST(test_socketinitclient, p, f);
+	LAUNCH_TEST(test_socketinitserver, p, f);
 	LAUNCH_TEST(test_sendingandreceiving, p, f);
 
 	if (pass) *pass += p;
