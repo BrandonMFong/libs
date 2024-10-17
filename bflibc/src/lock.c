@@ -43,6 +43,7 @@ int BFLockCreate(BFLock * lock) {
 	else if (pthread_mutex_init(&l->mutex, NULL)) error = 1;
 	else if (pthread_cond_init(&l->cond, NULL)) error = 1;
 	else {
+		l->flags = 0;
 		*lock = (BFLock) l;
 	}
 
