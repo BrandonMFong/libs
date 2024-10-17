@@ -39,12 +39,6 @@ public:
 		this->_obj = obj; 
 	}
 
-	/*
-	T & unsafeget() {
-		return this->_obj; 
-	}
-	*/
-
 	T & unsafeget() const {
 		return this->_obj; 
 	}
@@ -58,15 +52,6 @@ public:
 	// returns a reference to object
 	//
 	// caller does NOT own
-	/*
-	T & get() {
-		BFLockLock(&this->_objlock);
-		T & res = this->unsafeget();
-		BFLockUnlock(&this->_objlock);
-		return res;
-	}
-	*/
-
 	T & get() const {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
@@ -99,23 +84,25 @@ public:
 		return *this;
 	}
 
-	bool operator==(const Atomic<T> & a) {
-		return this->_obj == a._obj;
+	friend bool operator==(const Atomic<T> & a, const Atomic<T> & b) {
+		return a._obj == b._obj;
+	}
+	
+	friend bool operator!=(const Atomic<T> & a, const Atomic<T> & b) {
+		return a._obj != b._obj;
 	}
 
-	bool operator!=(const Atomic<T> & a) {
-		return this->_obj != a._obj;
+	friend bool operator==(const Atomic<T> & a, const T & b) {
+		return a._obj == b;
 	}
 
+	friend bool operator!=(const Atomic<T> & a, const T & b) {
+		return a._obj != b;
+	}
+	
 	operator T () const {
 		return this->get();
 	}
-
-	/*
-	operator T () {
-		return this->get();
-	}
-	*/
 
 private:
 	mutable T _obj;

@@ -231,6 +231,22 @@ int test_changingvaluebyreference() {
 	return result;
 }
 
+int test_comparingObjectWithAnother() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	long long max = (long long) 2 << 40;
+	while (!result && max--) {
+		Atomic<long long> val = max;
+		if ((val != max) || (max != val)) {
+			result = max;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void atomic_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -244,6 +260,7 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_equaloverloadop, p, f);
 	LAUNCH_TEST(test_castingoperator, p, f);
 	LAUNCH_TEST(test_changingvaluebyreference, p, f);
+	LAUNCH_TEST(test_comparingObjectWithAnother, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
