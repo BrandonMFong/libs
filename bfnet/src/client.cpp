@@ -64,7 +64,7 @@ void BF::Net::Client::init(void * in) {
     }
 
 	if (err) {
-		BFNetLogDebug("%s - %d\n", __func__, err);
+		BFNetLogDebug("%s - %d\n", __FUNCTION__, err);
 	}
 
 	BFRelease(c);

@@ -144,7 +144,7 @@ void BF::Net::Socket::inStream(void * in) {
 // called by subclasses whenever they get a new connection
 int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) {
 	if (!sc) {
-		BFNetLogDebug("%s - null socket connection");
+		BFNetLogDebug("%s - null socket connection", __FUNCTION__);
 		return 1;
 	}
 

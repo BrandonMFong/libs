@@ -13,6 +13,7 @@
 #include <bflibcpp/bflibcpp.hpp>
 #include "connection.hpp"
 #include <arpa/inet.h>
+#include "internal/log.hpp"
 
 BF::Net::Server::Server() : Socket() {
 	this->_mainSocket = 0;
@@ -35,22 +36,38 @@ void BF::Net::Server::init(void * in) {
 	// create server socket similar to what was done in
     // client program
     s->_mainSocket = socket(AF_INET, SOCK_STREAM, 0);
+	int err = 0;
+	if (s->_mainSocket == -1) {
+		BFNetLogDebug("%s - socket() returned %d", __FUNCTION__, errno);
+		err = 1;
+	}
 
     // define server address
     struct sockaddr_in servAddr;
+	if (!err) {
+		servAddr.sin_family = AF_INET;
+		servAddr.sin_port = htons(s->port());
+		servAddr.sin_addr.s_addr = inet_addr(s->ipaddr());
 
-    servAddr.sin_family = AF_INET;
-    servAddr.sin_port = htons(s->port());
-    servAddr.sin_addr.s_addr = inet_addr(s->ipaddr());
+		// bind socket to the specified IP and port
+		err = bind(s->_mainSocket.get(), (struct sockaddr *) &servAddr, sizeof(servAddr));
+		if (err) {
+			BFNetLogDebug("%s - bind() returned %d", __FUNCTION__, errno);
+		}
+	}
 
-    // bind socket to the specified IP and port
-    bind(s->_mainSocket.get(), (struct sockaddr *) &servAddr, sizeof(servAddr));
+	if (!err) {
+		// listen for connections
+		err = listen(s->_mainSocket.get(), 5);
+		if (err) {
+			BFNetLogDebug("%s - listen() returned %d", __FUNCTION__, errno);
+		}
+	}
 
-    // listen for connections
-    listen(s->_mainSocket.get(), 5);
-
-	// launch thread that will constantly accept multiple connections
-	s->_pollt = BFThreadAsync(Server::pollthread, s);
+	if (!err) {
+		// launch thread that will constantly accept multiple connections
+		s->_pollt = BFThreadAsync(Server::pollthread, s);
+	}
 
 	BFRelease(s);
 }
