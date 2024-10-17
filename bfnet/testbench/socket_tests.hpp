@@ -8,7 +8,7 @@
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 #define LOCALHOST "127.0.0.1"
-#define PORT 8080
+#define PORT 8081
 #define BUFFER_SIZE 1024
 
 #include <bflibcpp/bflibcpp.hpp>
@@ -55,7 +55,7 @@ int test_socketinitclient() {
 			}
 		}
 
-		BFDelete(skt);
+		BFRelease(skt);
 	}
 
 	UNIT_TEST_END(!result, result);
@@ -91,7 +91,7 @@ int test_socketinitserver() {
 			}
 		}
 
-		BFDelete(skt);
+		BFRelease(skt);
 	}
 
 	UNIT_TEST_END(!result, result);
@@ -135,6 +135,7 @@ int test_sendingandreceiving() {
 	UNIT_TEST_START;
 	int result = 0;
 	int max = 2;
+	int portoffset = 0;
 
 	while (!result && max--) {
 		Data data(2 << 9); // test data
@@ -144,8 +145,9 @@ int test_sendingandreceiving() {
 			buf[i] = rand() % 256;
 		}
 
-		Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
-		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
+		Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT + portoffset, &result);
+		Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT + portoffset, &result);
+		portoffset++;
 
 		if (!s || !c) {
 			result = 1;
@@ -221,8 +223,8 @@ int test_sendingandreceiving() {
 			result = s->stop();
 		}
 
-		BFDelete(s);
-		BFDelete(c);
+		BFRelease(s);
+		BFRelease(c);
 	}
 
 	UNIT_TEST_END(!result, result);

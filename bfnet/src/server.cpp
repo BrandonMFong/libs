@@ -38,7 +38,7 @@ void BF::Net::Server::init(void * in) {
     s->_mainSocket = socket(AF_INET, SOCK_STREAM, 0);
 	int err = 0;
 	if (s->_mainSocket == -1) {
-		BFNetLogDebug("%s - socket() returned %d", __FUNCTION__, errno);
+		BFNetLogDebug("%s - socket() returned %d", __FILE__, errno);
 		err = 1;
 	}
 
@@ -52,7 +52,7 @@ void BF::Net::Server::init(void * in) {
 		// bind socket to the specified IP and port
 		err = bind(s->_mainSocket.get(), (struct sockaddr *) &servAddr, sizeof(servAddr));
 		if (err) {
-			BFNetLogDebug("%s - bind() returned %d", __FUNCTION__, errno);
+			BFNetLogDebug("%s - bind() returned %d", __FILE__, errno);
 		}
 	}
 
@@ -60,7 +60,7 @@ void BF::Net::Server::init(void * in) {
 		// listen for connections
 		err = listen(s->_mainSocket.get(), 5);
 		if (err) {
-			BFNetLogDebug("%s - listen() returned %d", __FUNCTION__, errno);
+			BFNetLogDebug("%s - listen() returned %d", __FILE__, errno);
 		}
 	}
 
@@ -80,7 +80,7 @@ void BF::Net::Server::pollthread(void * in) {
 	while (!err && !BFThreadAsyncIsCanceled(s->_pollt.get())) {
 		int csock = accept(s->_mainSocket.get(), NULL, NULL); // this blocks
 		if (csock == -1) {
-			BFNetLogDebug("%s - accept() returned %d", __FUNCTION__, errno);
+			//BFNetLogDebug("%s - accept() returned %d", __FILE__, errno);
 			err = 1;
 		}
 
@@ -88,7 +88,7 @@ void BF::Net::Server::pollthread(void * in) {
 		if (!err) {
 			sc = new SocketConnection(csock, s);
 			if (!sc) {
-				BFNetLogDebug("%s - could not create SocketConnection", __FUNCTION__);
+				BFNetLogDebug("%s - could not create SocketConnection", __FILE__);
 				err = 1;
 			}
 		}
@@ -124,11 +124,17 @@ int BF::Net::Server::_start() {
 }
 
 int BF::Net::Server::_stop() {
-	shutdown(this->_mainSocket.get(), SHUT_RDWR);
-	close(this->_mainSocket.get());
+	BFThreadAsyncCancel(this->_pollt.get());
+
+	if (shutdown(this->_mainSocket.get(), SHUT_RDWR) == -1) {
+		BFNetLogDebug("%s - shutdown returned %d", __FILE__, errno);
+	}
+
+	if (close(this->_mainSocket.get()) == -1) {
+		BFNetLogDebug("%s - close returned %d", __FILE__, errno);
+	}
 
 	// thread break down
-	BFThreadAsyncCancel(this->_pollt.get());
 	BFThreadAsyncWait(this->_pollt.get());
 
 	return 0;

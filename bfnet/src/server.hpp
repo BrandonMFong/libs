@@ -16,6 +16,11 @@ extern "C" {
 namespace BF {
 namespace Net {
 
+/**
+ * https://handsonnetworkprogramming.com/articles/bind-error-98-eaddrinuse-10048-wsaeaddrinuse-address-already-in-use/
+ *
+ * the above article describes why reopening a port may error out
+ */
 class Server : public Socket {
 public:
 	Server();

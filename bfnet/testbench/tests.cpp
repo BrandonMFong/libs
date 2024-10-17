@@ -14,7 +14,7 @@ extern "C" {
 using namespace BF::Net;
 
 void TestLog(const char * str) {
-	printf("\nbfnet: %s", str);
+	printf("\nbfnet: %s\n", str);
 }
 
 int main() {

@@ -14,6 +14,7 @@
 #include <sys/socket.h> //for socket APIs 
 #include <sys/types.h> 
 #include <unistd.h>
+#include "internal/log.hpp"
 
 using namespace BF;
 
@@ -33,8 +34,13 @@ BF::Net::SocketConnection::~SocketConnection() {
 }
 
 void BF::Net::SocketConnection::closeConnection() {
-	shutdown(this->_sd, SHUT_RDWR);
-	close(this->_sd);
+	if (shutdown(this->_sd, SHUT_RDWR) == -1) {
+		BFNetLogDebug("%s - shutdown returned %d", __FUNCTION__, errno);
+	}
+
+	if (close(this->_sd) == -1) {
+		BFNetLogDebug("%s - close returned %d", __FUNCTION__, errno);
+	}
 }
 
 bool BF::Net::SocketConnection::isready() {
