@@ -79,6 +79,8 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 	if (!buf)
 		return 1;
+	
+	BFNetLogDebug("> recvData");
 
 	size_t bytesReceived = 0;
 	while (bytesReceived < this->_sktref->_bufferSize) {
@@ -98,6 +100,8 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			bytesReceived,
 			this->_sktref->_bufferSize);
 	}
+
+	BFNetLogDebug("< recvData");
 
 	return 0;
 }
