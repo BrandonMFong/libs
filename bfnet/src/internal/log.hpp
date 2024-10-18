@@ -6,7 +6,7 @@
 #ifndef BF_NET_INTERNAL_LOG_HPP
 #define BF_NET_INTERNAL_LOG_HPP
 
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(TESTING)
 #define BFNetLogDebug(...) BF::Net::Log::Write(__VA_ARGS__)
 #else
 #define BFNetLogDebug(...)

@@ -130,8 +130,16 @@ void BF::Net::Socket::inStream(void * in) {
 		//
 		// this gets blocked until we receive something
 		int err = sc->recvData(&envelope->_buf);
-        if (!err && skt->_cbinstream) {
-			skt->_cbinstream(envelope);
+        if (err) {
+			// when we are stopping, we will receive
+			// some errors as we are shutting down
+			//
+			// BFThreadAsyncIsCanceled should be notified that this
+			// thread is canceled
+			usleep(500); // sleep a bit
+		} else {
+			if (skt->_cbinstream)
+				skt->_cbinstream(envelope);
 		}
 
 		BFRelease(envelope);
