@@ -90,8 +90,10 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			this->_sktref->_bufferSize - bytesReceived,
 			0);
 		if (buf->_size == -1) {
+			BFNetLogDebug("size is -1");
 			return errno;
 		} else if (buf->_size == 0) {
+			BFNetLogDebug("size is 0");
 			return -1;
 		}
 
