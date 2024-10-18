@@ -94,6 +94,9 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 		}
 
 		bytesReceived += buf->_size;
+		BFNetLogDebug("received %ld/%ld bytes",
+			bytesReceived,
+			this->_sktref->_bufferSize);
 	}
 
 	return 0;

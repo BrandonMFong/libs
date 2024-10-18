@@ -14,6 +14,7 @@
 #include "envelope.hpp"
 #include "server.hpp"
 #include "socket.hpp"
+#include "log.hpp"
 
 #endif // NETLIB_HPP
 
