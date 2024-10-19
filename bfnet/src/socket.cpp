@@ -130,13 +130,16 @@ void BF::Net::Socket::inStream(void * in) {
 		//
 		// this gets blocked until we receive something
 		int err = sc->recvData(&envelope->_buf);
-        if (err) {
-			// when we are stopping, we will receive
-			// some errors as we are shutting down
-			//
-			// BFThreadAsyncIsCanceled should be notified that this
-			// thread is canceled
-			usleep(500); // sleep a bit
+		
+		// when we are stopping, we may receive
+		// some errors as we are shutting down
+		//
+		// we also may get 0 bytes
+		//
+		// BFThreadAsyncIsCanceled should be notified that this
+		// thread is canceled
+        if (err || (envelope->_buf.size() == 0)) {
+					usleep(500); // sleep a bit
 		} else {
 			if (skt->_cbinstream)
 				skt->_cbinstream(envelope);
