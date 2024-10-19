@@ -81,7 +81,7 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 			buf->size() - bytesSent,
 			0);
 		if ((int) bytes == -1) {
-			BFNetLogDebug("%s - errno=%d", errno);
+			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			return errno;
 		}
 
@@ -110,7 +110,7 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			this->_sktref->_bufferSize - bytesReceived,
 			0);
 		if ((int) bytes == -1) {
-			BFNetLogDebug("%s - errno=%d", errno);
+			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			return errno;
 		}
 
