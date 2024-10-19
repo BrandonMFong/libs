@@ -62,7 +62,7 @@ int test_datainit() {
 int test_clearData() {
 	UNIT_TEST_START;
 	int result = 0;
-	int max = 2 << 4;
+	int max = 2 << 12;
 	const size_t maxbufsize = 2 << 16;
 
 	while (max-- && !result) {
@@ -278,7 +278,35 @@ int test_emptyStringDataLength() {
 
 	UNIT_TEST_END(!result, result);
 	return result;
+}
 
+Data test_dataByRefBuf(32);
+void test_dataByRefCallback(Data & d) {
+	d = test_dataByRefBuf;
+}
+
+int test_dataByRef() {
+	UNIT_TEST_START;
+	int result = 0;
+	int max = 2 << 20;
+
+	while (!result && max--) {
+		unsigned char * tmp = (unsigned char *) test_dataByRefBuf.buffer();
+		srand(time(0));
+		for (size_t i = 0; i < test_dataByRefBuf.size(); i++) {
+			tmp[i] = rand() % (2 << 7);
+		}
+
+		Data d;
+		test_dataByRefCallback(d);
+
+		if (d != test_dataByRefBuf) {
+			result = max;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
 }
 
 void data_tests(int * pass, int * fail) {
@@ -294,6 +322,7 @@ void data_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_HexString, p, f);
 	LAUNCH_TEST(test_dataCompare, p, f);
 	LAUNCH_TEST(test_emptyStringDataLength, p, f);
+	LAUNCH_TEST(test_dataByRef, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

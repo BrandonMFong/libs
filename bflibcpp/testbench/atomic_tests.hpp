@@ -206,6 +206,47 @@ int test_castingoperator() {
 	return result;
 }
 
+void test_changebyref(Atomic<bool> & val) {
+	val = true;
+}
+
+int test_changingvaluebyreference() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	int max = 2 << 20;
+	while (!result && max--) {
+		Atomic<bool> val = false;
+		if (val) {
+			result = 1;
+		}
+
+		test_changebyref(val);
+		if (!val) {
+			result = 2;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_comparingObjectWithAnother() {
+	UNIT_TEST_START;
+	int result = 0;
+
+	long long max = (long long) 2 << 20;
+	while (!result && max--) {
+		Atomic<long long> val = max;
+		if ((val != max) || (max != val)) {
+			result = max;
+		}
+	}
+
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 void atomic_tests(int * pass, int * fail) {
 	int p = 0, f = 0;
 	
@@ -218,6 +259,8 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_settingvalueonthreads, p, f);
 	LAUNCH_TEST(test_equaloverloadop, p, f);
 	LAUNCH_TEST(test_castingoperator, p, f);
+	LAUNCH_TEST(test_changingvaluebyreference, p, f);
+	LAUNCH_TEST(test_comparingObjectWithAnother, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

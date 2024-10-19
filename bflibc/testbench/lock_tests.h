@@ -104,11 +104,12 @@ int test_waitinglock() {
 typedef struct {
 	BFLock l;
 	bool ran;
+	int err;
 } test_destroyLockThatIsWaiting_struct;
 
 void thread_test_destroyLockThatIsWaiting(void * in) {
 	test_destroyLockThatIsWaiting_struct * st = (test_destroyLockThatIsWaiting_struct *) in;
-	BFLockWait(&st->l);
+	st->err = BFLockWait(&st->l);
 	st->ran = true;
 }
 
@@ -116,17 +117,18 @@ int test_destroyLockThatIsWaiting() {
 	UNIT_TEST_START;
 	int result = 0;
 
-	int max = 2 << 8;
+	int max = 2 << 14;
 	while (!result && max--) {
 		test_destroyLockThatIsWaiting_struct st;
 		BFLockCreate(&st.l);
 		st.ran = false;
+		st.err = 0;
 
 		BFThreadAsyncID tid = BFThreadAsync(thread_test_destroyLockThatIsWaiting, &st);
 		while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
 
-		if (BFLockIsWaiting(&st.l)) {
-			result = max;
+		while (!BFLockIsWaiting(&st.l)) {
+			usleep(50);
 		}
 
 		BFLockDestroy(&st.l);
@@ -134,8 +136,12 @@ int test_destroyLockThatIsWaiting() {
 		BFThreadAsyncWait(tid);
 		BFThreadAsyncDestroy(tid);
 
-		if (!result && !st.ran) {
-			result = max;
+		if (!st.ran) {
+			result = 1;
+		}
+
+		if (st.err) {
+			result += 2;
 		}
 	}
 

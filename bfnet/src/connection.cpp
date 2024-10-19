@@ -14,6 +14,7 @@
 #include <sys/socket.h> //for socket APIs 
 #include <sys/types.h> 
 #include <unistd.h>
+#include "internal/log.hpp"
 
 using namespace BF;
 
@@ -33,8 +34,13 @@ BF::Net::SocketConnection::~SocketConnection() {
 }
 
 void BF::Net::SocketConnection::closeConnection() {
-	shutdown(this->_sd, SHUT_RDWR);
-	close(this->_sd);
+	if (shutdown(this->_sd, SHUT_RDWR) == -1) {
+		BFNetLogDebug("%s - shutdown returned %d", __FUNCTION__, errno);
+	}
+
+	if (close(this->_sd) == -1) {
+		BFNetLogDebug("%s - close returned %d", __FUNCTION__, errno);
+	}
 }
 
 bool BF::Net::SocketConnection::isready() {
@@ -64,8 +70,28 @@ int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
 int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 	if (!buf)
 		return 1;
-	
-	send(this->_sd, buf->data(), buf->size(), 0);
+
+	BFNetLogDebug("> sendData");
+
+	size_t bytesSent = 0;
+	while (bytesSent < this->_sktref->_bufferSize) {
+		size_t bytes = send(
+			this->_sd,
+			((unsigned char *) buf->data()) + bytesSent,
+			buf->size() - bytesSent,
+			0);
+		if ((int) bytes == -1) {
+			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
+			return errno;
+		}
+
+		bytesSent += bytes;
+		BFNetLogDebug("sent %ld/%ld bytes",
+			bytesSent,
+			this->_sktref->_bufferSize);
+	}
+
+	BFNetLogDebug("< sendData");
 
 	return 0;
 }
@@ -73,22 +99,33 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 	if (!buf)
 		return 1;
+	
+	BFNetLogDebug("> recvData");
 
 	size_t bytesReceived = 0;
 	while (bytesReceived < this->_sktref->_bufferSize) {
-		buf->_size = recv(
+		size_t bytes = recv(
 			this->_sd,
 			((unsigned char *) buf->_data) + bytesReceived,
 			this->_sktref->_bufferSize - bytesReceived,
 			0);
-		if (buf->_size == -1) {
+		if ((int) bytes == -1) {
+			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			return errno;
-		} else if (buf->_size == 0) {
-			return -1;
+		} else if (bytes == 0) {
+			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__);
+			break;
 		}
 
-		bytesReceived += buf->_size;
+		bytesReceived += bytes;
+		BFNetLogDebug("received %ld/%ld bytes",
+			bytesReceived,
+			this->_sktref->_bufferSize);
 	}
+
+	buf->_size = bytesReceived;
+
+	BFNetLogDebug("< recvData");
 
 	return 0;
 }

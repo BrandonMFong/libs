@@ -13,12 +13,13 @@
 #include <bflibcpp/bflibcpp.hpp>
 #include "connection.hpp"
 #include <arpa/inet.h>
+#include "internal/log.hpp"
 
-BF::Net::Client::Client() {
-}
+using namespace BF::Net;
 
-BF::Net::Client::~Client() {
-}
+BF::Net::Client::Client() { }
+
+BF::Net::Client::~Client() { }
 
 const char BF::Net::Client::mode() const {
 	return SOCKET_MODE_CLIENT;
@@ -47,7 +48,6 @@ void BF::Net::Client::init(void * in) {
 	int err = 0;
     if (connectStatus == -1) {
 		err = errno;
-        printf("Error... %d\n", err);
 	}
 
 	SocketConnection * sc = NULL;
@@ -57,23 +57,43 @@ void BF::Net::Client::init(void * in) {
 
 	if (!err) {
 		if (c->_cbnewconn)
-			err = c->_cbnewconn(sc);
-	}
+			c->_cbnewconn(sc);
 
-	if (!err) {
 		c->_connections.get().add(sc);
 		c->startInStreamForConnection(sc);
     }
 
+	if (err) {
+		BFNetLogDebug("%s - %d\n", __FUNCTION__, err);
+	}
+
 	BFRelease(c);
+}
+
+bool BF::Net::Client::isRunning() const {
+	if (this->_tidin.get().count() != 1) { // assuming client will only connct to 1 server
+		BFNetLogDebug("%s - count == %d\n", __func__, this->_tidin.get().count());
+		return false;
+	} else if (!BFThreadAsyncIDIsValid(this->inStreamThreadID())) {
+		BFNetLogDebug("%s - invalid thread id\n", __func__);
+		return false;
+    } else if (!BFThreadAsyncIsRunning(this->inStreamThreadID())) {
+		BFNetLogDebug("%s - thread not running\n", __func__);
+		return false;
+	}
+
+	return true;
+}
+
+BFThreadAsyncID Client::inStreamThreadID() const {
+	return this->_tidin.get().first()->object();
 }
 
 int BF::Net::Client::_start() {
 	BFThreadAsyncID tid = BFThreadAsync(Client::init, this);
 	BFThreadAsyncDestroy(tid);
 	
-	int error = 0;
-	return error;
+	return 0;
 }
 
 int BF::Net::Client::_stop() {

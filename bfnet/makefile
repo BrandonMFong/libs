@@ -26,7 +26,7 @@ CPPFLAGS += -std=c++20
 #
 # All objects defined in headers should be copied to 
 # bin
-CPP_OBJECTS = client server socket envelope connection buffer
+CPP_OBJECTS = client server socket envelope connection buffer log
 
 ### RELEASE ###
 R_CPPFLAGS = $(CPPFLAGS) -Ibin/release/ -I../bflibc/bin/release -I../bflibcpp/bin/release $(BF_LIB_C_UUID_FLAGS)
@@ -99,8 +99,7 @@ T_BFLIBCPP_OUT = test-$(LIB_NAME)
 T_BIN_PATH = bin/test/$(LIB_NAME)
 #T_SANITIZE_ADDR = -fsanitize=address
 
-test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
-#test: CPP = @g++
+test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR) -I../bflibcpp/src
 test: AR = @ar
 test: CP = @cp
 test: RM = @rm
@@ -110,10 +109,14 @@ test: d-clean t-setup debug compile-tests
 t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
-compile-tests:
+compile-tests: testbench/*.hpp
 	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS)
 
 clean: r-clean d-clean
 	$(RM) -rfv build/
 	$(RM) -rfv bin
+
+clean-all: clean
+	@cd ../bflibc/ && make clean
+	@cd ../bflibcpp/ && make clean
 

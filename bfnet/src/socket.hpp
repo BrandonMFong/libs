@@ -21,14 +21,10 @@ extern "C" {
 #define SOCKET_IP4_ADDR_STRLEN 16
 
 namespace BF {
-	namespace Net {
-		class SocketConnection;
-		class SocketEnvelope;
-	}
-}
-
-namespace BF {
 namespace Net {
+
+class SocketConnection;
+class SocketEnvelope;
 
 class Socket : public BF::Object {
 	friend class BF::Net::SocketConnection;
@@ -52,7 +48,18 @@ public:
 
 	int start();
 	int stop();
-	
+
+	/**
+	 * true if socket is ready to take connections (server) or
+	 * is actively connected (client)
+	 *
+	 * true if start() finished kicking off all
+	 * working threads
+	 *
+	 * is thread safe
+	 */
+	virtual bool isRunning() const = 0;
+
 	/**
 	 * sets callback that gets invoked when incoming data is ready to be handled
 	 *
@@ -63,7 +70,7 @@ public:
 	/**
 	 * see _cbnewconn
 	 */
-	void setNewConnectionCallback(int (* cb)(BF::Net::SocketConnection * sc));
+	void setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc));
 
 	/**
 	 * buffer length for incoming data
@@ -74,6 +81,12 @@ public:
 
 	uint16_t port() const;
 	const char * ipaddr() const;
+
+	/**
+	 * checks if everything is ready to go before 
+	 * calling start()
+	 */
+	bool isReady() const;
 
 protected:
 	Socket();
@@ -101,7 +114,9 @@ protected:
 	 * sc : keep a record of this if you want to send data to the 
 	 * device on the other end.  You do not own memory
 	 */
-	int (* _cbnewconn)(BF::Net::SocketConnection * sc);
+	void (* _cbnewconn)(BF::Net::SocketConnection * sc);
+
+	BF::Atomic<BF::List<BFThreadAsyncID>> _tidin;
 
 private:
 
@@ -119,16 +134,6 @@ private:
 	static void inStream(void * in);
 
 	/**
-	 * sends packets out
-	 */
-	//static void outStream(void * in);
-	
-	//int queueEnvelope(SocketEnvelope & e);
-
-	BF::Atomic<BF::List<BFThreadAsyncID>> _tidin;
-	//BFThreadAsyncID _tidout;
-
-	/**
 	 * holds expected buffer size for all incoming and outcoming data
 	 *
 	 * implementer is responsible for setting this
@@ -140,7 +145,6 @@ private:
 	 *
 	 * each envelope will get released after pop
 	 */
-	//BF::Atomic<BF::Queue<SocketEnvelope *>> _outq;
 	BFLock _outqlock;
 
 	uint16_t _portnum;

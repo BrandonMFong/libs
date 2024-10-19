@@ -39,7 +39,7 @@ public:
 		this->_obj = obj; 
 	}
 
-	T & unsafeget() {
+	T & unsafeget() const {
 		return this->_obj; 
 	}
 
@@ -52,7 +52,7 @@ public:
 	// returns a reference to object
 	//
 	// caller does NOT own
-	T & get() {
+	T & get() const {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
 		BFLockUnlock(&this->_objlock);
@@ -63,14 +63,14 @@ public:
 	 * use unsafe getter and setter to access after
 	 * this call
 	 */
-	void lock() {
+	void lock() const {
 		BFLockLock(&this->_objlock);
 	}
 
 	/**
 	 * must call after lock()
 	 */
-	void unlock() {
+	void unlock() const {
 		BFLockUnlock(&this->_objlock);
 	}
 
@@ -84,20 +84,28 @@ public:
 		return *this;
 	}
 
-	bool operator==(const Atomic<T> & a) {
-		return this->_obj == a._obj;
+	friend bool operator==(const Atomic<T> & a, const Atomic<T> & b) {
+		return a._obj == b._obj;
+	}
+	
+	friend bool operator!=(const Atomic<T> & a, const Atomic<T> & b) {
+		return a._obj != b._obj;
 	}
 
-	bool operator!=(const Atomic<T> & a) {
-		return this->_obj != a._obj;
+	friend bool operator==(const Atomic<T> & a, const T & b) {
+		return a._obj == b;
 	}
 
-	operator T () {
+	friend bool operator!=(const Atomic<T> & a, const T & b) {
+		return a._obj != b;
+	}
+	
+	operator T () const {
 		return this->get();
 	}
 
 private:
-	T _obj;
+	mutable T _obj;
 	BFLock _objlock;
 };
 

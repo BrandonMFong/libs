@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <bflibcpp/bflibcpp.hpp>
 #include <bflibc/bflibc.h>
+#include "internal/log.hpp"
 
 using namespace BF;
 using namespace BF::Net;
@@ -86,7 +87,7 @@ void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
-void BF::Net::Socket::setNewConnectionCallback(int (* cb)(BF::Net::SocketConnection * sc)) {
+void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc)) {
 	this->_cbnewconn = cb;
 }
 
@@ -129,8 +130,19 @@ void BF::Net::Socket::inStream(void * in) {
 		//
 		// this gets blocked until we receive something
 		int err = sc->recvData(&envelope->_buf);
-        if (!err && skt->_cbinstream) {
-			skt->_cbinstream(envelope);
+		
+		// when we are stopping, we may receive
+		// some errors as we are shutting down
+		//
+		// we also may get 0 bytes
+		//
+		// BFThreadAsyncIsCanceled should be notified that this
+		// thread is canceled
+        if (err || (envelope->_buf.size() == 0)) {
+					usleep(500); // sleep a bit
+		} else {
+			if (skt->_cbinstream)
+				skt->_cbinstream(envelope);
 		}
 
 		BFRelease(envelope);
@@ -142,7 +154,10 @@ void BF::Net::Socket::inStream(void * in) {
 
 // called by subclasses whenever they get a new connection
 int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) {
-	if (!sc) return 1;
+	if (!sc) {
+		BFNetLogDebug("%s - null socket connection", __FUNCTION__);
+		return 1;
+	}
 
 	InStreamTools * tools = new InStreamTools;
 	tools->mainConnection = sc;
@@ -157,6 +172,17 @@ int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) 
 int BF::Net::Socket::start() {
 	this->_start();
 	return 0;
+}
+
+bool BF::Net::Socket::isReady() const {
+	if (this->_bufferSize == 0)
+		return false;
+	else if (this->_cbinstream == NULL)
+		return false;
+	else if (this->_cbnewconn == NULL)
+		return false;
+
+	return true;
 }
 
 int BF::Net::Socket::stop() {

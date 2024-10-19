@@ -6,6 +6,7 @@
 
 #include "lock.h"
 #include <stdlib.h>
+#include <unistd.h>
 #include <pthread.h>
 #include "free.h"
 #include "bftime.h"
@@ -25,7 +26,7 @@ typedef struct {
 #define IS_WAITING_SET_ON(flags) FLAGS_SET_ON(flags, 0)
 #define IS_WAITING_SET_OFF(flags) FLAGS_SET_OFF(flags, 0)
 
-bool BFLockIsValid(BFLock * _lock) {
+bool BFLockIsValid(const BFLock * _lock) {
 	if (_lock == NULL) return false;
 	else {
 		_BFLock * l = (_BFLock *) *_lock;
@@ -42,6 +43,7 @@ int BFLockCreate(BFLock * lock) {
 	else if (pthread_mutex_init(&l->mutex, NULL)) error = 1;
 	else if (pthread_cond_init(&l->cond, NULL)) error = 1;
 	else {
+		l->flags = 0;
 		*lock = (BFLock) l;
 	}
 
@@ -51,6 +53,16 @@ int BFLockCreate(BFLock * lock) {
 int BFLockDestroy(BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
+		if (BFLockIsWaiting(lock)) {
+			BFLockRelease(lock);
+
+			// wait for BFLockWait to release
+			// its mutex
+			while (BFLockIsWaiting(lock)) {
+				usleep(50);
+			}
+		}
+
 		_BFLock * l = (_BFLock *) *lock;
 
 		int error = pthread_mutex_destroy(&l->mutex);
@@ -64,35 +76,57 @@ int BFLockDestroy(BFLock * lock) {
 	return 0;
 }
 
-int BFLockWait(BFLock * lock) {
+int BFLockRelease(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 202;
 		
-		IS_WAITING_SET_ON(l->flags);
+		pthread_mutex_lock(&l->mutex);
+		int err = pthread_cond_signal(&l->cond);
+		pthread_mutex_unlock(&l->mutex);
 
-		if (pthread_cond_wait(&l->cond, &l->mutex)) return 3;
-		if (pthread_mutex_unlock(&l->mutex)) return 4;
+		return err;
 	}
-
-	return 0;
 }
 
-int BFLockTimedWait(BFLock * lock, BFTime t) {
+bool BFLockIsWaiting(const BFLock * lock) {
+	if (lock == 0) return false;
+	else {
+		_BFLock * l = (_BFLock *) *lock;
+		pthread_mutex_lock(&l->mutex);
+		bool res = IS_WAITING_GET(l->flags);
+		pthread_mutex_unlock(&l->mutex);
+		return res;
+	}
+}
+
+int BFLockWait(const BFLock * lock) {
+	if (lock == 0) return 1;
+	else {
+		_BFLock * l = (_BFLock *) *lock;
+		
+		pthread_mutex_lock(&l->mutex);
+		IS_WAITING_SET_ON(l->flags);
+		int err = pthread_cond_wait(&l->cond, &l->mutex);
+		IS_WAITING_SET_OFF(l->flags); // reset regardless of error
+		pthread_mutex_unlock(&l->mutex);
+
+		return err;
+	}
+}
+
+int BFLockTimedWait(const BFLock * lock, BFTime t) {
 	struct timespec ts;
 	_BFLock * l = 0;
 	if (lock == 0) return 1;
-	else {
-		l = (_BFLock *) *lock;
-		
-		clock_gettime(CLOCK_REALTIME, &ts);
-		ts.tv_sec += (time_t) t;
-		ts.tv_nsec += BFTimeGetNS(t);
-
-		if (pthread_mutex_lock(&l->mutex)) return 203;
-	}
 	
+	l = (_BFLock *) *lock;
+	
+	clock_gettime(CLOCK_REALTIME, &ts);
+	ts.tv_sec += (time_t) t;
+	ts.tv_nsec += BFTimeGetNS(t);
+
+	pthread_mutex_lock(&l->mutex);
 	IS_WAITING_SET_ON(l->flags);
 
 	// Check if wait timedout
@@ -102,25 +136,13 @@ int BFLockTimedWait(BFLock * lock, BFTime t) {
 		result = kBFLockTimedWaitCodeTimedOut;
 	}
 	
-	if (pthread_mutex_unlock(&l->mutex)) result = 4;
+	IS_WAITING_SET_OFF(l->flags); // reset regardless of error
+	pthread_mutex_unlock(&l->mutex);
 
 	return result;
 }
 
-int BFLockRelease(BFLock * lock) {
-	if (lock == 0) return 1;
-	else {
-		_BFLock * l = (_BFLock *) *lock;
-		if (pthread_mutex_lock(&l->mutex)) return 204;
-		IS_WAITING_SET_OFF(l->flags);
-		if (pthread_cond_signal(&l->cond)) return 3;
-		if (pthread_mutex_unlock(&l->mutex)) return 4;
-	}
-
-	return 0;
-}
-
-int BFLockLock(BFLock * lock) {
+int BFLockLock(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
@@ -131,7 +153,7 @@ int BFLockLock(BFLock * lock) {
 	return 0;
 }
 
-int BFLockUnlock(BFLock * lock) {
+int BFLockUnlock(const BFLock * lock) {
 	if (lock == 0) return 1;
 	else {
 		_BFLock * l = (_BFLock *) *lock;
@@ -140,16 +162,5 @@ int BFLockUnlock(BFLock * lock) {
 		}
 	}
 	return 0;
-}
-
-bool BFLockIsWaiting(BFLock * lock) {
-	if (lock == 0) return false;
-	else {
-		_BFLock * l = (_BFLock *) *lock;
-		pthread_mutex_lock(&l->mutex);
-		bool res = IS_WAITING_GET(l->flags);
-		pthread_mutex_unlock(&l->mutex);
-		return res;
-	}
 }
 

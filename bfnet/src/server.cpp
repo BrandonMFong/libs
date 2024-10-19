@@ -13,6 +13,7 @@
 #include <bflibcpp/bflibcpp.hpp>
 #include "connection.hpp"
 #include <arpa/inet.h>
+#include "internal/log.hpp"
 
 BF::Net::Server::Server() : Socket() {
 	this->_mainSocket = 0;
@@ -20,7 +21,7 @@ BF::Net::Server::Server() : Socket() {
 }
 
 BF::Net::Server::~Server() {
-	BFThreadAsyncDestroy(this->_pollt);
+	BFThreadAsyncDestroy(this->_pollt.get());
 }
 
 const char BF::Net::Server::mode() const {
@@ -35,22 +36,38 @@ void BF::Net::Server::init(void * in) {
 	// create server socket similar to what was done in
     // client program
     s->_mainSocket = socket(AF_INET, SOCK_STREAM, 0);
+	int err = 0;
+	if (s->_mainSocket == -1) {
+		BFNetLogDebug("%s - socket() returned %d", __FILE__, errno);
+		err = 1;
+	}
 
     // define server address
     struct sockaddr_in servAddr;
+	if (!err) {
+		servAddr.sin_family = AF_INET;
+		servAddr.sin_port = htons(s->port());
+		servAddr.sin_addr.s_addr = inet_addr(s->ipaddr());
 
-    servAddr.sin_family = AF_INET;
-    servAddr.sin_port = htons(s->port());
-    servAddr.sin_addr.s_addr = inet_addr(s->ipaddr());
+		// bind socket to the specified IP and port
+		err = bind(s->_mainSocket.get(), (struct sockaddr *) &servAddr, sizeof(servAddr));
+		if (err) {
+			BFNetLogDebug("%s - bind() returned %d", __FILE__, errno);
+		}
+	}
 
-    // bind socket to the specified IP and port
-    bind(s->_mainSocket, (struct sockaddr *) &servAddr, sizeof(servAddr));
+	if (!err) {
+		// listen for connections
+		err = listen(s->_mainSocket.get(), 5);
+		if (err) {
+			BFNetLogDebug("%s - listen() returned %d", __FILE__, errno);
+		}
+	}
 
-    // listen for connections
-    listen(s->_mainSocket, 5);
-
-	// launch thread that will constantly accept multiple connections
-	s->_pollt = BFThreadAsync(Server::pollthread, s);
+	if (!err) {
+		// launch thread that will constantly accept multiple connections
+		s->_pollt = BFThreadAsync(Server::pollthread, s);
+	}
 
 	BFRelease(s);
 }
@@ -59,32 +76,44 @@ void BF::Net::Server::pollthread(void * in) {
 	Server * s = (Server *) in;
 	BFRetain(s);
 
-	while (!BFThreadAsyncIsCanceled(s->_pollt)) {
-		int csock = accept(s->_mainSocket, NULL, NULL); // this blocks
-
-		int err = 0;
-		SocketConnection * sc = new SocketConnection(csock, s);
-		if (!sc) {
+	int err = 0;
+	while (!err && !BFThreadAsyncIsCanceled(s->_pollt.get())) {
+		int csock = accept(s->_mainSocket.get(), NULL, NULL); // this blocks
+		if (csock == -1) {
+			//BFNetLogDebug("%s - accept() returned %d", __FILE__, errno);
 			err = 1;
 		}
 
+		SocketConnection * sc = NULL;
 		if (!err) {
-			if (s->_cbnewconn)
-				err = s->_cbnewconn(sc);
-
-			if (err) {
+			sc = new SocketConnection(csock, s);
+			if (!sc) {
+				BFNetLogDebug("%s - could not create SocketConnection", __FILE__);
+				err = 1;
 			}
 		}
 
 		// if there are no errors with connection then
 		// we will add it to our connections list
 		if (!err) {
+			if (s->_cbnewconn)
+				s->_cbnewconn(sc);
+
 			s->_connections.get().add(sc);
 			s->startInStreamForConnection(sc);
 		}
 	}
 
 	BFRelease(s);
+}
+
+bool BF::Net::Server::isRunning() const {
+	if (!BFThreadAsyncIDIsValid(this->_pollt.get()))
+		return false;
+	else if (!BFThreadAsyncIsRunning(this->_pollt.get()))
+		return false;
+
+	return true;
 }
 
 int BF::Net::Server::_start() {
@@ -95,12 +124,18 @@ int BF::Net::Server::_start() {
 }
 
 int BF::Net::Server::_stop() {
-	shutdown(this->_mainSocket, SHUT_RDWR);
-	close(this->_mainSocket);
+	BFThreadAsyncCancel(this->_pollt.get());
+
+	if (shutdown(this->_mainSocket.get(), SHUT_RDWR) == -1) {
+		BFNetLogDebug("%s - shutdown returned %d", __FILE__, errno);
+	}
+
+	if (close(this->_mainSocket.get()) == -1) {
+		BFNetLogDebug("%s - close returned %d", __FILE__, errno);
+	}
 
 	// thread break down
-	BFThreadAsyncCancel(this->_pollt);
-	BFThreadAsyncWait(this->_pollt);
+	BFThreadAsyncWait(this->_pollt.get());
 
 	return 0;
 }

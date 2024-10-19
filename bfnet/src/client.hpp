@@ -19,12 +19,13 @@ class Client : public Socket {
 public:
 	Client();
 	virtual ~Client();
-	const int descriptor() const;
 	const char mode() const;
+	bool isRunning() const;
 protected:
 	static void init(void * in);
 	int _start();
 	int _stop();
+	BFThreadAsyncID inStreamThreadID() const;
 private:
 };
 
