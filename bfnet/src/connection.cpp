@@ -70,8 +70,28 @@ int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
 int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 	if (!buf)
 		return 1;
-	
-	send(this->_sd, buf->data(), buf->size(), 0);
+
+	BFNetLogDebug("> sendData");
+
+	size_t bytesSent = 0;
+	while (bytesSent < this->_sktref->_bufferSize) {
+		size_t bytes = send(
+			this->_sd,
+			((unsigned char *) buf->data()) + bytesSent,
+			buf->size() - bytesSent,
+			0);
+		if ((int) bytes == -1) {
+			BFNetLogDebug("%s - errno=%d", errno);
+			return errno;
+		}
+
+		bytesSent += bytes;
+		BFNetLogDebug("sent %ld/%ld bytes",
+			bytesSent,
+			this->_sktref->_bufferSize);
+	}
+
+	BFNetLogDebug("< sendData");
 
 	return 0;
 }
@@ -84,24 +104,23 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 
 	size_t bytesReceived = 0;
 	while (bytesReceived < this->_sktref->_bufferSize) {
-		buf->_size = recv(
+		size_t bytes = recv(
 			this->_sd,
 			((unsigned char *) buf->_data) + bytesReceived,
 			this->_sktref->_bufferSize - bytesReceived,
 			0);
-		if (buf->_size == -1) {
-			BFNetLogDebug("size is -1");
+		if ((int) bytes == -1) {
+			BFNetLogDebug("%s - errno=%d", errno);
 			return errno;
-		} else if (buf->_size == 0) {
-			BFNetLogDebug("size is 0");
-			return -1;
 		}
 
-		bytesReceived += buf->_size;
+		bytesReceived += bytes;
 		BFNetLogDebug("received %ld/%ld bytes",
 			bytesReceived,
 			this->_sktref->_bufferSize);
 	}
+
+	buf->_size = bytesReceived;
 
 	BFNetLogDebug("< recvData");
 
