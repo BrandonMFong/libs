@@ -83,9 +83,6 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 		if ((int) bytes == -1) {
 			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			return errno;
-		} else if (bytes == 0) {
-			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__);
-			break;
 		}
 
 		bytesSent += bytes;
@@ -115,6 +112,9 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 		if ((int) bytes == -1) {
 			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			return errno;
+		} else if (bytes == 0) {
+			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__);
+			break;
 		}
 
 		bytesReceived += bytes;
