@@ -72,13 +72,13 @@ void BF::Net::Client::init(void * in) {
 
 bool BF::Net::Client::isRunning() const {
 	if (this->_tidin.get().count() != 1) { // assuming client will only connct to 1 server
-		//BFNetLogDebug("%s - count == %d\n", __func__, this->_tidin.get().count());
+		BFNetLogDebug("%s - count == %d\n", __func__, this->_tidin.get().count());
 		return false;
 	} else if (!BFThreadAsyncIDIsValid(this->inStreamThreadID())) {
-		//BFNetLogDebug("%s - invalid thread id\n", __func__);
+		BFNetLogDebug("%s - invalid thread id\n", __func__);
 		return false;
     } else if (!BFThreadAsyncIsRunning(this->inStreamThreadID())) {
-		//BFNetLogDebug("%s - thread not running\n", __func__);
+		BFNetLogDebug("%s - thread not running\n", __func__);
 		return false;
 	}
 
