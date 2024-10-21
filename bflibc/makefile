@@ -15,6 +15,10 @@ COPY_FLAGS = -afv
 REMOVE = rm # remove tool
 REMOVE_FLAGS = -rfv
 
+# used to make universal binaries
+MACOS_TARGET_X86_64 = x86_64-apple-macos10.12
+MACOS_TARGET_ARM64 = arm64-apple-macos11
+
 ## Compile Flags
 
 # Warnings
@@ -43,8 +47,20 @@ $(R_BIN_PATH)/$(R_BFLIBC_OUT): $(R_C_OBJ_FILES)
 	$(COPY) $(COPY_FLAGS) src/*.h $(R_BIN_PATH)
 	$(AR) -rsc $(R_BIN_PATH)/$(R_BFLIBC_OUT) $^
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+$(R_BUILD_PATH)/%.o: $(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(R_BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
+	lipo -create -output $@ $^
+else
 $(R_BUILD_PATH)/%.o: src/%.c src/%.h
 	$(CC) -c -o $@ $< $(R_CFLAGS)
+endif
+
+$(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64): src/%.c src/%.h
+	$(CC) -c -o $@ $< $(R_CFLAGS) -target $(MACOS_TARGET_X86_64)
+
+$(R_BUILD_PATH)/%.$(MACOS_TARGET_ARM64): src/%.c src/%.h
+	$(CC) -c -o $@ $< $(R_CFLAGS) -target $(MACOS_TARGET_ARM64)
 
 r-clean:
 	rm -rfv $(R_BUILD_PATH)
@@ -67,8 +83,20 @@ $(D_BIN_PATH)/$(D_BFLIBC_OUT): $(D_C_OBJ_FILES)
 	$(COPY) $(COPY_FLAGS) src/*.h $(D_BIN_PATH)
 	$(AR) -rsc $(D_BIN_PATH)/$(D_BFLIBC_OUT) $^
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+$(D_BUILD_PATH)/%.o: $(D_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(D_BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
+	lipo -create -output $@ $^
+else
 $(D_BUILD_PATH)/%.o: src/%.c src/%.h
 	$(CC) -c -o $@ $< $(D_CFLAGS)
+endif
+
+$(D_BUILD_PATH)/%.$(MACOS_TARGET_X86_64): src/%.c src/%.h
+	$(CC) -c -o $@ $< $(D_CFLAGS) -target $(MACOS_TARGET_X86_64)
+
+$(D_BUILD_PATH)/%.$(MACOS_TARGET_ARM64): src/%.c src/%.h
+	$(CC) -c -o $@ $< $(D_CFLAGS) -target $(MACOS_TARGET_ARM64)
 
 d-clean:
 	$(REMOVE) $(REMOVE_FLAGS) $(D_BUILD_PATH)
