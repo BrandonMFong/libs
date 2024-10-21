@@ -13,6 +13,10 @@ CP = cp
 RM = rm
 DOXYGEN = doxygen
 
+# used to make universal binaries
+MACOS_TARGET_X86_64 = x86_64-apple-macos10.12
+MACOS_TARGET_ARM64 = arm64-apple-macos11
+
 ## Compile Flags
 
 # Warnings
@@ -32,10 +36,11 @@ R_CPPFLAGS = $(CPPFLAGS) -Ibin/release/ -I../bflibc/bin/release $(BF_LIB_C_UUID_
 R_BUILD_PATH = build/release
 R_BIN_PATH = bin/release/bflibcpp
 R_BFLIBCPP_OUT = libbfcpp.a
-R_CPP_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/%.o, $(CPP_OBJECTS))
 R_C_OBJ_FILES = ../bflibc/build/release/*.o
+R_CPP_OBJ_FILES = $(patsubst %, $(R_BUILD_PATH)/%.o, $(CPP_OBJECTS))
 
 .PHONY: docs
+.PRECIOUS: $(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(R_BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 
 release: r-setup build-release-c $(R_BIN_PATH)/$(R_BFLIBCPP_OUT)
 
@@ -50,8 +55,20 @@ $(R_BIN_PATH)/$(R_BFLIBCPP_OUT): $(R_CPP_OBJ_FILES)
 	cp -afv src/*.hpp $(R_BIN_PATH)
 	$(AR) rsc $(R_BIN_PATH)/$(R_BFLIBCPP_OUT) $^ $(R_C_OBJ_FILES)
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+$(R_BUILD_PATH)/%.o: $(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(R_BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
+	lipo -create -output $@ $^
+else
 $(R_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(R_CPPFLAGS)
+endif
+
+$(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64): src/%.cpp src/%.hpp
+	$(CPP) -c -o $@ $< $(R_CPPFLAGS) -target $(MACOS_TARGET_X86_64)
+
+$(R_BUILD_PATH)/%.$(MACOS_TARGET_ARM64): src/%.cpp src/%.hpp
+	$(CPP) -c -o $@ $< $(R_CPPFLAGS) -target $(MACOS_TARGET_ARM64)
 
 r-clean:
 	rm -rfv $(R_BUILD_PATH)
@@ -62,8 +79,10 @@ D_CPPFLAGS = $(CPPFLAGS) -DDEBUG -g -Ibin/debug/ -I../bflibc/bin/debug
 D_BUILD_PATH = build/debug
 D_BIN_PATH = bin/debug/bflibcpp
 D_BFLIBCPP_OUT = libbfcpp-debug.a
-D_CPP_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/%.o, $(CPP_OBJECTS))
 D_C_OBJ_FILES = ../bflibc/build/debug/*.o
+D_CPP_OBJ_FILES = $(patsubst %, $(D_BUILD_PATH)/%.o, $(CPP_OBJECTS))
+
+.PRECIOUS: $(D_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(D_BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 
 debug: d-setup build-debug-c $(D_BIN_PATH)/$(D_BFLIBCPP_OUT)
 
@@ -78,8 +97,20 @@ $(D_BIN_PATH)/$(D_BFLIBCPP_OUT): $(D_CPP_OBJ_FILES)
 	$(CP) -afv src/*.hpp $(D_BIN_PATH)
 	$(AR) rsc $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $^ $(D_C_OBJ_FILES)
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+$(D_BUILD_PATH)/%.o: $(D_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(D_BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
+	lipo -create -output $@ $^
+else
 $(D_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(D_CPPFLAGS)
+endif
+
+$(D_BUILD_PATH)/%.$(MACOS_TARGET_X86_64): src/%.cpp src/%.hpp
+	$(CPP) -c -o $@ $< $(D_CPPFLAGS) -target $(MACOS_TARGET_X86_64)
+
+$(D_BUILD_PATH)/%.$(MACOS_TARGET_ARM64): src/%.cpp src/%.hpp
+	$(CPP) -c -o $@ $< $(D_CPPFLAGS) -target $(MACOS_TARGET_ARM64)
 
 d-clean:
 	$(RM) -rfv $(D_BUILD_PATH)
@@ -90,7 +121,7 @@ T_BFLIBCPP_OUT = test-bflibcpp
 T_BIN_PATH = bin/test/bflibcpp
 #T_SANITIZE_ADDR = -fsanitize=address
 
-test: D_CPPFLAGS += -DTESTING -Isrc/ -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
+test: D_CPPFLAGS += -DTESTING -Isrc/ 
 test: CPP = @g++
 test: AR = @ar
 test: CP = @cp
@@ -102,7 +133,7 @@ t-setup:
 	@mkdir -p $(T_BIN_PATH)
 
 compile-tests:
-	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS)
+	$(CPP) -o $(T_BIN_PATH)/$(T_BFLIBCPP_OUT) testbench/tests.cpp $(D_BIN_PATH)/$(D_BFLIBCPP_OUT) $(D_CPPFLAGS) -lpthread $(BF_LIB_C_UUID_FLAGS) $(T_SANITIZE_ADDR)
 
 clean: r-clean d-clean
 	$(RM) -rfv build/
