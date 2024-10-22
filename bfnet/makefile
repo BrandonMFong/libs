@@ -68,7 +68,6 @@ $(R_BUILD_PATH)/%.o: $(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(R_BUILD_PATH)/%.
 else
 $(R_BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	$(CPP) -c -o $@ $< $(R_CPPFLAGS)
-
 endif
 
 $(R_BUILD_PATH)/%.$(MACOS_TARGET_X86_64): src/%.cpp src/%.hpp
