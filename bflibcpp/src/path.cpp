@@ -22,11 +22,7 @@ Path::~Path() {
 }
 
 const char * Path::path() {
-	if (this->_path) {
-		return this->_path;
-	} else {
-		return "";
-	}
+	return this->_path;
 }
 
 const char * Path::abspath() {
