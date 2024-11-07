@@ -7,4 +7,11 @@
 
 using namespace BF;
 
+Collection::Collection() : Object() {
+
+}
+
+Collection::~Collection() {
+
+}
 

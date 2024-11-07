@@ -10,7 +10,10 @@
 
 namespace BF {
 class Collection : public Object {
-
+public:
+	~Collection();
+protected:
+	Collection();
 };
 }
 

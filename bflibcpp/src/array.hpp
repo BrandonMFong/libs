@@ -12,7 +12,7 @@
 #include <iostream>
 #include "delete.hpp"
 #include "access.hpp"
-#include "object.hpp"
+#include "collection.hpp"
 #include <string.h>
 
 namespace BF {
@@ -26,9 +26,10 @@ namespace BF {
  * Objects stored in array are assumed to be owned by owner of array 
  * object
  */
-template <typename T, typename S = size_t> class Array : public Object {
+template <typename T, typename S = size_t>
+class Array : public Collection {
 public:
-	Array() : Object() {
+	Array() : Collection() {
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;

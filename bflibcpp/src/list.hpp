@@ -7,7 +7,7 @@
 #define LIST_HPP
 
 #include "access.hpp"
-#include "object.hpp"
+#include "collection.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -38,7 +38,7 @@ typedef enum {
  * object memory will not be deallocated.
  */
 template <typename L, typename S = int>
-class List : public Object {
+class List : public Collection {
 public:
 	
 	/**
@@ -85,7 +85,7 @@ public:
 
 public:
 
-	List() : Object() {
+	List() : Collection() {
 		this->_head = 0;
 		this->_tail = 0;
 		this->_count = 0;
