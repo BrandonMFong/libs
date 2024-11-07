@@ -30,7 +30,7 @@ int test_collectionListSortDefault() {
 			l.add(val);
 		}
 
-		result = Collection<int>::sort((Collection<int>*) &l);
+		result = l.sort();
 	}
 
 	UNIT_TEST_END(!result, result);

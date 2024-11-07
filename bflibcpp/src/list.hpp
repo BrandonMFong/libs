@@ -583,11 +583,15 @@ public:
 		this->set(list);
 	}
 
+	//explicit operator Collection<L,S>*() const { return this; }
+
 public:
 
 	/**
 	 * Range-Based implementation for our Linked list
 	 * ref: https://en.cppreference.com/w/cpp/language/range-for
+	 *
+	 * this can probably go to the collections class
 	 */
 	class Iterator {
 	private:

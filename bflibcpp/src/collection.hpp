@@ -17,7 +17,6 @@ typedef enum {
 	kCollectionSortMerge = 4,
 	kCollectionSortQuick = 5,
 	kCollectionSortRadix = 6,
-	kCollectionSortDefault = kCollectionSortMerge
 } CollectionSort;
 
 /**
@@ -33,12 +32,16 @@ public:
 
 	}
 
-	static int sort(Collection<T,S> * collection, CollectionSort type = kCollectionSortDefault) {
+	int sort(CollectionSort type = kCollectionSortMerge) {
+		switch (type) {
+			case kCollectionSortMerge:
+			default:
+				break;
+		}
 		return 0;
 	}
 protected:
-	Collection() : Object() {
-	}
+	Collection() : Object() { }
 };
 }
 
