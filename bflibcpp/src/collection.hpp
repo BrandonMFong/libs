@@ -10,17 +10,35 @@
 
 namespace BF {
 
+typedef enum {
+	kCollectionSortBubble = 1,
+	kCollectionSortInsertion = 2,
+	kCollectionSortSelection = 3,
+	kCollectionSortMerge = 4,
+	kCollectionSortQuick = 5,
+	kCollectionSortRadix = 6,
+	kCollectionSortDefault = kCollectionSortMerge
+} CollectionSort;
+
 /**
  * This class serves as a base class to all array type
  * implementations. Purpose is to abstract each class such
  * that I can have a set of mutable functions like sorting
  * to be used across different classes
  */
+template <typename T, typename S = size_t>
 class Collection : public Object {
 public:
-	~Collection();
+	virtual ~Collection() {
+
+	}
+
+	static int sort(Collection<T,S> * collection, CollectionSort type = kCollectionSortDefault) {
+		return 0;
+	}
 protected:
-	Collection();
+	Collection() : Object() {
+	}
 };
 }
 

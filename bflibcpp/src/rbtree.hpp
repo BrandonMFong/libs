@@ -34,7 +34,6 @@ namespace BF {
  */
 template <typename T, typename S = int> class RBTree : public BinTree<T,S> {
 public:
-	// TODO: rename rbnode to node
 	class RBNode : public BinTree<T,S>::BinNode {
 		friend class RBTree<T,S>;
 

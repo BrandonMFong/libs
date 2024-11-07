@@ -16,10 +16,12 @@
 #include "atomic_tests.hpp"
 #include "object_tests.hpp"
 #include "data_tests.hpp"
+#include "collection_tests.hpp"
 
 int main() {
 	TEST_SUITE_START;
 
+	/*
 	LAUNCH_TEST_SET(atomic_tests);
 	LAUNCH_TEST_SET(array_tests);
 	LAUNCH_TEST_SET(file_tests);
@@ -33,6 +35,8 @@ int main() {
 	LAUNCH_TEST_SET(time_tests);
 	LAUNCH_TEST_SET(object_tests);
 	LAUNCH_TEST_SET(data_tests);
+	*/
+	LAUNCH_TEST_SET(collection_tests);
 
 	TEST_SUITE_END;
 

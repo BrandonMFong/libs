@@ -27,9 +27,9 @@ namespace BF {
  * object
  */
 template <typename T, typename S = size_t>
-class Array : public Collection {
+class Array : public Collection<T,S> {
 public:
-	Array() : Collection() {
+	Array() : Collection<T,S>() {
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;

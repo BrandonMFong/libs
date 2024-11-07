@@ -14,8 +14,7 @@
 namespace BF {
 
 /**
- * Sort options for the List object
- */
+ * Sort options for the List object */
 typedef enum {
 	kListSortOptionsAscending = 0,
 	kListSortOptionsDescending = 1,
@@ -38,7 +37,7 @@ typedef enum {
  * object memory will not be deallocated.
  */
 template <typename L, typename S = int>
-class List : public Collection {
+class List : public Collection<L,S> {
 public:
 	
 	/**
@@ -85,7 +84,7 @@ public:
 
 public:
 
-	List() : Collection() {
+	List() : Collection<L,S>() {
 		this->_head = 0;
 		this->_tail = 0;
 		this->_count = 0;
