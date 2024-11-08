@@ -35,6 +35,15 @@ public:
 	virtual T objectAtIndex(S index) const = 0;
 	virtual T & refObjectAtIndex(S index) = 0;
 	virtual void replaceObjectAtIndex(T obj, S index)  = 0;
+	virtual S size() const = 0;
+
+	T operator[](S index) const {
+		return this->objectAtIndex(index);
+	}
+
+	T & operator[](S index) {
+		return this->refObjectAtIndex(index);
+	}
 
 	int sort(CollectionSort type = kCollectionSortMerge) {
 		switch (type) {
@@ -43,14 +52,6 @@ public:
 				return Collection::sortMerge(*this);
 				break;
 		}
-	}
-
-	T operator[](S index) const {
-		return this->objectAtIndex(index);
-	}
-
-	T & operator[](S index) {
-		return this->refObjectAtIndex(index);
 	}
 
 protected:
@@ -62,7 +63,7 @@ private:
 	/** MERGE SORT - START **/
 
 	static int sortMerge(Collection & c) {
-		return 0;
+		return sortMerge(c, 0, c.size() - 1);
 	}
 
 	static int sortMerge(Collection & c, S left, S right) {
@@ -70,9 +71,9 @@ private:
 			return 0;
 
 		S mid = left + (right - left) / 2;
-		mergeSort(c, left, mid);
-		mergeSort(c, mid + 1, right);
-		mergeSort(c, left, mid, right);
+		sortMerge(c, left, mid);
+		sortMerge(c, mid + 1, right);
+		sortMerge(c, left, mid, right);
 		return 0;
 	}
 

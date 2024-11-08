@@ -107,6 +107,7 @@ public:
 	}
 
 	S count() const { return this->_count; }
+	virtual S size() const { return this->count(); }
 
 	// Adds obj at tail end of list
 	int add(L obj) {

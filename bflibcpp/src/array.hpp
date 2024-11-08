@@ -147,6 +147,10 @@ public:
 		return this->_count;
 	}
 
+	virtual S size() const {
+		return this->count();
+	}
+
 	/**
 	 * Prints the array from the first element to the last
 	 */
