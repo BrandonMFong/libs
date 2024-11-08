@@ -8,7 +8,7 @@
 
 #include "rbtree.hpp"
 #include "access.hpp"
-#include "object.hpp"
+#include "collection.hpp"
 
 namespace BF {
 
@@ -16,7 +16,7 @@ namespace BF {
  * Dictionary whose entries are pair with keys (of type K) and values (of type V)
  */
 template <typename K, typename V, typename S = int>
-class Dictionary : public Object {
+class Dictionary : public Collection<S> {
 public:
 
 	/**
@@ -80,7 +80,7 @@ public:
 	
 	friend class Entry;
 
-	Dictionary() : Object() {
+	Dictionary() : Collection<S>() {
 		this->_keyCompare = 0;
 		this->_keyValueRelease = 0;
 		this->_keyValueRetain = 0;
@@ -107,7 +107,7 @@ public:
 	/**
 	 * Returns number of key/value pairs 
 	 */
-	S size() const {
+	virtual S size() const {
 		return this->_tree.count();
 	}
 

@@ -6,7 +6,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include "object.hpp"
+#include "collection.hpp"
 #include <vector>
 
 extern "C" {
@@ -30,14 +30,13 @@ typedef enum {
  * to be used across different classes
  */
 template <typename T, typename S = size_t>
-class Vector : public Object {
+class Vector : public Collection<S> {
 public:
 	virtual ~Vector() { }
 
 	virtual T objectAtIndex(S index) const = 0;
 	virtual T & refObjectAtIndex(S index) = 0;
 	virtual void replaceObjectAtIndex(T obj, S index)  = 0;
-	virtual S size() const = 0;
 	virtual T max() const = 0;
 
 	T operator[](S index) const {
@@ -65,7 +64,7 @@ public:
 	}
 
 protected:
-	Vector() : Object() { }
+	Vector() : Collection<S>() { }
 
 private:
 	

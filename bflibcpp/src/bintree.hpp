@@ -8,7 +8,7 @@
 
 #include "access.hpp"
 #include "delete.hpp"
-#include "object.hpp"
+#include "collection.hpp"
 #include <iostream>
 #include "list.hpp"
 #include "stack.hpp"
@@ -20,7 +20,8 @@ namespace BF {
  *
  * Left most node is the least value comparison
  */
-template <typename T, typename S = int> class BinTree : public Object {
+template <typename T, typename S = int>
+class BinTree : public Collection<S> {
 public:
 	// TODO: rename BinNode to Node
 	class BinNode : public Object {
@@ -262,7 +263,7 @@ public:
 		Stack<BinNode *> _st;
 	};
 
-	BinTree() : Object() {
+	BinTree() : Collection<S>() {
 		this->_root = NULL;
 		this->_compare = NULL;
 		this->_count = 0;
@@ -304,6 +305,7 @@ public:
 	}
 
 	S count() const { return this->_count; }
+	virtual S size() const { return this->_count; }
 
 	/**
 	 * Sees if obj is inside our tree start from root
