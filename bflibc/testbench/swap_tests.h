@@ -25,6 +25,16 @@ int test_swapping(void) {
 		} else if (c != b) {
 			result = 2;
 		}
+
+		if (!result) {
+			a = b = c = d = rand();
+			BFSwap(a, c);
+			if (a != d) {
+				result = 3;
+			} else if (c != b) {
+				result = 4;
+			}
+		}		
 	}
 
 	UNIT_TEST_END(!result, result);

@@ -9,6 +9,10 @@
 #include "object.hpp"
 #include <vector>
 
+extern "C" {
+#include <bflibc/swap.h>
+}
+
 namespace BF {
 
 typedef enum {
@@ -122,12 +126,14 @@ private:
 			// unsorted array
 			min_idx = i;
 			for (j = i+1; j < n; j++)
-			if (c[j] < c[min_idx])
-				min_idx = j;
+				if (c[j] < c[min_idx])
+					min_idx = j;
 
 			// Swap the found minimum element
 			// with the first element
-			BFSwap(c[min_idx], c[i]);
+			if (c[min_idx] != c[i]) {
+				BFSwap(c[min_idx], c[i]);
+			}
 		}
 		return 0;
 	}

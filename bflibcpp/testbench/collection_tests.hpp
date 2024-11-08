@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <list.hpp>
+#include <stack.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -24,13 +25,13 @@ int run_collectionListSort(CollectionSort type, int listsize, int reps) {
 		int maxsize = listsize;
 		srand(time(0));
 		List<int> l;
+		List<int> b;
 		for (int i = 0; i < maxsize; i++) {
 			int val = rand();
-			printf("\n%d", val);
+			b.add(val);
 			l.add(val);
 		}
 
-		printf("\n");
 		result = l.sort(type);
 
 		if (!result) {
@@ -47,9 +48,10 @@ int run_collectionListSort(CollectionSort type, int listsize, int reps) {
 				}
 			}
 			for (int i = 0; i < maxsize; i++) {
-				printf("\n%d", l[i]);
+				if (!l.contains(b[i])) {
+					result = 3;
+				}
 			}
-			printf("\n");
 		}
 	}
 
@@ -72,7 +74,7 @@ int test_collectionListSortInsertion() {
 
 int test_collectionListSortSelection() {
 	UNIT_TEST_START;
-	int result = run_collectionListSort(kCollectionSortSelection, 2 << 1, 1);
+	int result = run_collectionListSort(kCollectionSortSelection, 2 << 9, 1);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
