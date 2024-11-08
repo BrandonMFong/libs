@@ -354,111 +354,6 @@ private:
 	}
 
 	/**
-	 * Sorts nodes from first to last using merge sort techinques
-	int sortNodeToNode(Node * first, Node * last, S distance, const ListSortOptions option) {
-		int result = 0;
-		List<L,S> tmp;
-		Node * mid = 0, * t0 = 0, * t1 = 0;
-		const S halfDistance = distance / 2;
-
-		if (!first && !last) {
-			result = 2;
-		} else {
-			if (distance < 3) {
-				// We only worry about swapping
-				if (distance == 2) {
-					if (option == kListSortOptionsDescending) {
-						if (this->runCompare(first->obj, last->obj) < 0) {
-							result = this->swap(first, last);
-						}
-					} else {
-						if (this->runCompare(first->obj, last->obj) > 0) {
-							result = this->swap(first, last);
-						}
-					}
-				}
-			} else {
-				mid = first;
-				// Find mid node
-				for (S i = 0; i < (halfDistance - 1); i++)
-					mid = mid->next();
-
-				t0 = first;
-				t1 = mid->next();
-
-				// Sort the first half
-				result = this->sortNodeToNode(first, mid, halfDistance, option);
-
-				// Then sort the last half
-				if (!result)
-					result = this->sortNodeToNode(mid->next(), last, distance - halfDistance, option);
-
-				// Merge the two halves
-				if (!result) {
-					while (t0 && (t0 != mid->next()) && t1 && (t1 != last->next())) {
-						int res = this->runCompare(t0->obj, t1->obj);
-						switch (option) {
-							case kListSortOptionsDescending:
-								if (res < 0) {
-									tmp.add(t1->obj);
-									t1 = t1->next();
-								} else if (res > 0) {
-									tmp.add(t0->obj);
-									t0 = t0->next();
-								} else {
-									tmp.add(t0->obj);
-									tmp.add(t1->obj);
-									t0 = t0->next();
-									t1 = t1->next();
-								}
-
-								break;
-							case kListSortOptionsAscending:
-							default:
-								if (res < 0) {
-									tmp.add(t0->obj);
-									t0 = t0->next();
-								} else if (res > 0) {
-									tmp.add(t1->obj);
-									t1 = t1->next();
-								} else {
-									tmp.add(t0->obj);
-									tmp.add(t1->obj);
-									t0 = t0->next();
-									t1 = t1->next();
-								}
-
-								break;
-						}
-					}
-
-					// Merge in leftovers
-
-					while (t0 && (t0 != mid->next())) {
-						tmp.add(t0->obj);
-						t0 = t0->next();
-					}
-
-					while (t1 && (t1 != last->next())) {
-						tmp.add(t1->obj);
-						t1 = t1->next();
-					}
-
-					// Reset our data with the sorted data
-					for (Node * n0 = tmp.first(), * n1 = first; 
-						n0 && n1 && (n1 != last->next()); 
-						n0 = n0->next(), n1 = n1->next()) {
-						n1->obj = n0->obj;
-					}
-				}
-			}
-		}
-
-		return result;
-	}
-	 */
-
-	/**
 	 * Allows us to set list with {...} notation
 	 *
 	 * Calling this will reset the list to the input
@@ -611,8 +506,6 @@ public:
 	void operator=(const std::initializer_list<L> & list) {
 		this->set(list);
 	}
-
-	//explicit operator Collection<L,S>*() const { return this; }
 
 public:
 
