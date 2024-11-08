@@ -39,6 +39,7 @@ public:
 	virtual T & refObjectAtIndex(S index) = 0;
 	virtual void replaceObjectAtIndex(T obj, S index)  = 0;
 	virtual S size() const = 0;
+	virtual T max() const = 0;
 
 	T operator[](S index) const {
 		return this->objectAtIndex(index);
@@ -56,6 +57,10 @@ public:
 				return Collection::sortInsertion(*this);
 			case kCollectionSortSelection:
 				return Collection::sortSelection(*this);
+			case kCollectionSortQuick:
+				return Collection::sortQuick(*this);
+			case kCollectionSortRadix:
+				return Collection::sortRadix(*this);
 			case kCollectionSortMerge:
 			default:
 				return Collection::sortMerge(*this);
@@ -139,6 +144,103 @@ private:
 	}
 
 	/** SELECTION SORT - END **/
+	/** QUICK SORT - START **/
+
+	static int sortQuick(Collection & c) {
+		return sortQuick(c, 0, c.size() - 1);
+	}
+
+	static int sortQuick(Collection & c, int low, int high) {
+		if (low < high) {
+			// pi is the partition return index of pivot
+			int pi = sortQuickPartition(c, low, high);
+
+			// Recursion calls for smaller elements
+			// and greater or equals elements
+			sortQuick(c, low, pi - 1);
+			sortQuick(c, pi + 1, high);
+		}
+
+		return 0;
+	}
+
+	static int sortQuickPartition(Collection & c, int low, int high) {
+		// Choose the pivot
+		int pivot = c[high];
+	  
+		// Index of smaller element and indicates 
+		// the right position of pivot found so far
+		int i = low - 1;
+
+		// Traverse arr[;ow..high] and move all smaller
+		// elements on left side. Elements from low to 
+		// i are smaller after every iteration
+		for (int j = low; j <= high - 1; j++) {
+			if (c[j] < pivot) {
+				i++;
+				if (c[i] != c[j]) {
+					BFSwap(c[i], c[j]);
+				}
+			}
+		}
+		
+		// Move pivot after smaller elements and
+		// return its position
+		if (c[i + 1] != c[high]) {
+			BFSwap(c[i + 1], c[high]);
+		}
+		return i + 1;
+	}
+
+	/** QUICK SORT - END **/
+	/** RADIX SORT - START **/
+
+	static int sortRadix(Collection & c) {
+		// Find the maximum number to
+		// know number of digits
+		T m = c.max();
+
+		// Do counting sort for every digit.
+		// Note that instead of passing digit
+		// number, exp is passed. exp is 10^i
+		// where i is current digit number
+		for (int exp = 1; m / exp > 0; exp *= 10)
+			sortRadixCount(c, c.size(), exp);
+		return 0;
+	}
+
+	static int sortRadixCount(Collection & c, S n, int exp) {
+		// Output array
+		std::vector<T> output(n);
+		S i = 0;
+		std::vector<T> count(10);
+
+		// Store count of occurrences
+		// in count[]
+		for (i = 0; i < n; i++)
+			count[(c[i] / exp) % 10]++;
+
+		// Change count[i] so that count[i]
+		// now contains actual position
+		// of this digit in output[]
+		for (i = 1; i < 10; i++)
+			count[i] += count[i - 1];
+
+		// Build the output array
+		for (i = n - 1; i >= 0; i--) {
+			output[count[(c[i] / exp) % 10] - 1] = c[i];
+			count[(c[i] / exp) % 10]--;
+		}
+
+		// Copy the output array to arr[],
+		// so that arr[] now contains sorted
+		// numbers according to current digit
+		for (i = 0; i < n; i++)
+			c[i] = output[i];
+		return 0;
+	}
+
+	/** RADIX SORT - END **/
 	/** MERGE SORT - START **/
 
 	static int sortMerge(Collection & c) {
@@ -161,7 +263,7 @@ private:
 		int n2 = right - mid;
 
 		// Create temp vectors
-		std::vector<int> L(n1), R(n2);
+		std::vector<T> L(n1), R(n2);
 
 		// Copy data to temp vectors L[] and R[]
 		for (int i = 0; i < n1; i++)

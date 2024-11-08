@@ -109,6 +109,26 @@ public:
 	S count() const { return this->_count; }
 	virtual S size() const { return this->count(); }
 
+	/**
+	 * returns max object in list
+	 *
+	 * throws if count is 0, caller must check
+	 */
+	virtual L max() const {
+		if (this->count() == 0) {
+			throw Exception("cannot get max from empty list");
+		}
+		Node * maxnode = this->first();
+		for (Node * n = maxnode->next();
+			n; n = n->next()) {
+			if (maxnode->object() < n->object()) {
+				maxnode = n;
+			}
+		}
+
+		return maxnode->object();
+	}
+
 	// Adds obj at tail end of list
 	int add(L obj) {
 		int result = 0;

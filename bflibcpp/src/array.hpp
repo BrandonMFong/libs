@@ -157,6 +157,27 @@ public:
 	}
 
 	/**
+	 * returns max object in list
+	 *
+	 * throws if count is 0, caller must check
+	 */
+	virtual T max() const {
+		if (this->count() == 0) {
+			throw Exception("cannot get max from empty array");
+		}
+		T res = this->objectAtIndex(0);
+		for (S i = 1; i < this->count(); i++) {
+			T tmp = this->objectAtIndex(i);
+			if (res < tmp) {
+				res = tmp;
+			}
+		}
+
+		return res;
+	}
+
+
+	/**
 	 * Prints the array from the first element to the last
 	 */
 	virtual void print() {

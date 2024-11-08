@@ -79,9 +79,23 @@ int test_collectionListSortSelection() {
 	return result;
 }
 
+int test_collectionListSortQuick() {
+	UNIT_TEST_START;
+	int result = run_collectionListSort(kCollectionSortQuick, 2 << 9, 1);
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 int test_collectionListSortMerge() {
 	UNIT_TEST_START;
 	int result = run_collectionListSort(kCollectionSortMerge, 2 << 12, 1);
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_collectionListSortRadix() {
+	UNIT_TEST_START;
+	int result = run_collectionListSort(kCollectionSortRadix, 2 << 10, 1);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -91,10 +105,12 @@ void collection_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	//LAUNCH_TEST(test_collectionListSortBubble, p, f);
-	//LAUNCH_TEST(test_collectionListSortInsertion, p, f);
+	LAUNCH_TEST(test_collectionListSortBubble, p, f);
+	LAUNCH_TEST(test_collectionListSortInsertion, p, f);
 	LAUNCH_TEST(test_collectionListSortSelection, p, f);
-	//LAUNCH_TEST(test_collectionListSortMerge, p, f);
+	LAUNCH_TEST(test_collectionListSortQuick, p, f);
+	LAUNCH_TEST(test_collectionListSortMerge, p, f);
+	LAUNCH_TEST(test_collectionListSortRadix, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
