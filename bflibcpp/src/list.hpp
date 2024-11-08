@@ -15,14 +15,6 @@
 namespace BF {
 
 /**
- * Sort options for the List object */
-typedef enum {
-	kListSortOptionsAscending = 0,
-	kListSortOptionsDescending = 1,
-	kListSortOptionsDefault = kListSortOptionsAscending,
-} ListSortOptions;
-
-/**
  * Linked List implementation
  *
  * Essentially a mutable array
@@ -277,17 +269,6 @@ public:
 		std::cout << "]";
 		std::cout << std::endl;
 	}
-
-	/**
-	 * Default sort kListSortOptionsDefault
-	int sort() {
-		return this->sort(kListSortOptionsDefault);
-	}
-
-	int sort(const ListSortOptions option) {
-		return this->sortNodeToNode(this->_head, this->_tail, this->_count, option);
-	}
-	 */
 
 	/**
 	 * Shuffles node links

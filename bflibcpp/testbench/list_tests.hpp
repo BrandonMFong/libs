@@ -305,82 +305,6 @@ int test_InitializingWithInitList() {
 	return result;
 }
 
-/*
-int test_ListSortAscending() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	List<int> l;
-
-	srand(time(NULL));
-
-	int size = 2 << 20, max = size;
-	for (int i = 0; i < size; i++) {
-		int num = rand() % max;
-
-		result = l.add(num);
-
-		if (result) break;
-	}
-
-	if (!result)
-		result = l.sort();
-
-	if (!result) {
-		List<int>::Node * n = l.first();
-		int tmp = n->object();
-		for (n = n->next(); n; n = n->next()) {
-			if (tmp > n->object()) {
-				printf("%d > %d\n", tmp, n->object());
-				result = 2;
-				break;
-			}
-			tmp = n->object();
-		}
-	}
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_ListSortDescending() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	List<int> l;
-
-	srand(time(NULL));
-
-	int size = 2 << 20, max = 2 << 20;
-	for (int i = 0; i < size; i++) {
-		int num = rand() % max;
-
-		result = l.add(num);
-
-		if (result) break;
-	}
-
-	if (!result)
-		result = l.sort(kListSortOptionsDescending);
-
-	if (!result) {
-		List<int>::Node * n = l.first();
-		int tmp = n->object();
-		for (n = n->next(); n; n = n->next()) {
-			if (tmp < n->object()) {
-				printf("%d < %d\n", tmp, n->object());
-				result = 2;
-				break;
-			}
-			tmp = n->object();
-		}
-	}
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-*/
-
 int test_InitializingFromRawArray() {
 	int result = 0;
 
@@ -400,35 +324,6 @@ int test_InitializingFromRawArray() {
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
-
-/*
-int test_ListSortingStrings() {
-	int result = 0;
-
-	List<const char *> l = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
-	l.setCompareCallback(strcmp);
-
-	result = l.sort();
-	List<const char *>::Node * n = 0;
-	const char * tmp = 0;
-	if (!result) {
-		tmp = l.first()->object();
-		n = l.first()->next();
-	}
-
-	while (!result && n) {
-		if (strcmp(tmp, n->object()) > 0) {
-			result = 2;
-			l.print();
-		}
-
-		n = n->next();
-	}
-
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-*/
 
 int test_ListNullSwap() {
 	int result = 0;
@@ -678,10 +573,7 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_traversing, p, f);
 	LAUNCH_TEST(test_ListContains, p, f);
 	LAUNCH_TEST(test_InitializingWithInitList, p, f);
-	//LAUNCH_TEST(test_ListSortAscending, p, f);
-	//LAUNCH_TEST(test_ListSortDescending, p, f);
 	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
-	//LAUNCH_TEST(test_ListSortingStrings, p, f);
 	LAUNCH_TEST(test_ListSwap, p, f);
 	LAUNCH_TEST(test_shuffle, p, f);
 	LAUNCH_TEST(test_ListNullSwap, p, f);
