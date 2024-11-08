@@ -52,7 +52,14 @@ int run_collectionListSort(CollectionSort type, int listsize, int reps) {
 
 int test_collectionListSortBubble() {
 	UNIT_TEST_START;
-	int result = run_collectionListSort(kCollectionSortBubble, 2 << 8, 1);
+	int result = run_collectionListSort(kCollectionSortBubble, 2 << 9, 1);
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_collectionListSortInsertion() {
+	UNIT_TEST_START;
+	int result = run_collectionListSort(kCollectionSortInsertion, 2 << 10, 1);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -70,8 +77,9 @@ void collection_tests(int * pass, int * fail) {
 	INTRO_TEST_FUNCTION;
 
 	LAUNCH_TEST(test_collectionListSortBubble, p, f);
+	LAUNCH_TEST(test_collectionListSortInsertion, p, f);
 	LAUNCH_TEST(test_collectionListSortMerge, p, f);
-	
+
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }

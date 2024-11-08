@@ -31,9 +31,7 @@ typedef enum {
 template <typename T, typename S = size_t>
 class Collection : public Object {
 public:
-	virtual ~Collection() {
-		this->_subscriptIndex = 0;
-	}
+	virtual ~Collection() { }
 
 	virtual T objectAtIndex(S index) const = 0;
 	virtual T & refObjectAtIndex(S index) = 0;
@@ -52,6 +50,8 @@ public:
 		switch (type) {
 			case kCollectionSortBubble:
 				return Collection::sortBubble(*this);
+			case kCollectionSortInsertion:
+				return Collection::sortInsertion(*this);
 			case kCollectionSortMerge:
 			default:
 				return Collection::sortMerge(*this);
@@ -62,8 +62,7 @@ protected:
 	Collection() : Object() { }
 
 private:
-	S _subscriptIndex;
-
+	
 	/** BUBBLE SORT - START **/
 
 	static int sortBubble(Collection & c) {
@@ -87,6 +86,29 @@ private:
 	}
 
 	/** BUBBLE SORT - END **/
+	/** INSERTION SORT - START **/
+
+	static int sortInsertion(Collection & c) {
+		int i, key, j;
+		int n = c.size();
+		for (i = 1; i < n; i++) {
+			key = c[i];
+			j = i - 1;
+	 
+			// Move elements of arr[0..i-1],
+			// that are greater than key, to one
+			// position ahead of their
+			// current position
+			while (j >= 0 && c[j] > key) {
+				c[j + 1] = c[j];
+				j = j - 1;
+			}
+			c[j + 1] = key;
+		}
+		return 0;
+	}
+
+	/** INSERTION SORT - END **/
 	/** MERGE SORT - START **/
 
 	static int sortMerge(Collection & c) {
