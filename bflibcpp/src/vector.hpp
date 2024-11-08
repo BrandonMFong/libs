@@ -7,7 +7,6 @@
 #define VECTOR_HPP
 
 #include "collection.hpp"
-#include <vector>
 
 extern "C" {
 #include <bflibc/swap.h>
@@ -210,7 +209,7 @@ private:
 		int n2 = right - mid;
 
 		// Create temp vectors
-		std::vector<T> L(n1), R(n2);
+		int L[n1], R[n2];
 
 		// Copy data to temp vectors L[] and R[]
 		for (int i = 0; i < n1; i++)
