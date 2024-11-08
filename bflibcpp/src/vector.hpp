@@ -45,6 +45,11 @@ public:
 		return this->refObjectAtIndex(index);
 	}
 
+	/**
+	 * sorts the vector in ascending order
+	 *
+	 * default algorithm is merge sort
+	 */
 	int sort(VectorSort type = kVectorSortMerge) {
 		switch (type) {
 			case kVectorSortBubble:
