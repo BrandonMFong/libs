@@ -7,8 +7,11 @@
 #define COLLECTION_HPP
 
 #include "object.hpp"
+#include <vector>
 
 namespace BF {
+
+#define BFSwap(a, b) a += b; b = a - b; a = a - b;
 
 typedef enum {
 	kCollectionSortBubble = 1,
@@ -47,10 +50,11 @@ public:
 
 	int sort(CollectionSort type = kCollectionSortMerge) {
 		switch (type) {
+			case kCollectionSortBubble:
+				return Collection::sortBubble(*this);
 			case kCollectionSortMerge:
 			default:
 				return Collection::sortMerge(*this);
-				break;
 		}
 	}
 
@@ -60,6 +64,29 @@ protected:
 private:
 	S _subscriptIndex;
 
+	/** BUBBLE SORT - START **/
+
+	static int sortBubble(Collection & c) {
+		int n = c.size();
+		bool swapped;
+
+		for (int i = 0; i < n - 1; i++) {
+			swapped = false;
+			for (int j = 0; j < n - i - 1; j++) {
+				if (c[j] > c[j + 1]) {
+					BFSwap(c[j], c[j + 1]);
+					swapped = true;
+				}
+			}
+
+			// If no two elements were swapped, then break
+			if (!swapped)
+				break;
+		}
+		return 0;
+	}
+
+	/** BUBBLE SORT - END **/
 	/** MERGE SORT - START **/
 
 	static int sortMerge(Collection & c) {
@@ -78,18 +105,17 @@ private:
 	}
 
 	static int sortMerge(Collection & c, S left, S mid, S right) {
-		/*
 		int n1 = mid - left + 1;
 		int n2 = right - mid;
 
 		// Create temp vectors
-		vector<int> L(n1), R(n2);
+		std::vector<int> L(n1), R(n2);
 
 		// Copy data to temp vectors L[] and R[]
 		for (int i = 0; i < n1; i++)
-			L[i] = arr[left + i];
+			L[i] = c[left + i];
 		for (int j = 0; j < n2; j++)
-			R[j] = arr[mid + 1 + j];
+			R[j] = c[mid + 1 + j];
 
 		int i = 0, j = 0;
 		int k = left;
@@ -98,11 +124,11 @@ private:
 		// into arr[left..right]
 		while (i < n1 && j < n2) {
 			if (L[i] <= R[j]) {
-				arr[k] = L[i];
+				c[k] = L[i];
 				i++;
 			}
 			else {
-				arr[k] = R[j];
+				c[k] = R[j];
 				j++;
 			}
 			k++;
@@ -111,7 +137,7 @@ private:
 		// Copy the remaining elements of L[],
 		// if there are any
 		while (i < n1) {
-			arr[k] = L[i];
+			c[k] = L[i];
 			i++;
 			k++;
 		}
@@ -119,11 +145,10 @@ private:
 		// Copy the remaining elements of R[],
 		// if there are any
 		while (j < n2) {
-			arr[k] = R[j];
+			c[k] = R[j];
 			j++;
 			k++;
 		}
-		*/
 		return 0;
 	}
 	

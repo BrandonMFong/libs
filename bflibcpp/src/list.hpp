@@ -260,7 +260,6 @@ public:
 
 	/**
 	 * Default sort kListSortOptionsDefault
-	 */
 	int sort() {
 		return this->sort(kListSortOptionsDefault);
 	}
@@ -268,6 +267,7 @@ public:
 	int sort(const ListSortOptions option) {
 		return this->sortNodeToNode(this->_head, this->_tail, this->_count, option);
 	}
+	 */
 
 	/**
 	 * Shuffles node links
@@ -335,7 +335,6 @@ private:
 
 	/**
 	 * Sorts nodes from first to last using merge sort techinques
-	 */
 	int sortNodeToNode(Node * first, Node * last, S distance, const ListSortOptions option) {
 		int result = 0;
 		List<L,S> tmp;
@@ -437,6 +436,7 @@ private:
 
 		return result;
 	}
+	 */
 
 	/**
 	 * Allows us to set list with {...} notation

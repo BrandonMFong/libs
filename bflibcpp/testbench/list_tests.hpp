@@ -305,6 +305,7 @@ int test_InitializingWithInitList() {
 	return result;
 }
 
+/*
 int test_ListSortAscending() {
 	UNIT_TEST_START;
 	int result = 0;
@@ -378,6 +379,7 @@ int test_ListSortDescending() {
 	UNIT_TEST_END(!result, result);
 	return result;
 }
+*/
 
 int test_InitializingFromRawArray() {
 	int result = 0;
@@ -399,6 +401,7 @@ int test_InitializingFromRawArray() {
 	return result;
 }
 
+/*
 int test_ListSortingStrings() {
 	int result = 0;
 
@@ -425,6 +428,7 @@ int test_ListSortingStrings() {
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }
+*/
 
 int test_ListNullSwap() {
 	int result = 0;
@@ -674,10 +678,10 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_traversing, p, f);
 	LAUNCH_TEST(test_ListContains, p, f);
 	LAUNCH_TEST(test_InitializingWithInitList, p, f);
-	LAUNCH_TEST(test_ListSortAscending, p, f);
-	LAUNCH_TEST(test_ListSortDescending, p, f);
+	//LAUNCH_TEST(test_ListSortAscending, p, f);
+	//LAUNCH_TEST(test_ListSortDescending, p, f);
 	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
-	LAUNCH_TEST(test_ListSortingStrings, p, f);
+	//LAUNCH_TEST(test_ListSortingStrings, p, f);
 	LAUNCH_TEST(test_ListSwap, p, f);
 	LAUNCH_TEST(test_shuffle, p, f);
 	LAUNCH_TEST(test_ListNullSwap, p, f);

@@ -118,11 +118,16 @@ public:
 		}
 	}
 
+	/**
+	 * returns reference to the object
+	 *
+	 * throws if index is out of range
+	 */
 	virtual T & refObjectAtIndex(S index) {
 		if ((this->_address == 0) || (this->_count == 0)) {
 			throw Exception("indexing null array");
 		} else if (index >= this->_count) {
-			throw Exception("indexing outside array");
+			throw Exception("index %d out of range", index);
 		} else {
 			return this->_address[index];
 		}

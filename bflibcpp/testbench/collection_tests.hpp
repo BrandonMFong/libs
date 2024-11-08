@@ -16,13 +16,12 @@ extern "C" {
 
 using namespace BF;
 
-int test_collectionListSortDefault() {
-	UNIT_TEST_START;
+int run_collectionListSort(CollectionSort type, int listsize, int reps) {
 	int result = 0;
-	int max = 1;
+	int max = reps;
 
 	while (!result && max--) {
-		int maxsize = 2 << 4;
+		int maxsize = listsize;
 		srand(time(0));
 		List<int> l;
 		for (int i = 0; i < maxsize; i++) {
@@ -30,9 +29,37 @@ int test_collectionListSortDefault() {
 			l.add(val);
 		}
 
-		result = l.sort();
+		result = l.sort(type);
+
+		if (!result) {
+			if (l.size() != maxsize) {
+				result = 2;
+			}
+		}
+
+		if (!result) {
+			for (int i = 1; i < maxsize; i++) {
+				if (l[i - 1] > l[i]) {
+					result = 1;
+					break;
+				}
+			}
+		}
 	}
 
+	return result;
+}
+
+int test_collectionListSortBubble() {
+	UNIT_TEST_START;
+	int result = run_collectionListSort(kCollectionSortBubble, 2 << 8, 1);
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
+int test_collectionListSortMerge() {
+	UNIT_TEST_START;
+	int result = run_collectionListSort(kCollectionSortMerge, 2 << 12, 1);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -42,7 +69,8 @@ void collection_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	LAUNCH_TEST(test_collectionListSortDefault, p, f);
+	LAUNCH_TEST(test_collectionListSortBubble, p, f);
+	LAUNCH_TEST(test_collectionListSortMerge, p, f);
 	
 	if (pass) *pass += p;
 	if (fail) *fail += f;
