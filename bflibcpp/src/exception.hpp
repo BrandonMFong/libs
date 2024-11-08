@@ -12,14 +12,12 @@ namespace BF {
 
 class Exception : public std::exception {
 public:
-	//Exception(BF::String msg);
 	Exception(const char * format, ...);
 	virtual ~Exception();
 
 	virtual const char * what() const throw();
 
 private:
-	//BF::String _msg;
 	char * _msg;
 };
 
