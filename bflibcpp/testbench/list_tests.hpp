@@ -41,7 +41,7 @@ int test_adding() {
 
 	if (!result) {
 		if (l->count() != 2) {
-			printf("Count is %d\n", l->count());
+			printf("Count is %ld\n", l->count());
 			result = 3;
 		}
 	}
@@ -71,7 +71,7 @@ int test_indexing() {
 
 	if (result) {
 		printf("Error %d\n", result);
-		printf("Count %d\n", l->count());
+		printf("Count %ld\n", l->count());
 		printf("%f\n", l->objectAtIndex(0));
 		printf("%f\n", l->objectAtIndex(1));
 	}
@@ -106,7 +106,7 @@ int test_inserting() {
 
 	if (result) {
 		printf("Error %d\n", result);
-		printf("Count %d\n", l->count());
+		printf("Count %ld\n", l->count());
 		printf("0: %f\n", l->objectAtIndex(0));
 		printf("1: %f\n", l->objectAtIndex(1));
 		printf("2: %f\n", l->objectAtIndex(2));
@@ -136,7 +136,7 @@ int test_deletingAtIndex() {
 		printf("1: %ld\n", l->objectAtIndex(1));
 	} else if (l->count() != 2) {
 		result = 6;
-		printf("Count %d\n", l->count());
+		printf("Count %ld\n", l->count());
 	} else if (l->objectAtIndex(0) != 1) {
 		result = 7;
 	} else if (l->deleteObjectAtIndex(0)) {
@@ -214,7 +214,7 @@ int test_listMemoryHandling() {
 
 	if (result == 0) {
 		if (l->count() != 3) {
-			printf("count: %d\n", l->count());
+			printf("count: %ld\n", l->count());
 			result = 1;
 		}
 	}
@@ -258,7 +258,7 @@ int test_traversing() {
 		max--;
 	}
 
-	int i = 0;
+	size_t i = 0;
 	List<int>::Node * node = t.first();
 	while (!result && (i < t.count()) && node) {
 		node = node->next();
@@ -384,7 +384,7 @@ int test_ListSortDescending() {
 int test_InitializingFromRawArray() {
 	int result = 0;
 
-	const int size = 5;
+	const size_t size = 5;
 	const char * strings[size] = {"one", "two", "three", "four", "five"};
 
 	List<const char *> l;
@@ -393,7 +393,7 @@ int test_InitializingFromRawArray() {
 
 	if (l.count() != size) result = 1;
 
-	for (int i = 0; (i < size) && !result; i++) {
+	for (size_t i = 0; (i < size) && !result; i++) {
 		if (!l.contains(strings[i])) result = i + 10;
 	}
 
@@ -575,11 +575,11 @@ int test_pluckingObject() {
 		srand(time(0));
 
 		// make array and list
-		int size = 10;
+		size_t size = 10;
 		int * arr[size];
 		List<int *> list;
 		list.setReleaseCallback(TestPluckingObjectRelease);
-		for (int i = 0; i < size; i++) {
+		for (size_t i = 0; i < size; i++) {
 			arr[i] = (int *) malloc(sizeof(int));
 			*arr[i] = rand();
 			list.add(arr[i]);
@@ -604,7 +604,7 @@ int test_pluckingObject() {
 
 		// make sure we can still play around with value
 		if (!result) {
-			for (int i = 0; i < size; i++) {
+			for (size_t i = 0; i < size; i++) {
 				int t = *arr[i];
 				t++;
 			}
@@ -616,7 +616,7 @@ int test_pluckingObject() {
 		}
 
 		list.setReleaseCallback(0);
-		for (int i = 0; i < size; i++) { BFFree(arr[i]); }
+		for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
 	}
 
 	UNIT_TEST_END(!result, result);

@@ -12,7 +12,7 @@
 #include <iostream>
 #include "delete.hpp"
 #include "access.hpp"
-#include "collection.hpp"
+#include "vector.hpp"
 #include <string.h>
 #include "exception.hpp"
 
@@ -28,9 +28,9 @@ namespace BF {
  * object
  */
 template <typename T, typename S = size_t>
-class Array : public Collection<T,S> {
+class Array : public Vector<T,S> {
 public:
-	Array() : Collection<T,S>() {
+	Array() : Vector<T,S>() {
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;

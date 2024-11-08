@@ -3,8 +3,8 @@
  * date: 11/7/24
  */
 
-#ifndef COLLECTION_HPP
-#define COLLECTION_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 #include "object.hpp"
 #include <vector>
@@ -16,13 +16,13 @@ extern "C" {
 namespace BF {
 
 typedef enum {
-	kCollectionSortBubble = 1,
-	kCollectionSortInsertion = 2,
-	kCollectionSortSelection = 3,
-	kCollectionSortMerge = 4,
-	kCollectionSortQuick = 5,
-	kCollectionSortRadix = 6,
-} CollectionSort;
+	kVectorSortBubble = 1,
+	kVectorSortInsertion = 2,
+	kVectorSortSelection = 3,
+	kVectorSortMerge = 4,
+	kVectorSortQuick = 5,
+	kVectorSortRadix = 6,
+} VectorSort;
 
 /**
  * This class serves as a base class to all array type
@@ -31,9 +31,9 @@ typedef enum {
  * to be used across different classes
  */
 template <typename T, typename S = size_t>
-class Collection : public Object {
+class Vector : public Object {
 public:
-	virtual ~Collection() { }
+	virtual ~Vector() { }
 
 	virtual T objectAtIndex(S index) const = 0;
 	virtual T & refObjectAtIndex(S index) = 0;
@@ -49,32 +49,32 @@ public:
 		return this->refObjectAtIndex(index);
 	}
 
-	int sort(CollectionSort type = kCollectionSortMerge) {
+	int sort(VectorSort type = kVectorSortMerge) {
 		switch (type) {
-			case kCollectionSortBubble:
-				return Collection::sortBubble(*this);
-			case kCollectionSortInsertion:
-				return Collection::sortInsertion(*this);
-			case kCollectionSortSelection:
-				return Collection::sortSelection(*this);
-			case kCollectionSortQuick:
-				return Collection::sortQuick(*this);
-			case kCollectionSortRadix:
-				return Collection::sortRadix(*this);
-			case kCollectionSortMerge:
+			case kVectorSortBubble:
+				return Vector::sortBubble(*this);
+			case kVectorSortInsertion:
+				return Vector::sortInsertion(*this);
+			case kVectorSortSelection:
+				return Vector::sortSelection(*this);
+			case kVectorSortQuick:
+				return Vector::sortQuick(*this);
+			case kVectorSortRadix:
+				return Vector::sortRadix(*this);
+			case kVectorSortMerge:
 			default:
-				return Collection::sortMerge(*this);
+				return Vector::sortMerge(*this);
 		}
 	}
 
 protected:
-	Collection() : Object() { }
+	Vector() : Object() { }
 
 private:
 	
 	/** BUBBLE SORT - START **/
 
-	static int sortBubble(Collection & c) {
+	static int sortBubble(Vector & c) {
 		int n = c.size();
 		bool swapped;
 
@@ -97,7 +97,7 @@ private:
 	/** BUBBLE SORT - END **/
 	/** INSERTION SORT - START **/
 
-	static int sortInsertion(Collection & c) {
+	static int sortInsertion(Vector & c) {
 		int i, key, j;
 		int n = c.size();
 		for (i = 1; i < n; i++) {
@@ -120,7 +120,7 @@ private:
 	/** INSERTION SORT - END **/
 	/** SELECTION SORT - START **/
 
-	static int sortSelection(Collection & c) {
+	static int sortSelection(Vector & c) {
 		int i, j, min_idx;
 		int n = c.size();
 
@@ -146,11 +146,11 @@ private:
 	/** SELECTION SORT - END **/
 	/** QUICK SORT - START **/
 
-	static int sortQuick(Collection & c) {
+	static int sortQuick(Vector & c) {
 		return sortQuick(c, 0, c.size() - 1);
 	}
 
-	static int sortQuick(Collection & c, int low, int high) {
+	static int sortQuick(Vector & c, int low, int high) {
 		if (low < high) {
 			// pi is the partition return index of pivot
 			int pi = sortQuickPartition(c, low, high);
@@ -164,7 +164,7 @@ private:
 		return 0;
 	}
 
-	static int sortQuickPartition(Collection & c, int low, int high) {
+	static int sortQuickPartition(Vector & c, int low, int high) {
 		// Choose the pivot
 		int pivot = c[high];
 	  
@@ -195,7 +195,7 @@ private:
 	/** QUICK SORT - END **/
 	/** RADIX SORT - START **/
 
-	static int sortRadix(Collection & c) {
+	static int sortRadix(Vector & c) {
 		// Find the maximum number to
 		// know number of digits
 		T m = c.max();
@@ -209,7 +209,7 @@ private:
 		return 0;
 	}
 
-	static int sortRadixCount(Collection & c, S n, int exp) {
+	static int sortRadixCount(Vector & c, S n, int exp) {
 		// Output array
 		std::vector<T> output(n);
 		S i = 0;
@@ -243,11 +243,11 @@ private:
 	/** RADIX SORT - END **/
 	/** MERGE SORT - START **/
 
-	static int sortMerge(Collection & c) {
+	static int sortMerge(Vector & c) {
 		return sortMerge(c, 0, c.size() - 1);
 	}
 
-	static int sortMerge(Collection & c, S left, S right) {
+	static int sortMerge(Vector & c, S left, S right) {
 		if (left >= right)
 			return 0;
 
@@ -258,7 +258,7 @@ private:
 		return 0;
 	}
 
-	static int sortMerge(Collection & c, S left, S mid, S right) {
+	static int sortMerge(Vector & c, S left, S mid, S right) {
 		int n1 = mid - left + 1;
 		int n2 = right - mid;
 
@@ -310,5 +310,5 @@ private:
 };
 }
 
-#endif // COLLECTION_HPP
+#endif // VECTOR_HPP
 

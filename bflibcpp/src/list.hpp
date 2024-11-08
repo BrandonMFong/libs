@@ -7,7 +7,7 @@
 #define LIST_HPP
 
 #include "access.hpp"
-#include "collection.hpp"
+#include "vector.hpp"
 #include "exception.hpp"
 #include <iostream>
 #include <initializer_list>
@@ -37,8 +37,8 @@ typedef enum {
  * Unless a callback is specified, by default the node
  * object memory will not be deallocated.
  */
-template <typename L, typename S = int>
-class List : public Collection<L,S> {
+template <typename L, typename S = size_t>
+class List : public Vector<L,S> {
 public:
 	
 	/**
@@ -90,7 +90,7 @@ public:
 
 public:
 
-	List() : Collection<L,S>() {
+	List() : Vector<L,S>() {
 		this->_head = 0;
 		this->_tail = 0;
 		this->_count = 0;
