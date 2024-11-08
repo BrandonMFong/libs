@@ -268,10 +268,6 @@ public:
 		return 0;
 	}
 
-	virtual void replaceObjectAtIndex(T obj, S index) {
-
-	}
-
 protected:
 
 	/**

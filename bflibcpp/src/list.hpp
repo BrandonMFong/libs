@@ -190,10 +190,6 @@ public:
 		}
 	}
 
-	virtual void replaceObjectAtIndex(L obj, S index) {
-
-	}
-
 	// Deletes every object in list
 	void deleteAll() {
 		Node * node = this->_head;

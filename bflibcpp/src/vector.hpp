@@ -36,7 +36,6 @@ public:
 
 	virtual T objectAtIndex(S index) const = 0;
 	virtual T & refObjectAtIndex(S index) = 0;
-	virtual void replaceObjectAtIndex(T obj, S index)  = 0;
 	virtual T max() const = 0;
 
 	T operator[](S index) const {
