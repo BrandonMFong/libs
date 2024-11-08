@@ -93,51 +93,37 @@ int test_vectorListSortMerge() {
 	return result;
 }
 
-int test_vectorListSortRadix() {
-	UNIT_TEST_START;
-	int result = run_vectorSort<List<int>>(kVectorSortRadix, 2 << 10, 1);
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
 int test_vectorArraySortBubble() {
 	UNIT_TEST_START;
-	int result = run_vectorSort<Array<int>>(kVectorSortBubble, 2 << 9, 1);
+	int result = run_vectorSort<Array<int>>(kVectorSortBubble, 2 << 12, 4);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_vectorArraySortInsertion() {
 	UNIT_TEST_START;
-	int result = run_vectorSort<Array<int>>(kVectorSortInsertion, 2 << 10, 1);
+	int result = run_vectorSort<Array<int>>(kVectorSortInsertion, 2 << 13, 4);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_vectorArraySortSelection() {
 	UNIT_TEST_START;
-	int result = run_vectorSort<Array<int>>(kVectorSortSelection, 2 << 9, 1);
+	int result = run_vectorSort<Array<int>>(kVectorSortSelection, 2 << 13, 4);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_vectorArraySortQuick() {
 	UNIT_TEST_START;
-	int result = run_vectorSort<Array<int>>(kVectorSortQuick, 2 << 9, 1);
+	int result = run_vectorSort<Array<int>>(kVectorSortQuick, 2 << 13, 4);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_vectorArraySortMerge() {
 	UNIT_TEST_START;
-	int result = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 12, 1);
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_vectorArraySortRadix() {
-	UNIT_TEST_START;
-	int result = run_vectorSort<Array<int>>(kVectorSortRadix, 2 << 10, 1);
+	int result = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 14, 4);
 	UNIT_TEST_END(!result, result);
 	return result;
 }
@@ -147,20 +133,16 @@ void vector_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	/*
 	LAUNCH_TEST(test_vectorListSortBubble, p, f);
 	LAUNCH_TEST(test_vectorListSortInsertion, p, f);
 	LAUNCH_TEST(test_vectorListSortSelection, p, f);
 	LAUNCH_TEST(test_vectorListSortQuick, p, f);
 	LAUNCH_TEST(test_vectorListSortMerge, p, f);
-	LAUNCH_TEST(test_vectorListSortRadix, p, f);
 	LAUNCH_TEST(test_vectorArraySortBubble, p, f);
 	LAUNCH_TEST(test_vectorArraySortInsertion, p, f);
 	LAUNCH_TEST(test_vectorArraySortSelection, p, f);
 	LAUNCH_TEST(test_vectorArraySortQuick, p, f);
 	LAUNCH_TEST(test_vectorArraySortMerge, p, f);
-	*/
-	LAUNCH_TEST(test_vectorArraySortRadix, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

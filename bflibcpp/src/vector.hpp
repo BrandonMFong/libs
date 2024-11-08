@@ -21,7 +21,6 @@ typedef enum {
 	kVectorSortSelection = 3,
 	kVectorSortMerge = 4,
 	kVectorSortQuick = 5,
-	kVectorSortRadix = 6,
 } VectorSort;
 
 /**
@@ -59,8 +58,6 @@ public:
 				return Vector::sortSelection(*this);
 			case kVectorSortQuick:
 				return Vector::sortQuick(*this);
-			case kVectorSortRadix:
-				return Vector::sortRadix(*this);
 			case kVectorSortMerge:
 			default:
 				return Vector::sortMerge(*this);
@@ -193,54 +190,6 @@ private:
 	}
 
 	/** QUICK SORT - END **/
-	/** RADIX SORT - START **/
-
-	static int sortRadix(Vector & c) {
-		// Find the maximum number to
-		// know number of digits
-		T m = c.max();
-
-		// Do counting sort for every digit.
-		// Note that instead of passing digit
-		// number, exp is passed. exp is 10^i
-		// where i is current digit number
-		for (int exp = 1; m / exp > 0; exp *= 10)
-			sortRadixCount(c, c.size(), exp);
-		return 0;
-	}
-
-	static int sortRadixCount(Vector & c, S n, int exp) {
-		// Output array
-		std::vector<T> output(n);
-		S i = 0;
-		std::vector<T> count(10);
-
-		// Store count of occurrences
-		// in count[]
-		for (i = 0; i < n; i++)
-			count[(c[i] / exp) % 10]++;
-
-		// Change count[i] so that count[i]
-		// now contains actual position
-		// of this digit in output[]
-		for (i = 1; i < 10; i++)
-			count[i] += count[i - 1];
-
-		// Build the output array
-		for (i = n - 1; i >= 0; i--) {
-			output[count[(c[i] / exp) % 10] - 1] = c[i];
-			count[(c[i] / exp) % 10]--;
-		}
-
-		// Copy the output array to arr[],
-		// so that arr[] now contains sorted
-		// numbers according to current digit
-		for (i = 0; i < n; i++)
-			c[i] = output[i];
-		return 0;
-	}
-
-	/** RADIX SORT - END **/
 	/** MERGE SORT - START **/
 
 	static int sortMerge(Vector & c) {
