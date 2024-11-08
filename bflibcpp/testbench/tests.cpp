@@ -23,9 +23,7 @@ int main() {
 
 	/*
 	LAUNCH_TEST_SET(atomic_tests);
-	LAUNCH_TEST_SET(array_tests);
 	LAUNCH_TEST_SET(file_tests);
-	LAUNCH_TEST_SET(list_tests);
 	LAUNCH_TEST_SET(bintree_tests);
 	LAUNCH_TEST_SET(rbtree_tests);
 	LAUNCH_TEST_SET(dictionary_tests);
@@ -36,6 +34,8 @@ int main() {
 	LAUNCH_TEST_SET(object_tests);
 	LAUNCH_TEST_SET(data_tests);
 	*/
+	LAUNCH_TEST_SET(list_tests);
+	LAUNCH_TEST_SET(array_tests);
 	LAUNCH_TEST_SET(collection_tests);
 
 	TEST_SUITE_END;

@@ -8,6 +8,7 @@
 
 #include "access.hpp"
 #include "collection.hpp"
+#include "exception.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -74,6 +75,11 @@ public:
 			this->left = 0;
 			this->right = 0;
 		}
+
+		L & refobject() {
+			return this->obj;
+		}
+
 
 		Node * left;
 		Node * right;
@@ -171,6 +177,10 @@ public:
 		}
 	}
 
+	virtual void replaceObjectAtIndex(L obj, S index) {
+
+	}
+
 	// Deletes every object in list
 	void deleteAll() {
 		Node * node = this->_head;
@@ -187,18 +197,16 @@ public:
 
 	// returns object at index
 	// returns 0 if an error ocurred
-	L objectAtIndex(S index) const {
+	virtual L objectAtIndex(S index) const {
 		Node * n = this->nodeAtIndex(index, this->_head, 0);
 		if (n) return n->object();
 		else return 0;
 	}
 
-	/**
-	 * callback will be a pointer to a function that handles how we will delete object memory
-	 */
-	[[deprecated("please use the setReleaseCallback")]]
-	void setDeallocateCallback(void (* callback)(L obj)) {
-		this->_nodeObjectCleanUpCallback = callback;
+	virtual L & refObjectAtIndex(S index) {
+		Node * n = this->nodeAtIndex(index, this->_head, 0);
+		if (n) return n->refobject();
+		throw Exception("no object found at %d", (int) index);
 	}
 
 	/**

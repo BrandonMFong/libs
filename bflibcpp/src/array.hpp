@@ -14,6 +14,7 @@
 #include "access.hpp"
 #include "collection.hpp"
 #include <string.h>
+#include "exception.hpp"
 
 namespace BF {
 
@@ -90,26 +91,6 @@ public:
 	}
 
 	/**
-	 * Establishes how allocation works
-	 *
-	 * By default free store is utilized
-	 */
-	[[deprecated("allocation is no longer configurable")]]
-	void setAllocationCallback(T * (* cb) (S size)) {
-		//this->_allocationCallback = cb;
-	}
-
-	/**
-	 * Establishes how deallocation works
-	 *
-	 * By default free store is utilized
-	 */
-	[[deprecated("allocation is no longer configurable")]]
-	void setDeallocationCallback(void (* cb) (T * value)) {
-		//this->_deallocationCallback = cb;
-	}
-
-	/**
 	 * Returns false if argument could not be found
 	 *
 	 * This function uses the _callback comparison 
@@ -127,11 +108,21 @@ public:
 	/**
 	 * Returns null if argument could not be found
 	 */
-	T objectAtIndex(S index) const {
+	virtual T objectAtIndex(S index) const {
 		if ((this->_address == 0) || (this->_count == 0)) {
 			return (T) 0;
 		} else if (index >= this->_count) {
 			return (T) 0;
+		} else {
+			return this->_address[index];
+		}
+	}
+
+	virtual T & refObjectAtIndex(S index) {
+		if ((this->_address == 0) || (this->_count == 0)) {
+			throw Exception("indexing null array");
+		} else if (index >= this->_count) {
+			throw Exception("indexing outside array");
 		} else {
 			return this->_address[index];
 		}
@@ -247,6 +238,10 @@ public:
 		return 0;
 	}
 
+	virtual void replaceObjectAtIndex(T obj, S index) {
+
+	}
+
 protected:
 
 	/**
@@ -346,9 +341,11 @@ private:
 
 public:
 
+	/*
 	T operator[](S index) const {
 		return this->objectAtIndex(index);
 	}
+	*/
 
 	void operator=(const std::initializer_list<T> & list) {
 		this->saveArray(list);
