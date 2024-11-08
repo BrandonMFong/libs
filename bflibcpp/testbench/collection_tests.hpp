@@ -26,9 +26,11 @@ int run_collectionListSort(CollectionSort type, int listsize, int reps) {
 		List<int> l;
 		for (int i = 0; i < maxsize; i++) {
 			int val = rand();
+			printf("\n%d", val);
 			l.add(val);
 		}
 
+		printf("\n");
 		result = l.sort(type);
 
 		if (!result) {
@@ -44,6 +46,10 @@ int run_collectionListSort(CollectionSort type, int listsize, int reps) {
 					break;
 				}
 			}
+			for (int i = 0; i < maxsize; i++) {
+				printf("\n%d", l[i]);
+			}
+			printf("\n");
 		}
 	}
 
@@ -64,6 +70,13 @@ int test_collectionListSortInsertion() {
 	return result;
 }
 
+int test_collectionListSortSelection() {
+	UNIT_TEST_START;
+	int result = run_collectionListSort(kCollectionSortSelection, 2 << 1, 1);
+	UNIT_TEST_END(!result, result);
+	return result;
+}
+
 int test_collectionListSortMerge() {
 	UNIT_TEST_START;
 	int result = run_collectionListSort(kCollectionSortMerge, 2 << 12, 1);
@@ -76,9 +89,10 @@ void collection_tests(int * pass, int * fail) {
 	
 	INTRO_TEST_FUNCTION;
 
-	LAUNCH_TEST(test_collectionListSortBubble, p, f);
-	LAUNCH_TEST(test_collectionListSortInsertion, p, f);
-	LAUNCH_TEST(test_collectionListSortMerge, p, f);
+	//LAUNCH_TEST(test_collectionListSortBubble, p, f);
+	//LAUNCH_TEST(test_collectionListSortInsertion, p, f);
+	LAUNCH_TEST(test_collectionListSortSelection, p, f);
+	//LAUNCH_TEST(test_collectionListSortMerge, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

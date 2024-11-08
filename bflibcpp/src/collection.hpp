@@ -11,8 +11,6 @@
 
 namespace BF {
 
-#define BFSwap(a, b) a += b; b = a - b; a = a - b;
-
 typedef enum {
 	kCollectionSortBubble = 1,
 	kCollectionSortInsertion = 2,
@@ -52,6 +50,8 @@ public:
 				return Collection::sortBubble(*this);
 			case kCollectionSortInsertion:
 				return Collection::sortInsertion(*this);
+			case kCollectionSortSelection:
+				return Collection::sortSelection(*this);
 			case kCollectionSortMerge:
 			default:
 				return Collection::sortMerge(*this);
@@ -109,6 +109,30 @@ private:
 	}
 
 	/** INSERTION SORT - END **/
+	/** SELECTION SORT - START **/
+
+	static int sortSelection(Collection & c) {
+		int i, j, min_idx;
+		int n = c.size();
+
+		// One by one move boundary of
+		// unsorted subarray
+		for (i = 0; i < n-1; i++) {
+			// Find the minimum element in
+			// unsorted array
+			min_idx = i;
+			for (j = i+1; j < n; j++)
+			if (c[j] < c[min_idx])
+				min_idx = j;
+
+			// Swap the found minimum element
+			// with the first element
+			BFSwap(c[min_idx], c[i]);
+		}
+		return 0;
+	}
+
+	/** SELECTION SORT - END **/
 	/** MERGE SORT - START **/
 
 	static int sortMerge(Collection & c) {

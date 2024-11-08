@@ -16,6 +16,7 @@
 #include "checksum.h"
 #include "thread.h"
 #include "lock.h"
+#include "swap.h"
 
 #endif // CLIB_H
 
