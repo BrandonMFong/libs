@@ -7,7 +7,7 @@
 #define BINTREE_HPP
 
 #include "access.hpp"
-#include "delete.hpp"
+#include "release.hpp"
 #include "collection.hpp"
 #include <iostream>
 #include "list.hpp"
@@ -361,7 +361,7 @@ public:
 		int result = this->removeNode(node); // we do not need to know who replaced node
 		
 		// Delete node
-		Delete(node);
+		BFRelease(node);
 		if (result == 0) {
 			this->_count--;
 		}
@@ -689,7 +689,7 @@ protected:
 				}
 
 				if (result == 0) {
-					Delete(max);
+					BFRelease(max);
 				}
 			}
 		}
@@ -741,7 +741,7 @@ private:
 		}
 
 		if (result == 0) {
-			Delete(node);
+			BFRelease(node);
 			this->_count--;
 		}
 
