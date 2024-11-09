@@ -41,7 +41,7 @@ int test_adding() {
 
 	if (!result) {
 		if (l->count() != 2) {
-			printf("Count is %d\n", l->count());
+			printf("Count is %ld\n", l->count());
 			result = 3;
 		}
 	}
@@ -71,7 +71,7 @@ int test_indexing() {
 
 	if (result) {
 		printf("Error %d\n", result);
-		printf("Count %d\n", l->count());
+		printf("Count %ld\n", l->count());
 		printf("%f\n", l->objectAtIndex(0));
 		printf("%f\n", l->objectAtIndex(1));
 	}
@@ -106,7 +106,7 @@ int test_inserting() {
 
 	if (result) {
 		printf("Error %d\n", result);
-		printf("Count %d\n", l->count());
+		printf("Count %ld\n", l->count());
 		printf("0: %f\n", l->objectAtIndex(0));
 		printf("1: %f\n", l->objectAtIndex(1));
 		printf("2: %f\n", l->objectAtIndex(2));
@@ -136,7 +136,7 @@ int test_deletingAtIndex() {
 		printf("1: %ld\n", l->objectAtIndex(1));
 	} else if (l->count() != 2) {
 		result = 6;
-		printf("Count %d\n", l->count());
+		printf("Count %ld\n", l->count());
 	} else if (l->objectAtIndex(0) != 1) {
 		result = 7;
 	} else if (l->deleteObjectAtIndex(0)) {
@@ -214,7 +214,7 @@ int test_listMemoryHandling() {
 
 	if (result == 0) {
 		if (l->count() != 3) {
-			printf("count: %d\n", l->count());
+			printf("count: %ld\n", l->count());
 			result = 1;
 		}
 	}
@@ -258,7 +258,7 @@ int test_traversing() {
 		max--;
 	}
 
-	int i = 0;
+	size_t i = 0;
 	List<int>::Node * node = t.first();
 	while (!result && (i < t.count()) && node) {
 		node = node->next();
@@ -305,84 +305,10 @@ int test_InitializingWithInitList() {
 	return result;
 }
 
-int test_ListSortAscending() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	List<int> l;
-
-	srand(time(NULL));
-
-	int size = 2 << 20, max = size;
-	for (int i = 0; i < size; i++) {
-		int num = rand() % max;
-
-		result = l.add(num);
-
-		if (result) break;
-	}
-
-	if (!result)
-		result = l.sort();
-
-	if (!result) {
-		List<int>::Node * n = l.first();
-		int tmp = n->object();
-		for (n = n->next(); n; n = n->next()) {
-			if (tmp > n->object()) {
-				printf("%d > %d\n", tmp, n->object());
-				result = 2;
-				break;
-			}
-			tmp = n->object();
-		}
-	}
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_ListSortDescending() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	List<int> l;
-
-	srand(time(NULL));
-
-	int size = 2 << 20, max = 2 << 20;
-	for (int i = 0; i < size; i++) {
-		int num = rand() % max;
-
-		result = l.add(num);
-
-		if (result) break;
-	}
-
-	if (!result)
-		result = l.sort(kListSortOptionsDescending);
-
-	if (!result) {
-		List<int>::Node * n = l.first();
-		int tmp = n->object();
-		for (n = n->next(); n; n = n->next()) {
-			if (tmp < n->object()) {
-				printf("%d < %d\n", tmp, n->object());
-				result = 2;
-				break;
-			}
-			tmp = n->object();
-		}
-	}
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
 int test_InitializingFromRawArray() {
 	int result = 0;
 
-	const int size = 5;
+	const size_t size = 5;
 	const char * strings[size] = {"one", "two", "three", "four", "five"};
 
 	List<const char *> l;
@@ -391,35 +317,8 @@ int test_InitializingFromRawArray() {
 
 	if (l.count() != size) result = 1;
 
-	for (int i = 0; (i < size) && !result; i++) {
+	for (size_t i = 0; (i < size) && !result; i++) {
 		if (!l.contains(strings[i])) result = i + 10;
-	}
-
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_ListSortingStrings() {
-	int result = 0;
-
-	List<const char *> l = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
-	l.setCompareCallback(strcmp);
-
-	result = l.sort();
-	List<const char *>::Node * n = 0;
-	const char * tmp = 0;
-	if (!result) {
-		tmp = l.first()->object();
-		n = l.first()->next();
-	}
-
-	while (!result && n) {
-		if (strcmp(tmp, n->object()) > 0) {
-			result = 2;
-			l.print();
-		}
-
-		n = n->next();
 	}
 
 	PRINT_TEST_RESULTS(!result);
@@ -571,11 +470,11 @@ int test_pluckingObject() {
 		srand(time(0));
 
 		// make array and list
-		int size = 10;
+		size_t size = 10;
 		int * arr[size];
 		List<int *> list;
 		list.setReleaseCallback(TestPluckingObjectRelease);
-		for (int i = 0; i < size; i++) {
+		for (size_t i = 0; i < size; i++) {
 			arr[i] = (int *) malloc(sizeof(int));
 			*arr[i] = rand();
 			list.add(arr[i]);
@@ -600,7 +499,7 @@ int test_pluckingObject() {
 
 		// make sure we can still play around with value
 		if (!result) {
-			for (int i = 0; i < size; i++) {
+			for (size_t i = 0; i < size; i++) {
 				int t = *arr[i];
 				t++;
 			}
@@ -612,7 +511,7 @@ int test_pluckingObject() {
 		}
 
 		list.setReleaseCallback(0);
-		for (int i = 0; i < size; i++) { BFFree(arr[i]); }
+		for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
 	}
 
 	UNIT_TEST_END(!result, result);
@@ -674,10 +573,7 @@ void list_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_traversing, p, f);
 	LAUNCH_TEST(test_ListContains, p, f);
 	LAUNCH_TEST(test_InitializingWithInitList, p, f);
-	LAUNCH_TEST(test_ListSortAscending, p, f);
-	LAUNCH_TEST(test_ListSortDescending, p, f);
 	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
-	LAUNCH_TEST(test_ListSortingStrings, p, f);
 	LAUNCH_TEST(test_ListSwap, p, f);
 	LAUNCH_TEST(test_shuffle, p, f);
 	LAUNCH_TEST(test_ListNullSwap, p, f);

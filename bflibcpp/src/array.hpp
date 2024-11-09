@@ -12,8 +12,9 @@
 #include <iostream>
 #include "delete.hpp"
 #include "access.hpp"
-#include "object.hpp"
+#include "vector.hpp"
 #include <string.h>
+#include "exception.hpp"
 
 namespace BF {
 
@@ -26,9 +27,10 @@ namespace BF {
  * Objects stored in array are assumed to be owned by owner of array 
  * object
  */
-template <typename T, typename S = size_t> class Array : public Object {
+template <typename T, typename S = size_t>
+class Array : public Vector<T,S> {
 public:
-	Array() : Object() {
+	Array() : Vector<T,S>() {
 		this->_address = 0;
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
@@ -89,26 +91,6 @@ public:
 	}
 
 	/**
-	 * Establishes how allocation works
-	 *
-	 * By default free store is utilized
-	 */
-	[[deprecated("allocation is no longer configurable")]]
-	void setAllocationCallback(T * (* cb) (S size)) {
-		//this->_allocationCallback = cb;
-	}
-
-	/**
-	 * Establishes how deallocation works
-	 *
-	 * By default free store is utilized
-	 */
-	[[deprecated("allocation is no longer configurable")]]
-	void setDeallocationCallback(void (* cb) (T * value)) {
-		//this->_deallocationCallback = cb;
-	}
-
-	/**
 	 * Returns false if argument could not be found
 	 *
 	 * This function uses the _callback comparison 
@@ -126,11 +108,26 @@ public:
 	/**
 	 * Returns null if argument could not be found
 	 */
-	T objectAtIndex(S index) const {
+	virtual T objectAtIndex(S index) const {
 		if ((this->_address == 0) || (this->_count == 0)) {
 			return (T) 0;
 		} else if (index >= this->_count) {
 			return (T) 0;
+		} else {
+			return this->_address[index];
+		}
+	}
+
+	/**
+	 * returns reference to the object
+	 *
+	 * throws if index is out of range
+	 */
+	virtual T & refObjectAtIndex(S index) {
+		if ((this->_address == 0) || (this->_count == 0)) {
+			throw Exception("indexing null array");
+		} else if (index >= this->_count) {
+			throw Exception("index %d out of range", index);
 		} else {
 			return this->_address[index];
 		}
@@ -154,6 +151,31 @@ public:
 	virtual S count() const {
 		return this->_count;
 	}
+
+	virtual S size() const {
+		return this->count();
+	}
+
+	/**
+	 * returns max object in list
+	 *
+	 * throws if count is 0, caller must check
+	 */
+	virtual T max() const {
+		if (this->count() == 0) {
+			throw Exception("cannot get max from empty array");
+		}
+		T res = this->objectAtIndex(0);
+		for (S i = 1; i < this->count(); i++) {
+			T tmp = this->objectAtIndex(i);
+			if (res < tmp) {
+				res = tmp;
+			}
+		}
+
+		return res;
+	}
+
 
 	/**
 	 * Prints the array from the first element to the last
@@ -345,9 +367,11 @@ private:
 
 public:
 
+	/*
 	T operator[](S index) const {
 		return this->objectAtIndex(index);
 	}
+	*/
 
 	void operator=(const std::initializer_list<T> & list) {
 		this->saveArray(list);

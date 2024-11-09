@@ -227,7 +227,7 @@ int test_ReturningLeafValues() {
 
 	if (result == 0) {
 		if (l.count() != 2) {
-			printf("List count is: %d\n", l.count());
+			printf("List count is: %ld\n", l.count());
 			result = 1;
 		} else if (!l.contains(4)) {
 			printf("List does not have: 4\n");

@@ -8,7 +8,7 @@
 
 #include "access.hpp"
 #include "bintree.hpp"
-#include "delete.hpp"
+#include "release.hpp"
 #include <iostream>
 
 /// Node colors
@@ -34,7 +34,6 @@ namespace BF {
  */
 template <typename T, typename S = int> class RBTree : public BinTree<T,S> {
 public:
-	// TODO: rename rbnode to node
 	class RBNode : public BinTree<T,S>::BinNode {
 		friend class RBTree<T,S>;
 
@@ -355,17 +354,17 @@ private:
 		if (node->left())
 			if (node->left()->isNull()) {
 				RBNode * l = (RBNode *) node->left();
-				Delete(l);
+				BFRelease(l);
 			}
 
 		if (node->right())
 			if ((node->right())->isNull()) {
 				RBNode * r = (RBNode *) node->right();
-				Delete(r);
+				BFRelease(r);
 			}
 
 		// Delete node
-		Delete(node);
+		BFRelease(node);
 	
 		if (result == 0) {
 			this->_count--;
@@ -405,7 +404,7 @@ private:
 
 		if (!(*rbLocation)->isNull()) return false;
 		else {
-			Delete(*rbLocation);
+			BFRelease(*rbLocation);
 			return true;
 		}
 	}
@@ -919,7 +918,7 @@ private:
 				else {
 					// IF newLocation was holding a null node, we need
 					// to delete the null node memory
-					Delete(*newLocation);
+					BFRelease(*newLocation);
 
 					*newLocation = tmp;
 					//tmp->_location = (typename BinTree<T,S>::BinNode **) newLocation;

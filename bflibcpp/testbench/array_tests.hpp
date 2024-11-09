@@ -173,6 +173,13 @@ int test_Setter() {
 		printf("Count %ld\n", a.count());
 	}
 
+	if (!result) {
+		a[0] = 6;
+		if (a[0] != 6) {
+			result = 2;
+		}
+	}
+
 	PRINT_TEST_RESULTS(!result);
 	return result;
 }

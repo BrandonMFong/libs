@@ -41,7 +41,7 @@ void Object::release(Object * obj) {
 
 		if (obj->_retainCount == 0) {
 			BFLockUnlock(&obj->_lock);
-			Delete(obj);
+			delete obj;
 		} else {
 			BFLockUnlock(&obj->_lock);
 		}

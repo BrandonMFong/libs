@@ -18,8 +18,6 @@ String::String(const String & str) : String(str.cString()) {}
 
 String:: String() : String("") {}
 
-//String::String(const char * str) : String((char *) str) {}
-
 String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
 }

@@ -11,6 +11,7 @@
 #include "thread_tests.h"
 #include "lock_tests.h"
 #include "filewriter_tests.h"
+#include "swap_tests.h"
 #include <stdio.h>
 
 int main() {
@@ -24,6 +25,7 @@ int main() {
 	LAUNCH_TEST_SET(time_tests);
 	LAUNCH_TEST_SET(thread_tests);
 	LAUNCH_TEST_SET(filewriter_tests);
+	LAUNCH_TEST_SET(swap_tests);
 	
 	TEST_SUITE_END;
 

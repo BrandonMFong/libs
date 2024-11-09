@@ -7,20 +7,12 @@
 #define LIST_HPP
 
 #include "access.hpp"
-#include "object.hpp"
+#include "vector.hpp"
+#include "exception.hpp"
 #include <iostream>
 #include <initializer_list>
 
 namespace BF {
-
-/**
- * Sort options for the List object
- */
-typedef enum {
-	kListSortOptionsAscending = 0,
-	kListSortOptionsDescending = 1,
-	kListSortOptionsDefault = kListSortOptionsAscending,
-} ListSortOptions;
 
 /**
  * Linked List implementation
@@ -37,8 +29,8 @@ typedef enum {
  * Unless a callback is specified, by default the node
  * object memory will not be deallocated.
  */
-template <typename L, typename S = int>
-class List : public Object {
+template <typename L, typename S = size_t>
+class List : public Vector<L,S> {
 public:
 	
 	/**
@@ -76,6 +68,11 @@ public:
 			this->right = 0;
 		}
 
+		L & refobject() {
+			return this->obj;
+		}
+
+
 		Node * left;
 		Node * right;
 		L obj;
@@ -85,7 +82,7 @@ public:
 
 public:
 
-	List() : Object() {
+	List() : Vector<L,S>() {
 		this->_head = 0;
 		this->_tail = 0;
 		this->_count = 0;
@@ -102,6 +99,27 @@ public:
 	}
 
 	S count() const { return this->_count; }
+	virtual S size() const { return this->count(); }
+
+	/**
+	 * returns max object in list
+	 *
+	 * throws if count is 0, caller must check
+	 */
+	virtual L max() const {
+		if (this->count() == 0) {
+			throw Exception("cannot get max from empty list");
+		}
+		Node * maxnode = this->first();
+		for (Node * n = maxnode->next();
+			n; n = n->next()) {
+			if (maxnode->object() < n->object()) {
+				maxnode = n;
+			}
+		}
+
+		return maxnode->object();
+	}
 
 	// Adds obj at tail end of list
 	int add(L obj) {
@@ -188,18 +206,16 @@ public:
 
 	// returns object at index
 	// returns 0 if an error ocurred
-	L objectAtIndex(S index) const {
+	virtual L objectAtIndex(S index) const {
 		Node * n = this->nodeAtIndex(index, this->_head, 0);
 		if (n) return n->object();
 		else return 0;
 	}
 
-	/**
-	 * callback will be a pointer to a function that handles how we will delete object memory
-	 */
-	[[deprecated("please use the setReleaseCallback")]]
-	void setDeallocateCallback(void (* callback)(L obj)) {
-		this->_nodeObjectCleanUpCallback = callback;
+	virtual L & refObjectAtIndex(S index) {
+		Node * n = this->nodeAtIndex(index, this->_head, 0);
+		if (n) return n->refobject();
+		throw Exception("no object found at %d", (int) index);
 	}
 
 	/**
@@ -248,17 +264,6 @@ public:
 
 		std::cout << "]";
 		std::cout << std::endl;
-	}
-
-	/**
-	 * Default sort kListSortOptionsDefault
-	 */
-	int sort() {
-		return this->sort(kListSortOptionsDefault);
-	}
-
-	int sort(const ListSortOptions option) {
-		return this->sortNodeToNode(this->_head, this->_tail, this->_count, option);
 	}
 
 	/**
@@ -323,111 +328,6 @@ private:
 			b->obj = obj;
 			return 0;
 		}
-	}
-
-	/**
-	 * Sorts nodes from first to last using merge sort techinques
-	 */
-	int sortNodeToNode(Node * first, Node * last, S distance, const ListSortOptions option) {
-		int result = 0;
-		List<L,S> tmp;
-		Node * mid = 0, * t0 = 0, * t1 = 0;
-		const S halfDistance = distance / 2;
-
-		if (!first && !last) {
-			result = 2;
-		} else {
-			if (distance < 3) {
-				// We only worry about swapping
-				if (distance == 2) {
-					if (option == kListSortOptionsDescending) {
-						if (this->runCompare(first->obj, last->obj) < 0) {
-							result = this->swap(first, last);
-						}
-					} else {
-						if (this->runCompare(first->obj, last->obj) > 0) {
-							result = this->swap(first, last);
-						}
-					}
-				}
-			} else {
-				mid = first;
-				// Find mid node
-				for (S i = 0; i < (halfDistance - 1); i++)
-					mid = mid->next();
-
-				t0 = first;
-				t1 = mid->next();
-
-				// Sort the first half
-				result = this->sortNodeToNode(first, mid, halfDistance, option);
-
-				// Then sort the last half
-				if (!result)
-					result = this->sortNodeToNode(mid->next(), last, distance - halfDistance, option);
-
-				// Merge the two halves
-				if (!result) {
-					while (t0 && (t0 != mid->next()) && t1 && (t1 != last->next())) {
-						int res = this->runCompare(t0->obj, t1->obj);
-						switch (option) {
-							case kListSortOptionsDescending:
-								if (res < 0) {
-									tmp.add(t1->obj);
-									t1 = t1->next();
-								} else if (res > 0) {
-									tmp.add(t0->obj);
-									t0 = t0->next();
-								} else {
-									tmp.add(t0->obj);
-									tmp.add(t1->obj);
-									t0 = t0->next();
-									t1 = t1->next();
-								}
-
-								break;
-							case kListSortOptionsAscending:
-							default:
-								if (res < 0) {
-									tmp.add(t0->obj);
-									t0 = t0->next();
-								} else if (res > 0) {
-									tmp.add(t1->obj);
-									t1 = t1->next();
-								} else {
-									tmp.add(t0->obj);
-									tmp.add(t1->obj);
-									t0 = t0->next();
-									t1 = t1->next();
-								}
-
-								break;
-						}
-					}
-
-					// Merge in leftovers
-
-					while (t0 && (t0 != mid->next())) {
-						tmp.add(t0->obj);
-						t0 = t0->next();
-					}
-
-					while (t1 && (t1 != last->next())) {
-						tmp.add(t1->obj);
-						t1 = t1->next();
-					}
-
-					// Reset our data with the sorted data
-					for (Node * n0 = tmp.first(), * n1 = first; 
-						n0 && n1 && (n1 != last->next()); 
-						n0 = n0->next(), n1 = n1->next()) {
-						n1->obj = n0->obj;
-					}
-				}
-			}
-		}
-
-		return result;
 	}
 
 	/**
@@ -589,6 +489,8 @@ public:
 	/**
 	 * Range-Based implementation for our Linked list
 	 * ref: https://en.cppreference.com/w/cpp/language/range-for
+	 *
+	 * this can probably go to the collections class
 	 */
 	class Iterator {
 	private:
