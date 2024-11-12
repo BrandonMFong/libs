@@ -130,9 +130,7 @@ $(SETUP_DIRS):
 	mkdir -p $@
 
 clean:
-	rm -rfv $(BUILD_PATH)
-	rm -rfv $(BIN_PATH)
-	rm -rfv $(PACKAGE_NAME)
+	rm -rfv build bin $(PACKAGE_NAME)
 
 ### Main build
 
@@ -155,7 +153,7 @@ ifeq ($(CONFIG), test)
 $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS)
 	g++ -o $@ $^ $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
 else # ($(CONFIG),...)
-$(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS)
+$(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	$(CP) -afv src/*.hpp $(BIN_PATH)
 	$(AR) rsc $@ $^ $(OBJECTS)
 endif # ($(CONFIG), test)
