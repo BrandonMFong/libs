@@ -9,14 +9,6 @@ include ../bflibc/makefiles/uuid.mk
 .SECONDEXPANSION:
 
 UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-PLATFORM = linux
-PACKAGE_MODE = package-linux
-endif
-ifeq ($(UNAME_S),Darwin)
-PLATFORM = macos
-PACKAGE_MODE = package-macos
-endif
 
 CONFIG = release
 CPPSTD = -std=c++20
@@ -31,12 +23,11 @@ data directory exception file object \
 path string time
 
 ### Release settings
-ifeq ($(CONFIG), release) # release
+ifeq ($(CONFIG),release) # release
 CPPFLAGS += -Isrc/ $(CPPSTD) -I../bflibc/bin/release
 BIN_NAME = libbfcpp.a
 BUILD_PATH = build/release
 BIN_PATH = bin/release
-LIBRARIES += 
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -48,13 +39,12 @@ OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
 
 ### Debug settings
-else ifeq ($(CONFIG), debug) # debug
+else ifeq ($(CONFIG),debug) # debug
 ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-debug.a
 BUILD_PATH = build/debug
 BIN_PATH = bin/debug
-LIBRARIES += 
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -66,7 +56,7 @@ OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
 
 ### Test settings
-else ifeq ($(CONFIG), test) # test
+else ifeq ($(CONFIG),test) # test
 ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-test
@@ -76,7 +66,7 @@ MAIN_FILE = testbench/tests.cpp
 LIBRARIES += 
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
 BIN_PREREQS := $(wildcard testbench/*.hpp)
-CPPLINKS = -luuid
+CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
 ifeq ($(UNAME_S),Darwin)
 MAIN_OBJECT_MACOS_TARGET_X86_64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_X86_64)
 MAIN_OBJECT_MACOS_TARGET_ARM64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_ARM64)
