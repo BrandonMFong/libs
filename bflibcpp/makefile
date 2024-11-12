@@ -106,23 +106,7 @@ help:
 	@echo "Target(s):"
 	@echo "	clean			cleans build and bin folder"
 	@echo "	build 			builds release verions"
-	@echo "	package			compresses build"
-	@echo "	dependecies		builds all dependencies in the external directory"
-	@echo "	clean-dependecies	builds all dependencies in the external directory"
-	@echo "	clean-all		cleans local and dependency builds"
 	@echo ""
-	@echo "Variable(s):"
-	@echo "	CONFIG		use this to change the build config. Accepts \"release\" (default), \"debug\", or \"test\""
-	@echo "	IDENTITY	(macos only) \"Developer ID Application\" common name"
-	@echo "	TEAMID 		(macos only) Organizational Unit"
-	@echo "	EMAIL 		(macos only) Developer account email"
-	@echo "	PW		(macos only) Developer account password"
-	@echo ""
-	@echo "Example(s):"
-	@echo "	Build for release for macOS distribution"
-	@echo "		make clean build codesign package notarize staple IDENTITY=\"\" TEAMID=\"\" EMAIL=\"\" PW=\"\""
-	@echo "	Build for release for Linux distribution"
-	@echo "		make clean build package"
 
 SETUP_DIRS = $(BIN_PATH) $(BUILD_PATH)
 setup: $(SETUP_DIRS)
