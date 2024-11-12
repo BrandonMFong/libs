@@ -46,6 +46,7 @@ BIN_MACOS_TARGETS = $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_X86_64) $(BIN_PATH)/$
 else # ($(UNAME_S),Linux)
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
+
 ### Debug settings
 else ifeq ($(CONFIG), debug) # debug
 ADDR_SANITIZER = -fsanitize=address
@@ -62,6 +63,7 @@ BIN_MACOS_TARGETS = $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_X86_64) $(BIN_PATH)/$
 else # ($(UNAME_S),Linux)
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
+
 ### Test settings
 else ifeq ($(CONFIG), test) # test
 ADDR_SANITIZER = -fsanitize=address
@@ -137,7 +139,7 @@ $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.hpp $(BIN_PATH)
-	ar rsc $@ $^ $(OBJECTS)
+	ar rsc $@ $^ $(wildcard ../bflibc/build/$(CONFIG)/*.o)
 endif # ($(CONFIG), test)
 
 $(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
@@ -145,11 +147,6 @@ $(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 
 endif # ($(UNAME_S),...)
 
-ifeq ($(CONFIG),release) # release
 build-bflibc:
-	cd ../bflibc/ && make release
-else ifeq ($(CONFIG),debug) # release
-build-bflibc:
-	cd ../bflibc/ && make debug
-endif
+	cd ../bflibc/ && make $(CONFIG)
 
