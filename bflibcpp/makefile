@@ -19,7 +19,6 @@ PACKAGE_MODE = package-macos
 endif
 
 CONFIG = release
-CPPLINKS = 
 CPPSTD = -std=c++20
 PACKAGE_NAME = bflibcpp 
 
@@ -38,6 +37,7 @@ BIN_NAME = libbfcpp.a
 BUILD_PATH = build/release
 BIN_PATH = bin/release
 LIBRARIES += 
+BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
 OBJECTS_MACOS_TARGET_ARM64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64), $(FILES))
@@ -55,6 +55,7 @@ BIN_NAME = libbfcpp-debug.a
 BUILD_PATH = build/debug
 BIN_PATH = bin/debug
 LIBRARIES += 
+BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
 OBJECTS_MACOS_TARGET_ARM64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64), $(FILES))
@@ -67,14 +68,15 @@ endif # ($(UNAME_S),...)
 ### Test settings
 else ifeq ($(CONFIG), test) # test
 ADDR_SANITIZER = -fsanitize=address
-CPPFLAGS += -DDEBUG -DTESTING -g -Isrc/ \
-	$(ADDR_SANITIZER) $(CPPSTD)
+CPPFLAGS += -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-test
 BUILD_PATH = build/test
 BIN_PATH = bin/test
 MAIN_FILE = testbench/tests.cpp
-LIBRARIES += external/libs/$(BF_LIB_RPATH_DEBUG_NET)
+LIBRARIES += 
+BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
 BIN_PREREQS := $(wildcard testbench/*.hpp)
+CPPLINKS = -luuid
 ifeq ($(UNAME_S),Darwin)
 MAIN_OBJECT_MACOS_TARGET_X86_64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_X86_64)
 MAIN_OBJECT_MACOS_TARGET_ARM64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_ARM64)
@@ -135,11 +137,11 @@ else # ($(UNAME_S),Linux)
 
 ifeq ($(CONFIG), test)
 $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS)
-	g++ -o $@ $^ $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
+	g++ -o $@ $^ ../bflibc/bin/debug/bflibc/libbfc-debug.a $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.hpp $(BIN_PATH)
-	ar rsc $@ $^ $(wildcard ../bflibc/build/$(CONFIG)/*.o)
+	ar rsc $@ $^ $(BFLIBC_OBJECTS)
 endif # ($(CONFIG), test)
 
 $(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
@@ -148,5 +150,5 @@ $(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 endif # ($(UNAME_S),...)
 
 build-bflibc:
-	cd ../bflibc/ && make $(CONFIG)
+	cd ../bflibc/ && make debug release
 

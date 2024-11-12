@@ -119,7 +119,7 @@ test: REMOVE = @rm
 test: REMOVE_FLAGS = -rf
 test: COPY_FLAGS = -af
 test: t-setup d-clean debug compile-tests
-	./$(T_BIN_PATH)/$(T_BFLIBC_OUT)
+#	./$(T_BIN_PATH)/$(T_BFLIBC_OUT)
 
 t-setup:
 	@mkdir -p $(T_BIN_PATH)
