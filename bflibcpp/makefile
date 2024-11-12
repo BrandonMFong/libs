@@ -33,8 +33,7 @@ path string time
 
 ### Release settings
 ifeq ($(CONFIG), release) # release
-CPPFLAGS += -Isrc/ \
-	$(CPPSTD)
+CPPFLAGS += -Isrc/ $(CPPSTD) -I../bflibc/bin/release
 BIN_NAME = libbfcpp.a
 BUILD_PATH = build/release
 BIN_PATH = bin/release
@@ -50,8 +49,7 @@ endif # ($(UNAME_S),...)
 ### Debug settings
 else ifeq ($(CONFIG), debug) # debug
 ADDR_SANITIZER = -fsanitize=address
-CPPFLAGS += -DDEBUG -g -Isrc/ \
-	$(ADDR_SANITIZER) $(CPPSTD)
+CPPFLAGS += -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-debug.a
 BUILD_PATH = build/debug
 BIN_PATH = bin/debug
@@ -62,7 +60,7 @@ OBJECTS_MACOS_TARGET_ARM64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 OBJECTS_MACOS_TARGETS = $(OBJECTS_MACOS_TARGET_X86_64) $(OBJECTS_MACOS_TARGET_ARM64)
 BIN_MACOS_TARGETS = $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_X86_64) $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_ARM64)
 else # ($(UNAME_S),Linux)
-D_OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
+OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
 ### Test settings
 else ifeq ($(CONFIG), test) # test
@@ -94,7 +92,7 @@ endif # ($(CONFIG),...)
 	$(BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64) \
 	$(BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 
-build: setup $(BIN_PATH)/$(BIN_NAME)
+build: build-bflibc setup $(BIN_PATH)/$(BIN_NAME)
 
 run:
 	./$(BIN_PATH)/$(BIN_NAME)
@@ -138,12 +136,20 @@ $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS)
 	g++ -o $@ $^ $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	$(CP) -afv src/*.hpp $(BIN_PATH)
-	$(AR) rsc $@ $^ $(OBJECTS)
+	cp -afv src/*.hpp $(BIN_PATH)
+	ar rsc $@ $^ $(OBJECTS)
 endif # ($(CONFIG), test)
 
-$(BUILD_PATH)/%.o: src/%.cpp src/%.hpp src/*.h
+$(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
 	g++ -c $< -o $@ $(CPPFLAGS)
 
 endif # ($(UNAME_S),...)
+
+ifeq ($(CONFIG),release) # release
+build-bflibc:
+	cd ../bflibc/ && make release
+else ifeq ($(CONFIG),debug) # release
+build-bflibc:
+	cd ../bflibc/ && make debug
+endif
 
