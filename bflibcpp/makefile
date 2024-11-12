@@ -13,6 +13,8 @@ UNAME_S := $(shell uname -s)
 CONFIG = release
 CPPSTD = -std=c++20
 PACKAGE_NAME = bflibcpp 
+BUILD_PATH = build/$(CONFIG)
+BIN_PATH = bin/$(CONFIG)
 
 # used to make universal binaries
 MACOS_TARGET_X86_64 = x86_64-apple-macos10--12
@@ -26,8 +28,6 @@ path string time
 ifeq ($(CONFIG),release) # release
 CPPFLAGS += -Isrc/ $(CPPSTD) -I../bflibc/bin/release
 BIN_NAME = libbfcpp.a
-BUILD_PATH = build/release
-BIN_PATH = bin/release
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -43,8 +43,6 @@ else ifeq ($(CONFIG),debug) # debug
 ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-debug.a
-BUILD_PATH = build/debug
-BIN_PATH = bin/debug
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -60,10 +58,8 @@ else ifeq ($(CONFIG),test) # test
 ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-test
-BUILD_PATH = build/test
-BIN_PATH = bin/test
 MAIN_FILE = testbench/tests.cpp
-LIBRARIES += 
+LIBRARIES += ../bflibc/bin/debug/bflibc/libbfc-debug.a 
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
 BIN_PREREQS := $(wildcard testbench/*.hpp)
 CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
@@ -88,17 +84,21 @@ endif # ($(CONFIG),...)
 
 build: build-bflibc setup $(BIN_PATH)/$(BIN_NAME)
 
+ifeq ($(CONFIG), test)
 run:
 	./$(BIN_PATH)/$(BIN_NAME)
+endif
 
 help:
 	@echo "Usage:"
-	@echo "	make [target] variables"
+	@echo "	make <targets> <variables>"
 	@echo ""
 	@echo "Target(s):"
 	@echo "	clean			cleans build and bin folder"
 	@echo "	build 			builds release verions"
 	@echo ""
+	@echo "Variable(s):"
+	@echo "	CONFIG		use this to change the build config. Accepts \"release\" (default), \"debug\", or \"test\""
 
 SETUP_DIRS = $(BIN_PATH) $(BUILD_PATH)
 setup: $(SETUP_DIRS)
@@ -126,8 +126,8 @@ $(OBJECTS_MACOS_TARGETS): $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),,
 else # ($(UNAME_S),Linux)
 
 ifeq ($(CONFIG), test)
-$(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS)
-	g++ -o $@ $^ ../bflibc/bin/debug/bflibc/libbfc-debug.a $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
+$(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS) $(BIN_PREREQS)
+	g++ -o $@ $< $(OBJECTS) $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.hpp $(BIN_PATH)
