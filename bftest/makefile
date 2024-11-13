@@ -1,9 +1,8 @@
 # author: Brando
-# date: 7/29/22
+# date: 6/2/22
 #
 
 include makefiles/lib.mk 
-include ../bflibc/makefiles/uuid.mk 
 
 help:
 	@echo "Usage:"
@@ -16,32 +15,29 @@ help:
 	@echo "Variable(s):"
 	@echo "	CONFIG		use this to change the build config. Accepts \"release\" (default), \"debug\", or \"test\""
 
-COMPILER = g++
-CPPSTD = -std=c++20
+COMPILER = gcc
 CONFIG = release
-SOURCE_EXT = cpp
-HEADER_EXT = hpp
-FILES = \
-data directory exception file object \
-path string time
+SOURCE_EXT = c
+HEADER_EXT = h
+FILES = bftest
 
 ### Release settings
 ifeq ($(CONFIG),release) # release
 BIN_NAME = $(LIB_FILE_NAME_RELEASE)
-FLAGS = $(CPPFLAGS) -Isrc/ $(CPPSTD) -I../bflibc/bin/release
+FLAGS = $(CFLAGS) -Isrc/ -Wall
 ### Debug settings
 else ifeq ($(CONFIG),debug) # debug
 BIN_NAME = $(LIB_FILE_NAME_DEBUG)
 ADDR_SANITIZER = -fsanitize=address
-FLAGS = $(CPPFLAGS) -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
+FLAGS = $(CFLAGS) -Wall -DDEBUG -g -Isrc/ $(ADDR_SANITIZER)
 ### Test settings
 else ifeq ($(CONFIG),test) # test
-BIN_NAME = libbfcpp-test
+BIN_NAME = libbfc-test
 ADDR_SANITIZER = -fsanitize=address
-FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
-LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a 
-LINKS = $(BF_LIB_C_UUID_FLAGS)
-MAIN_FILE = testbench/tests.cpp
+FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) 
+LIBRARIES =
+LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
+MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 
 include ../makefiles/build.mk 
