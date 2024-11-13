@@ -17,7 +17,7 @@ int main() {
 
 	Log::SetCallback(TestLog);
 	
-	LAUNCH_TEST_SET(socket_tests);
+	TEST_SUITE_LAUNCH(socket_tests);
 
 	TEST_SUITE_END;
 

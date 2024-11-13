@@ -17,15 +17,15 @@
 int main() {
 	TEST_SUITE_START;
 
-	LAUNCH_TEST_SET(lock_tests);
-	LAUNCH_TEST_SET(coreutils_tests);
-	//LAUNCH_TEST_SET(checksum_tests);
-	LAUNCH_TEST_SET(filesystem_tests);
-	LAUNCH_TEST_SET(stringutils_tests);
-	LAUNCH_TEST_SET(time_tests);
-	LAUNCH_TEST_SET(thread_tests);
-	LAUNCH_TEST_SET(filewriter_tests);
-	LAUNCH_TEST_SET(swap_tests);
+	TEST_SUITE_LAUNCH(lock_tests);
+	TEST_SUITE_LAUNCH(coreutils_tests);
+	//TEST_SUITE_LAUNCH(checksum_tests);
+	TEST_SUITE_LAUNCH(filesystem_tests);
+	TEST_SUITE_LAUNCH(stringutils_tests);
+	TEST_SUITE_LAUNCH(time_tests);
+	TEST_SUITE_LAUNCH(thread_tests);
+	TEST_SUITE_LAUNCH(filewriter_tests);
+	TEST_SUITE_LAUNCH(swap_tests);
 	
 	TEST_SUITE_END;
 

@@ -21,20 +21,20 @@
 int main() {
 	TEST_SUITE_START;
 
-	LAUNCH_TEST_SET(atomic_tests);
-	LAUNCH_TEST_SET(file_tests);
-	LAUNCH_TEST_SET(bintree_tests);
-	LAUNCH_TEST_SET(rbtree_tests);
-	LAUNCH_TEST_SET(dictionary_tests);
-	LAUNCH_TEST_SET(string_tests);
-	LAUNCH_TEST_SET(stack_tests);
-	LAUNCH_TEST_SET(queue_tests);
-	LAUNCH_TEST_SET(time_tests);
-	LAUNCH_TEST_SET(object_tests);
-	LAUNCH_TEST_SET(data_tests);
-	LAUNCH_TEST_SET(list_tests);
-	LAUNCH_TEST_SET(vector_tests);
-	LAUNCH_TEST_SET(array_tests);
+	TEST_SUITE_LAUNCH(atomic_tests);
+	TEST_SUITE_LAUNCH(file_tests);
+	TEST_SUITE_LAUNCH(bintree_tests);
+	TEST_SUITE_LAUNCH(rbtree_tests);
+	TEST_SUITE_LAUNCH(dictionary_tests);
+	TEST_SUITE_LAUNCH(string_tests);
+	TEST_SUITE_LAUNCH(stack_tests);
+	TEST_SUITE_LAUNCH(queue_tests);
+	TEST_SUITE_LAUNCH(time_tests);
+	TEST_SUITE_LAUNCH(object_tests);
+	TEST_SUITE_LAUNCH(data_tests);
+	TEST_SUITE_LAUNCH(list_tests);
+	TEST_SUITE_LAUNCH(vector_tests);
+	TEST_SUITE_LAUNCH(array_tests);
 
 	TEST_SUITE_END;
 

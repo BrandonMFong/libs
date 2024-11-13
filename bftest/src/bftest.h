@@ -10,39 +10,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INTRO_TEST_FUNCTION printf("Running %s:\n", __func__)
+#define TEST_SUITE_START \
+	int pass = 0, fail = 0;\
+	float tp = 0, tf = 0;
 
-/*
-#define PRINT_TEST_RESULTS(result) \
-	if (result) {system("printf \"[\033[0;32m Pass \033[0m] \"");}\
-	else {system("printf \"[\033[0;31m Fail \033[0m] \"");}\
-	printf("%s\n", __func__)
-*/
-
-// Use these to show progress
-#define UNIT_TEST_START printf("%s - ", __func__); fflush(stdout);
-#define UNIT_TEST_END(success, errcode) \
-	if (success) {printf("PASS\n");}\
-	else {printf("FAIL %d\n", errcode);}
-
-/**
- * each function should take no params and return 0 on success
- */
-#define LAUNCH_TEST(unit_test_function, pass_counter, fail_counter) \
-	if (!unit_test_function()) pass_counter++; \
-	else fail_counter++;
-
-#define PRINT_GRADE(p, f) printf("Grade - %.2f%% (%d/%d)\n", (float) ((p/(p+f)) * 100), (int) p, (int) (p+f));
-
-#define TEST_SUITE_START int pass = 0, fail = 0;\
-						float tp = 0, tf = 0;
-
-#define LAUNCH_TEST_SET(foo) foo(&pass, &fail);\
+#define TEST_SUITE_LAUNCH(foo) \
+	foo(&pass, &fail);\
 	printf("[+ %d, - %d]\n", pass, fail);\
 	tp += pass; tf += fail;\
 	pass = 0; fail = 0;
  
-#define TEST_SUITE_END PRINT_GRADE(tp, tf)
+#define TEST_SUITE_END printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));
+
+#define INTRO_TEST_FUNCTION printf("---- %s started ----\n", __func__)
+
+/**
+ * each function should take no params and return 0 on success
+ */
+#define LAUNCH_TEST(foo, p, f) \
+	if (!foo()) p++; \
+	else f++;
+
+#define UNIT_TEST_START \
+	printf("%s - ", __func__);\
+	fflush(stdout);
+
+#define UNIT_TEST_END(success, errcode) \
+	if (success) {printf("PASS\n");}\
+	else {printf("FAIL %d\n", errcode);}
 
 #endif // BF_TEST_H
 
