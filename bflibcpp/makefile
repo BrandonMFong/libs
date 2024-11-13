@@ -29,7 +29,6 @@ path string time
 ifeq ($(CONFIG),release) # release
 CPPFLAGS += -Isrc/ $(CPPSTD) -I../bflibc/bin/release
 BIN_NAME = $(LIB_FILE_NAME_RELEASE)
-#BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -43,7 +42,6 @@ else ifeq ($(CONFIG),debug) # debug
 ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = $(LIB_FILE_NAME_DEBUG)
-#BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -59,7 +57,6 @@ CPPFLAGS += -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/
 BIN_NAME = libbfcpp-test
 MAIN_FILE = testbench/tests.cpp
 LIBRARIES += ../bflibc/bin/debug/bflibc/libbfc-debug.a 
-#BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
 BIN_PREREQS := $(wildcard testbench/*.hpp)
 CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
@@ -119,7 +116,7 @@ $(BIN_MACOS_TARGETS): $(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.hpp $(BIN_PATH)
-	ar rsc $@ $^ $(BFLIBC_OBJECTS)
+	ar rsc $@ $^
 
 $(BUILD_PATH)/%.o: $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 	lipo -create -output $@ $^
@@ -136,7 +133,7 @@ $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS) $(BIN_PREREQS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.hpp $(BIN_PATH)
-	ar rsc $@ $^ $(BFLIBC_OBJECTS)
+	ar rsc $@ $^
 endif # ($(CONFIG), test)
 
 $(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
