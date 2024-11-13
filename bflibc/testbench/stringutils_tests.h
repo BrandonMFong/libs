@@ -91,30 +91,38 @@ int test_readingFile(void) {
 	TestStringUtilsRandomFileCreate();
 
 	char * buf = BFStringCreateFromFile(TEST_STRINGUTILS_RANDOM_FILE);
-	int bufi = 0;
-	const char * randtext = TEST_STRINGUTILS_RANDOM_TEXT;
-	const size_t len = strlen(TEST_STRINGUTILS_RANDOM_TEXT);
-	for (int j = 0; j < TEST_STRINGUTILS_RANDOM_TEXT_OCC; j++) {
-		for (int i = 0; i < len; i++) {
-			if (bufi >= strlen(buf)) {
-				printf("\nbufi >= strlen buf\n");
-				result = 1;
-				goto endloop;
-			} else {
-				if (buf[bufi] != randtext[i]) {
-					printf("\n bufi=%d, i=%d, %c != %c\n",
-							bufi, i, buf[bufi], randtext[i]);
+	if (!buf) {
+		result = 2;
+	}
+
+	if (!result) {
+		int bufi = 0;
+		const char * randtext = TEST_STRINGUTILS_RANDOM_TEXT;
+		const size_t len = strlen(TEST_STRINGUTILS_RANDOM_TEXT);
+		for (int j = 0; j < TEST_STRINGUTILS_RANDOM_TEXT_OCC; j++) {
+			for (int i = 0; i < len; i++) {
+				if (bufi >= strlen(buf)) {
+					printf("\nbufi >= strlen buf\n");
 					result = 1;
 					goto endloop;
+				} else {
+					if (buf[bufi] != randtext[i]) {
+						printf("\n bufi=%d, i=%d, %c != %c\n",
+								bufi, i, buf[bufi], randtext[i]);
+						result = 1;
+						goto endloop;
+					}
+					bufi++;
 				}
-				bufi++;
 			}
 		}
 	}
 endloop:
 
-	if (buf == NULL)
-		result = 1;
+	if (!result) {
+		if (buf == NULL)
+			result = 1;
+	}
 
 	BFFree(buf);
 	

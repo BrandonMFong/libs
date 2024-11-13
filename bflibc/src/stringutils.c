@@ -46,7 +46,7 @@ char * BFStringCreateFromFile(const char * file) {
 	rewind(f);
 
 	// get buf the size of the file
-	char * buf = (char *) malloc(sizeof(char) * filesize);
+	char * buf = (char *) malloc(sizeof(char) * (filesize+1));
 
 	// we will read a certain amount bytes at a time
 	char * tmp = buf; // using this to read
