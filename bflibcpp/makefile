@@ -44,5 +44,8 @@ LINKS = $(BF_LIB_C_UUID_FLAGS)
 MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
 
+dependencies:
+	cd ../bflibc/ && make build CONFIG=release && make build CONFIG=debug
+
 include ../makefiles/build.mk 
 

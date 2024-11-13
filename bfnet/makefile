@@ -36,14 +36,14 @@ FLAGS = $(CPPFLAGS) -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bi
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfnet-test
 ADDR_SANITIZER = -fsanitize=address
-FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug -I../bflibcpp/bin/debug -I../bflibcpp/src
-LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a ../bflibcpp/bin/debug/bflibcpp/libbfcpp-debug.a
+FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug -I../bflibcpp/bin/debug -I../bftest/bin/debug
+LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a ../bflibcpp/bin/debug/bflibcpp/libbfcpp-debug.a ../bftest/bin/debug/bftest/libbftest-debug.a
 LINKS = $(BF_LIB_C_UUID_FLAGS)
 MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
 
 dependencies:
-	cd ../bflibc/ && make debug release
+	cd ../bflibc/ && make build CONFIG=release && make build CONFIG=debug
 	cd ../bflibcpp/ && make build CONFIG=release && make build CONFIG=debug
 
 include ../makefiles/build.mk 

@@ -6,7 +6,9 @@
 #ifndef BFNET_TESTS_HPP
 #define BFNET_TESTS_HPP
 
-#include "bftests.hpp"
+extern "C" {
+#include <bftest/bftest.h>
+}
 
 #endif // BFNET_TESTS_HPP
 

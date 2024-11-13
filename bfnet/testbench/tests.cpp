@@ -6,11 +6,6 @@
 #include "socket_tests.hpp"
 #include "log.hpp"
 
-extern "C" {
-#include <bflibc/bflibc.h>
-#include <bflibc/bftests.h>
-}
-
 using namespace BF::Net;
 
 void TestLog(const char * str) {
