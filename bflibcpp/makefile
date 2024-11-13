@@ -29,13 +29,12 @@ ifeq ($(CONFIG),release) # release
 CPPFLAGS += -Isrc/ $(CPPSTD) -I../bflibc/bin/release
 BIN_NAME = libbfcpp.a
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
+OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
 OBJECTS_MACOS_TARGET_ARM64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64), $(FILES))
 OBJECTS_MACOS_TARGETS = $(OBJECTS_MACOS_TARGET_X86_64) $(OBJECTS_MACOS_TARGET_ARM64)
 BIN_MACOS_TARGETS = $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_X86_64) $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_ARM64)
-else # ($(UNAME_S),Linux)
-OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
 
 ### Debug settings
@@ -44,13 +43,12 @@ ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 BIN_NAME = libbfcpp-debug.a
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
+OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
 OBJECTS_MACOS_TARGET_ARM64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64), $(FILES))
 OBJECTS_MACOS_TARGETS = $(OBJECTS_MACOS_TARGET_X86_64) $(OBJECTS_MACOS_TARGET_ARM64)
 BIN_MACOS_TARGETS = $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_X86_64) $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_ARM64)
-else # ($(UNAME_S),Linux)
-OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif # ($(UNAME_S),...)
 
 ### Test settings
@@ -63,6 +61,7 @@ LIBRARIES += ../bflibc/bin/debug/bflibc/libbfc-debug.a
 BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
 BIN_PREREQS := $(wildcard testbench/*.hpp)
 CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
+OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 MAIN_OBJECT_MACOS_TARGET_X86_64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_X86_64)
 MAIN_OBJECT_MACOS_TARGET_ARM64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_ARM64)
@@ -73,7 +72,6 @@ OBJECTS_MACOS_TARGETS = $(OBJECTS_MACOS_TARGET_X86_64) $(OBJECTS_MACOS_TARGET_AR
 BIN_MACOS_TARGETS = $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_X86_64) $(BIN_PATH)/$(BIN_NAME).$(MACOS_TARGET_ARM64)
 else
 MAIN_OBJECT = $(BUILD_PATH)/tests.o
-OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 endif
 endif # ($(CONFIG),...)
 
@@ -111,21 +109,27 @@ clean:
 ### Main build
 
 ifeq ($(UNAME_S),Darwin)
+ifeq ($(CONFIG),test)
 $(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
 	lipo -create -output $@ $^
 
 $(BIN_MACOS_TARGETS): $(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
 	g++ -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@)) $(CPPFLAGS) $(CPPLINKS) $(LIBRARIES) -target $(subst --,.,$(subst .,,$(suffix $@)))
+else # ($(CONFIG),...)
+$(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
+	cp -afv src/*.hpp $(BIN_PATH)
+	ar rsc $@ $^ $(BFLIBC_OBJECTS)
 
 $(BUILD_PATH)/%.o: $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 	lipo -create -output $@ $^
+endif # ($(CONFIG), test)
 
-$(OBJECTS_MACOS_TARGETS): $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).cpp  $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).hpp src/*.h
+$(OBJECTS_MACOS_TARGETS): $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).cpp  $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).hpp
 	g++ -c -o $@ $< $(CPPFLAGS) -target $(subst --,.,$(subst .,,$(suffix $@)))
 
 else # ($(UNAME_S),Linux)
 
-ifeq ($(CONFIG), test)
+ifeq ($(CONFIG),test)
 $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS) $(BIN_PREREQS)
 	g++ -o $@ $< $(OBJECTS) $(LIBRARIES) $(CPPFLAGS) $(CPPLINKS)
 else # ($(CONFIG),...)
