@@ -11,9 +11,8 @@ include ../makefiles/platforms.mk
 UNAME_S := $(shell uname -s)
 
 CONFIG = release
-CPPSTD = -std=c++20
 BUILD_PATH = build/$(CONFIG)
-BIN_PATH = bin/$(CONFIG)
+BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 
 # used to make universal binaries
 MACOS_TARGET_X86_64 = x86_64-apple-macos10--12

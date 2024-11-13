@@ -17,6 +17,7 @@ help:
 	@echo "	CONFIG		use this to change the build config. Accepts \"release\" (default), \"debug\", or \"test\""
 
 COMPILER = g++
+CPPSTD = -std=c++20
 CONFIG = release
 FILES = \
 data directory exception file object \
