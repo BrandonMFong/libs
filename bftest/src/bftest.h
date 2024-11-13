@@ -4,17 +4,19 @@
  * date: 6/30/22
  */
 
-#ifndef BF_TESTS_H
-#define BF_TESTS_H
+#ifndef BF_TEST_H
+#define BF_TEST_H
 
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
 #define INTRO_TEST_FUNCTION printf("Running %s:\n", __func__)
 #define PRINT_TEST_RESULTS(result) \
 	if (result) {system("printf \"[\033[0;32m Pass \033[0m] \"");}\
 	else {system("printf \"[\033[0;31m Fail \033[0m] \"");}\
 	printf("%s\n", __func__)
+*/
 
 // Use these to show progress
 #define UNIT_TEST_START printf("[ .... ] %s", __func__); fflush(stdout);
@@ -45,5 +47,5 @@
  
 #define TEST_SUITE_END PRINT_GRADE(tp, tf)
 
-#endif // BF_TESTS_H
+#endif // BF_TEST_H
 
