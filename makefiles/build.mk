@@ -40,8 +40,7 @@ endif # ($(UNAME_S),...)
 
 ### Test settings
 else ifeq ($(CONFIG),test) # test
-MAIN_FILE = testbench/tests.cpp
-BIN_PREREQS := $(wildcard testbench/*.hpp)
+BIN_PREREQS := $(wildcard testbench/*.$(HEADER_EXT))
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 MAIN_OBJECT_MACOS_TARGET_X86_64 = $(BUILD_PATH)/tests.$(MACOS_TARGET_X86_64)
@@ -87,14 +86,14 @@ $(BIN_MACOS_TARGETS): $(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
 	$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@)) $(FLAGS) $(LINKS) $(LIBRARIES) -target $(subst --,.,$(subst .,,$(suffix $@)))
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	cp -afv src/*.hpp $(BIN_PATH)
+	cp -afv src/*.$(HEADER_EXT) $(BIN_PATH)
 	ar rsc $@ $^
 
 $(BUILD_PATH)/%.o: $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64) $(BUILD_PATH)/%.$(MACOS_TARGET_ARM64)
 	lipo -create -output $@ $^
 endif # ($(CONFIG), test)
 
-$(OBJECTS_MACOS_TARGETS): $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).cpp  $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).hpp
+$(OBJECTS_MACOS_TARGETS): $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).$(SOURCE_EXT)  $$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).$(HEADER_EXT)
 	$(COMPILER) -c -o $@ $< $(FLAGS) -target $(subst --,.,$(subst .,,$(suffix $@)))
 
 else # ($(UNAME_S),Linux)
@@ -104,11 +103,11 @@ $(BIN_PATH)/$(BIN_NAME): $(MAIN_FILE) $(OBJECTS) $(BIN_PREREQS)
 	$(COMPILER) -o $@ $< $(OBJECTS) $(LIBRARIES) $(FLAGS) $(LINKS)
 else # ($(CONFIG),...)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	cp -afv src/*.hpp $(BIN_PATH)
+	cp -afv src/*.$(HEADER_EXT) $(BIN_PATH)
 	ar rsc $@ $^
 endif # ($(CONFIG), test)
 
-$(BUILD_PATH)/%.o: src/%.cpp src/%.hpp
+$(BUILD_PATH)/%.o: src/%.$(SOURCE_EXT) src/%.$(HEADER_EXT)
 	$(COMPILER) -c $< -o $@ $(FLAGS)
 
 endif # ($(UNAME_S),...)

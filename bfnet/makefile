@@ -19,6 +19,8 @@ help:
 COMPILER = g++
 CPPSTD = -std=c++20
 CONFIG = release
+SOURCE_EXT = cpp
+HEADER_EXT = hpp
 FILES = client server socket envelope connection buffer log
 
 ### Release settings
@@ -36,7 +38,8 @@ BIN_NAME = libbfnet-test
 ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug -I../bflibcpp/bin/debug -I../bflibcpp/src
 LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a ../bflibcpp/bin/debug/bflibcpp/libbfcpp-debug.a
-CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
+LINKS = $(BF_LIB_C_UUID_FLAGS)
+MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
 
 dependencies:

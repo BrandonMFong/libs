@@ -19,6 +19,8 @@ help:
 COMPILER = g++
 CPPSTD = -std=c++20
 CONFIG = release
+SOURCE_EXT = cpp
+HEADER_EXT = hpp
 FILES = \
 data directory exception file object \
 path string time
@@ -38,7 +40,8 @@ BIN_NAME = libbfcpp-test
 ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a 
-CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
+LINKS = $(BF_LIB_C_UUID_FLAGS)
+MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
 
 build-bflibc:
