@@ -20,7 +20,10 @@ COMPILER = gcc
 CONFIG = release
 SOURCE_EXT = c
 HEADER_EXT = h
-FILES = filesystem coreutils stringutils bftime checksum thread lock filewriter
+FILES = \
+filesystem coreutils stringutils \
+bftime thread \
+lock filewriter
 
 ### Release settings
 ifeq ($(CONFIG),release) # release
@@ -37,7 +40,7 @@ BIN_NAME = libbfc-test
 ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) 
 LIBRARIES =
-LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread $(BF_LIB_C_CHECKSUM_FLAGS)
+LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 

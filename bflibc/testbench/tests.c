@@ -7,7 +7,7 @@
 #include "filesystem_tests.h"
 #include "stringutils_tests.h"
 #include "time_tests.h"
-#include "checksum_tests.h"
+//#include "checksum_tests.h"
 #include "thread_tests.h"
 #include "lock_tests.h"
 #include "filewriter_tests.h"
@@ -19,7 +19,7 @@ int main() {
 
 	LAUNCH_TEST_SET(lock_tests);
 	LAUNCH_TEST_SET(coreutils_tests);
-	LAUNCH_TEST_SET(checksum_tests);
+	//LAUNCH_TEST_SET(checksum_tests);
 	LAUNCH_TEST_SET(filesystem_tests);
 	LAUNCH_TEST_SET(stringutils_tests);
 	LAUNCH_TEST_SET(time_tests);
