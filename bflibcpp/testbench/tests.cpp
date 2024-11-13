@@ -33,8 +33,8 @@ int main() {
 	LAUNCH_TEST_SET(object_tests);
 	LAUNCH_TEST_SET(data_tests);
 	LAUNCH_TEST_SET(list_tests);
-	LAUNCH_TEST_SET(array_tests);
 	LAUNCH_TEST_SET(vector_tests);
+	LAUNCH_TEST_SET(array_tests);
 
 	TEST_SUITE_END;
 

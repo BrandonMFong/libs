@@ -65,6 +65,8 @@ build: setup $(BIN_PATH)/$(BIN_NAME)
 ifeq ($(CONFIG),test)
 run:
 	./$(BIN_PATH)/$(BIN_NAME)
+run-debugger:
+	$(DEBUGGER) ./$(BIN_PATH)/$(BIN_NAME)
 endif
 
 SETUP_DIRS = $(BIN_PATH) $(BUILD_PATH)

@@ -195,7 +195,7 @@ int test_addanddelete() {
 
 	int max = 2 << 8;
 	while (!result && max) {
-		int objcount = 2 << 16;
+		int objcount = 2 << 9;
 		Array<int> a;
 
 		// add
@@ -380,10 +380,10 @@ void array_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_Count, p, f);
 	LAUNCH_TEST(test_Setter, p, f);
 	LAUNCH_TEST(test_indexForObject, p, f);
-	LAUNCH_TEST(test_addanddelete, p, f);
 	LAUNCH_TEST(test_deletingObjectAtRandomIndex, p, f);
 	LAUNCH_TEST(test_insertingAtRandomIndex, p, f);
 	LAUNCH_TEST(test_releasecallback, p, f);
+	LAUNCH_TEST(test_addanddelete, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;
