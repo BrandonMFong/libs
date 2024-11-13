@@ -2,6 +2,7 @@
 # date: 7/29/22
 #
 
+include makefiles/lib.mk 
 include ../makefiles/libpaths.mk 
 include ../makefiles/platforms.mk 
 include ../bflibc/makefiles/uuid.mk 
@@ -27,8 +28,8 @@ path string time
 ### Release settings
 ifeq ($(CONFIG),release) # release
 CPPFLAGS += -Isrc/ $(CPPSTD) -I../bflibc/bin/release
-BIN_NAME = libbfcpp.a
-BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
+BIN_NAME = $(LIB_FILE_NAME_RELEASE)
+#BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -41,8 +42,8 @@ endif # ($(UNAME_S),...)
 else ifeq ($(CONFIG),debug) # debug
 ADDR_SANITIZER = -fsanitize=address
 CPPFLAGS += -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
-BIN_NAME = libbfcpp-debug.a
-BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
+BIN_NAME = $(LIB_FILE_NAME_DEBUG)
+#BFLIBC_OBJECTS = $(wildcard ../bflibc/build/$(CONFIG)/*.o) 
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
 ifeq ($(UNAME_S),Darwin)
 OBJECTS_MACOS_TARGET_X86_64 = $(patsubst %, $(BUILD_PATH)/%.$(MACOS_TARGET_X86_64), $(FILES))
@@ -58,7 +59,7 @@ CPPFLAGS += -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/
 BIN_NAME = libbfcpp-test
 MAIN_FILE = testbench/tests.cpp
 LIBRARIES += ../bflibc/bin/debug/bflibc/libbfc-debug.a 
-BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
+#BFLIBC_OBJECTS = $(wildcard ../bflibc/build/debug/*.o) 
 BIN_PREREQS := $(wildcard testbench/*.hpp)
 CPPLINKS = $(BF_LIB_C_UUID_FLAGS)
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(FILES))
