@@ -6,7 +6,11 @@
 #ifndef CLIB_TESTS_H
 #define CLIB_TESTS_H
 
-#include "bftests.hpp"
+//#include "bftests.hpp"
+
+extern "C" {
+#include <bftest/bftest.h>
+}
 
 #endif // CLIB_TESTS_H
 

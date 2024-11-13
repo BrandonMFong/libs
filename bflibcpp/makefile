@@ -38,8 +38,8 @@ FLAGS = $(CPPFLAGS) -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bi
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfcpp-test
 ADDR_SANITIZER = -fsanitize=address
-FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
-LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a
+FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug -I../bftest/bin/debug
+LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a ../bftest/bin/debug/bftest/libbftest-debug.a
 LINKS = $(BF_LIB_C_UUID_FLAGS)
 MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
