@@ -43,8 +43,9 @@ MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
 
 dependencies:
-	cd ../bflibc/ && make build CONFIG=release && make build CONFIG=debug
-	cd ../bflibcpp/ && make build CONFIG=release && make build CONFIG=debug
+	cd ../bflibc/ && make clean && make build CONFIG=release && make build CONFIG=debug
+	cd ../bflibcpp/ && make clean && make build CONFIG=release && make build CONFIG=debug
+	cd ../bftest/ && make clean && make build CONFIG=release && make build CONFIG=debug
 
 include ../makefiles/build.mk 
 
