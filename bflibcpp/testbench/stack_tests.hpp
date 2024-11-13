@@ -17,15 +17,17 @@ extern "C" {
 using namespace BF;
 
 int test_StackInit() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Stack<int> stack;
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_StackPush() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Stack<int> stack;
@@ -41,11 +43,12 @@ int test_StackPush() {
 	if (!result)
 		result = stack.push(4);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_StackPop() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Stack<int> stack;
@@ -78,11 +81,12 @@ int test_StackPop() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_StackTop() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Stack<int> stack;
@@ -107,11 +111,12 @@ int test_StackTop() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_StackSize() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Stack<int> stack;
@@ -143,7 +148,7 @@ int test_StackSize() {
 		printf("Size: %d != 4\n", stack.size());
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -186,7 +191,6 @@ int test_LoadAndUnloadStrings() {
 	Stack<char *> stack;
 	for (int i = 0; i < size; i++) {
 		char uuidstr[kBFStringUUIDStringLength];
-		//BFStringGetRandomUUIDString(uuidstr);
 		strcpy(uuidstr, "uuid");
 		array[i] = BFStringCopyString(uuidstr);
 		if (array[i] == NULL) {

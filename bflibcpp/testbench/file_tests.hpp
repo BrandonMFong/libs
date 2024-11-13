@@ -12,6 +12,7 @@
 using namespace BF;
 
 int test_filePath() {
+	UNIT_TEST_START;
 	int result = 0;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
@@ -62,11 +63,12 @@ int test_filePath() {
 
 	Delete(file);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_basename() {
+	UNIT_TEST_START;
 	int result = 0;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
@@ -118,11 +120,12 @@ int test_basename() {
 
 	Delete(file);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_extension() {
+	UNIT_TEST_START;
 	int result = 0;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
@@ -183,11 +186,12 @@ int test_extension() {
 
 	Delete(file);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_directory() {
+	UNIT_TEST_START;
 	int result = 0;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
@@ -248,7 +252,7 @@ int test_directory() {
 
 	Delete(file);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
@@ -257,17 +261,10 @@ void file_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_filePath()) p++;
-	else f++;
-	
-	if (!(test_basename())) p++;
-	else f++;
-
-	if (!test_extension()) p++;
-	else f++;
-
-	if (!test_directory()) p++;
-	else f++;
+	LAUNCH_TEST(test_filePath, p, f);
+	LAUNCH_TEST(test_basename, p, f);
+	LAUNCH_TEST(test_extension, p, f);
+	LAUNCH_TEST(test_directory, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

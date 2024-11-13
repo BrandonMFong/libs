@@ -20,7 +20,7 @@
 using namespace BF;
 
 static int test_RBInitializer() {
-	PRINT_TEST_RESULTS(1);
+	UNIT_TEST_START;
 
 	RBTree<int> i;
 	RBTree<double> d;
@@ -37,10 +37,13 @@ static int test_RBInitializer() {
 	Delete(ff);
 	Delete(cc);
 	
+	UNIT_TEST_END(1, 0);
+	
 	return 0;
 }
 
 static int test_InsertingLRCase() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	RBTree<int> i;
@@ -68,12 +71,13 @@ static int test_InsertingLRCase() {
 		if (result) printf("Inserting error: %d\n", result);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 static int test_InsertingLLCase() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	RBTree<int> i;
@@ -101,12 +105,13 @@ static int test_InsertingLLCase() {
 		if (result) printf("Inserting error: %d\n", result);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 static int test_InsertingRRCase() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	RBTree<int> i;
@@ -134,12 +139,13 @@ static int test_InsertingRRCase() {
 		if (result) printf("Inserting error: %d\n", result);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 static int test_InsertingRLCase() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	RBTree<int> i;
@@ -167,12 +173,13 @@ static int test_InsertingRLCase() {
 		if (result) printf("Inserting error: %d\n", result);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 static int test_AccessingNodeHierarchy() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	RBTree<int>::RBNodeNonnull * n1;
@@ -217,12 +224,13 @@ static int test_AccessingNodeHierarchy() {
 	Delete(n3);
 	Delete(n4);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 int test_NodeColors() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	RBTree<int>::RBNodeNonnull * n1 = 0;
@@ -278,12 +286,13 @@ int test_NodeColors() {
 
 	Delete(n1);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 int test_RotationCases() {
+	UNIT_TEST_START;
 	int result = 0;
 	RBTree<int> t;
 
@@ -329,12 +338,13 @@ int test_RotationCases() {
 	Delete(n3);
 	Delete(n4);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 
 	return result;
 }
 
 int test_NodeLevels() {
+	UNIT_TEST_START;
 	int result = 0;
 	
 	RBTree<int>::RBNodeNonnull * n1;
@@ -370,7 +380,7 @@ int test_NodeLevels() {
 	Delete(n3);
 	Delete(n4);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
@@ -517,6 +527,7 @@ PUBLIC:
 };
 
 int test_RBTreeChecker() {
+	UNIT_TEST_START;
 	int result = 0;
 	int max = 3; // max nodes
 	
@@ -540,11 +551,12 @@ int test_RBTreeChecker() {
 		}
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_RBTreeMax() {
+	UNIT_TEST_START;
 	int result = 0;
 	int max = 50; // max nodes
 	int maxValue = 100;
@@ -574,11 +586,12 @@ int test_RBTreeMax() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_RBTreeMin() {
+	UNIT_TEST_START;
 	int result = 0;
 	int max = 50; // max nodes
 	int minValue = 10;
@@ -608,7 +621,7 @@ int test_RBTreeMin() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
@@ -616,6 +629,7 @@ int test_RBTreeMin() {
  * This will add values 0 to `addCount` and remove up to `removeCount` objects
  */
 int test_RBRemove() {
+	UNIT_TEST_START;
 	int result = 0;
 	int addCount = 500;
 	int removeCount = 25;
@@ -682,11 +696,12 @@ int test_RBRemove() {
 
 	if (result) printf("Error %d\n", result);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_RBTreeCount() {
+	UNIT_TEST_START;
 	int result = 0;
 	RBTree<int> t;
 	const int size = 100;
@@ -706,11 +721,12 @@ int test_RBTreeCount() {
 		}
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 
 int test_SearchingRBTree() {
+	UNIT_TEST_START;
 	int result = 0;
 	const int maxVal = 2000;
 	srand(time(0));
@@ -745,7 +761,7 @@ int test_SearchingRBTree() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(1, 0);
 	return result;
 }
 

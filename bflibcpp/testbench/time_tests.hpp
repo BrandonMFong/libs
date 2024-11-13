@@ -7,17 +7,18 @@
 #define TIME_TESTS_HPP
 
 #include <time.hpp>
-#include "cpplib_tests.hpp"
 #include <delete.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
 #include <unistd.h>
+#include <bftest/bftest.h>
 }
 
 using namespace BF;
 
 int test_TimeInit() {
+	UNIT_TEST_START;
 	int result = 0;
 	BFTime t = BFTimeGetCurrentTime();
 	Time * tm = new Time(t);
@@ -60,7 +61,7 @@ int test_TimeInit() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -86,11 +87,8 @@ void time_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_TimeInit()) p++;
-	else f++;
-
-	if (!test_TimeBasicOperations()) p++;
-	else f++;
+	LAUNCH_TEST(test_TimeInit, p, f);
+	LAUNCH_TEST(test_TimeBasicOperations, p, f);
 
 	if (pass) *pass += p;
 	if (fail) *fail += f;

@@ -20,6 +20,7 @@ extern "C" {
 using namespace BF;
 
 int test_StringInit() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	char str[100] = "hello world";
@@ -29,11 +30,12 @@ int test_StringInit() {
 	String s2("hello world");
 	String s3(str);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_comparingString() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	char tmp[20] = "hello world";
@@ -56,11 +58,12 @@ int test_comparingString() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_StringLength() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	const char * tmp = "Hello, my name is brando";
@@ -72,11 +75,12 @@ int test_StringLength() {
 		printf("%d != %d\n", (int) str.length(), (int) strlen(tmp));
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_StringCopy() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	String str0 = "Hello world";
@@ -101,7 +105,7 @@ int test_StringCopy() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -110,6 +114,7 @@ bool DoStringsMatch(String str, const char * expected) {
 }
 
 int test_PassingStringToFunction() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	if (!DoStringsMatch("Hello", "Hello")) {
@@ -129,7 +134,7 @@ int test_PassingStringToFunction() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 

@@ -24,6 +24,7 @@ using namespace BF;
  * Just test that it can build and nothing crashes
  */
 int test_Initializer() {
+	UNIT_TEST_START;
 	Array<int> intArr;
 	Array<char> charArr;
 	Array<double> doubleArr;
@@ -36,12 +37,13 @@ int test_Initializer() {
 	delete doubleArrPtr;
 	delete charArrPtr;
 
-	PRINT_TEST_RESULTS(1);
+	UNIT_TEST_END(true, 0);
 
 	return 0;
 }
 
 int test_Contains() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Array<int> arr({1, 2, 3, 4});
@@ -73,12 +75,13 @@ int test_Contains() {
 		printf("ch should contain 'world'\n");
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
 }
 
 int test_ObjectAtIndex() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Array<double> d({1.1, 2.2, 3.3, 4.4, 5.5});
@@ -97,7 +100,7 @@ int test_ObjectAtIndex() {
 		printf("%f != 4.4\n", a);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
 }
@@ -147,6 +150,7 @@ int test_indexForObject() {
 }
 
 int test_Count() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Array<int> a({1, 2, 3, 4, 5});
@@ -156,12 +160,13 @@ int test_Count() {
 		printf("Count %ld\n", a.count());
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
 }
 
 int test_Setter() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Array<int> a;
@@ -180,7 +185,7 @@ int test_Setter() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 

@@ -14,15 +14,17 @@
 using namespace BF;
 
 int test_Init() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<int> * l = new List<int>;
 	Delete(l);
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_adding() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<int> * l = new List<int>;
@@ -47,11 +49,12 @@ int test_adding() {
 	}
 
 	Delete(l);
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_indexing() {
+	UNIT_TEST_START;
 	int result = 0;
 	List<double> * l = new List<double>;
 
@@ -78,11 +81,12 @@ int test_indexing() {
 
 	Delete(l);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_inserting() {
+	UNIT_TEST_START;
 	int result = 0;
 	List<double> * l = new List<double>;
 
@@ -114,11 +118,12 @@ int test_inserting() {
 
 	Delete(l);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_deletingAtIndex() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<long> * l = new List<long>;
@@ -151,11 +156,12 @@ int test_deletingAtIndex() {
 
 	Delete(l);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_deletingAllNodes() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<char> * l = new List<char>;
@@ -180,7 +186,7 @@ int test_deletingAllNodes() {
 		printf("Error %d\n", result);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -189,6 +195,7 @@ void intDelete(int * i) {
 }
 
 int test_listMemoryHandling() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<int *> * l = new List<int *>;
@@ -233,7 +240,7 @@ int test_listMemoryHandling() {
 
 	l->deleteAll();
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -277,6 +284,7 @@ int test_traversing() {
 }
 
 int test_ListContains() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	List<int> l;
@@ -290,22 +298,24 @@ int test_ListContains() {
 		result = 2;
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_InitializingWithInitList() {
+	UNIT_TEST_START;
 	int result = 0;
 	
 	List<int> l = {1,2,3,4};
 
 	l = {5,6,7,8};
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_InitializingFromRawArray() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	const size_t size = 5;
@@ -321,11 +331,12 @@ int test_InitializingFromRawArray() {
 		if (!l.contains(strings[i])) result = i + 10;
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_ListNullSwap() {
+	UNIT_TEST_START;
 	int result = 0;
 	List<int>::Node a, b;
 	a.obj = 0;
@@ -334,11 +345,12 @@ int test_ListNullSwap() {
 	if (result) result = List<int>::swap(0, &b);
 	if (result) result = List<int>::swap(0, 0);
 
-	PRINT_TEST_RESULTS(result);
+	UNIT_TEST_END(!result, result);
 	return result == 0 ? -1 : 0;
 }
 
 int test_ListSwap() {
+	UNIT_TEST_START;
 	int result = 0;
 	List<int>::Node * a = new List<int>::Node;
 	a->obj = 1;
@@ -383,7 +395,7 @@ int test_ListSwap() {
 		else if (br->prev() != b) result = 2;
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 

@@ -17,15 +17,17 @@ extern "C" {
 using namespace BF;
 
 int test_queueinit() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Queue<int> q;
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_loadandunloadQueue(void) {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Queue<int> q;

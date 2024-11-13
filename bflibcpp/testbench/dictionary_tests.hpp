@@ -18,15 +18,17 @@ extern "C" {
 using namespace BF;
 
 int test_DictionaryInit() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<char *, char *> d;
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_DictionarySize() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<char *, char *> d;
@@ -35,11 +37,12 @@ int test_DictionarySize() {
 		result = 1;
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_AddingKeyValues() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<const char *, int> d;
@@ -50,11 +53,12 @@ int test_AddingKeyValues() {
 		result = d.setValueForKey("World", 2);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_GettingValueForKey() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<const char *, int> d;
@@ -73,7 +77,7 @@ int test_GettingValueForKey() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -109,6 +113,7 @@ void KeyStringValueStringRelease(const char ** key, const char ** value) {
 }
 
 int test_DictionaryRetainAndReleaseCallbacks() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<const char *, const char *> d(KeyStringCompare, KeyStringValueStringRetain, KeyStringValueStringRelease);
@@ -142,11 +147,12 @@ int test_DictionaryRetainAndReleaseCallbacks() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_RemovingEntryFromDictionary() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<const char *, const char *> d;
@@ -184,13 +190,14 @@ int test_RemovingEntryFromDictionary() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 #define TEST_DICTIONARY_PRINT 0
 #if TEST_DICTIONARY_PRINT == 1
 int test_DictionaryPrint() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<const char *, const char *> d;
@@ -219,7 +226,7 @@ int test_DictionaryPrint() {
 	if (!result)
 		d.print();
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 #endif
@@ -237,6 +244,7 @@ bool DictionaryTestStringArrayContainsString(const char ** arr, int size, const 
 }
 
 int test_TraversingThroughDictionary() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	Dictionary<String, String> d;
@@ -269,7 +277,7 @@ int test_TraversingThroughDictionary() {
 
 	Delete(itr);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
@@ -278,32 +286,18 @@ void dictionary_tests(int * pass, int * fail) {
 
 	INTRO_TEST_FUNCTION;
 
-	if (!test_DictionaryInit()) p++;
-	else f++;
-
-	if (!test_DictionarySize()) p++;
-	else f++;
-
-	if (!test_AddingKeyValues()) p++;
-	else f++;
-
-	if (!test_GettingValueForKey()) p++;
-	else f++;
-
-	if (!test_DictionaryRetainAndReleaseCallbacks()) p++;
-	else f++;
-
-	if (!test_RemovingEntryFromDictionary()) p++;
-	else f++;
+	LAUNCH_TEST(test_DictionaryInit, p, f);
+	LAUNCH_TEST(test_DictionarySize, p, f);
+	LAUNCH_TEST(test_AddingKeyValues, p, f);
+	LAUNCH_TEST(test_GettingValueForKey, p, f);
+	LAUNCH_TEST(test_DictionaryRetainAndReleaseCallbacks, p, f);
+	LAUNCH_TEST(test_RemovingEntryFromDictionary, p, f);
+	LAUNCH_TEST(test_TraversingThroughDictionary, p, f);
 
 #if TEST_DICTIONARY_PRINT == 1
-	if (!test_DictionaryPrint()) p++;
-	else f++;
+	LAUNCH_TEST(test_DictionaryPrint, p, f);
 #endif
-
-	if (!test_TraversingThroughDictionary()) p++;
-	else f++;
-
+	
 	if (pass) *pass += p;
 	if (fail) *fail += f;
 }

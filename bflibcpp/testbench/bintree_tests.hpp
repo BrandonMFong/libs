@@ -18,7 +18,7 @@
 using namespace BF;
 
 static int test_BinInitializer() {
-	PRINT_TEST_RESULTS(1);
+	UNIT_TEST_START;
 
 	BinTree<int> i;
 	BinTree<double> d;
@@ -34,11 +34,13 @@ static int test_BinInitializer() {
 	Delete(dd);
 	Delete(ff);
 	Delete(cc);
+	UNIT_TEST_END(true, 0);
 
 	return 0;
 }
 
 static int test_BinInsert() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t;
@@ -57,11 +59,12 @@ static int test_BinInsert() {
 		result = t.insert(5);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 static int test_BinMax() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t;
@@ -77,11 +80,12 @@ static int test_BinMax() {
 		printf("Max is not: %d\n", t.max());
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 static int test_BinMin() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t;
@@ -97,11 +101,12 @@ static int test_BinMin() {
 		printf("Min is not: %d\n", t.min());
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 static int test_BinNodeKnowsItsLeaf() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int>::BinNode n1;
@@ -123,11 +128,12 @@ static int test_BinNodeKnowsItsLeaf() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 static int test_BSTDelete() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t;
@@ -155,11 +161,12 @@ static int test_BSTDelete() {
 		if (result) printf("Error removing 8\n");
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_RemovingRoot() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t0;
@@ -182,11 +189,12 @@ int test_RemovingRoot() {
 		result = t2.remove(2);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_RemovingAll() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t;
@@ -209,11 +217,12 @@ int test_RemovingAll() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_ReturningLeafValues() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<int> t;
@@ -238,11 +247,12 @@ int test_ReturningLeafValues() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_BinTreeCount() {
+	UNIT_TEST_START;
 	int result = 0;
 	BinTree<int> t;
 	const int size = 100;
@@ -262,11 +272,12 @@ int test_BinTreeCount() {
 		}
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_ReplacingBinNodes() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BinTree<char> t;
@@ -307,11 +318,12 @@ int test_ReplacingBinNodes() {
 	Delete(f);
 	Delete(g);
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_SearchingBinTree() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	int target = 4;
@@ -342,11 +354,12 @@ int test_SearchingBinTree() {
 		printf("Could not find %d\n", target);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_Iterations() {
+	UNIT_TEST_START;
 	int result = 0;
 
 	// randomly add to list so we can have a better chance of a balanced tree
@@ -391,7 +404,7 @@ int test_Iterations() {
 	}
 
 	Delete(itr);
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
