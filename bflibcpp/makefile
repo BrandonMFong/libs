@@ -13,7 +13,6 @@ UNAME_S := $(shell uname -s)
 
 CONFIG = release
 CPPSTD = -std=c++20
-PACKAGE_NAME = bflibcpp 
 BUILD_PATH = build/$(CONFIG)
 BIN_PATH = bin/$(CONFIG)
 
