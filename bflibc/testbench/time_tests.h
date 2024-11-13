@@ -77,6 +77,7 @@ int test_GettingLocalTime(void) {
 }
 
 int test_GettingDateTime(void) {
+	UNIT_TEST_START;
 	int result = 0;
 
 	BFTime n = BFTimeGetCurrentTime();
@@ -112,7 +113,7 @@ int test_GettingDateTime(void) {
 		printf("Error: %d\n", result);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 

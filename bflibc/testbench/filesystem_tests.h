@@ -20,6 +20,7 @@
 #include <unistd.h>
 
 int test_HomePath(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char * home = BFFileSystemPathCopyHomePath(&result);
 
@@ -35,11 +36,12 @@ int test_HomePath(void) {
 
 	free(home);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_CalculateSizeForAvailability(void) {
+	UNIT_TEST_START;
 	int result = 0;
 
 	char * home = BFFileSystemPathCopyHomePath(&result);
@@ -58,11 +60,12 @@ int test_CalculateSizeForAvailability(void) {
 
 	BFFree(home);
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_GetFileExtensionForPath(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char buf[100];
 
@@ -89,11 +92,13 @@ int test_GetFileExtensionForPath(void) {
 		result = strcmp(buf, "");
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
+
 	return result;
 }
 
 int test_tmpdir(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char tmpdir[PATH_MAX];
 	result = BFFileSystemGetOSTempDirectory(tmpdir);
@@ -101,11 +106,12 @@ int test_tmpdir(void) {
 	if (result == 0) {
 		if (!strlen(tmpdir)) result = 2;
 	}
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_GettingNameWithoutExtension() {
+	UNIT_TEST_START;
 	int result = 0;
 	char buf[PATH_MAX];
 
@@ -124,11 +130,12 @@ int test_GettingNameWithoutExtension() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_GettingLeafComponent() {
+	UNIT_TEST_START;
 	int result = 0;
 	char buf[PATH_MAX];
 
@@ -147,12 +154,12 @@ int test_GettingLeafComponent() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
-
 }
 
 int test_GettingFullname() {
+	UNIT_TEST_START;
 	int result = 0;
 	char buf[PATH_MAX];
 
@@ -171,11 +178,12 @@ int test_GettingFullname() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_RemoveFullDirectory(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char tmpdir[PATH_MAX];
 	char file[PATH_MAX];
@@ -220,11 +228,12 @@ int test_RemoveFullDirectory(void) {
 		printf("could not remove: %s\n", tmpdir);
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_directoryWithAPeriod(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char tmpdir[PATH_MAX];
 
@@ -249,7 +258,7 @@ int test_directoryWithAPeriod(void) {
 		printf("could not remove: %s\n", tmpdir);
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 void filesystem_tests(int * pass, int * fail) {

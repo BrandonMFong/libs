@@ -44,5 +44,8 @@ LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 
+build-bftest:
+	cd ../bftest && make clean && make build && make build CONFIG=debug
+
 include ../makefiles/build.mk 
 

@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 int test_DoesStringArrayContain(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
@@ -35,12 +36,13 @@ int test_DoesStringArrayContain(void) {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
 }
 
 int test_GetByteStringRepresentationUsingKilo(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char buf[20];
 
@@ -55,12 +57,13 @@ int test_GetByteStringRepresentationUsingKilo(void) {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
 }
 
 int test_GetByteStringRepresentationUsingKibi(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	char buf[20];
 
@@ -75,13 +78,13 @@ int test_GetByteStringRepresentationUsingKibi(void) {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 
 	return result;
-
 }
 
 int test_CreateBinaryStringFromNumber() {
+	UNIT_TEST_START;
 	int result = 0;
 	char * string = 0;
 	unsigned char a = 0x00;
@@ -113,11 +116,12 @@ int test_CreateBinaryStringFromNumber() {
 		free(string);
 	}
 	
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
 int test_IndexOfStringInArray() {
+	UNIT_TEST_START;
 	int result = 0;
 	int index = 0;
 	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
@@ -144,7 +148,7 @@ int test_IndexOfStringInArray() {
 		}
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 

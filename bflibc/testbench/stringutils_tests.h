@@ -16,6 +16,7 @@
 #include <uuid/uuid.h>
 
 int test_CopyString(void) {
+	UNIT_TEST_START;
 	int result = 0;
 	const char * string = "Hello world!";
 	int error = 0;
@@ -36,7 +37,7 @@ int test_CopyString(void) {
 		free(output);
 	}
 
-	PRINT_TEST_RESULTS(!result);
+	UNIT_TEST_END(!result, result);
 	return result;
 }
 
