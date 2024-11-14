@@ -150,18 +150,15 @@ int test_destroyLockThatIsWaiting() {
 
 }
 
-void lock_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(lock_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
+	LAUNCH_TEST(test_CreatingBFLock);
+	LAUNCH_TEST(test_CreatingTimedWaitLock);
+	LAUNCH_TEST(test_waitinglock);
+	LAUNCH_TEST(test_destroyLockThatIsWaiting);
 
-	LAUNCH_TEST(test_CreatingBFLock, p, f);
-	LAUNCH_TEST(test_CreatingTimedWaitLock, p, f);
-	LAUNCH_TEST(test_waitinglock, p, f);
-	LAUNCH_TEST(test_destroyLockThatIsWaiting, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // LOCK_TESTS_H

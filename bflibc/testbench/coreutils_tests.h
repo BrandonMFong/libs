@@ -152,19 +152,16 @@ int test_IndexOfStringInArray() {
 	return result;
 }
 
-void coreutils_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(coreutils_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_DoesStringArrayContain, p, f);
-	LAUNCH_TEST(test_CreateBinaryStringFromNumber, p, f);
-	LAUNCH_TEST(test_IndexOfStringInArray, p, f);
-	LAUNCH_TEST(test_GetByteStringRepresentationUsingKibi, p, f);
-	LAUNCH_TEST(test_GetByteStringRepresentationUsingKilo, p, f);
+	LAUNCH_TEST(test_DoesStringArrayContain);
+	LAUNCH_TEST(test_CreateBinaryStringFromNumber);
+	LAUNCH_TEST(test_IndexOfStringInArray);
+	LAUNCH_TEST(test_GetByteStringRepresentationUsingKibi);
+	LAUNCH_TEST(test_GetByteStringRepresentationUsingKilo);
 	
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // COREUTILS_TESTS_H

@@ -82,18 +82,15 @@ int test_checksumSHA512() {
 	return result;
 }
 
-void checksum_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(checksum_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_checksumMD5, p, f);
-	LAUNCH_TEST(test_checksumSHA1, p, f);
-	LAUNCH_TEST(test_checksumSHA256, p, f);
-	LAUNCH_TEST(test_checksumSHA512, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	LAUNCH_TEST(test_checksumMD5);
+	LAUNCH_TEST(test_checksumSHA1);
+	LAUNCH_TEST(test_checksumSHA256);
+	LAUNCH_TEST(test_checksumSHA512);
+	
+	TEST_COVERAGE_END;
 }
 
 #endif // CHECKSUM_TESTS_H

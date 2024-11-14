@@ -377,10 +377,8 @@ int test_filetruncation() {
 	return result;
 }
 
-void filewriter_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+TEST_COVERAGE_FUNC(filewriter_tests) {
+	TEST_COVERAGE_START;
 
 	BFThreadResetStartedCount();
 	BFThreadResetStoppedCount();
@@ -389,19 +387,18 @@ void filewriter_tests(int * pass, int * fail) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	LAUNCH_TEST(test_creatingfilewriter, p, f);
-	LAUNCH_TEST(test_writingwithfilewriter, p, f);
-	LAUNCH_TEST(test_writingfromdifferentthreads, p, f);
-	LAUNCH_TEST(test_writingwithformat, p, f);
-	LAUNCH_TEST(test_filewritingisappending, p, f);
-	LAUNCH_TEST(test_filetruncation, p, f);
+	LAUNCH_TEST(test_creatingfilewriter);
+	LAUNCH_TEST(test_writingwithfilewriter);
+	LAUNCH_TEST(test_writingfromdifferentthreads);
+	LAUNCH_TEST(test_writingwithformat);
+	LAUNCH_TEST(test_filewritingisappending);
+	LAUNCH_TEST(test_filetruncation);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // FILE_WRITER_TESTS_H

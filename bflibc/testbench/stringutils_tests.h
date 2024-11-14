@@ -280,21 +280,18 @@ int test_byteArrayToHexString() {
 	return result;
 }
 
-void stringutils_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(stringutils_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
+	LAUNCH_TEST(test_CopyString);
+	LAUNCH_TEST(test_uuidGen);
+	LAUNCH_TEST(test_readingFile);
+	LAUNCH_TEST(test_creatingstringfromformat);
+	LAUNCH_TEST(test_uuidcompare);
+	LAUNCH_TEST(test_makingarrayfromstring);
+	LAUNCH_TEST(test_byteArrayToHexString);
 
-	LAUNCH_TEST(test_CopyString, p, f);
-	LAUNCH_TEST(test_uuidGen, p, f);
-	LAUNCH_TEST(test_readingFile, p, f);
-	LAUNCH_TEST(test_creatingstringfromformat, p, f);
-	LAUNCH_TEST(test_uuidcompare, p, f);
-	LAUNCH_TEST(test_makingarrayfromstring, p, f);
-	LAUNCH_TEST(test_byteArrayToHexString, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // STRINGUTILS_TESTS_H

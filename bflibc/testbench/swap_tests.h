@@ -41,15 +41,12 @@ int test_swapping(void) {
 	return result;
 }
 
-void swap_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(swap_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
+	LAUNCH_TEST(test_swapping);
 
-	LAUNCH_TEST(test_swapping, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // SWAP_TESTS_H

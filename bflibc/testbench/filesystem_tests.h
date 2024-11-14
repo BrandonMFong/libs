@@ -261,23 +261,21 @@ int test_directoryWithAPeriod(void) {
 	UNIT_TEST_END(!result, result);
 	return result;
 }
-void filesystem_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
 
-	INTRO_TEST_FUNCTION;
+TEST_COVERAGE_FUNC(filesystem_tests) {
+	TEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_HomePath, p, f);
-	LAUNCH_TEST(test_CalculateSizeForAvailability, p, f);
-	LAUNCH_TEST(test_GetFileExtensionForPath, p, f);
-	LAUNCH_TEST(test_RemoveFullDirectory, p, f);
-	LAUNCH_TEST(test_tmpdir, p, f);
-	LAUNCH_TEST(test_GettingNameWithoutExtension, p, f);
-	LAUNCH_TEST(test_GettingFullname, p, f);
-	LAUNCH_TEST(test_GettingLeafComponent, p, f);
-	LAUNCH_TEST(test_directoryWithAPeriod, p, f);
+	LAUNCH_TEST(test_HomePath);
+	LAUNCH_TEST(test_CalculateSizeForAvailability);
+	LAUNCH_TEST(test_GetFileExtensionForPath);
+	LAUNCH_TEST(test_RemoveFullDirectory);
+	LAUNCH_TEST(test_tmpdir);
+	LAUNCH_TEST(test_GettingNameWithoutExtension);
+	LAUNCH_TEST(test_GettingFullname);
+	LAUNCH_TEST(test_GettingLeafComponent);
+	LAUNCH_TEST(test_directoryWithAPeriod);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // CLIB_TESTS_H

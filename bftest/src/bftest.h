@@ -27,22 +27,21 @@
 #define TEST_COVERAGE_FUNC(foo) \
 	void foo (int * pass, int * fail)
 
-//#define INTRO_TEST_FUNCTION printf("---- %s started ----\n", __func__)
 #define TEST_COVERAGE_START \
 	printf("---- %s started ----\n", __func__);\
 	int p = 0, f = 0;
+
+/**
+ * each function should take no params and return 0 on success
+ */
+#define LAUNCH_TEST(foo) \
+	if (!foo()) p++; \
+	else f++;
 
 #define TEST_COVERAGE_END \
 	if (pass) *pass += p;\
 	if (fail) *fail += f;\
 	printf("---- %s ended [+ %d, - %d] ----\n", __func__, *pass, *fail);
-
-/**
- * each function should take no params and return 0 on success
- */
-#define LAUNCH_TEST(foo, p, f) \
-	if (!foo()) p++; \
-	else f++;
 
 /** UNIT TEST **/
 #define UNIT_TEST_START \

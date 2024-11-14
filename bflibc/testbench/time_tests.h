@@ -167,23 +167,20 @@ int time_bftimesleep0(void) {
 	return result;
 }
 
-void time_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(time_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
+	LAUNCH_TEST(test_GettingTime);
+	LAUNCH_TEST(test_GettingDateTime);
+	LAUNCH_TEST(test_GettingUTCTime);
+	LAUNCH_TEST(test_GettingLocalTime);
+	LAUNCH_TEST(time_bftimesleep);
+	LAUNCH_TEST(time_bftimesleep0);
+	LAUNCH_TEST(time_bftimesleepmicro);
+	LAUNCH_TEST(time_bftimesleepmilli);
+	LAUNCH_TEST(time_bftimesleepsecondswithmicro);
 
-	LAUNCH_TEST(test_GettingTime, p, f);
-	LAUNCH_TEST(test_GettingDateTime, p, f);
-	LAUNCH_TEST(test_GettingUTCTime, p, f);
-	LAUNCH_TEST(test_GettingLocalTime, p, f);
-	LAUNCH_TEST(time_bftimesleep, p, f);
-	LAUNCH_TEST(time_bftimesleep0, p, f);
-	LAUNCH_TEST(time_bftimesleepmicro, p, f);
-	LAUNCH_TEST(time_bftimesleepmilli, p, f);
-	LAUNCH_TEST(time_bftimesleepsecondswithmicro, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // TIME_TESTS_H

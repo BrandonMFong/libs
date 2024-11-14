@@ -294,23 +294,20 @@ int test_threadwait() {
 	return result;
 }
 
-void thread_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+TEST_COVERAGE_FUNC(thread_tests) {
+	TEST_COVERAGE_START;
 
-	INTRO_TEST_FUNCTION;
+	LAUNCH_TEST(test_CreatingThreadSync);
+	LAUNCH_TEST(test_CreatingThreadAsync);
+	LAUNCH_TEST(test_WaitingOnThreadLock);
+	LAUNCH_TEST(test_LockAndUnlock);
+	LAUNCH_TEST(test_ReleasingAsyncID);
+	LAUNCH_TEST(test_CancelingAsyncThread);
+	LAUNCH_TEST(test_CancelingAsyncThreadThatHasAlreadyFinished);
+	LAUNCH_TEST(test_threadCount);
+	LAUNCH_TEST(test_threadwait);
 
-	LAUNCH_TEST(test_CreatingThreadSync, p, f);
-	LAUNCH_TEST(test_CreatingThreadAsync, p, f);
-	LAUNCH_TEST(test_WaitingOnThreadLock, p, f);
-	LAUNCH_TEST(test_LockAndUnlock, p, f);
-	LAUNCH_TEST(test_ReleasingAsyncID, p, f);
-	LAUNCH_TEST(test_CancelingAsyncThread, p, f);
-	LAUNCH_TEST(test_CancelingAsyncThreadThatHasAlreadyFinished, p, f);
-	LAUNCH_TEST(test_threadCount, p, f);
-	LAUNCH_TEST(test_threadwait, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // THREAD_TESTS_H
