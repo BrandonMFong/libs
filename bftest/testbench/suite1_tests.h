@@ -36,7 +36,7 @@ BFTEST_UNIT_FUNC(test_assertfailureWithMessage) {
 
 	sleep(1);
 
-	const char * msg = "hello failure!";
+	const char * msg = "this is a failure";
 	BF_ASSERT(false, "%s", msg);
 
 	exit(1); // should never reach here

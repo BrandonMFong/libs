@@ -70,6 +70,13 @@
 #define BFTEST_UNIT_FUNC(foo) \
 	int foo (void)
 
+/**
+ * `result` is defined here and can be used in unit test functions
+ * it is advisable to refrain from setting `result` and use
+ * `BF_ASSERT`
+ *
+ * NOTE: using `result` is scheduled to be deprecated
+ */
 #define BFTEST_UNIT_START \
 	printf("%s - ", __func__);\
 	fflush(stdout);\
@@ -79,28 +86,33 @@
 	if (result == 0) { printf("PASS\n"); }\
 	else {\
 		printf("FAIL\n");\
-		_BFTestLogFlush(__func__);\
+		_BFTestLogFlush();\
 	}\
 	return result;
 
 #define BF_ASSERT(expr, ...) \
 	if (!(expr)) {\
 		result = -1;\
-		_BFTestLogPush("" __VA_ARGS__);\
+		_BFTestLogPush(__FILE__, __LINE__, "" __VA_ARGS__);\
 		BFTEST_UNIT_END; \
 	}
 
 /**
  * adds a message to the test log
  */
-void _BFTestLogPush(const char * format, ...);
+void _BFTestLogPush(
+	const char * filename,
+	int line,
+	const char * format,
+	...
+);
 
 /**
  * dumps all test log entries
  *
  * assumes all logs are error messages
  */
-void _BFTestLogFlush(const char * suffix);
+void _BFTestLogFlush();
 
 #endif // BF_TEST_H
 
