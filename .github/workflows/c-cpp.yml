@@ -13,6 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: test
+      run: |
+        cd bflibc;
+        make clean build CONFIG=test run
+
     - name: build
       run: |
         cd bflibc;
