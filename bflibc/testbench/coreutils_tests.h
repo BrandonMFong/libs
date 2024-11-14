@@ -12,7 +12,8 @@
 #include <string.h>
 #include <stdio.h>
 
-int test_DoesStringArrayContain(void) {
+//int test_DoesStringArrayContain(void) {
+BFTEST_UNIT_FUNC(test_DoesStringArrayContain) {
 	BFTEST_UNIT_START;
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
@@ -38,7 +39,8 @@ int test_DoesStringArrayContain(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_GetByteStringRepresentationUsingKilo(void) {
+//int test_GetByteStringRepresentationUsingKilo(void) {
+BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKilo) {
 	BFTEST_UNIT_START;
 	char buf[20];
 
@@ -56,7 +58,8 @@ int test_GetByteStringRepresentationUsingKilo(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_GetByteStringRepresentationUsingKibi(void) {
+//int test_GetByteStringRepresentationUsingKibi(void) {
+BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKibi) {
 	BFTEST_UNIT_START;
 	char buf[20];
 

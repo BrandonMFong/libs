@@ -15,7 +15,8 @@
 #include <stdio.h>
 #include <uuid/uuid.h>
 
-int test_CopyString(void) {
+//int test_CopyString(void) {
+BFTEST_UNIT_FUNC(test_CopyString) {
 	BFTEST_UNIT_START;
 	const char * string = "Hello world!";
 	int error = 0;
@@ -39,7 +40,8 @@ int test_CopyString(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_uuidGen(void) {
+//int test_uuidGen(void) {
+BFTEST_UNIT_FUNC(test_uuidGen) {
 	BFTEST_UNIT_START;
 
 	const long lim = (long) 2 << 16;
@@ -81,7 +83,8 @@ void TestStringUtilsRandomFileDelete() {
 	remove(TEST_STRINGUTILS_RANDOM_FILE);
 }
 
-int test_readingFile(void) {
+//int test_readingFile(void) {
+BFTEST_UNIT_FUNC(test_readingFile) {
 	BFTEST_UNIT_START;
 
 	TestStringUtilsRandomFileCreate();
@@ -127,7 +130,8 @@ endloop:
 	BFTEST_UNIT_END;
 }
 
-int test_uuidcompare(void) {
+//int test_uuidcompare(void) {
+BFTEST_UNIT_FUNC(test_uuidcompare) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 1;
@@ -176,7 +180,8 @@ int test_uuidcompare(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_creatingstringfromformat(void) {
+//int test_creatingstringfromformat(void) {
+BFTEST_UNIT_FUNC(test_creatingstringfromformat) {
 	BFTEST_UNIT_START;
 
 	int numstr = 2 << 20;
@@ -196,7 +201,8 @@ int test_creatingstringfromformat(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_makingarrayfromstring() {
+//int test_makingarrayfromstring() {
+BFTEST_UNIT_FUNC(test_makingarrayfromstring) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 20;
@@ -238,7 +244,8 @@ int test_makingarrayfromstring() {
 	BFTEST_UNIT_END;
 }
 
-int test_byteArrayToHexString() {
+//int test_byteArrayToHexString() {
+BFTEST_UNIT_FUNC(test_byteArrayToHexString) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 20;

@@ -18,7 +18,8 @@ void CreatingThreadSyncRun(void * in) {
 	}
 }
 
-int test_CreatingThreadSync(void) {
+//int test_CreatingThreadSync(void) {
+BFTEST_UNIT_FUNC(test_CreatingThreadSync) {
 	BFTEST_UNIT_START;
 
 	bool threadRan = false;
@@ -31,7 +32,8 @@ int test_CreatingThreadSync(void) {
 
 void CreatingThreadAsyncRun(void * in) {}
 
-int test_CreatingThreadAsync(void) {
+//int test_CreatingThreadAsync(void) {
+BFTEST_UNIT_FUNC(test_CreatingThreadAsync) {
 	BFTEST_UNIT_START;
 
 	BFThreadAsyncID id = BFThreadAsync(CreatingThreadAsyncRun, NULL);
@@ -49,7 +51,8 @@ void WaitingOnThreadLockRun(void * in) {
 	if (error) printf("\n%d\n", error);
 }
 
-int test_WaitingOnThreadLock(void) {
+//int test_WaitingOnThreadLock(void) {
+BFTEST_UNIT_FUNC(test_WaitingOnThreadLock) {
 	BFTEST_UNIT_START;
 	BFThreadAsyncID id = 0;
 	BFLock lock;
@@ -88,7 +91,8 @@ void LockAndUnlock(void * in) {
 	}
 }
 
-int test_LockAndUnlock(void) {
+//int test_LockAndUnlock(void) {
+BFTEST_UNIT_FUNC(test_LockAndUnlock) {
 	BFTEST_UNIT_START;
 	BFThreadAsyncID tid1, tid2;
 	LockAndUnlockArgs args1, args2;
@@ -145,7 +149,8 @@ void ReleasingAsyncRun(void * in) {
 	}
 }
 
-int test_ReleasingAsyncID(void) {
+//int test_ReleasingAsyncID(void) {
+BFTEST_UNIT_FUNC(test_ReleasingAsyncID) {
 	BFTEST_UNIT_START;
 	BFLock lock;
 	result = BFLockCreate(&lock);
@@ -173,7 +178,8 @@ void CancelingAsyncThreadRun(void * in) {
 	}
 }
 
-int test_CancelingAsyncThread(void) {
+//int test_CancelingAsyncThread(void) {
+BFTEST_UNIT_FUNC(test_CancelingAsyncThread) {
 	BFTEST_UNIT_START;
 	bool flag = false;
 
@@ -194,7 +200,8 @@ int test_CancelingAsyncThread(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_CancelingAsyncThreadThatHasAlreadyFinished() {
+//int test_CancelingAsyncThreadThatHasAlreadyFinished() {
+BFTEST_UNIT_FUNC(test_CancelingAsyncThreadThatHasAlreadyFinished) {
 	BFTEST_UNIT_START;
 	bool flag = false;
 
@@ -221,7 +228,8 @@ int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 
 void TestThreadCountThread(void * in) { }
 
-int test_threadCount() {
+//int test_threadCount() {
+BFTEST_UNIT_FUNC(test_threadCount) {
 	BFTEST_UNIT_START;
 	
 	BFThreadResetStartedCount();
@@ -252,7 +260,8 @@ void TestThreadWait(void * in) {
 	usleep(20000);
 }
 
-int test_threadwait() {
+//int test_threadwait() {
+BFTEST_UNIT_FUNC(test_threadwait) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 4;

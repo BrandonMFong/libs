@@ -13,7 +13,8 @@
 
 #define FILE_WRITER_FILE_PATH "/tmp/filewriter_test.txt"
 
-int test_creatingfilewriter(void) {
+//int test_creatingfilewriter(void) {
+BFTEST_UNIT_FUNC(test_creatingfilewriter) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
@@ -36,7 +37,8 @@ int test_creatingfilewriter(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_writingwithfilewriter(void) {
+//int test_writingwithfilewriter(void) {
+BFTEST_UNIT_FUNC(test_writingwithfilewriter) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
@@ -117,7 +119,8 @@ void TestFileWriterThreads(void * in) {
 	BFFileWriterFlush(tools->fw);
 }
 
-int test_writingfromdifferentthreads(void) {
+//int test_writingfromdifferentthreads(void) {
+BFTEST_UNIT_FUNC(test_writingfromdifferentthreads) {
 	BFTEST_UNIT_START;
 	const int lines2write = 2 << 8;
 
@@ -186,7 +189,8 @@ int test_writingfromdifferentthreads(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_writingwithformat(void) {
+//int test_writingwithformat(void) {
+BFTEST_UNIT_FUNC(test_writingwithformat) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
@@ -245,7 +249,8 @@ int test_writingwithformat(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_filewritingisappending() {
+//int test_filewritingisappending() {
+BFTEST_UNIT_FUNC(test_filewritingisappending) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 3;
@@ -306,7 +311,8 @@ int test_filewritingisappending() {
 	BFTEST_UNIT_END;
 }
 
-int test_filetruncation() {
+//int test_filetruncation() {
+BFTEST_UNIT_FUNC(test_filetruncation) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 4;

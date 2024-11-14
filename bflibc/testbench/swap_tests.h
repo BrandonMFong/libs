@@ -9,7 +9,8 @@
 #include "clib_tests.h"
 #include "swap.h"
 
-int test_swapping(void) {
+//int test_swapping(void) {
+BFTEST_UNIT_FUNC(test_swapping) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 21;

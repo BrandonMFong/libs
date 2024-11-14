@@ -9,7 +9,8 @@
 #include "clib_tests.h"
 #include "lock.h"
 
-int test_CreatingBFLock(void) {
+//int test_CreatingBFLock(void) {
+BFTEST_UNIT_FUNC(test_CreatingBFLock) {
 	BFTEST_UNIT_START;
 
 	BFLock lock;
@@ -24,7 +25,8 @@ int test_CreatingBFLock(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_CreatingTimedWaitLock(void) {
+//int test_CreatingTimedWaitLock(void) {
+BFTEST_UNIT_FUNC(test_CreatingTimedWaitLock) {
 	BFTEST_UNIT_START;
 
 	BFLock lock;
@@ -62,7 +64,8 @@ void thread_test_waitinglock(void * in) {
 	BFLockRelease(&st->lock);
 }
 
-int test_waitinglock() {
+//int test_waitinglock() {
+BFTEST_UNIT_FUNC(test_waitinglock) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
@@ -107,7 +110,8 @@ void thread_test_destroyLockThatIsWaiting(void * in) {
 	st->ran = true;
 }
 
-int test_destroyLockThatIsWaiting() {
+//int test_destroyLockThatIsWaiting() {
+BFTEST_UNIT_FUNC(test_destroyLockThatIsWaiting) {
 	BFTEST_UNIT_START;
 
 	int max = 2 << 14;

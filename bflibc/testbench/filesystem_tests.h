@@ -19,7 +19,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int test_HomePath(void) {
+//int test_HomePath(void) {
+BFTEST_UNIT_FUNC(test_HomePath) {
 	BFTEST_UNIT_START;
 	char * home = BFFileSystemPathCopyHomePath(&result);
 
@@ -38,7 +39,8 @@ int test_HomePath(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_CalculateSizeForAvailability(void) {
+//int test_CalculateSizeForAvailability(void) {
+BFTEST_UNIT_FUNC(test_CalculateSizeForAvailability) {
 	BFTEST_UNIT_START;
 
 	char * home = BFFileSystemPathCopyHomePath(&result);
@@ -60,7 +62,8 @@ int test_CalculateSizeForAvailability(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_GetFileExtensionForPath(void) {
+//int test_GetFileExtensionForPath(void) {
+BFTEST_UNIT_FUNC(test_GetFileExtensionForPath) {
 	BFTEST_UNIT_START;
 	char buf[100];
 
@@ -90,7 +93,8 @@ int test_GetFileExtensionForPath(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_tmpdir(void) {
+//int test_tmpdir(void) {
+BFTEST_UNIT_FUNC(test_tmpdir) {
 	BFTEST_UNIT_START;
 	char tmpdir[PATH_MAX];
 	result = BFFileSystemGetOSTempDirectory(tmpdir);
@@ -101,7 +105,8 @@ int test_tmpdir(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_GettingNameWithoutExtension() {
+//int test_GettingNameWithoutExtension() {
+BFTEST_UNIT_FUNC(test_GettingNameWithoutExtension) {
 	BFTEST_UNIT_START;
 	char buf[PATH_MAX];
 
@@ -123,7 +128,8 @@ int test_GettingNameWithoutExtension() {
 	BFTEST_UNIT_END;
 }
 
-int test_GettingLeafComponent() {
+//int test_GettingLeafComponent() {
+BFTEST_UNIT_FUNC(test_GettingLeafComponent) {
 	BFTEST_UNIT_START;
 	char buf[PATH_MAX];
 
@@ -145,7 +151,8 @@ int test_GettingLeafComponent() {
 	BFTEST_UNIT_END;
 }
 
-int test_GettingFullname() {
+//int test_GettingFullname() {
+BFTEST_UNIT_FUNC(test_GettingFullname) {
 	BFTEST_UNIT_START;
 	char buf[PATH_MAX];
 
@@ -167,7 +174,8 @@ int test_GettingFullname() {
 	BFTEST_UNIT_END;
 }
 
-int test_RemoveFullDirectory(void) {
+//int test_RemoveFullDirectory(void) {
+BFTEST_UNIT_FUNC(test_RemoveFullDirectory) {
 	BFTEST_UNIT_START;
 	char tmpdir[PATH_MAX];
 	char file[PATH_MAX];
@@ -215,7 +223,8 @@ int test_RemoveFullDirectory(void) {
 	BFTEST_UNIT_END;
 }
 
-int test_directoryWithAPeriod(void) {
+//int test_directoryWithAPeriod(void) {
+BFTEST_UNIT_FUNC(test_directoryWithAPeriod) {
 	BFTEST_UNIT_START;
 	char tmpdir[PATH_MAX];
 
