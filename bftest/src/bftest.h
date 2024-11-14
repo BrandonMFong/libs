@@ -62,8 +62,11 @@
 #define BF_ASSERT(expr, ...) \
 	if (!(expr)) {\
 		result = -1;\
+		BFTestLogPush(__VA_ARGS__);\
 		UNIT_TEST_END \
 	}
+
+void BFTestLogPush(const char * format, ...);
 
 #endif // BF_TEST_H
 

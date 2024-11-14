@@ -4,3 +4,11 @@
  */
 
 #include "bftest.h"
+#include <stdarg.h>
+
+void BFTestLogPush(const char * format, ...) {
+	va_list valist;
+	va_start(valist, format);
+	va_end(valist);
+}
+
