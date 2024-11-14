@@ -16,7 +16,7 @@ jobs:
     - name: test
       run: |
         cd bflibc;
-        make clean build CONFIG=test run
+        make dependencies clean build CONFIG=test run
 
     - name: build
       run: |
