@@ -369,10 +369,9 @@ int test_releasecallback() {
 	return result;
 }
 
-void array_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void array_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(array_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_Initializer, p, f);
 	LAUNCH_TEST(test_Contains, p, f);
@@ -385,8 +384,7 @@ void array_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_releasecallback, p, f);
 	LAUNCH_TEST(test_addanddelete, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // ARRAY_TESTS_HPP

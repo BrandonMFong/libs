@@ -435,10 +435,9 @@ int test_getNodeForObject(void) {
 	return result;
 }
 
-void bintree_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void bintree_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(bintree_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_BinInitializer, p, f);
 	LAUNCH_TEST(test_BinInsert, p, f);
@@ -455,8 +454,7 @@ void bintree_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_Iterations, p, f);
 	LAUNCH_TEST(test_getNodeForObject, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // BINTREE_TESTS_HPP

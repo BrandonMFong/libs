@@ -256,18 +256,16 @@ int test_directory() {
 	return result;
 }
 
-void file_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void file_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(file_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_filePath, p, f);
 	LAUNCH_TEST(test_basename, p, f);
 	LAUNCH_TEST(test_extension, p, f);
 	LAUNCH_TEST(test_directory, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // FILE_TESTS_HPP

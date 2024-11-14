@@ -99,17 +99,15 @@ int test_objectshallowcopy() {
 	return result;
 }
 
-void object_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+//void object_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(object_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_objectinit, p, f);
 	LAUNCH_TEST(test_objectretainer, p, f);
 	LAUNCH_TEST(test_objectshallowcopy, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // BF_OBJECT_TESTS_HPP

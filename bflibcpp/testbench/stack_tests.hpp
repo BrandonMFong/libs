@@ -221,10 +221,9 @@ int test_LoadAndUnloadStrings() {
 	return result;
 }
 
-void stack_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+//void stack_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(stack_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_StackInit, p, f);
 	LAUNCH_TEST(test_StackPush, p, f);
@@ -234,8 +233,7 @@ void stack_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_LoadAndUnload, p, f);
 	LAUNCH_TEST(test_LoadAndUnloadStrings, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // STACK_TESTS_HPP

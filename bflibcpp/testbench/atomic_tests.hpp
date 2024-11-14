@@ -247,10 +247,9 @@ int test_comparingObjectWithAnother() {
 	return result;
 }
 
-void atomic_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+//void atomic_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(atomic_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_atomicinit, p, f);
 	LAUNCH_TEST(test_atomisetandget, p, f);
@@ -262,8 +261,7 @@ void atomic_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_changingvaluebyreference, p, f);
 	LAUNCH_TEST(test_comparingObjectWithAnother, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // ATOMIC_TESTS_HPP

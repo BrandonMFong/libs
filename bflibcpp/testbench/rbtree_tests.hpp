@@ -792,10 +792,9 @@ int test_insertingStrings(void) {
 	return result;
 }
 
-void rbtree_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void rbtree_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(rbtree_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_RBInitializer,p, f);
 	LAUNCH_TEST(test_AccessingNodeHierarchy,p, f);
@@ -814,8 +813,7 @@ void rbtree_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_SearchingRBTree,p, f);
 	LAUNCH_TEST(test_insertingStrings,p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // RBTREE_TESTS_HPP

@@ -3,6 +3,7 @@
  * date: 6/30/22
  */
 
+#include "cpplib_tests.hpp"
 #include "array_tests.hpp"
 #include "list_tests.hpp"
 #include "file_tests.hpp"

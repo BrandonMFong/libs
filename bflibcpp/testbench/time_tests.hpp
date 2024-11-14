@@ -82,16 +82,14 @@ int test_TimeBasicOperations() {
 	return result;
 }
 
-void time_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void time_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(time_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_TimeInit, p, f);
 	LAUNCH_TEST(test_TimeBasicOperations, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // TIME_TESTS_HPP

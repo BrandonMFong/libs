@@ -309,10 +309,9 @@ int test_dataByRef() {
 	return result;
 }
 
-void data_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+//void data_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(data_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_datainit, p, f);
 	LAUNCH_TEST(test_clearData, p, f);
@@ -324,8 +323,7 @@ void data_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_emptyStringDataLength, p, f);
 	LAUNCH_TEST(test_dataByRef, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // DATA_TESTS_HPP

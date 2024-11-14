@@ -53,16 +53,14 @@ int test_loadandunloadQueue(void) {
 	return result;
 }
 
-void queue_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+//void queue_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(queue_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_queueinit, p, f);
 	LAUNCH_TEST(test_loadandunloadQueue, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // QUEUE_TESTS_HPP 

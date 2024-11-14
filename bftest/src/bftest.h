@@ -10,19 +10,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/** TEST SUITE **/
 #define TEST_SUITE_START \
 	int pass = 0, fail = 0;\
 	float tp = 0, tf = 0;
 
 #define TEST_SUITE_LAUNCH(foo) \
 	foo(&pass, &fail);\
-	printf("[+ %d, - %d]\n", pass, fail);\
 	tp += pass; tf += fail;\
 	pass = 0; fail = 0;
  
 #define TEST_SUITE_END printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));
 
-#define INTRO_TEST_FUNCTION printf("---- %s started ----\n", __func__)
+/** TEST COVERAGE **/
+
+#define TEST_COVERAGE_FUNC(foo) \
+	void foo (int * pass, int * fail)
+
+//#define INTRO_TEST_FUNCTION printf("---- %s started ----\n", __func__)
+#define TEST_COVERAGE_START \
+	printf("---- %s started ----\n", __func__);\
+	int p = 0, f = 0;
+
+#define TEST_COVERAGE_END \
+	if (pass) *pass += p;\
+	if (fail) *fail += f;\
+	printf("---- %s ended [+ %d, - %d] ----\n", __func__, *pass, *fail);
 
 /**
  * each function should take no params and return 0 on success
@@ -31,6 +44,7 @@
 	if (!foo()) p++; \
 	else f++;
 
+/** UNIT TEST **/
 #define UNIT_TEST_START \
 	printf("%s - ", __func__);\
 	fflush(stdout);

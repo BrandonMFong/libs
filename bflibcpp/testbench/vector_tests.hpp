@@ -128,10 +128,9 @@ int test_vectorArraySortMerge() {
 	return result;
 }
 
-void vector_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+//void vector_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(vector_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_vectorListSortBubble, p, f);
 	LAUNCH_TEST(test_vectorListSortInsertion, p, f);
@@ -144,8 +143,7 @@ void vector_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_vectorArraySortQuick, p, f);
 	LAUNCH_TEST(test_vectorArraySortMerge, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // VECTOR_TESTS_HPP

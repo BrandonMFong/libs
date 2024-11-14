@@ -481,10 +481,9 @@ int test_data2string() {
 	return result;
 }
 
-void string_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void string_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(string_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_StringInit, p, f);
 	LAUNCH_TEST(test_comparingString, p, f);
@@ -504,8 +503,7 @@ void string_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_readingFromFile, p, f);
 	LAUNCH_TEST(test_data2string, p, f);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // STRING_TESTS_HPP

@@ -281,10 +281,9 @@ int test_TraversingThroughDictionary() {
 	return result;
 }
 
-void dictionary_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
+//void dictionary_tests(int * pass, int * fail) {
+TEST_COVERAGE_FUNC(dictionary_tests) {
+	TEST_COVERAGE_START;
 
 	LAUNCH_TEST(test_DictionaryInit, p, f);
 	LAUNCH_TEST(test_DictionarySize, p, f);
@@ -298,8 +297,7 @@ void dictionary_tests(int * pass, int * fail) {
 	LAUNCH_TEST(test_DictionaryPrint, p, f);
 #endif
 	
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // DICTIONARY_TESTS_HPP
