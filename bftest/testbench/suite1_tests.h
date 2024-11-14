@@ -26,6 +26,21 @@ UNIT_TEST_FUNC(test_assertfailure) {
 
 	BF_ASSERT(false);
 
+	exit(1); // should never reach here
+
+	UNIT_TEST_END;
+}
+
+UNIT_TEST_FUNC(test_assertfailureWithMessage) {
+	UNIT_TEST_START;
+
+	sleep(1);
+
+	const char * msg = "hello failure!";
+	BF_ASSERT(false, "%s", msg);
+
+	exit(1); // should never reach here
+
 	UNIT_TEST_END;
 }
 
@@ -34,6 +49,7 @@ TEST_COVERAGE_FUNC(suite1_tests) {
 
 	LAUNCH_TEST(test_assertsuccess);
 	LAUNCH_TEST(test_assertfailure);
+	LAUNCH_TEST(test_assertfailureWithMessage);
 
 	TEST_COVERAGE_END;
 }

@@ -59,7 +59,7 @@
 	else {printf("FAIL %d\n", result);}\
 	return result;
 
-#define BF_ASSERT(expr) \
+#define BF_ASSERT(expr, ...) \
 	if (!(expr)) {\
 		result = -1;\
 		UNIT_TEST_END \
