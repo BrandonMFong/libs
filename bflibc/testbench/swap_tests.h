@@ -36,8 +36,7 @@ int test_swapping(void) {
 		}		
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(swap_tests) {

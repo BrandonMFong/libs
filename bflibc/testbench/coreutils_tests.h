@@ -35,9 +35,7 @@ int test_DoesStringArrayContain(void) {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GetByteStringRepresentationUsingKilo(void) {
@@ -55,9 +53,7 @@ int test_GetByteStringRepresentationUsingKilo(void) {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GetByteStringRepresentationUsingKibi(void) {
@@ -75,9 +71,7 @@ int test_GetByteStringRepresentationUsingKibi(void) {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_CreateBinaryStringFromNumber() {
@@ -112,8 +106,7 @@ int test_CreateBinaryStringFromNumber() {
 		free(string);
 	}
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_IndexOfStringInArray() {
@@ -143,8 +136,7 @@ int test_IndexOfStringInArray() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(coreutils_tests) {

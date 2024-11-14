@@ -21,8 +21,7 @@ int test_CreatingBFLock(void) {
 
 	if (!result) result = BFLockDestroy(&lock);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_CreatingTimedWaitLock(void) {
@@ -44,8 +43,7 @@ int test_CreatingTimedWaitLock(void) {
 
 	if (!result) result = BFLockDestroy(&lock);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 typedef struct {
@@ -93,8 +91,7 @@ int test_waitinglock() {
 		if (!result) result = BFLockDestroy(&st.lock);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 
 }
 
@@ -141,8 +138,7 @@ int test_destroyLockThatIsWaiting() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 
 }
 

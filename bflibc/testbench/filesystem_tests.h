@@ -35,8 +35,7 @@ int test_HomePath(void) {
 
 	free(home);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_CalculateSizeForAvailability(void) {
@@ -58,8 +57,7 @@ int test_CalculateSizeForAvailability(void) {
 
 	BFFree(home);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GetFileExtensionForPath(void) {
@@ -89,9 +87,7 @@ int test_GetFileExtensionForPath(void) {
 		result = strcmp(buf, "");
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_tmpdir(void) {
@@ -102,8 +98,7 @@ int test_tmpdir(void) {
 	if (result == 0) {
 		if (!strlen(tmpdir)) result = 2;
 	}
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GettingNameWithoutExtension() {
@@ -125,8 +120,7 @@ int test_GettingNameWithoutExtension() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GettingLeafComponent() {
@@ -148,8 +142,7 @@ int test_GettingLeafComponent() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GettingFullname() {
@@ -171,8 +164,7 @@ int test_GettingFullname() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_RemoveFullDirectory(void) {
@@ -220,8 +212,7 @@ int test_RemoveFullDirectory(void) {
 		printf("could not remove: %s\n", tmpdir);
 	}
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_directoryWithAPeriod(void) {
@@ -249,8 +240,7 @@ int test_directoryWithAPeriod(void) {
 		printf("could not remove: %s\n", tmpdir);
 	}
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(filesystem_tests) {

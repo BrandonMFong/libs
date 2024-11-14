@@ -36,7 +36,7 @@ BIN_NAME = libbfc-test
 ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) 
 LIBRARIES =
-LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
+LINKS =
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 

@@ -26,8 +26,7 @@ int test_CreatingThreadSync(void) {
 
 	if (!result && !threadRan) result = 1;
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 void CreatingThreadAsyncRun(void * in) {}
@@ -40,8 +39,7 @@ int test_CreatingThreadAsync(void) {
 
 	BFThreadAsyncDestroy(id);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 void WaitingOnThreadLockRun(void * in) {
@@ -70,8 +68,7 @@ int test_WaitingOnThreadLock(void) {
 
 	BFThreadAsyncDestroy(id);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 typedef struct {
@@ -137,8 +134,7 @@ int test_LockAndUnlock(void) {
 	BFThreadAsyncDestroy(tid1);
 	BFThreadAsyncDestroy(tid2);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 void ReleasingAsyncRun(void * in) {
@@ -167,8 +163,7 @@ int test_ReleasingAsyncID(void) {
 
 	BFLockDestroy(&lock);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 void CancelingAsyncThreadRun(void * in) {
@@ -196,8 +191,7 @@ int test_CancelingAsyncThread(void) {
 	
 	BFThreadAsyncDestroy(id);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_CancelingAsyncThreadThatHasAlreadyFinished() {
@@ -222,8 +216,7 @@ int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 	
 	BFThreadAsyncDestroy(id);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 void TestThreadCountThread(void * in) { }
@@ -247,8 +240,7 @@ int test_threadCount() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 void TestThreadWait(void * in) {
@@ -281,8 +273,7 @@ int test_threadwait() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(thread_tests) {

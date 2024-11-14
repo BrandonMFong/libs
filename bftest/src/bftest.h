@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 /** TEST SUITE **/
 #define TEST_SUITE_START \
@@ -44,14 +45,25 @@
 	printf("---- %s ended [+ %d, - %d] ----\n", __func__, *pass, *fail);
 
 /** UNIT TEST **/
+
+#define UNIT_TEST_FUNC(foo) \
+	int foo (void)
+
 #define UNIT_TEST_START \
 	printf("%s - ", __func__);\
 	fflush(stdout);\
 	int result = 0;
 
-#define UNIT_TEST_END(success, errcode) \
-	if (success) {printf("PASS\n");}\
-	else {printf("FAIL %d\n", errcode);}
+#define UNIT_TEST_END \
+	if (result == 0) {printf("PASS\n");}\
+	else {printf("FAIL %d\n", result);}\
+	return result;
+
+#define BF_ASSERT(expr) \
+	if (!(expr)) {\
+		result = -1;\
+		UNIT_TEST_END \
+	}
 
 #endif // BF_TEST_H
 

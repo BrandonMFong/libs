@@ -36,8 +36,7 @@ int test_CopyString(void) {
 		free(output);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_uuidGen(void) {
@@ -59,8 +58,7 @@ int test_uuidGen(void) {
 		if (result) break;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 #define TEST_STRINGUTILS_RANDOM_FILE "/tmp/stringutils_tests_random_file"
@@ -126,8 +124,7 @@ endloop:
 	
 	TestStringUtilsRandomFileDelete();
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_uuidcompare(void) {
@@ -176,8 +173,7 @@ int test_uuidcompare(void) {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_creatingstringfromformat(void) {
@@ -197,8 +193,7 @@ int test_creatingstringfromformat(void) {
 		free(str);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_makingarrayfromstring() {
@@ -240,8 +235,7 @@ int test_makingarrayfromstring() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_byteArrayToHexString() {
@@ -269,8 +263,7 @@ int test_byteArrayToHexString() {
 		BFFree(str);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(stringutils_tests) {

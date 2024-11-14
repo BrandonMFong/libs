@@ -33,8 +33,7 @@ int test_creatingfilewriter(void) {
 	}
 
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_writingwithfilewriter(void) {
@@ -95,8 +94,7 @@ int test_writingwithfilewriter(void) {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 typedef struct {
@@ -185,8 +183,7 @@ int test_writingfromdifferentthreads(void) {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_writingwithformat(void) {
@@ -245,8 +242,7 @@ int test_writingwithformat(void) {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_filewritingisappending() {
@@ -307,8 +303,7 @@ int test_filewritingisappending() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_filetruncation() {
@@ -367,8 +362,7 @@ int test_filetruncation() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(filewriter_tests) {

@@ -27,8 +27,7 @@ int test_GettingTime(void) {
 		printf("Failed: %ld <= %f <= %ld\n", b, n, a);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GettingUTCTime(void) {
@@ -48,8 +47,7 @@ int test_GettingUTCTime(void) {
 		if (difftime(t1, t2)) result = 2;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GettingLocalTime(void) {
@@ -69,8 +67,7 @@ int test_GettingLocalTime(void) {
 		if (difftime(t1, t2)) result = 2;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int test_GettingDateTime(void) {
@@ -109,8 +106,7 @@ int test_GettingDateTime(void) {
 		printf("Error: %d\n", result);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int time_bftimesleep(void) {
@@ -118,8 +114,7 @@ int time_bftimesleep(void) {
 	
 	BFTimeSleep(1);
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int time_bftimesleepmicro(void) {
@@ -127,8 +122,7 @@ int time_bftimesleepmicro(void) {
 	
 	BFTimeSleep(BFTimeUS(100));
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int time_bftimesleepmilli(void) {
@@ -136,8 +130,7 @@ int time_bftimesleepmilli(void) {
 	
 	BFTimeSleep(BFTimeMS(100));
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int time_bftimesleepsecondswithmicro(void) {
@@ -145,8 +138,7 @@ int time_bftimesleepsecondswithmicro(void) {
 	
 	BFTimeSleep(1.123456);
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 int time_bftimesleep0(void) {
@@ -154,8 +146,7 @@ int time_bftimesleep0(void) {
 	
 	BFTimeSleep(0);
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	UNIT_TEST_END;
 }
 
 TEST_COVERAGE_FUNC(time_tests) {
