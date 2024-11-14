@@ -55,18 +55,22 @@
 	int result = 0;
 
 #define UNIT_TEST_END \
-	if (result == 0) {printf("PASS\n");}\
-	else {printf("FAIL %d\n", result);}\
+	if (result == 0) { printf("PASS\n"); }\
+	else {\
+		printf("FAIL %d\n", result);\
+		_BFTestLogFlush(__func__);\
+	}\
 	return result;
 
 #define BF_ASSERT(expr, ...) \
 	if (!(expr)) {\
 		result = -1;\
-		BFTestLogPush("" __VA_ARGS__);\
+		_BFTestLogPush("" __VA_ARGS__);\
 		UNIT_TEST_END \
 	}
 
-void BFTestLogPush(const char * format, ...);
+void _BFTestLogPush(const char * format, ...);
+void _BFTestLogFlush(const char * suffix);
 
 #endif // BF_TEST_H
 
