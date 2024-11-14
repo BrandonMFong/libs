@@ -15,7 +15,6 @@
 
 int test_GettingTime(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	time_t b = time(NULL);
 	sleep(1);
@@ -34,7 +33,6 @@ int test_GettingTime(void) {
 
 int test_GettingUTCTime(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
@@ -56,7 +54,6 @@ int test_GettingUTCTime(void) {
 
 int test_GettingLocalTime(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
@@ -78,7 +75,6 @@ int test_GettingLocalTime(void) {
 
 int test_GettingDateTime(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	BFTime n = BFTimeGetCurrentTime();
 	struct tm tm;
@@ -119,7 +115,6 @@ int test_GettingDateTime(void) {
 
 int time_bftimesleep(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTimeSleep(1);
 	
@@ -129,7 +124,6 @@ int time_bftimesleep(void) {
 
 int time_bftimesleepmicro(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTimeSleep(BFTimeUS(100));
 	
@@ -139,7 +133,6 @@ int time_bftimesleepmicro(void) {
 
 int time_bftimesleepmilli(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTimeSleep(BFTimeMS(100));
 	
@@ -149,7 +142,6 @@ int time_bftimesleepmilli(void) {
 
 int time_bftimesleepsecondswithmicro(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTimeSleep(1.123456);
 	
@@ -159,7 +151,6 @@ int time_bftimesleepsecondswithmicro(void) {
 
 int time_bftimesleep0(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFTimeSleep(0);
 	

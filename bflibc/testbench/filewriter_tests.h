@@ -15,7 +15,6 @@
 
 int test_creatingfilewriter(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -40,7 +39,6 @@ int test_creatingfilewriter(void) {
 
 int test_writingwithfilewriter(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -123,7 +121,6 @@ void TestFileWriterThreads(void * in) {
 
 int test_writingfromdifferentthreads(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	const int lines2write = 2 << 8;
 
 	int max = 2 << 4;
@@ -194,7 +191,6 @@ int test_writingfromdifferentthreads(void) {
 
 int test_writingwithformat(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -255,7 +251,6 @@ int test_writingwithformat(void) {
 
 int test_filewritingisappending() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 3;
 	while (!result && max) {
@@ -318,7 +313,6 @@ int test_filewritingisappending() {
 
 int test_filetruncation() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 4;
 	while (!result && max) {

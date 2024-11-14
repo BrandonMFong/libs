@@ -46,7 +46,8 @@
 /** UNIT TEST **/
 #define UNIT_TEST_START \
 	printf("%s - ", __func__);\
-	fflush(stdout);
+	fflush(stdout);\
+	int result = 0;
 
 #define UNIT_TEST_END(success, errcode) \
 	if (success) {printf("PASS\n");}\

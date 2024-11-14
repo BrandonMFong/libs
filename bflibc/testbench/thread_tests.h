@@ -20,7 +20,6 @@ void CreatingThreadSyncRun(void * in) {
 
 int test_CreatingThreadSync(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	bool threadRan = false;
 	result = BFThreadSync(CreatingThreadSyncRun, &threadRan);
@@ -35,7 +34,6 @@ void CreatingThreadAsyncRun(void * in) {}
 
 int test_CreatingThreadAsync(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	BFThreadAsyncID id = BFThreadAsync(CreatingThreadAsyncRun, NULL);
 	result = BFThreadAsyncError(id);
@@ -55,7 +53,6 @@ void WaitingOnThreadLockRun(void * in) {
 
 int test_WaitingOnThreadLock(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	BFThreadAsyncID id = 0;
 	BFLock lock;
 	result = BFLockCreate(&lock);
@@ -96,7 +93,6 @@ void LockAndUnlock(void * in) {
 
 int test_LockAndUnlock(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	BFThreadAsyncID tid1, tid2;
 	LockAndUnlockArgs args1, args2;
 	int count = 0;
@@ -155,7 +151,6 @@ void ReleasingAsyncRun(void * in) {
 
 int test_ReleasingAsyncID(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	BFLock lock;
 	result = BFLockCreate(&lock);
 
@@ -185,7 +180,6 @@ void CancelingAsyncThreadRun(void * in) {
 
 int test_CancelingAsyncThread(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	bool flag = false;
 
 	BFThreadAsyncID id = 0;
@@ -208,7 +202,6 @@ int test_CancelingAsyncThread(void) {
 
 int test_CancelingAsyncThreadThatHasAlreadyFinished() {
 	UNIT_TEST_START;
-	int result = 0;
 	bool flag = false;
 
 	BFThreadAsyncID id;
@@ -237,7 +230,6 @@ void TestThreadCountThread(void * in) { }
 
 int test_threadCount() {
 	UNIT_TEST_START;
-	int result = 0;
 	
 	BFThreadResetStartedCount();
 	BFThreadResetStoppedCount();
@@ -270,7 +262,6 @@ void TestThreadWait(void * in) {
 
 int test_threadwait() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 4;
 	while (max) {

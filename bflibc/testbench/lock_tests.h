@@ -11,7 +11,6 @@
 
 int test_CreatingBFLock(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	BFLock lock;
 	result = BFLockCreate(&lock);
@@ -28,7 +27,6 @@ int test_CreatingBFLock(void) {
 
 int test_CreatingTimedWaitLock(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	BFLock lock;
 	result = BFLockCreate(&lock);
@@ -68,7 +66,6 @@ void thread_test_waitinglock(void * in) {
 
 int test_waitinglock() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 4;
 	while (!result && max--) {
@@ -115,7 +112,6 @@ void thread_test_destroyLockThatIsWaiting(void * in) {
 
 int test_destroyLockThatIsWaiting() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 14;
 	while (!result && max--) {

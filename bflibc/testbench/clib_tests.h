@@ -6,7 +6,6 @@
 #ifndef CLIB_TESTS_H
 #define CLIB_TESTS_H
 
-//#include "bftests.h"
 #include <bftest/bftest.h>
 
 #endif // CLIB_TESTS_H

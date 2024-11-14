@@ -11,7 +11,6 @@
 
 int test_swapping(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 21;
 	while (!result && max--) {

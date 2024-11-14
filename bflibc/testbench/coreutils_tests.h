@@ -14,7 +14,6 @@
 
 int test_DoesStringArrayContain(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
 
@@ -43,7 +42,6 @@ int test_DoesStringArrayContain(void) {
 
 int test_GetByteStringRepresentationUsingKilo(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char buf[20];
 
 	result = BFByteGetString(1000 * 1000, 0, buf);
@@ -64,7 +62,6 @@ int test_GetByteStringRepresentationUsingKilo(void) {
 
 int test_GetByteStringRepresentationUsingKibi(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char buf[20];
 
 	result = BFByteGetString(1024 * 1024, 1, buf);
@@ -85,7 +82,6 @@ int test_GetByteStringRepresentationUsingKibi(void) {
 
 int test_CreateBinaryStringFromNumber() {
 	UNIT_TEST_START;
-	int result = 0;
 	char * string = 0;
 	unsigned char a = 0x00;
 
@@ -122,7 +118,6 @@ int test_CreateBinaryStringFromNumber() {
 
 int test_IndexOfStringInArray() {
 	UNIT_TEST_START;
-	int result = 0;
 	int index = 0;
 	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
 

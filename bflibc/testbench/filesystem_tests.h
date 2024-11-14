@@ -21,7 +21,6 @@
 
 int test_HomePath(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char * home = BFFileSystemPathCopyHomePath(&result);
 
 	if (result) {
@@ -42,7 +41,6 @@ int test_HomePath(void) {
 
 int test_CalculateSizeForAvailability(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	char * home = BFFileSystemPathCopyHomePath(&result);
 	if (result) {
@@ -66,7 +64,6 @@ int test_CalculateSizeForAvailability(void) {
 
 int test_GetFileExtensionForPath(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char buf[100];
 
 	result = BFFileSystemPathGetExtension("test.txt", buf);
@@ -99,7 +96,6 @@ int test_GetFileExtensionForPath(void) {
 
 int test_tmpdir(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char tmpdir[PATH_MAX];
 	result = BFFileSystemGetOSTempDirectory(tmpdir);
 
@@ -112,7 +108,6 @@ int test_tmpdir(void) {
 
 int test_GettingNameWithoutExtension() {
 	UNIT_TEST_START;
-	int result = 0;
 	char buf[PATH_MAX];
 
 	for (int i = 0; i < (2 << 4); i++) {
@@ -136,7 +131,6 @@ int test_GettingNameWithoutExtension() {
 
 int test_GettingLeafComponent() {
 	UNIT_TEST_START;
-	int result = 0;
 	char buf[PATH_MAX];
 
 	for (int i = 0; i < (2 << 4); i++) {
@@ -160,7 +154,6 @@ int test_GettingLeafComponent() {
 
 int test_GettingFullname() {
 	UNIT_TEST_START;
-	int result = 0;
 	char buf[PATH_MAX];
 
 	for (int i = 0; i < (2 << 4); i++) {
@@ -184,7 +177,6 @@ int test_GettingFullname() {
 
 int test_RemoveFullDirectory(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char tmpdir[PATH_MAX];
 	char file[PATH_MAX];
 
@@ -234,7 +226,6 @@ int test_RemoveFullDirectory(void) {
 
 int test_directoryWithAPeriod(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	char tmpdir[PATH_MAX];
 
 	// setup

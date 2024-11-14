@@ -17,7 +17,6 @@
 
 int test_CopyString(void) {
 	UNIT_TEST_START;
-	int result = 0;
 	const char * string = "Hello world!";
 	int error = 0;
 	char * output = BFStringCopyString(string);
@@ -43,7 +42,6 @@ int test_CopyString(void) {
 
 int test_uuidGen(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	const long lim = (long) 2 << 16;
 	for (long i = 0; i < lim; i++) {
@@ -87,7 +85,6 @@ void TestStringUtilsRandomFileDelete() {
 
 int test_readingFile(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	TestStringUtilsRandomFileCreate();
 
@@ -135,7 +132,6 @@ endloop:
 
 int test_uuidcompare(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 1;
 	while (!result && max) {
@@ -186,7 +182,6 @@ int test_uuidcompare(void) {
 
 int test_creatingstringfromformat(void) {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int numstr = 2 << 20;
 	for (int i = 0; i < numstr; i++) {
@@ -208,7 +203,6 @@ int test_creatingstringfromformat(void) {
 
 int test_makingarrayfromstring() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 20;
 	while (!result && max) {
@@ -252,7 +246,6 @@ int test_makingarrayfromstring() {
 
 int test_byteArrayToHexString() {
 	UNIT_TEST_START;
-	int result = 0;
 
 	int max = 2 << 20;
 	while (!result && max--) {
