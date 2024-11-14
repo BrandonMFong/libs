@@ -12,7 +12,6 @@
 #include <string.h>
 #include <stdio.h>
 
-//int test_DoesStringArrayContain(void) {
 BFTEST_UNIT_FUNC(test_DoesStringArrayContain) {
 	BFTEST_UNIT_START;
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
@@ -20,64 +19,42 @@ BFTEST_UNIT_FUNC(test_DoesStringArrayContain) {
 
 	const char * string = "Hello";
 	bool value = BFArrayStringContainsString(array, size, string);
-	
-	if (!value) {
-		printf("Array should have contained: %s\n", string);
-		result = 1;
-	}
+	BF_ASSERT(value, "Array should have contained: %s", string);
 
-	if (result == 0) {
-		string = "tree";
-		value = BFArrayStringContainsString(array, size, string);
-
-		if (value) {
-			result = 1;
-			printf("Array should not have: %s\n", string);
-		}
-	}
+	string = "tree";
+	value = BFArrayStringContainsString(array, size, string);
+	BF_ASSERT(!value, "Array should not have: %s", string);
 
 	BFTEST_UNIT_END;
 }
 
-//int test_GetByteStringRepresentationUsingKilo(void) {
 BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKilo) {
 	BFTEST_UNIT_START;
 	char buf[20];
 
-	result = BFByteGetString(1000 * 1000, 0, buf);
+	int err = BFByteGetString(1000 * 1000, 0, buf);
+	BF_ASSERT(err == 0);
 
 	const char * expected = "1.00 MB";
-
-	if (result == 0) {
-		if (strcmp(expected, buf)) {
-			result = 1;
-			printf("%s != %s\n", expected, buf);
-		}
-	}
+	BF_ASSERT(!strcmp(expected, buf), "%s != %s", expected, buf);
 
 	BFTEST_UNIT_END;
 }
 
-//int test_GetByteStringRepresentationUsingKibi(void) {
 BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKibi) {
 	BFTEST_UNIT_START;
 	char buf[20];
 
-	result = BFByteGetString(1024 * 1024, 1, buf);
+	int err = BFByteGetString(1024 * 1024, 1, buf);
+	BF_ASSERT(err == 0);
 
 	const char * expected = "1.00 MiB";
-
-	if (result == 0) {
-		if (strcmp(expected, buf)) {
-			result = 1;
-			printf("%s != %s\n", expected, buf);
-		}
-	}
+	BF_ASSERT(!strcmp(expected, buf), "%s != %s", expected, buf);
 
 	BFTEST_UNIT_END;
 }
 
-int test_CreateBinaryStringFromNumber() {
+BFTEST_UNIT_FUNC(test_CreateBinaryStringFromNumber) {
 	BFTEST_UNIT_START;
 	char * string = 0;
 	unsigned char a = 0x00;

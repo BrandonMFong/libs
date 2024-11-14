@@ -78,7 +78,7 @@
 #define BFTEST_UNIT_END \
 	if (result == 0) { printf("PASS\n"); }\
 	else {\
-		printf("FAIL %d\n", result);\
+		printf("FAIL\n");\
 		_BFTestLogFlush(__func__);\
 	}\
 	return result;
