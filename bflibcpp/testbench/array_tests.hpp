@@ -23,8 +23,9 @@ using namespace BF;
 /**
  * Just test that it can build and nothing crashes
  */
-int test_Initializer() {
-	UNIT_TEST_START;
+//int test_Initializer() {
+BFTEST_UNIT_FUNC(test_Initializer) {
+	BFTEST_UNIT_START;
 	Array<int> intArr;
 	Array<char> charArr;
 	Array<double> doubleArr;
@@ -37,14 +38,12 @@ int test_Initializer() {
 	delete doubleArrPtr;
 	delete charArrPtr;
 
-	UNIT_TEST_END(true, 0);
-
-	return 0;
+	BFTEST_UNIT_END(true, 0);
 }
 
-int test_Contains() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_Contains() {
+BFTEST_UNIT_FUNC(test_Contains) {
+	BFTEST_UNIT_START;
 
 	Array<int> arr({1, 2, 3, 4});
 
@@ -75,14 +74,12 @@ int test_Contains() {
 		printf("ch should contain 'world'\n");
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_ObjectAtIndex() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_ObjectAtIndex() {
+BFTEST_UNIT_FUNC(test_ObjectAtIndex) {
+	BFTEST_UNIT_START;
 
 	Array<double> d({1.1, 2.2, 3.3, 4.4, 5.5});
 
@@ -100,15 +97,13 @@ int test_ObjectAtIndex() {
 		printf("%f != 4.4\n", a);
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_indexForObject() {
-	UNIT_TEST_START;
+//int test_indexForObject() {
+BFTEST_UNIT_FUNC(test_indexForObject) {
+	BFTEST_UNIT_START;
 
-	int result = 0;
 	int max = 2 << 20;
 	while (!result && max) {
 		Array<int> arr({1, 2, 3, 4});
@@ -143,15 +138,12 @@ int test_indexForObject() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
-
+	BFTEST_UNIT_END;
 }
 
-int test_Count() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_Count() {
+BFTEST_UNIT_FUNC(test_Count) {
+	BFTEST_UNIT_START;
 
 	Array<int> a({1, 2, 3, 4, 5});
 
@@ -160,14 +152,12 @@ int test_Count() {
 		printf("Count %ld\n", a.count());
 	}
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_Setter() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_Setter() {
+BFTEST_UNIT_FUNC(test_Setter) {
+	BFTEST_UNIT_START;
 
 	Array<int> a;
 
@@ -185,13 +175,12 @@ int test_Setter() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_addanddelete() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_addanddelete() {
+BFTEST_UNIT_FUNC(test_addanddelete) {
+	BFTEST_UNIT_START;
 
 	int max = 2 << 8;
 	while (!result && max) {
@@ -222,13 +211,12 @@ int test_addanddelete() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_deletingObjectAtRandomIndex() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_deletingObjectAtRandomIndex() {
+BFTEST_UNIT_FUNC(test_deletingObjectAtRandomIndex) {
+	BFTEST_UNIT_START;
 
 	int max = 2 << 10;
 	while (!result && max) {
@@ -276,13 +264,12 @@ int test_deletingObjectAtRandomIndex() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_insertingAtRandomIndex() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_insertingAtRandomIndex() {
+BFTEST_UNIT_FUNC(test_insertingAtRandomIndex) {
+	BFTEST_UNIT_START;
 
 	int max = 2 << 8;
 	while (!result && max) {
@@ -340,17 +327,16 @@ int test_insertingAtRandomIndex() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 void TestArrayRelease(char * obj) {
 	BFFree(obj);
 }
 
-int test_releasecallback() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_releasecallback() {
+BFTEST_UNIT_FUNC(test_releasecallback) {
+	BFTEST_UNIT_START;
 
 	int max = 2 << 8;
 	while (!result && max--) {
@@ -365,26 +351,24 @@ int test_releasecallback() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-//void array_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(array_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(array_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_Initializer, p, f);
-	LAUNCH_TEST(test_Contains, p, f);
-	LAUNCH_TEST(test_ObjectAtIndex, p, f);
-	LAUNCH_TEST(test_Count, p, f);
-	LAUNCH_TEST(test_Setter, p, f);
-	LAUNCH_TEST(test_indexForObject, p, f);
-	LAUNCH_TEST(test_deletingObjectAtRandomIndex, p, f);
-	LAUNCH_TEST(test_insertingAtRandomIndex, p, f);
-	LAUNCH_TEST(test_releasecallback, p, f);
-	LAUNCH_TEST(test_addanddelete, p, f);
+	BFTEST_LAUNCH(test_Initializer);
+	BFTEST_LAUNCH(test_Contains);
+	BFTEST_LAUNCH(test_ObjectAtIndex);
+	BFTEST_LAUNCH(test_Count);
+	BFTEST_LAUNCH(test_Setter);
+	BFTEST_LAUNCH(test_indexForObject);
+	BFTEST_LAUNCH(test_deletingObjectAtRandomIndex);
+	BFTEST_LAUNCH(test_insertingAtRandomIndex);
+	BFTEST_LAUNCH(test_releasecallback);
+	BFTEST_LAUNCH(test_addanddelete);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // ARRAY_TESTS_HPP

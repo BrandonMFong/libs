@@ -19,9 +19,9 @@ extern "C" {
 
 using namespace BF;
 
-int test_StringInit() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StringInit() {
+BFTEST_UNIT_FUNC(test_StringInit) {
+	BFTEST_UNIT_START;
 
 	char str[100] = "hello world";
 
@@ -30,13 +30,12 @@ int test_StringInit() {
 	String s2("hello world");
 	String s3(str);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_comparingString() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_comparingString() {
+BFTEST_UNIT_FUNC(test_comparingString) {
+	BFTEST_UNIT_START;
 
 	char tmp[20] = "hello world";
 
@@ -58,13 +57,12 @@ int test_comparingString() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_StringLength() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StringLength() {
+BFTEST_UNIT_FUNC(test_StringLength) {
+	BFTEST_UNIT_START;
 
 	const char * tmp = "Hello, my name is brando";
 
@@ -75,13 +73,12 @@ int test_StringLength() {
 		printf("%d != %d\n", (int) str.length(), (int) strlen(tmp));
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_StringCopy() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StringCopy() {
+BFTEST_UNIT_FUNC(test_StringCopy) {
+	BFTEST_UNIT_START;
 
 	String str0 = "Hello world";
 	String str1;
@@ -105,17 +102,16 @@ int test_StringCopy() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 bool DoStringsMatch(String str, const char * expected) {
 	return !strcmp(str.cString(), expected);
 }
 
-int test_PassingStringToFunction() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_PassingStringToFunction() {
+BFTEST_UNIT_FUNC(test_PassingStringToFunction) {
+	BFTEST_UNIT_START;
 
 	if (!DoStringsMatch("Hello", "Hello")) {
 		result = 1;
@@ -134,13 +130,12 @@ int test_PassingStringToFunction() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_nullstring(void) {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_nullstring(void) {
+BFTEST_UNIT_FUNC(test_nullstring) {
+	BFTEST_UNIT_START;
 
 	String str0 = 0;
 	String str1 = 0;
@@ -156,26 +151,24 @@ int test_nullstring(void) {
 		} catch (const std::invalid_argument & e) { }
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_copyingString(void) {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_copyingString(void) {
+BFTEST_UNIT_FUNC(test_copyingString) {
+	BFTEST_UNIT_START;
 
 	String str = "hello world";
 	char * cstr = str.cStringCopy();
 	if (cstr == NULL) result = 1;
 	BFFree(cstr);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_removingCharacterFromString() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_removingCharacterFromString() {
+BFTEST_UNIT_FUNC(test_removingCharacterFromString) {
+	BFTEST_UNIT_START;
 	
 	const char * s = "hello world!";
 	const char * e = "hello world";
@@ -194,13 +187,12 @@ int test_removingCharacterFromString() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_addingCharacterToString() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_addingCharacterToString() {
+BFTEST_UNIT_FUNC(test_addingCharacterToString) {
+	BFTEST_UNIT_START;
 	
 	const char * s = "hello world";
 	const char * e = "hello world!";
@@ -219,13 +211,12 @@ int test_addingCharacterToString() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_clearstring() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_clearstring() {
+BFTEST_UNIT_FUNC(test_clearstring) {
+	BFTEST_UNIT_START;
 	
 	int max = 2 << 10;
 	String str;
@@ -251,13 +242,12 @@ int test_clearstring() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_indexingstring() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_indexingstring() {
+BFTEST_UNIT_FUNC(test_indexingstring) {
+	BFTEST_UNIT_START;
 	
 	const char * s = "Honorificabilitudinitatibus";
 
@@ -274,13 +264,12 @@ int test_indexingstring() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_removingcharatindex() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_removingcharatindex() {
+BFTEST_UNIT_FUNC(test_removingcharatindex) {
+	BFTEST_UNIT_START;
 	
 	char s[128];
 	strncpy(s, "Honorificabilitudinitatibus", sizeof(s));
@@ -311,13 +300,12 @@ int test_removingcharatindex() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_addandremove() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_addandremove() {
+BFTEST_UNIT_FUNC(test_addandremove) {
+	BFTEST_UNIT_START;
 	
 	const char * s = "Honorificabilitudinitatibus";
 
@@ -346,13 +334,12 @@ int test_addandremove() {
 		max--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_stringtoint() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_stringtoint() {
+BFTEST_UNIT_FUNC(test_stringtoint) {
+	BFTEST_UNIT_START;
 	
 	int max = 2 << 12;
 	while (!result && max--) {
@@ -375,13 +362,12 @@ int test_stringtoint() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_creatingstringfromformat() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_creatingstringfromformat() {
+BFTEST_UNIT_FUNC(test_creatingstringfromformat) {
+	BFTEST_UNIT_START;
 	
 	int max = 2 << 20;
 	while (!result && max--) {
@@ -398,8 +384,7 @@ int test_creatingstringfromformat() {
 		BFRelease(str);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 #define TEST_STRING_RANDOM_FILE "/tmp/string_tests_random_file"
@@ -422,9 +407,9 @@ void TestStringRandomFileDelete() {
 	remove(TEST_STRING_RANDOM_FILE);
 }
 
-int test_readingFromFile() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_readingFromFile() {
+BFTEST_UNIT_FUNC(test_readingFromFile) {
+	BFTEST_UNIT_START;
 	TestStringRandomFileCreate();
 	
 	String str;
@@ -434,13 +419,12 @@ int test_readingFromFile() {
 	}
 
 	TestStringRandomFileDelete();
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_data2string() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_data2string() {
+BFTEST_UNIT_FUNC(test_data2string) {
+	BFTEST_UNIT_START;
 	int max = 2 << 16;
 	const char * str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 	size_t size = strlen(str);
@@ -477,33 +461,32 @@ int test_data2string() {
 		BFFree(buf);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 //void string_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(string_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(string_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_StringInit, p, f);
-	LAUNCH_TEST(test_comparingString, p, f);
-	LAUNCH_TEST(test_StringLength, p, f);
-	LAUNCH_TEST(test_StringCopy, p, f);
-	LAUNCH_TEST(test_PassingStringToFunction, p, f);
-	LAUNCH_TEST(test_nullstring, p, f);
-	LAUNCH_TEST(test_copyingString, p, f);
-	LAUNCH_TEST(test_addingCharacterToString, p, f);
-	LAUNCH_TEST(test_clearstring, p, f);
-	LAUNCH_TEST(test_removingCharacterFromString, p, f);
-	LAUNCH_TEST(test_removingcharatindex, p, f);
-	LAUNCH_TEST(test_indexingstring, p, f);
-	LAUNCH_TEST(test_addandremove, p, f);
-	LAUNCH_TEST(test_stringtoint, p, f);
-	LAUNCH_TEST(test_creatingstringfromformat, p, f);
-	LAUNCH_TEST(test_readingFromFile, p, f);
-	LAUNCH_TEST(test_data2string, p, f);
+	BFTEST_LAUNCH(test_StringInit);
+	BFTEST_LAUNCH(test_comparingString);
+	BFTEST_LAUNCH(test_StringLength);
+	BFTEST_LAUNCH(test_StringCopy);
+	BFTEST_LAUNCH(test_PassingStringToFunction);
+	BFTEST_LAUNCH(test_nullstring);
+	BFTEST_LAUNCH(test_copyingString);
+	BFTEST_LAUNCH(test_addingCharacterToString);
+	BFTEST_LAUNCH(test_clearstring);
+	BFTEST_LAUNCH(test_removingCharacterFromString);
+	BFTEST_LAUNCH(test_removingcharatindex);
+	BFTEST_LAUNCH(test_indexingstring);
+	BFTEST_LAUNCH(test_addandremove);
+	BFTEST_LAUNCH(test_stringtoint);
+	BFTEST_LAUNCH(test_creatingstringfromformat);
+	BFTEST_LAUNCH(test_readingFromFile);
+	BFTEST_LAUNCH(test_data2string);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // STRING_TESTS_HPP

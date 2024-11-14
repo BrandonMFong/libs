@@ -13,19 +13,18 @@
 
 using namespace BF;
 
-int test_Init() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_Init() {
+BFTEST_UNIT_FUNC(test_Init) {
+	BFTEST_UNIT_START;
 
 	List<int> * l = new List<int>;
 	Delete(l);
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_adding() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_adding() {
+BFTEST_UNIT_FUNC(test_adding) {
+	BFTEST_UNIT_START;
 
 	List<int> * l = new List<int>;
 
@@ -49,13 +48,12 @@ int test_adding() {
 	}
 
 	Delete(l);
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_indexing() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_indexing() {
+BFTEST_UNIT_FUNC(test_indexing) {
+	BFTEST_UNIT_START;
 	List<double> * l = new List<double>;
 
 	if (l == 0) {
@@ -81,13 +79,12 @@ int test_indexing() {
 
 	Delete(l);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_inserting() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_inserting() {
+BFTEST_UNIT_FUNC(test_inserting) {
+	BFTEST_UNIT_START;
 	List<double> * l = new List<double>;
 
 	if (l == 0) {
@@ -118,13 +115,12 @@ int test_inserting() {
 
 	Delete(l);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_deletingAtIndex() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_deletingAtIndex() {
+BFTEST_UNIT_FUNC(test_deletingAtIndex) {
+	BFTEST_UNIT_START;
 
 	List<long> * l = new List<long>;
 
@@ -156,13 +152,12 @@ int test_deletingAtIndex() {
 
 	Delete(l);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_deletingAllNodes() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_deletingAllNodes() {
+BFTEST_UNIT_FUNC(test_deletingAllNodes) {
+	BFTEST_UNIT_START;
 
 	List<char> * l = new List<char>;
 
@@ -186,17 +181,16 @@ int test_deletingAllNodes() {
 		printf("Error %d\n", result);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 void intDelete(int * i) {
 	delete i;
 }
 
-int test_listMemoryHandling() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_listMemoryHandling() {
+BFTEST_UNIT_FUNC(test_listMemoryHandling) {
+	BFTEST_UNIT_START;
 
 	List<int *> * l = new List<int *>;
 	l->setReleaseCallback(intDelete);
@@ -240,14 +234,13 @@ int test_listMemoryHandling() {
 
 	l->deleteAll();
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_traversing() {
-	UNIT_TEST_START;
+//int test_traversing() {
+BFTEST_UNIT_FUNC(test_traversing) {
+	BFTEST_UNIT_START;
 
-	int result = 0;
 	int max = 2 << 31; // max nodes
 	int minValue = 10;
 	
@@ -279,13 +272,12 @@ int test_traversing() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_ListContains() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_ListContains() {
+BFTEST_UNIT_FUNC(test_ListContains) {
+	BFTEST_UNIT_START;
 
 	List<int> l;
 	l.add(1);
@@ -298,25 +290,23 @@ int test_ListContains() {
 		result = 2;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_InitializingWithInitList() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_InitializingWithInitList() {
+BFTEST_UNIT_FUNC(test_InitializingWithInitList) {
+	BFTEST_UNIT_START;
 	
 	List<int> l = {1,2,3,4};
 
 	l = {5,6,7,8};
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_InitializingFromRawArray() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_InitializingFromRawArray() {
+BFTEST_UNIT_FUNC(test_InitializingFromRawArray) {
+	BFTEST_UNIT_START;
 
 	const size_t size = 5;
 	const char * strings[size] = {"one", "two", "three", "four", "five"};
@@ -331,13 +321,12 @@ int test_InitializingFromRawArray() {
 		if (!l.contains(strings[i])) result = i + 10;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_ListNullSwap() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_ListNullSwap() {
+BFTEST_UNIT_FUNC(test_ListNullSwap) {
+	BFTEST_UNIT_START;
 	List<int>::Node a, b;
 	a.obj = 0;
 	b.obj = 1;
@@ -345,13 +334,12 @@ int test_ListNullSwap() {
 	if (result) result = List<int>::swap(0, &b);
 	if (result) result = List<int>::swap(0, 0);
 
-	UNIT_TEST_END(!result, result);
-	return result == 0 ? -1 : 0;
+	BFTEST_UNIT_END;
 }
 
-int test_ListSwap() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_ListSwap() {
+BFTEST_UNIT_FUNC(test_ListSwap) {
+	BFTEST_UNIT_START;
 	List<int>::Node * a = new List<int>::Node;
 	a->obj = 1;
 	List<int>::Node * al = new List<int>::Node;
@@ -395,13 +383,12 @@ int test_ListSwap() {
 		else if (br->prev() != b) result = 2;
 	}
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_shuffle() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_shuffle() {
+BFTEST_UNIT_FUNC(test_shuffle) {
+	BFTEST_UNIT_START;
 	const int size = 2 << 14;
 	int array[size];
 	for (int i = 0; i < size; i++) {
@@ -428,14 +415,13 @@ int test_shuffle() {
 		}
 	}
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_ShuffleLargeDataSet() {
-	UNIT_TEST_START;
+//int test_ShuffleLargeDataSet() {
+BFTEST_UNIT_FUNC(test_ShuffleLargeDataSet) {
+	BFTEST_UNIT_START;
 
-	int result = 0;
 	srand(time(0));
 	const int size = 2 << 14;
 	int array[size];
@@ -463,8 +449,7 @@ int test_ShuffleLargeDataSet() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 bool TestPluckingObjectReleaseWasCalled = false;
@@ -473,9 +458,9 @@ void TestPluckingObjectRelease(int * i) {
 	TestPluckingObjectReleaseWasCalled = true;
 }
 
-int test_pluckingObject() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_pluckingObject() {
+BFTEST_UNIT_FUNC(test_pluckingObject) {
+	BFTEST_UNIT_START;
 
 	int max = 2 << 1;
 	while (!result && max--) {
@@ -526,13 +511,12 @@ int test_pluckingObject() {
 		for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_rangeBasedLooping() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_rangeBasedLooping() {
+BFTEST_UNIT_FUNC(test_rangeBasedLooping) {
+	BFTEST_UNIT_START;
 
 	int max = 2 << 8;
 	while (!result && max--) {
@@ -566,33 +550,31 @@ int test_rangeBasedLooping() {
 		BFFree(arr);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-//void list_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(list_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(list_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_Init, p, f);
-	LAUNCH_TEST(test_adding, p, f);
-	LAUNCH_TEST(test_indexing, p, f);
-	LAUNCH_TEST(test_inserting, p, f);
-	LAUNCH_TEST(test_deletingAtIndex, p, f);
-	LAUNCH_TEST(test_deletingAllNodes, p, f);
-	LAUNCH_TEST(test_listMemoryHandling, p, f);
-	LAUNCH_TEST(test_traversing, p, f);
-	LAUNCH_TEST(test_ListContains, p, f);
-	LAUNCH_TEST(test_InitializingWithInitList, p, f);
-	LAUNCH_TEST(test_InitializingFromRawArray, p, f);
-	LAUNCH_TEST(test_ListSwap, p, f);
-	LAUNCH_TEST(test_shuffle, p, f);
-	LAUNCH_TEST(test_ListNullSwap, p, f);
-	LAUNCH_TEST(test_ShuffleLargeDataSet, p, f);
-	LAUNCH_TEST(test_pluckingObject, p, f);
-	LAUNCH_TEST(test_rangeBasedLooping, p, f);
+	BFTEST_LAUNCH(test_Init);
+	BFTEST_LAUNCH(test_adding);
+	BFTEST_LAUNCH(test_indexing);
+	BFTEST_LAUNCH(test_inserting);
+	BFTEST_LAUNCH(test_deletingAtIndex);
+	BFTEST_LAUNCH(test_deletingAllNodes);
+	BFTEST_LAUNCH(test_listMemoryHandling);
+	BFTEST_LAUNCH(test_traversing);
+	BFTEST_LAUNCH(test_ListContains);
+	BFTEST_LAUNCH(test_InitializingWithInitList);
+	BFTEST_LAUNCH(test_InitializingFromRawArray);
+	BFTEST_LAUNCH(test_ListSwap);
+	BFTEST_LAUNCH(test_shuffle);
+	BFTEST_LAUNCH(test_ListNullSwap);
+	BFTEST_LAUNCH(test_ShuffleLargeDataSet);
+	BFTEST_LAUNCH(test_pluckingObject);
+	BFTEST_LAUNCH(test_rangeBasedLooping);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // LIST_TESTS_HPP

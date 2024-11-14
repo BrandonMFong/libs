@@ -16,19 +16,18 @@ extern "C" {
 
 using namespace BF;
 
-int test_StackInit() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StackInit() {
+BFTEST_UNIT_FUNC(test_StackInit) {
+	BFTEST_UNIT_START;
 
 	Stack<int> stack;
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_StackPush() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StackPush() {
+BFTEST_UNIT_FUNC(test_StackPush) {
+	BFTEST_UNIT_START;
 
 	Stack<int> stack;
 
@@ -43,13 +42,12 @@ int test_StackPush() {
 	if (!result)
 		result = stack.push(4);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_StackPop() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StackPop() {
+BFTEST_UNIT_FUNC(test_StackPop) {
+	BFTEST_UNIT_START;
 
 	Stack<int> stack;
 
@@ -81,13 +79,12 @@ int test_StackPop() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_StackTop() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StackTop() {
+BFTEST_UNIT_FUNC(test_StackTop) {
+	BFTEST_UNIT_START;
 
 	Stack<int> stack;
 
@@ -111,13 +108,12 @@ int test_StackTop() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_StackSize() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_StackSize() {
+BFTEST_UNIT_FUNC(test_StackSize) {
+	BFTEST_UNIT_START;
 
 	Stack<int> stack;
 
@@ -148,13 +144,12 @@ int test_StackSize() {
 		printf("Size: %d != 4\n", stack.size());
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_LoadAndUnload() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_LoadAndUnload() {
+BFTEST_UNIT_FUNC(test_LoadAndUnload) {
+	BFTEST_UNIT_START;
 	srand(time(0));
 	const int size = (2 << 8);
 	int * array = (int *) malloc(sizeof(int) * size);
@@ -178,13 +173,12 @@ int test_LoadAndUnload() {
 	}
 
 	BFFree(array);
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_LoadAndUnloadStrings() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_LoadAndUnloadStrings() {
+BFTEST_UNIT_FUNC(test_LoadAndUnloadStrings) {
+	BFTEST_UNIT_START;
 
 	const int size = (2 << 16);
 	char ** array = (char **) malloc(sizeof(char *) * size);
@@ -217,23 +211,22 @@ int test_LoadAndUnloadStrings() {
 	
 	BFFree(array);
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 //void stack_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(stack_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(stack_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_StackInit, p, f);
-	LAUNCH_TEST(test_StackPush, p, f);
-	LAUNCH_TEST(test_StackPop, p, f);
-	LAUNCH_TEST(test_StackTop, p, f);
-	LAUNCH_TEST(test_StackSize, p, f);
-	LAUNCH_TEST(test_LoadAndUnload, p, f);
-	LAUNCH_TEST(test_LoadAndUnloadStrings, p, f);
+	BFTEST_LAUNCH(test_StackInit);
+	BFTEST_LAUNCH(test_StackPush);
+	BFTEST_LAUNCH(test_StackPop);
+	BFTEST_LAUNCH(test_StackTop);
+	BFTEST_LAUNCH(test_StackSize);
+	BFTEST_LAUNCH(test_LoadAndUnload);
+	BFTEST_LAUNCH(test_LoadAndUnloadStrings);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // STACK_TESTS_HPP

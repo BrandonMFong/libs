@@ -16,9 +16,9 @@ extern "C" {
 
 using namespace BF;
 
-int test_datainit() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_datainit() {
+BFTEST_UNIT_FUNC(test_datainit) {
+	BFTEST_UNIT_START;
 
 	Data buf0;
 	if (buf0.size() != 0) {
@@ -55,13 +55,12 @@ int test_datainit() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_clearData() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_clearData() {
+BFTEST_UNIT_FUNC(test_clearData) {
+	BFTEST_UNIT_START;
 	int max = 2 << 12;
 	const size_t maxbufsize = 2 << 16;
 
@@ -91,13 +90,12 @@ int test_clearData() {
 		BFFree(bytes);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_decreasingSize() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_decreasingSize() {
+BFTEST_UNIT_FUNC(test_decreasingSize) {
+	BFTEST_UNIT_START;
 	int max = 2 << 12;
 
 	while (!result && max--) {
@@ -121,13 +119,12 @@ int test_decreasingSize() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_increasingSize() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_increasingSize() {
+BFTEST_UNIT_FUNC(test_increasingSize) {
+	BFTEST_UNIT_START;
 	int max = 2 << 12;
 
 	while (!result && max--) {
@@ -152,13 +149,12 @@ int test_increasingSize() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_String2Data() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_String2Data() {
+BFTEST_UNIT_FUNC(test_String2Data) {
+	BFTEST_UNIT_START;
 	int max = 2 << 10;
 
 	while (!result && max--) {
@@ -173,13 +169,12 @@ int test_String2Data() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_HexString() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_HexString() {
+BFTEST_UNIT_FUNC(test_HexString) {
+	BFTEST_UNIT_START;
 	int max = 2 << 10;
 
 	while (!result && max--) {
@@ -206,13 +201,12 @@ int test_HexString() {
 		BFDelete(data);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_dataCompare() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_dataCompare() {
+BFTEST_UNIT_FUNC(test_dataCompare) {
+	BFTEST_UNIT_START;
 	int max = 2 << 15;
 
 	while (!result && max--) {
@@ -256,13 +250,12 @@ int test_dataCompare() {
 		BFFree(b1);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_emptyStringDataLength() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_emptyStringDataLength() {
+BFTEST_UNIT_FUNC(test_emptyStringDataLength) {
+	BFTEST_UNIT_START;
 	
 	String str = "";
 	if (str.length() != 0) {
@@ -276,8 +269,7 @@ int test_emptyStringDataLength() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
 Data test_dataByRefBuf(32);
@@ -285,9 +277,9 @@ void test_dataByRefCallback(Data & d) {
 	d = test_dataByRefBuf;
 }
 
-int test_dataByRef() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_dataByRef() {
+BFTEST_UNIT_FUNC(test_dataByRef) {
+	BFTEST_UNIT_START;
 	int max = 2 << 20;
 
 	while (!result && max--) {
@@ -305,25 +297,23 @@ int test_dataByRef() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-//void data_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(data_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(data_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_datainit, p, f);
-	LAUNCH_TEST(test_clearData, p, f);
-	LAUNCH_TEST(test_decreasingSize, p, f);
-	LAUNCH_TEST(test_increasingSize, p, f);
-	LAUNCH_TEST(test_String2Data, p, f);
-	LAUNCH_TEST(test_HexString, p, f);
-	LAUNCH_TEST(test_dataCompare, p, f);
-	LAUNCH_TEST(test_emptyStringDataLength, p, f);
-	LAUNCH_TEST(test_dataByRef, p, f);
+	BFTEST_LAUNCH(test_datainit);
+	BFTEST_LAUNCH(test_clearData);
+	BFTEST_LAUNCH(test_decreasingSize);
+	BFTEST_LAUNCH(test_increasingSize);
+	BFTEST_LAUNCH(test_String2Data);
+	BFTEST_LAUNCH(test_HexString);
+	BFTEST_LAUNCH(test_dataCompare);
+	BFTEST_LAUNCH(test_emptyStringDataLength);
+	BFTEST_LAUNCH(test_dataByRef);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // DATA_TESTS_HPP

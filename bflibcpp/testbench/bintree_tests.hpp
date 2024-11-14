@@ -17,8 +17,9 @@
 
 using namespace BF;
 
-static int test_BinInitializer() {
-	UNIT_TEST_START;
+//static int test_BinInitializer() {
+BFTEST_UNIT_FUNC(test_BinInitializer) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> i;
 	BinTree<double> d;
@@ -34,14 +35,12 @@ static int test_BinInitializer() {
 	Delete(dd);
 	Delete(ff);
 	Delete(cc);
-	UNIT_TEST_END(true, 0);
-
-	return 0;
+	BFTEST_UNIT_END;
 }
 
-static int test_BinInsert() {
-	UNIT_TEST_START;
-	int result = 0;
+//static int test_BinInsert() {
+BFTEST_UNIT_FUNC(test_BinInsert) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t;
 
@@ -59,13 +58,12 @@ static int test_BinInsert() {
 		result = t.insert(5);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-static int test_BinMax() {
-	UNIT_TEST_START;
-	int result = 0;
+//static int test_BinMax() {
+BFTEST_UNIT_FUNC(test_BinMax) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t;
 	t.insert(1);
@@ -80,13 +78,12 @@ static int test_BinMax() {
 		printf("Max is not: %d\n", t.max());
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-static int test_BinMin() {
-	UNIT_TEST_START;
-	int result = 0;
+//static int test_BinMin() {
+BFTEST_UNIT_FUNC(test_BinMin) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t;
 	t.insert(1);
@@ -101,13 +98,12 @@ static int test_BinMin() {
 		printf("Min is not: %d\n", t.min());
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-static int test_BinNodeKnowsItsLeaf() {
-	UNIT_TEST_START;
-	int result = 0;
+//static int test_BinNodeKnowsItsLeaf() {
+BFTEST_UNIT_FUNC(test_BinNodeKnowsItsLeaf) {
+	BFTEST_UNIT_START;
 
 	BinTree<int>::BinNode n1;
 	BinTree<int>::BinNode n2;
@@ -128,13 +124,12 @@ static int test_BinNodeKnowsItsLeaf() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-static int test_BSTDelete() {
-	UNIT_TEST_START;
-	int result = 0;
+//static int test_BSTDelete() {
+BFTEST_UNIT_FUNC(test_BSTDelete) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t;
 	t.insert(5);
@@ -161,13 +156,12 @@ static int test_BSTDelete() {
 		if (result) printf("Error removing 8\n");
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_RemovingRoot() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_RemovingRoot() {
+BFTEST_UNIT_FUNC(test_RemovingRoot) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t0;
 	BinTree<int> t1;
@@ -189,13 +183,12 @@ int test_RemovingRoot() {
 		result = t2.remove(2);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_RemovingAll() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_RemovingAll() {
+BFTEST_UNIT_FUNC(test_RemovingAll) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t;
 	t.insert(5);
@@ -217,13 +210,12 @@ int test_RemovingAll() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_ReturningLeafValues() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_ReturningLeafValues() {
+BFTEST_UNIT_FUNC(test_ReturningLeafValues) {
+	BFTEST_UNIT_START;
 
 	BinTree<int> t;
 	t.insert(5);
@@ -247,13 +239,12 @@ int test_ReturningLeafValues() {
 		}
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_BinTreeCount() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_BinTreeCount() {
+BFTEST_UNIT_FUNC(test_BinTreeCount) {
+	BFTEST_UNIT_START;
 	BinTree<int> t;
 	const int size = 100;
 	int counter = size;
@@ -272,13 +263,12 @@ int test_BinTreeCount() {
 		}
 	}
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_ReplacingBinNodes() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_ReplacingBinNodes() {
+BFTEST_UNIT_FUNC(test_ReplacingBinNodes) {
+	BFTEST_UNIT_START;
 
 	BinTree<char> t;
 
@@ -318,13 +308,12 @@ int test_ReplacingBinNodes() {
 	Delete(f);
 	Delete(g);
 	
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_SearchingBinTree() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_SearchingBinTree() {
+BFTEST_UNIT_FUNC(test_SearchingBinTree) {
+	BFTEST_UNIT_START;
 
 	int target = 4;
 	BinTree<int> t;
@@ -354,13 +343,12 @@ int test_SearchingBinTree() {
 		printf("Could not find %d\n", target);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_Iterations() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_Iterations() {
+BFTEST_UNIT_FUNC(test_Iterations) {
+	BFTEST_UNIT_START;
 
 	// randomly add to list so we can have a better chance of a balanced tree
 	List<int> l;
@@ -404,13 +392,12 @@ int test_Iterations() {
 	}
 
 	Delete(itr);
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-int test_getNodeForObject(void) {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_getNodeForObject(void) {
+BFTEST_UNIT_FUNC(test_getNodeForObject) {
+	BFTEST_UNIT_START;
 
 	int numtests = 2 << 9;
 	while (!result && numtests) {
@@ -431,30 +418,28 @@ int test_getNodeForObject(void) {
 		numtests--;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFTEST_UNIT_END;
 }
 
-//void bintree_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(bintree_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(bintree_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_BinInitializer, p, f);
-	LAUNCH_TEST(test_BinInsert, p, f);
-	LAUNCH_TEST(test_BinMax, p, f);
-	LAUNCH_TEST(test_BinMin, p, f);
-	LAUNCH_TEST(test_BinNodeKnowsItsLeaf, p, f);
-	LAUNCH_TEST(test_BSTDelete, p, f);
-	LAUNCH_TEST(test_RemovingRoot, p, f);
-	LAUNCH_TEST(test_RemovingAll, p, f);
-	LAUNCH_TEST(test_ReturningLeafValues, p, f);
-	LAUNCH_TEST(test_BinTreeCount, p, f);
-	LAUNCH_TEST(test_ReplacingBinNodes, p, f);
-	LAUNCH_TEST(test_SearchingBinTree, p, f);
-	LAUNCH_TEST(test_Iterations, p, f);
-	LAUNCH_TEST(test_getNodeForObject, p, f);
+	BFTEST_LAUNCH(test_BinInitializer);
+	BFTEST_LAUNCH(test_BinInsert);
+	BFTEST_LAUNCH(test_BinMax);
+	BFTEST_LAUNCH(test_BinMin);
+	BFTEST_LAUNCH(test_BinNodeKnowsItsLeaf);
+	BFTEST_LAUNCH(test_BSTDelete);
+	BFTEST_LAUNCH(test_RemovingRoot);
+	BFTEST_LAUNCH(test_RemovingAll);
+	BFTEST_LAUNCH(test_ReturningLeafValues);
+	BFTEST_LAUNCH(test_BinTreeCount);
+	BFTEST_LAUNCH(test_ReplacingBinNodes);
+	BFTEST_LAUNCH(test_SearchingBinTree);
+	BFTEST_LAUNCH(test_Iterations);
+	BFTEST_LAUNCH(test_getNodeForObject);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // BINTREE_TESTS_HPP

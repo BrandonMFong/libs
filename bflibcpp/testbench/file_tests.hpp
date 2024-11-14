@@ -11,9 +11,9 @@
 
 using namespace BF;
 
-int test_filePath() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_filePath() {
+BFTEST_UNIT_FUNC(test_filePath) {
+	BFTEST_UNIT_START;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -63,13 +63,12 @@ int test_filePath() {
 
 	Delete(file);
 
-	UNIT_TEST_END(1, 0);
-	return result;
+	BFTEST_UNIT_END(1, 0);
 }
 
-int test_basename() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_basename() {
+BFTEST_UNIT_FUNC(test_basename) {
+	BFTEST_UNIT_START;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -120,13 +119,12 @@ int test_basename() {
 
 	Delete(file);
 
-	UNIT_TEST_END(1, 0);
-	return result;
+	BFTEST_UNIT_END(1, 0);
 }
 
-int test_extension() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_extension() {
+BFTEST_UNIT_FUNC(test_extension) {
+	BFTEST_UNIT_START;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -186,13 +184,12 @@ int test_extension() {
 
 	Delete(file);
 
-	UNIT_TEST_END(1, 0);
-	return result;
+	BFTEST_UNIT_END(1, 0);
 }
 
-int test_directory() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_directory() {
+BFTEST_UNIT_FUNC(test_directory) {
+	BFTEST_UNIT_START;
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -252,20 +249,18 @@ int test_directory() {
 
 	Delete(file);
 
-	UNIT_TEST_END(1, 0);
-	return result;
+	BFTEST_UNIT_END(1, 0);
 }
 
-//void file_tests(int * pass, int * fail) {
-TEST_COVERAGE_FUNC(file_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(file_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_filePath, p, f);
-	LAUNCH_TEST(test_basename, p, f);
-	LAUNCH_TEST(test_extension, p, f);
-	LAUNCH_TEST(test_directory, p, f);
+	BFTEST_LAUNCH(test_filePath);
+	BFTEST_LAUNCH(test_basename);
+	BFTEST_LAUNCH(test_extension);
+	BFTEST_LAUNCH(test_directory);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // FILE_TESTS_HPP

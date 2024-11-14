@@ -20,24 +20,24 @@
 #include "vector_tests.hpp"
 
 int main() {
-	TEST_SUITE_START;
+	BFTEST_SUITE_START;
 
-	TEST_SUITE_LAUNCH(atomic_tests);
-	TEST_SUITE_LAUNCH(file_tests);
-	TEST_SUITE_LAUNCH(bintree_tests);
-	TEST_SUITE_LAUNCH(rbtree_tests);
-	TEST_SUITE_LAUNCH(dictionary_tests);
-	TEST_SUITE_LAUNCH(string_tests);
-	TEST_SUITE_LAUNCH(stack_tests);
-	TEST_SUITE_LAUNCH(queue_tests);
-	TEST_SUITE_LAUNCH(time_tests);
-	TEST_SUITE_LAUNCH(object_tests);
-	TEST_SUITE_LAUNCH(data_tests);
-	TEST_SUITE_LAUNCH(list_tests);
-	TEST_SUITE_LAUNCH(vector_tests);
-	TEST_SUITE_LAUNCH(array_tests);
+	BFTEST_SUITE_LAUNCH(atomic_tests);
+	BFTEST_SUITE_LAUNCH(file_tests);
+	BFTEST_SUITE_LAUNCH(bintree_tests);
+	BFTEST_SUITE_LAUNCH(rbtree_tests);
+	BFTEST_SUITE_LAUNCH(dictionary_tests);
+	BFTEST_SUITE_LAUNCH(string_tests);
+	BFTEST_SUITE_LAUNCH(stack_tests);
+	BFTEST_SUITE_LAUNCH(queue_tests);
+	BFTEST_SUITE_LAUNCH(time_tests);
+	BFTEST_SUITE_LAUNCH(object_tests);
+	BFTEST_SUITE_LAUNCH(data_tests);
+	BFTEST_SUITE_LAUNCH(list_tests);
+	BFTEST_SUITE_LAUNCH(vector_tests);
+	BFTEST_SUITE_LAUNCH(array_tests);
 
-	TEST_SUITE_END;
+	BFTEST_SUITE_END;
 
 	return 0;
 }
