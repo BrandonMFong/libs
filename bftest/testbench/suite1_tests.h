@@ -31,6 +31,19 @@ BFTEST_UNIT_FUNC(test_assertfailure) {
 	BFTEST_UNIT_END;
 }
 
+BFTEST_UNIT_FUNC(test_assertfailureWithCondition) {
+	BFTEST_UNIT_START;
+
+	sleep(1);
+
+	int error = -1;
+	BF_ASSERT(error == 0);
+
+	exit(1); // should never reach here
+
+	BFTEST_UNIT_END;
+}
+
 BFTEST_UNIT_FUNC(test_assertfailureWithMessage) {
 	BFTEST_UNIT_START;
 
@@ -44,12 +57,28 @@ BFTEST_UNIT_FUNC(test_assertfailureWithMessage) {
 	BFTEST_UNIT_END;
 }
 
+BFTEST_UNIT_FUNC(test_assertfailureWithMessageAndCondition) {
+	BFTEST_UNIT_START;
+
+	sleep(1);
+
+	const char * msg = "this is a failure";
+	int error = -1;
+	BF_ASSERT(error == 0, "%s", msg);
+
+	exit(1); // should never reach here
+
+	BFTEST_UNIT_END;
+}
+
 BFTEST_COVERAGE_FUNC(suite1_tests) {
 	BFTEST_COVERAGE_START;
 
 	BFTEST_LAUNCH(test_assertsuccess);
 	BFTEST_LAUNCH(test_assertfailure);
 	BFTEST_LAUNCH(test_assertfailureWithMessage);
+	BFTEST_LAUNCH(test_assertfailureWithMessageAndCondition);
+	BFTEST_LAUNCH(test_assertfailureWithCondition);
 
 	BFTEST_COVERAGE_END;
 }

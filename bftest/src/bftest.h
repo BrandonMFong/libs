@@ -90,12 +90,25 @@
 	}\
 	return result;
 
+/**
+ * exits function if expr fails then logs event
+ */
 #define BF_ASSERT(expr, ...) \
 	if (!(expr)) {\
 		result = -1;\
-		_BFTestLogPush(__FILE__, __LINE__, "" __VA_ARGS__);\
+		_BFTestLogPush(\
+			__FILE__,\
+			__LINE__,\
+			_kBFTestLogTypeAssertFailure,\
+			#expr,\
+			"" __VA_ARGS__\
+		);\
 		BFTEST_UNIT_END; \
 	}
+
+typedef enum _BFTestLogType {
+	_kBFTestLogTypeAssertFailure = 0,
+} _BFTestLogType;
 
 /**
  * adds a message to the test log
@@ -103,6 +116,8 @@
 void _BFTestLogPush(
 	const char * filename,
 	int line,
+	_BFTestLogType logtype,
+	const char * expression,
 	const char * format,
 	...
 );

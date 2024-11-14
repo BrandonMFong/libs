@@ -12,6 +12,8 @@ typedef struct _TestLogQueueEntry {
 	char * msg;
 	char filename[256];
 	int line;
+	_BFTestLogType logtype;
+	char expression[256];
 } _TestLogQueueEntry;
 
 char * _Arg2String(const char * format, va_list valist) {
@@ -34,7 +36,14 @@ char * _Arg2String(const char * format, va_list valist) {
 	return result;
 }
 
-_TestLogQueueEntry * _TestLogQueueEntryAlloc(const char * filename, int line, const char * format, va_list valist) {
+_TestLogQueueEntry * _TestLogQueueEntryAlloc(
+	const char * filename,
+	int line,
+	_BFTestLogType logtype,
+	const char * expression,
+	const char * format,
+	va_list valist
+) {
 	if (!format) return NULL;
 
 	_TestLogQueueEntry * res = (_TestLogQueueEntry *) malloc(
@@ -46,6 +55,8 @@ _TestLogQueueEntry * _TestLogQueueEntryAlloc(const char * filename, int line, co
 	res->msg = _Arg2String(format, valist);
 	strcpy(res->filename, filename);
 	res->line = line;
+	res->logtype = logtype;
+	strcpy(res->expression, expression);
 	return res;
 }
 
@@ -63,8 +74,22 @@ typedef struct _TestLogQueue {
 // https://www.geeksforgeeks.org/queue-in-c/
 _TestLogQueue q = {0};
 
-void _TestLogQueueEnqueue(const char * filename, int line, const char * format, va_list valist) {
-	_TestLogQueueEntry * ent = _TestLogQueueEntryAlloc(filename, line, format, valist);
+void _TestLogQueueEnqueue(
+	const char * filename,
+	int line,
+	_BFTestLogType logtype,
+	const char * expression,
+	const char * format,
+	va_list valist
+) {
+	_TestLogQueueEntry * ent = _TestLogQueueEntryAlloc(
+		filename,
+		line,
+		logtype,
+		expression,
+		format,
+		valist
+	);
 
 	if (!q.head) {
 		q.head = q.tail = ent;
@@ -89,18 +114,39 @@ _TestLogQueueEntry * _TestLogQueuePeek() {
 	return q.head;
 }
 
-void _BFTestLogPush(const char * filename, int line, const char * format, ...) {
-	if (strlen(format) == 0) return;
+void _BFTestLogPush(
+	const char * filename,
+	int line,
+	_BFTestLogType logtype,
+	const char * expression,
+	const char * format,
+	...
+) {
+	//if (strlen(format) == 0) return;
 	va_list valist;
 	va_start(valist, format);
-	_TestLogQueueEnqueue(filename, line, format, valist);
+	_TestLogQueueEnqueue(
+		filename, line, logtype,
+		expression,
+		format, valist
+	);
 	va_end(valist);
 }
 
 void _BFTestLogFlush() {
 	_TestLogQueueEntry * curr = _TestLogQueuePeek();
 	while (curr) {
-		printf(" * %s:%d - %s\n", curr->filename, curr->line, curr->msg);
+		switch (curr->logtype) {
+		case _kBFTestLogTypeAssertFailure:
+		default:
+			printf(" * %s:%d (expr: %s)%s%s\n",
+				curr->filename,
+				curr->line,
+				curr->expression,
+				strlen(curr->msg) > 0 ? " - " : "",
+				curr->msg
+			);
+		}
 		_TestLogQueueDequeue();
 		curr = _TestLogQueuePeek();
 	}
