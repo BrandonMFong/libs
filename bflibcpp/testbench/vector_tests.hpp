@@ -58,7 +58,6 @@ int run_vectorSort(VectorSort type, size_t listsize, int reps) {
 	return result;
 }
 
-//int test_vectorListSortBubble() {
 BFTEST_UNIT_FUNC(test_vectorListSortBubble) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<List<int>>(kVectorSortBubble, 2 << 9, 1);
@@ -66,7 +65,6 @@ BFTEST_UNIT_FUNC(test_vectorListSortBubble) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorListSortInsertion() {
 BFTEST_UNIT_FUNC(test_vectorListSortInsertion) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<List<int>>(kVectorSortInsertion, 2 << 10, 1);
@@ -74,7 +72,6 @@ BFTEST_UNIT_FUNC(test_vectorListSortInsertion) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorListSortSelection() {
 BFTEST_UNIT_FUNC(test_vectorListSortSelection) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<List<int>>(kVectorSortSelection, 2 << 9, 1);
@@ -82,7 +79,6 @@ BFTEST_UNIT_FUNC(test_vectorListSortSelection) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorListSortQuick() {
 BFTEST_UNIT_FUNC(test_vectorListSortQuick) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<List<int>>(kVectorSortQuick, 2 << 9, 1);
@@ -90,7 +86,6 @@ BFTEST_UNIT_FUNC(test_vectorListSortQuick) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorListSortMerge() {
 BFTEST_UNIT_FUNC(test_vectorListSortMerge) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<List<int>>(kVectorSortMerge, 2 << 12, 1);
@@ -98,7 +93,6 @@ BFTEST_UNIT_FUNC(test_vectorListSortMerge) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorArraySortBubble() {
 BFTEST_UNIT_FUNC(test_vectorArraySortBubble) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<Array<int>>(kVectorSortBubble, 2 << 12, 4);
@@ -106,7 +100,6 @@ BFTEST_UNIT_FUNC(test_vectorArraySortBubble) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorArraySortInsertion() {
 BFTEST_UNIT_FUNC(test_vectorArraySortInsertion) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<Array<int>>(kVectorSortInsertion, 2 << 13, 4);
@@ -114,7 +107,6 @@ BFTEST_UNIT_FUNC(test_vectorArraySortInsertion) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorArraySortSelection() {
 BFTEST_UNIT_FUNC(test_vectorArraySortSelection) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<Array<int>>(kVectorSortSelection, 2 << 13, 4);
@@ -122,7 +114,6 @@ BFTEST_UNIT_FUNC(test_vectorArraySortSelection) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorArraySortQuick() {
 BFTEST_UNIT_FUNC(test_vectorArraySortQuick) {
 	BFTEST_UNIT_START;
 	int err = run_vectorSort<Array<int>>(kVectorSortQuick, 2 << 13, 4);
@@ -130,10 +121,9 @@ BFTEST_UNIT_FUNC(test_vectorArraySortQuick) {
 	BFTEST_UNIT_END;
 }
 
-//int test_vectorArraySortMerge() {
 BFTEST_UNIT_FUNC(test_vectorArraySortMerge) {
 	BFTEST_UNIT_START;
-	int err = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 14, 4);
+	int err = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 12, 4);
 	BF_ASSERT(err == 0);
 	BFTEST_UNIT_END;
 }

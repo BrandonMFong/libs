@@ -99,16 +99,15 @@ void KeyStringValueStringRetain(const char ** key, const char ** value) {
 void KeyStringValueStringRelease(const char ** key, const char ** value) {
 	if (key) {
 		char * k = (char *) *key;
-		Delete(k);
+		free(k);
 	}
 
 	if (value) {
-		const char * v = (char *) *value;
-		Delete(v);
+		char * v = (char *) *value;
+		free(v);
 	}
 }
 
-//int test_DictionaryRetainAndReleaseCallbacks() {
 BFTEST_UNIT_FUNC(test_DictionaryRetainAndReleaseCallbacks) {
 	BFTEST_UNIT_START;
 
@@ -236,7 +235,6 @@ bool DictionaryTestStringArrayContainsString(const char ** arr, int size, const 
 	return false;
 }
 
-//int test_TraversingThroughDictionary() {
 BFTEST_UNIT_FUNC(test_TraversingThroughDictionary) {
 	BFTEST_UNIT_START;
 

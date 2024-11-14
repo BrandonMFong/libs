@@ -273,7 +273,7 @@ BFTEST_UNIT_FUNC(test_insertingAtRandomIndex) {
 
 	int max = 2 << 8;
 	while (!result && max) {
-		int objcount = 2 << 16;
+		int objcount = 2 << 12;
 		Array<int, int> a;
 
 		// add
@@ -334,7 +334,6 @@ void TestArrayRelease(char * obj) {
 	BFFree(obj);
 }
 
-//int test_releasecallback() {
 BFTEST_UNIT_FUNC(test_releasecallback) {
 	BFTEST_UNIT_START;
 

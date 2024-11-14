@@ -117,6 +117,7 @@ BFTEST_UNIT_FUNC(test_decreasingSize) {
 				}
 			}
 		}
+		free(bytes);
 	}
 
 	BFTEST_UNIT_END;
@@ -147,6 +148,7 @@ BFTEST_UNIT_FUNC(test_increasingSize) {
 				}
 			}
 		}
+		free(bytes);
 	}
 
 	BFTEST_UNIT_END;

@@ -9,7 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <list.hpp>
-#include "delete.hpp"
+#include "release.hpp"
 
 using namespace BF;
 
@@ -337,7 +337,6 @@ BFTEST_UNIT_FUNC(test_ListNullSwap) {
 	BFTEST_UNIT_END;
 }
 
-//int test_ListSwap() {
 BFTEST_UNIT_FUNC(test_ListSwap) {
 	BFTEST_UNIT_START;
 	List<int>::Node * a = new List<int>::Node;
@@ -382,6 +381,12 @@ BFTEST_UNIT_FUNC(test_ListSwap) {
 		else if (bl->next() != b) result = 2;
 		else if (br->prev() != b) result = 2;
 	}
+	BFRelease(a);
+	BFRelease(al);
+	BFRelease(ar);
+	BFRelease(b);
+	BFRelease(bl);
+	BFRelease(br);
 	
 	BFTEST_UNIT_END;
 }
