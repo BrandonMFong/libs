@@ -14,7 +14,7 @@
 #include <time.h>
 
 int test_GettingTime(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	time_t b = time(NULL);
 	sleep(1);
@@ -27,11 +27,11 @@ int test_GettingTime(void) {
 		printf("Failed: %ld <= %f <= %ld\n", b, n, a);
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_GettingUTCTime(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
@@ -47,11 +47,11 @@ int test_GettingUTCTime(void) {
 		if (difftime(t1, t2)) result = 2;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_GettingLocalTime(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
@@ -67,11 +67,11 @@ int test_GettingLocalTime(void) {
 		if (difftime(t1, t2)) result = 2;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_GettingDateTime(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	BFTime n = BFTimeGetCurrentTime();
 	struct tm tm;
@@ -106,63 +106,63 @@ int test_GettingDateTime(void) {
 		printf("Error: %d\n", result);
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int time_bftimesleep(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTimeSleep(1);
 	
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int time_bftimesleepmicro(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTimeSleep(BFTimeUS(100));
 	
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int time_bftimesleepmilli(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTimeSleep(BFTimeMS(100));
 	
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int time_bftimesleepsecondswithmicro(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTimeSleep(1.123456);
 	
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int time_bftimesleep0(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	
 	BFTimeSleep(0);
 	
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-TEST_COVERAGE_FUNC(time_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(time_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_GettingTime);
-	LAUNCH_TEST(test_GettingDateTime);
-	LAUNCH_TEST(test_GettingUTCTime);
-	LAUNCH_TEST(test_GettingLocalTime);
-	LAUNCH_TEST(time_bftimesleep);
-	LAUNCH_TEST(time_bftimesleep0);
-	LAUNCH_TEST(time_bftimesleepmicro);
-	LAUNCH_TEST(time_bftimesleepmilli);
-	LAUNCH_TEST(time_bftimesleepsecondswithmicro);
+	BFTEST_LAUNCH(test_GettingTime);
+	BFTEST_LAUNCH(test_GettingDateTime);
+	BFTEST_LAUNCH(test_GettingUTCTime);
+	BFTEST_LAUNCH(test_GettingLocalTime);
+	BFTEST_LAUNCH(time_bftimesleep);
+	BFTEST_LAUNCH(time_bftimesleep0);
+	BFTEST_LAUNCH(time_bftimesleepmicro);
+	BFTEST_LAUNCH(time_bftimesleepmilli);
+	BFTEST_LAUNCH(time_bftimesleepsecondswithmicro);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // TIME_TESTS_H

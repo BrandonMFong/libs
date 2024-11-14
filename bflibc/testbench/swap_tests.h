@@ -10,7 +10,7 @@
 #include "swap.h"
 
 int test_swapping(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 21;
 	while (!result && max--) {
@@ -36,15 +36,15 @@ int test_swapping(void) {
 		}		
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-TEST_COVERAGE_FUNC(swap_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(swap_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_swapping);
+	BFTEST_LAUNCH(test_swapping);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // SWAP_TESTS_H

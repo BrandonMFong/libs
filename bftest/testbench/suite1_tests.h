@@ -9,18 +9,18 @@
 #include "bftest.h"
 #include <unistd.h>
 
-UNIT_TEST_FUNC(test_assertsuccess) {
-	UNIT_TEST_START;
+BFTEST_UNIT_FUNC(test_assertsuccess) {
+	BFTEST_UNIT_START;
 
 	sleep(1);
 
 	BF_ASSERT(true);
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-UNIT_TEST_FUNC(test_assertfailure) {
-	UNIT_TEST_START;
+BFTEST_UNIT_FUNC(test_assertfailure) {
+	BFTEST_UNIT_START;
 
 	sleep(1);
 
@@ -28,11 +28,11 @@ UNIT_TEST_FUNC(test_assertfailure) {
 
 	exit(1); // should never reach here
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-UNIT_TEST_FUNC(test_assertfailureWithMessage) {
-	UNIT_TEST_START;
+BFTEST_UNIT_FUNC(test_assertfailureWithMessage) {
+	BFTEST_UNIT_START;
 
 	sleep(1);
 
@@ -41,17 +41,17 @@ UNIT_TEST_FUNC(test_assertfailureWithMessage) {
 
 	exit(1); // should never reach here
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-TEST_COVERAGE_FUNC(suite1_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(suite1_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_assertsuccess);
-	LAUNCH_TEST(test_assertfailure);
-	LAUNCH_TEST(test_assertfailureWithMessage);
+	BFTEST_LAUNCH(test_assertsuccess);
+	BFTEST_LAUNCH(test_assertfailure);
+	BFTEST_LAUNCH(test_assertfailureWithMessage);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // TESTSUITE1_TESTS_H

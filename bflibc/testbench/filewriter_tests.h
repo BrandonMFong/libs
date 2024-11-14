@@ -14,7 +14,7 @@
 #define FILE_WRITER_FILE_PATH "/tmp/filewriter_test.txt"
 
 int test_creatingfilewriter(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -33,11 +33,11 @@ int test_creatingfilewriter(void) {
 	}
 
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_writingwithfilewriter(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -94,7 +94,7 @@ int test_writingwithfilewriter(void) {
 		max--;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 typedef struct {
@@ -118,7 +118,7 @@ void TestFileWriterThreads(void * in) {
 }
 
 int test_writingfromdifferentthreads(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	const int lines2write = 2 << 8;
 
 	int max = 2 << 4;
@@ -183,11 +183,11 @@ int test_writingfromdifferentthreads(void) {
 		}
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_writingwithformat(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -242,11 +242,11 @@ int test_writingwithformat(void) {
 		max--;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_filewritingisappending() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 3;
 	while (!result && max) {
@@ -303,11 +303,11 @@ int test_filewritingisappending() {
 		max--;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_filetruncation() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
 	while (!result && max) {
@@ -362,11 +362,11 @@ int test_filetruncation() {
 		max--;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-TEST_COVERAGE_FUNC(filewriter_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(filewriter_tests) {
+	BFTEST_COVERAGE_START;
 
 	BFThreadResetStartedCount();
 	BFThreadResetStoppedCount();
@@ -375,18 +375,18 @@ TEST_COVERAGE_FUNC(filewriter_tests) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	LAUNCH_TEST(test_creatingfilewriter);
-	LAUNCH_TEST(test_writingwithfilewriter);
-	LAUNCH_TEST(test_writingfromdifferentthreads);
-	LAUNCH_TEST(test_writingwithformat);
-	LAUNCH_TEST(test_filewritingisappending);
-	LAUNCH_TEST(test_filetruncation);
+	BFTEST_LAUNCH(test_creatingfilewriter);
+	BFTEST_LAUNCH(test_writingwithfilewriter);
+	BFTEST_LAUNCH(test_writingfromdifferentthreads);
+	BFTEST_LAUNCH(test_writingwithformat);
+	BFTEST_LAUNCH(test_filewritingisappending);
+	BFTEST_LAUNCH(test_filetruncation);
 
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // FILE_WRITER_TESTS_H

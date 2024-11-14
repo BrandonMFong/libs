@@ -16,7 +16,7 @@
 #include <uuid/uuid.h>
 
 int test_CopyString(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	const char * string = "Hello world!";
 	int error = 0;
 	char * output = BFStringCopyString(string);
@@ -36,11 +36,11 @@ int test_CopyString(void) {
 		free(output);
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_uuidGen(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	const long lim = (long) 2 << 16;
 	for (long i = 0; i < lim; i++) {
@@ -58,7 +58,7 @@ int test_uuidGen(void) {
 		if (result) break;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 #define TEST_STRINGUTILS_RANDOM_FILE "/tmp/stringutils_tests_random_file"
@@ -82,7 +82,7 @@ void TestStringUtilsRandomFileDelete() {
 }
 
 int test_readingFile(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	TestStringUtilsRandomFileCreate();
 
@@ -124,11 +124,11 @@ endloop:
 	
 	TestStringUtilsRandomFileDelete();
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_uuidcompare(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 1;
 	while (!result && max) {
@@ -173,11 +173,11 @@ int test_uuidcompare(void) {
 		max--;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_creatingstringfromformat(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int numstr = 2 << 20;
 	for (int i = 0; i < numstr; i++) {
@@ -193,11 +193,11 @@ int test_creatingstringfromformat(void) {
 		free(str);
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_makingarrayfromstring() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 20;
 	while (!result && max) {
@@ -235,11 +235,11 @@ int test_makingarrayfromstring() {
 		max--;
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_byteArrayToHexString() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 20;
 	while (!result && max--) {
@@ -263,21 +263,21 @@ int test_byteArrayToHexString() {
 		BFFree(str);
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-TEST_COVERAGE_FUNC(stringutils_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(stringutils_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_CopyString);
-	LAUNCH_TEST(test_uuidGen);
-	LAUNCH_TEST(test_readingFile);
-	LAUNCH_TEST(test_creatingstringfromformat);
-	LAUNCH_TEST(test_uuidcompare);
-	LAUNCH_TEST(test_makingarrayfromstring);
-	LAUNCH_TEST(test_byteArrayToHexString);
+	BFTEST_LAUNCH(test_CopyString);
+	BFTEST_LAUNCH(test_uuidGen);
+	BFTEST_LAUNCH(test_readingFile);
+	BFTEST_LAUNCH(test_creatingstringfromformat);
+	BFTEST_LAUNCH(test_uuidcompare);
+	BFTEST_LAUNCH(test_makingarrayfromstring);
+	BFTEST_LAUNCH(test_byteArrayToHexString);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // STRINGUTILS_TESTS_H

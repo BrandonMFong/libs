@@ -10,7 +10,7 @@
 #include "lock.h"
 
 int test_CreatingBFLock(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	BFLock lock;
 	result = BFLockCreate(&lock);
@@ -21,11 +21,11 @@ int test_CreatingBFLock(void) {
 
 	if (!result) result = BFLockDestroy(&lock);
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_CreatingTimedWaitLock(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	BFLock lock;
 	result = BFLockCreate(&lock);
@@ -43,7 +43,7 @@ int test_CreatingTimedWaitLock(void) {
 
 	if (!result) result = BFLockDestroy(&lock);
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 typedef struct {
@@ -63,7 +63,7 @@ void thread_test_waitinglock(void * in) {
 }
 
 int test_waitinglock() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 4;
 	while (!result && max--) {
@@ -91,7 +91,7 @@ int test_waitinglock() {
 		if (!result) result = BFLockDestroy(&st.lock);
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 
 }
 
@@ -108,7 +108,7 @@ void thread_test_destroyLockThatIsWaiting(void * in) {
 }
 
 int test_destroyLockThatIsWaiting() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 
 	int max = 2 << 14;
 	while (!result && max--) {
@@ -138,19 +138,19 @@ int test_destroyLockThatIsWaiting() {
 		}
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 
 }
 
-TEST_COVERAGE_FUNC(lock_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(lock_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_CreatingBFLock);
-	LAUNCH_TEST(test_CreatingTimedWaitLock);
-	LAUNCH_TEST(test_waitinglock);
-	LAUNCH_TEST(test_destroyLockThatIsWaiting);
+	BFTEST_LAUNCH(test_CreatingBFLock);
+	BFTEST_LAUNCH(test_CreatingTimedWaitLock);
+	BFTEST_LAUNCH(test_waitinglock);
+	BFTEST_LAUNCH(test_destroyLockThatIsWaiting);
 
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // LOCK_TESTS_H

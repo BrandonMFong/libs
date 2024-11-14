@@ -40,42 +40,42 @@
 /**
  * defines the test coverage function
  */
-#define TEST_COVERAGE_FUNC(foo) \
+#define BFTEST_COVERAGE_FUNC(foo) \
 	void foo (int * pass, int * fail)
 
 /**
  * initializes your test coverage function
  */
-#define TEST_COVERAGE_START \
+#define BFTEST_COVERAGE_START \
 	printf("---- %s started ----\n", __func__);\
 	int p = 0, f = 0;
 
 /**
  * each function should take no params and return 0 on success
  */
-#define LAUNCH_TEST(foo) \
+#define BFTEST_LAUNCH(foo) \
 	if (!foo()) p++; \
 	else f++;
 
 /**
  * ends your test your coverage function
  */
-#define TEST_COVERAGE_END \
+#define BFTEST_COVERAGE_END \
 	if (pass) *pass += p;\
 	if (fail) *fail += f;\
 	printf("---- %s ended [+ %d, - %d] ----\n", __func__, *pass, *fail);
 
 /** UNIT TEST **/
 
-#define UNIT_TEST_FUNC(foo) \
+#define BFTEST_UNIT_FUNC(foo) \
 	int foo (void)
 
-#define UNIT_TEST_START \
+#define BFTEST_UNIT_START \
 	printf("%s - ", __func__);\
 	fflush(stdout);\
 	int result = 0;
 
-#define UNIT_TEST_END \
+#define BFTEST_UNIT_END \
 	if (result == 0) { printf("PASS\n"); }\
 	else {\
 		printf("FAIL %d\n", result);\
@@ -87,7 +87,7 @@
 	if (!(expr)) {\
 		result = -1;\
 		_BFTestLogPush("" __VA_ARGS__);\
-		UNIT_TEST_END; \
+		BFTEST_UNIT_END; \
 	}
 
 /**

@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 int test_DoesStringArrayContain(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
 
@@ -35,11 +35,11 @@ int test_DoesStringArrayContain(void) {
 		}
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_GetByteStringRepresentationUsingKilo(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	char buf[20];
 
 	result = BFByteGetString(1000 * 1000, 0, buf);
@@ -53,11 +53,11 @@ int test_GetByteStringRepresentationUsingKilo(void) {
 		}
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_GetByteStringRepresentationUsingKibi(void) {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	char buf[20];
 
 	result = BFByteGetString(1024 * 1024, 1, buf);
@@ -71,11 +71,11 @@ int test_GetByteStringRepresentationUsingKibi(void) {
 		}
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_CreateBinaryStringFromNumber() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	char * string = 0;
 	unsigned char a = 0x00;
 
@@ -106,11 +106,11 @@ int test_CreateBinaryStringFromNumber() {
 		free(string);
 	}
 	
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
 int test_IndexOfStringInArray() {
-	UNIT_TEST_START;
+	BFTEST_UNIT_START;
 	int index = 0;
 	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
 
@@ -136,19 +136,19 @@ int test_IndexOfStringInArray() {
 		}
 	}
 
-	UNIT_TEST_END;
+	BFTEST_UNIT_END;
 }
 
-TEST_COVERAGE_FUNC(coreutils_tests) {
-	TEST_COVERAGE_START;
+BFTEST_COVERAGE_FUNC(coreutils_tests) {
+	BFTEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_DoesStringArrayContain);
-	LAUNCH_TEST(test_CreateBinaryStringFromNumber);
-	LAUNCH_TEST(test_IndexOfStringInArray);
-	LAUNCH_TEST(test_GetByteStringRepresentationUsingKibi);
-	LAUNCH_TEST(test_GetByteStringRepresentationUsingKilo);
+	BFTEST_LAUNCH(test_DoesStringArrayContain);
+	BFTEST_LAUNCH(test_CreateBinaryStringFromNumber);
+	BFTEST_LAUNCH(test_IndexOfStringInArray);
+	BFTEST_LAUNCH(test_GetByteStringRepresentationUsingKibi);
+	BFTEST_LAUNCH(test_GetByteStringRepresentationUsingKilo);
 	
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // COREUTILS_TESTS_H
