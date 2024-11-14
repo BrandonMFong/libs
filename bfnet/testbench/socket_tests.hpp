@@ -19,10 +19,6 @@
 #include "bfnet_tests.hpp"
 #include <unistd.h>
 
-extern "C" {
-//#include <bflibc/bflibc.h>
-}
-
 using namespace BF;
 using namespace BF::Net;
 
@@ -229,17 +225,14 @@ int test_sendingandreceiving() {
 	return result;
 }
 
-void socket_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
+TEST_COVERAGE_FUNC(socket_tests) {
+	TEST_COVERAGE_START;
 
-	LAUNCH_TEST(test_socketinitclient, p, f);
-	LAUNCH_TEST(test_socketinitserver, p, f);
-	LAUNCH_TEST(test_sendingandreceiving, p, f);
+	LAUNCH_TEST(test_socketinitclient);
+	LAUNCH_TEST(test_socketinitserver);
+	LAUNCH_TEST(test_sendingandreceiving);
 
-	if (pass) *pass += p;
-	if (fail) *fail += f;
+	TEST_COVERAGE_END;
 }
 
 #endif // SOCKET_TESTS_HPP
