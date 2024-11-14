@@ -62,7 +62,7 @@
 #define BF_ASSERT(expr, ...) \
 	if (!(expr)) {\
 		result = -1;\
-		BFTestLogPush(__VA_ARGS__);\
+		BFTestLogPush("" __VA_ARGS__);\
 		UNIT_TEST_END \
 	}
 
