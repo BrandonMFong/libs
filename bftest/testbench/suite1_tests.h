@@ -9,57 +9,39 @@
 #include "bftest.h"
 #include <unistd.h>
 
-BFTEST_UNIT_FUNC(test_assertsuccess) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_assertsuccess, 1, {
 	sleep(1);
 
 	BF_ASSERT(true);
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_assertfailure) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_assertfailure, 1, {
 	sleep(1);
 
 	BF_ASSERT(false);
 
 	exit(1); // should never reach here
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_assertfailureWithCondition) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_assertfailureWithCondition, 1, {
 	sleep(1);
 
 	int error = -1;
 	BF_ASSERT(error == 0);
 
 	exit(1); // should never reach here
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_assertfailureWithMessage) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_assertfailureWithMessage, 1, {
 	sleep(1);
 
 	const char * msg = "this is a failure";
 	BF_ASSERT(false, "%s", msg);
 
 	exit(1); // should never reach here
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_assertfailureWithMessageAndCondition) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_assertfailureWithMessageAndCondition, 1, {
 	sleep(1);
 
 	const char * msg = "this is a failure";
@@ -67,9 +49,7 @@ BFTEST_UNIT_FUNC(test_assertfailureWithMessageAndCondition) {
 	BF_ASSERT(error == 0, "%s", msg);
 
 	exit(1); // should never reach here
-
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(suite1_tests) {
 	BFTEST_COVERAGE_START;

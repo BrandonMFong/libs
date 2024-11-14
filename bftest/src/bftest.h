@@ -67,8 +67,21 @@
 
 /** UNIT TEST **/
 
+/*
 #define BFTEST_UNIT_FUNC(foo) \
 	int foo (void)
+*/
+
+#define BFTEST_UNIT_FUNC(name, repeat, body) \
+	int name (void) {\
+		BFTEST_UNIT_START;\
+		int max = repeat;\
+		while (!result && max--) {\
+			usleep(50);\
+			body; \
+		}\
+		BFTEST_UNIT_END;\
+	}
 
 /**
  * `result` is defined here and can be used in unit test functions
