@@ -1,0 +1,26 @@
+name: BFLibC
+
+on:
+  push:
+    branches: [ "features/dev/brando-improvedTests" ]
+  # pull_request:
+  #   branches: [ "dev" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: test
+      run: |
+        cd bflibc;
+        make dependencies clean build CONFIG=test run
+
+    - name: build
+      run: |
+        cd bflibc;
+        make clean build CONFIG=release
+        make clean build CONFIG=debug
+

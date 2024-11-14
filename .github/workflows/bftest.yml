@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: BFTest
 
 on:
   push:
@@ -15,11 +15,12 @@ jobs:
     - uses: actions/checkout@v4
     - name: test
       run: |
-        cd bflibc;
-        make dependencies clean build CONFIG=test run
+        cd bftest;
+        make clean build CONFIG=test run
 
     - name: build
       run: |
         cd bflibc;
-        make clean build
+        make clean build CONFIG=release
+        make clean build CONFIG=debug
 
