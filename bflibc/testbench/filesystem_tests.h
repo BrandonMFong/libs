@@ -20,8 +20,7 @@
 #include <unistd.h>
 
 //int test_HomePath(void) {
-BFTEST_UNIT_FUNC(test_HomePath) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_HomePath, 1, {
 	char * home = BFFileSystemPathCopyHomePath(&result);
 
 	if (result) {
@@ -35,14 +34,10 @@ BFTEST_UNIT_FUNC(test_HomePath) {
 	}
 
 	free(home);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_CalculateSizeForAvailability(void) {
-BFTEST_UNIT_FUNC(test_CalculateSizeForAvailability) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_CalculateSizeForAvailability, 1, {
 	char * home = BFFileSystemPathCopyHomePath(&result);
 	if (result) {
 		printf("CopyHomePath returned: %d\n", result);
@@ -58,13 +53,10 @@ BFTEST_UNIT_FUNC(test_CalculateSizeForAvailability) {
 	}
 
 	BFFree(home);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_GetFileExtensionForPath(void) {
-BFTEST_UNIT_FUNC(test_GetFileExtensionForPath) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_GetFileExtensionForPath, 1, {
 	char buf[100];
 
 	result = BFFileSystemPathGetExtension("test.txt", buf);
@@ -89,25 +81,20 @@ BFTEST_UNIT_FUNC(test_GetFileExtensionForPath) {
 	if (result == 0) {
 		result = strcmp(buf, "");
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_tmpdir(void) {
-BFTEST_UNIT_FUNC(test_tmpdir) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_tmpdir, 1, {
 	char tmpdir[PATH_MAX];
 	result = BFFileSystemGetOSTempDirectory(tmpdir);
 
 	if (result == 0) {
 		if (!strlen(tmpdir)) result = 2;
 	}
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_GettingNameWithoutExtension() {
-BFTEST_UNIT_FUNC(test_GettingNameWithoutExtension) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_GettingNameWithoutExtension, 1, {
 	char buf[PATH_MAX];
 
 	for (int i = 0; i < (2 << 4); i++) {
@@ -124,13 +111,10 @@ BFTEST_UNIT_FUNC(test_GettingNameWithoutExtension) {
 			}
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_GettingLeafComponent() {
-BFTEST_UNIT_FUNC(test_GettingLeafComponent) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_GettingLeafComponent, 1, {
 	char buf[PATH_MAX];
 
 	for (int i = 0; i < (2 << 4); i++) {
@@ -147,13 +131,10 @@ BFTEST_UNIT_FUNC(test_GettingLeafComponent) {
 			}
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_GettingFullname() {
-BFTEST_UNIT_FUNC(test_GettingFullname) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_GettingFullname, 1, {
 	char buf[PATH_MAX];
 
 	for (int i = 0; i < (2 << 4); i++) {
@@ -170,13 +151,10 @@ BFTEST_UNIT_FUNC(test_GettingFullname) {
 			}
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RemoveFullDirectory(void) {
-BFTEST_UNIT_FUNC(test_RemoveFullDirectory) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RemoveFullDirectory, 1, {
 	char tmpdir[PATH_MAX];
 	char file[PATH_MAX];
 
@@ -219,13 +197,10 @@ BFTEST_UNIT_FUNC(test_RemoveFullDirectory) {
 	if (BFFileSystemRemoveAll(tmpdir)) {
 		printf("could not remove: %s\n", tmpdir);
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_directoryWithAPeriod(void) {
-BFTEST_UNIT_FUNC(test_directoryWithAPeriod) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_directoryWithAPeriod, 1, {
 	char tmpdir[PATH_MAX];
 
 	// setup
@@ -248,9 +223,7 @@ BFTEST_UNIT_FUNC(test_directoryWithAPeriod) {
 	if (BFFileSystemRemoveAll(tmpdir)) {
 		printf("could not remove: %s\n", tmpdir);
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(filesystem_tests) {
 	BFTEST_COVERAGE_START;

@@ -16,8 +16,7 @@
 #include <uuid/uuid.h>
 
 //int test_CopyString(void) {
-BFTEST_UNIT_FUNC(test_CopyString) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_CopyString, 1, {
 	const char * string = "Hello world!";
 	int error = 0;
 	char * output = BFStringCopyString(string);
@@ -36,14 +35,10 @@ BFTEST_UNIT_FUNC(test_CopyString) {
 	if (output) {
 		free(output);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_uuidGen(void) {
-BFTEST_UNIT_FUNC(test_uuidGen) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_uuidGen, 1, {
 	const long lim = (long) 2 << 16;
 	for (long i = 0; i < lim; i++) {
 		char uuidStr[kBFStringUUIDStringLength];
@@ -59,9 +54,7 @@ BFTEST_UNIT_FUNC(test_uuidGen) {
 
 		if (result) break;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 #define TEST_STRINGUTILS_RANDOM_FILE "/tmp/stringutils_tests_random_file"
 #define TEST_STRINGUTILS_RANDOM_TEXT "abcdefghijklmnopqrstuvwxz"
@@ -84,9 +77,7 @@ void TestStringUtilsRandomFileDelete() {
 }
 
 //int test_readingFile(void) {
-BFTEST_UNIT_FUNC(test_readingFile) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_readingFile, 1, {
 	TestStringUtilsRandomFileCreate();
 
 	char * buf = BFStringCreateFromFile(TEST_STRINGUTILS_RANDOM_FILE);
@@ -126,14 +117,10 @@ endloop:
 	BFFree(buf);
 	
 	TestStringUtilsRandomFileDelete();
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_uuidcompare(void) {
-BFTEST_UNIT_FUNC(test_uuidcompare) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_uuidcompare, 1, {
 	int max = 2 << 1;
 	while (!result && max) {
 		const long lim = (long) 2 << 16;
@@ -176,14 +163,10 @@ BFTEST_UNIT_FUNC(test_uuidcompare) {
 
 		max--;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_creatingstringfromformat(void) {
-BFTEST_UNIT_FUNC(test_creatingstringfromformat) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_creatingstringfromformat, 1, {
 	int numstr = 2 << 20;
 	for (int i = 0; i < numstr; i++) {
 		const char * fmt = "string %d";
@@ -197,14 +180,10 @@ BFTEST_UNIT_FUNC(test_creatingstringfromformat) {
 
 		free(str);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_makingarrayfromstring() {
-BFTEST_UNIT_FUNC(test_makingarrayfromstring) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_makingarrayfromstring, 1, {
 	int max = 2 << 20;
 	while (!result && max) {
 		const char * str = "hello world this is a test";
@@ -240,14 +219,10 @@ BFTEST_UNIT_FUNC(test_makingarrayfromstring) {
 
 		max--;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_byteArrayToHexString() {
-BFTEST_UNIT_FUNC(test_byteArrayToHexString) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_byteArrayToHexString, 1, {
 	int max = 2 << 20;
 	while (!result && max--) {
 		unsigned char arr[] = {
@@ -269,9 +244,7 @@ BFTEST_UNIT_FUNC(test_byteArrayToHexString) {
 
 		BFFree(str);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(stringutils_tests) {
 	BFTEST_COVERAGE_START;

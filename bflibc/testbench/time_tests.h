@@ -13,9 +13,8 @@
 #include <string.h>
 #include <time.h>
 
-int test_GettingTime(void) {
-	BFTEST_UNIT_START;
-
+//int test_GettingTime(void) {
+BFTEST_UNIT_FUNC(test_GettingTime, 1, {
 	time_t b = time(NULL);
 	sleep(1);
 	BFTime n = BFTimeGetCurrentTime();
@@ -26,13 +25,10 @@ int test_GettingTime(void) {
 		result = 1;
 		printf("Failed: %ld <= %f <= %ld\n", b, n, a);
 	}
+})
 
-	BFTEST_UNIT_END;
-}
-
-int test_GettingUTCTime(void) {
-	BFTEST_UNIT_START;
-	
+//int test_GettingUTCTime(void) {
+BFTEST_UNIT_FUNC(test_GettingUTCTime, 1, {
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
 	struct tm tm1, tm2;
@@ -46,13 +42,10 @@ int test_GettingUTCTime(void) {
 		time_t t1 = mktime(&tm1), t2 = mktime(&tm2);
 		if (difftime(t1, t2)) result = 2;
 	}
+})
 
-	BFTEST_UNIT_END;
-}
-
-int test_GettingLocalTime(void) {
-	BFTEST_UNIT_START;
-	
+//int test_GettingLocalTime(void) {
+BFTEST_UNIT_FUNC(test_GettingLocalTime, 1, {
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
 	struct tm tm1, tm2;
@@ -66,13 +59,10 @@ int test_GettingLocalTime(void) {
 		time_t t1 = mktime(&tm1), t2 = mktime(&tm2);
 		if (difftime(t1, t2)) result = 2;
 	}
+})
 
-	BFTEST_UNIT_END;
-}
-
-int test_GettingDateTime(void) {
-	BFTEST_UNIT_START;
-
+//int test_GettingDateTime(void) {
+BFTEST_UNIT_FUNC(test_GettingDateTime, 1, {
 	BFTime n = BFTimeGetCurrentTime();
 	struct tm tm;
 	time_t t = (time_t) n;
@@ -105,49 +95,32 @@ int test_GettingDateTime(void) {
 	if (result) {
 		printf("Error: %d\n", result);
 	}
+})
 
-	BFTEST_UNIT_END;
-}
-
-int time_bftimesleep(void) {
-	BFTEST_UNIT_START;
-	
+//int time_bftimesleep(void) {
+BFTEST_UNIT_FUNC(time_bftimesleep, 1, {
 	BFTimeSleep(1);
-	
-	BFTEST_UNIT_END;
-}
+})
 
-int time_bftimesleepmicro(void) {
-	BFTEST_UNIT_START;
-	
+//int time_bftimesleepmicro(void) {
+BFTEST_UNIT_FUNC(time_bftimesleepmicro, 1, {
 	BFTimeSleep(BFTimeUS(100));
-	
-	BFTEST_UNIT_END;
-}
+})
 
-int time_bftimesleepmilli(void) {
-	BFTEST_UNIT_START;
-	
+//int time_bftimesleepmilli(void) {
+BFTEST_UNIT_FUNC(time_bftimesleepmilli, 1, {
 	BFTimeSleep(BFTimeMS(100));
-	
-	BFTEST_UNIT_END;
-}
+})
 
-int time_bftimesleepsecondswithmicro(void) {
-	BFTEST_UNIT_START;
-	
+//int time_bftimesleepsecondswithmicro(void) {
+BFTEST_UNIT_FUNC(time_bftimesleepsecondswithmicro, 1, {
 	BFTimeSleep(1.123456);
-	
-	BFTEST_UNIT_END;
-}
+})
 
-int time_bftimesleep0(void) {
-	BFTEST_UNIT_START;
-	
+//int time_bftimesleep0(void) {
+BFTEST_UNIT_FUNC(time_bftimesleep0, 1, {
 	BFTimeSleep(0);
-	
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(time_tests) {
 	BFTEST_COVERAGE_START;

@@ -12,8 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 
-BFTEST_UNIT_FUNC(test_DoesStringArrayContain) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_DoesStringArrayContain, 1, {
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
 
@@ -24,12 +23,9 @@ BFTEST_UNIT_FUNC(test_DoesStringArrayContain) {
 	string = "tree";
 	value = BFArrayStringContainsString(array, size, string);
 	BF_ASSERT(!value, "Array should not have: %s", string);
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKilo) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKilo, 1, {
 	char buf[20];
 
 	int err = BFByteGetString(1000 * 1000, 0, buf);
@@ -37,12 +33,9 @@ BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKilo) {
 
 	const char * expected = "1.00 MB";
 	BF_ASSERT(!strcmp(expected, buf), "%s != %s", expected, buf);
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKibi) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKibi, 1, {
 	char buf[20];
 
 	int err = BFByteGetString(1024 * 1024, 1, buf);
@@ -50,12 +43,9 @@ BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKibi) {
 
 	const char * expected = "1.00 MiB";
 	BF_ASSERT(!strcmp(expected, buf), "%s != %s", expected, buf);
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_CreateBinaryStringFromNumber) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_CreateBinaryStringFromNumber, 1, {
 	char * string = 0;
 	unsigned char a = 0x00;
 
@@ -85,12 +75,10 @@ BFTEST_UNIT_FUNC(test_CreateBinaryStringFromNumber) {
 		result = strcmp(string, "11110000");
 		free(string);
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
-int test_IndexOfStringInArray() {
-	BFTEST_UNIT_START;
+//int test_IndexOfStringInArray() {
+BFTEST_UNIT_FUNC(test_IndexOfStringInArray, 1, {
 	int index = 0;
 	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
 
@@ -115,9 +103,7 @@ int test_IndexOfStringInArray() {
 			printf("3: index returned was %d\n", index);
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(coreutils_tests) {
 	BFTEST_COVERAGE_START;

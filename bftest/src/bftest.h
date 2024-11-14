@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 /** TEST SUITE **/
 // a test suite is the high level function that will call
@@ -72,13 +73,13 @@
 	int foo (void)
 */
 
-#define BFTEST_UNIT_FUNC(name, repeat, body) \
+#define BFTEST_UNIT_FUNC(name, repeat, ...) \
 	int name (void) {\
 		BFTEST_UNIT_START;\
 		int max = repeat;\
 		while (!result && max--) {\
 			usleep(50);\
-			body; \
+			__VA_ARGS__ \
 		}\
 		BFTEST_UNIT_END;\
 	}
