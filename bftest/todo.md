@@ -1,5 +1,6 @@
 ```
 0.1
 [] version header
-[] error logs that gets pushed using assert
+[x] error logs that gets pushed using assert
+[] better format for error dialog
 ```
