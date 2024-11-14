@@ -18,14 +18,14 @@
 /**
  * Call at the start of your test suite function
  */
-#define TEST_SUITE_START \
+#define BFTEST_SUITE_START \
 	int pass = 0, fail = 0;\
 	float tp = 0, tf = 0;
 
 /**
  * Calls test coverage function
  */
-#define TEST_SUITE_LAUNCH(foo) \
+#define BFTEST_SUITE_LAUNCH(foo) \
 	foo(&pass, &fail);\
 	tp += pass; tf += fail;\
 	pass = 0; fail = 0;
@@ -33,7 +33,7 @@
 /**
  * call at the end of your test suite function
  */
-#define TEST_SUITE_END printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));
+#define BFTEST_SUITE_END printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));
 
 /** TEST COVERAGE **/
 

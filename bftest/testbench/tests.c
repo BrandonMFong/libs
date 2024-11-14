@@ -6,11 +6,11 @@
 #include "suite1_tests.h"
 
 int main() {
-	TEST_SUITE_START;
+	BFTEST_SUITE_START;
 
-	TEST_SUITE_LAUNCH(suite1_tests);
+	BFTEST_SUITE_LAUNCH(suite1_tests);
 	
-	TEST_SUITE_END;
+	BFTEST_SUITE_END;
 
 	return 0;
 }
