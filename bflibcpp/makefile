@@ -49,5 +49,6 @@ dependencies:
 	cd ../bflibc/ && make clean && make build && make build CONFIG=debug
 	cd ../bftest/ && make clean && make build && make build CONFIG=debug
 
+LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 

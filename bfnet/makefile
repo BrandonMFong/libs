@@ -48,5 +48,6 @@ dependencies:
 	cd ../bflibcpp/ && make clean && make build CONFIG=release && make build CONFIG=debug
 	cd ../bftest/ && make clean && make build CONFIG=release && make build CONFIG=debug
 
+LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 

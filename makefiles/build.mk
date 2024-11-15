@@ -5,8 +5,13 @@
 
 .SECONDEXPANSION:
 
-include ../makefiles/libpaths.mk 
-include ../makefiles/platforms.mk 
+# BUILD_TYPE = archive || executable
+ifeq ($(LIBS_MAKEFILES_PATH),)
+$(error ERROR: "please define `LIBS_MAKEFILES_PATH` in your makefile. this should be the absolute path to build.mk")
+endif
+
+include $(LIBS_MAKEFILES_PATH)/libpaths.mk 
+include $(LIBS_MAKEFILES_PATH)/platforms.mk 
 
 UNAME_S := $(shell uname -s)
 
@@ -16,7 +21,7 @@ BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 
 # BUILD_TYPE = archive || executable
 ifeq ($(BUILD_TYPE),)
-$(error ERROR: "please define `BUILD_TYPE` in your makefile)
+$(error ERROR: "please define `BUILD_TYPE` in your makefile")
 endif
 
 # used to make universal binaries

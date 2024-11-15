@@ -41,5 +41,6 @@ LINKS =
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 
+LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 
