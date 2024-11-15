@@ -3,6 +3,8 @@ name: BFLibC
 on:
   push:
     branches: [ "features/dev/brando-improvedTests" ]
+    paths:
+      - 'bflibc/*'
   # pull_request:
   #   branches: [ "dev" ]
 
