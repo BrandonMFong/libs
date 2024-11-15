@@ -2,9 +2,9 @@ name: Testing All Libs
 
 on:
   push:
-    branches: [ "features/dev/brando-improvedTests" ]
-  # pull_request:
-  #   branches: [ "dev" ]
+    branches: [ "dev" ]
+    pull_request:
+      branches: [ "dev" ]
 
 jobs:
   unit-tests:
