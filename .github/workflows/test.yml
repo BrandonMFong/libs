@@ -7,7 +7,7 @@ on:
   #   branches: [ "dev" ]
 
 jobs:
-  task:
+  unit-tests:
 
     runs-on: ubuntu-latest
 
