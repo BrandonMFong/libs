@@ -216,9 +216,7 @@ BFTEST_UNIT_FUNC(test_byteArrayToHexString, 2<<10, {
 	BFFree(str);
 })
 
-BFTEST_COVERAGE_FUNC(stringutils_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(stringutils_tests, {
 	BFTEST_LAUNCH(test_CopyString);
 	BFTEST_LAUNCH(test_uuidGen);
 	BFTEST_LAUNCH(test_readingFile);
@@ -226,9 +224,7 @@ BFTEST_COVERAGE_FUNC(stringutils_tests) {
 	BFTEST_LAUNCH(test_uuidcompare);
 	BFTEST_LAUNCH(test_makingarrayfromstring);
 	BFTEST_LAUNCH(test_byteArrayToHexString);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // STRINGUTILS_TESTS_H
 

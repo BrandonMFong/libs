@@ -19,9 +19,7 @@
 #include "data_tests.hpp"
 #include "vector_tests.hpp"
 
-int main() {
-	BFTEST_SUITE_START;
-
+BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(atomic_tests);
 	BFTEST_SUITE_LAUNCH(file_tests);
 	BFTEST_SUITE_LAUNCH(bintree_tests);
@@ -36,9 +34,5 @@ int main() {
 	BFTEST_SUITE_LAUNCH(list_tests);
 	BFTEST_SUITE_LAUNCH(array_tests);
 	BFTEST_SUITE_LAUNCH(vector_tests);
-
-	BFTEST_SUITE_END;
-
-	return 0;
-}
+})
 

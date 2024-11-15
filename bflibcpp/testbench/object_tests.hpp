@@ -84,15 +84,11 @@ BFTEST_UNIT_FUNC(test_objectshallowcopy, 1,  {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(object_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(object_tests, {
 	BFTEST_LAUNCH(test_objectinit);
 	BFTEST_LAUNCH(test_objectretainer);
 	BFTEST_LAUNCH(test_objectshallowcopy);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // BF_OBJECT_TESTS_HPP
 

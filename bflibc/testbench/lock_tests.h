@@ -121,16 +121,12 @@ BFTEST_UNIT_FUNC(test_destroyLockThatIsWaiting, 2<<14, {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(lock_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(lock_tests, {
 	BFTEST_LAUNCH(test_CreatingBFLock);
 	BFTEST_LAUNCH(test_CreatingTimedWaitLock);
 	BFTEST_LAUNCH(test_waitinglock);
 	BFTEST_LAUNCH(test_destroyLockThatIsWaiting);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // LOCK_TESTS_H
 

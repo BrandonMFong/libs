@@ -491,9 +491,7 @@ BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<10,  {
 	BFFree(arr);
 })
 
-BFTEST_COVERAGE_FUNC(list_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(list_tests, {
 	BFTEST_LAUNCH(test_Init);
 	BFTEST_LAUNCH(test_adding);
 	BFTEST_LAUNCH(test_indexing);
@@ -511,9 +509,7 @@ BFTEST_COVERAGE_FUNC(list_tests) {
 	BFTEST_LAUNCH(test_ShuffleLargeDataSet);
 	BFTEST_LAUNCH(test_pluckingObject);
 	BFTEST_LAUNCH(test_rangeBasedLooping);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // LIST_TESTS_HPP
 

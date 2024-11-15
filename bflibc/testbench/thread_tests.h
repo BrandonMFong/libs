@@ -254,9 +254,7 @@ BFTEST_UNIT_FUNC(test_threadwait, 1, {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(thread_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(thread_tests, {
 	BFTEST_LAUNCH(test_CreatingThreadSync);
 	BFTEST_LAUNCH(test_CreatingThreadAsync);
 	BFTEST_LAUNCH(test_WaitingOnThreadLock);
@@ -266,9 +264,7 @@ BFTEST_COVERAGE_FUNC(thread_tests) {
 	BFTEST_LAUNCH(test_CancelingAsyncThreadThatHasAlreadyFinished);
 	BFTEST_LAUNCH(test_threadCount);
 	BFTEST_LAUNCH(test_threadwait);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // THREAD_TESTS_H
 

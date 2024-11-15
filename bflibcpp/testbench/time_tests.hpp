@@ -74,14 +74,10 @@ BFTEST_UNIT_FUNC(test_TimeBasicOperations, 1,  {
 })
 
 //void time_tests(int * pass, int * fail) {
-BFTEST_COVERAGE_FUNC(time_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(time_tests, {
 	BFTEST_LAUNCH(test_TimeInit);
 	BFTEST_LAUNCH(test_TimeBasicOperations);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // TIME_TESTS_HPP
 

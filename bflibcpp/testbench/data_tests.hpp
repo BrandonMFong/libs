@@ -168,7 +168,6 @@ BFTEST_UNIT_FUNC(test_HexString, 2<<10,  {
 	BFRelease(data);
 })
 
-//int test_dataCompare() {
 BFTEST_UNIT_FUNC(test_dataCompare, 2<<10,  {
 	srand(time(0));
 	int size = rand() % 2048;
@@ -246,9 +245,7 @@ BFTEST_UNIT_FUNC(test_dataByRef, 2<<10,  {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(data_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(data_tests, {
 	BFTEST_LAUNCH(test_datainit);
 	BFTEST_LAUNCH(test_clearData);
 	BFTEST_LAUNCH(test_decreasingSize);
@@ -258,9 +255,7 @@ BFTEST_COVERAGE_FUNC(data_tests) {
 	BFTEST_LAUNCH(test_dataCompare);
 	BFTEST_LAUNCH(test_emptyStringDataLength);
 	BFTEST_LAUNCH(test_dataByRef);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // DATA_TESTS_HPP
 

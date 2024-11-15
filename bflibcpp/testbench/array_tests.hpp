@@ -289,9 +289,7 @@ BFTEST_UNIT_FUNC(test_releasecallback, 2<<8,  {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(array_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_Initializer);
 	BFTEST_LAUNCH(test_Contains);
 	BFTEST_LAUNCH(test_ObjectAtIndex);
@@ -302,9 +300,7 @@ BFTEST_COVERAGE_FUNC(array_tests) {
 	BFTEST_LAUNCH(test_insertingAtRandomIndex);
 	BFTEST_LAUNCH(test_releasecallback);
 	BFTEST_LAUNCH(test_addanddelete);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // ARRAY_TESTS_HPP
 

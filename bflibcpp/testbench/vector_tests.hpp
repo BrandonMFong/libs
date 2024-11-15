@@ -27,6 +27,7 @@ int run_vectorSort(VectorSort type, size_t listsize, int reps) {
 		T l;
 		T b;
 		for (size_t i = 0; i < maxsize; i++) {
+			usleep(50);
 			int val = rand();
 			b.add(val);
 			l.add(val);
@@ -42,12 +43,14 @@ int run_vectorSort(VectorSort type, size_t listsize, int reps) {
 
 		if (!result) {
 			for (size_t i = 1; i < maxsize; i++) {
+				usleep(50);
 				if (l[i - 1] > l[i]) {
 					result = 1;
 					break;
 				}
 			}
 			for (size_t i = 0; i < maxsize; i++) {
+				usleep(50);
 				if (!l.contains(b[i])) {
 					result = 3;
 				}
@@ -108,9 +111,7 @@ BFTEST_UNIT_FUNC(test_vectorArraySortMerge, 1,  {
 	BF_ASSERT(err == 0);
 })
 
-BFTEST_COVERAGE_FUNC(vector_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(vector_tests, {
 	BFTEST_LAUNCH(test_vectorListSortBubble);
 	BFTEST_LAUNCH(test_vectorListSortInsertion);
 	BFTEST_LAUNCH(test_vectorListSortSelection);
@@ -121,9 +122,7 @@ BFTEST_COVERAGE_FUNC(vector_tests) {
 	BFTEST_LAUNCH(test_vectorArraySortSelection);
 	BFTEST_LAUNCH(test_vectorArraySortQuick);
 	BFTEST_LAUNCH(test_vectorArraySortMerge);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // VECTOR_TESTS_HPP
 

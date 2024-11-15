@@ -122,9 +122,7 @@ BFTEST_UNIT_FUNC(time_bftimesleep0, 1, {
 	BFTimeSleep(0);
 })
 
-BFTEST_COVERAGE_FUNC(time_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(time_tests, {
 	BFTEST_LAUNCH(test_GettingTime);
 	BFTEST_LAUNCH(test_GettingDateTime);
 	BFTEST_LAUNCH(test_GettingUTCTime);
@@ -134,9 +132,7 @@ BFTEST_COVERAGE_FUNC(time_tests) {
 	BFTEST_LAUNCH(time_bftimesleepmicro);
 	BFTEST_LAUNCH(time_bftimesleepmilli);
 	BFTEST_LAUNCH(time_bftimesleepsecondswithmicro);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // TIME_TESTS_H
 

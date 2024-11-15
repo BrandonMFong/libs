@@ -385,10 +385,7 @@ BFTEST_UNIT_FUNC(test_data2string, 2<<10,  {
 	BFFree(buf);
 })
 
-//void string_tests(int * pass, int * fail) {
-BFTEST_COVERAGE_FUNC(string_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_StringInit);
 	BFTEST_LAUNCH(test_comparingString);
 	BFTEST_LAUNCH(test_StringLength);
@@ -406,9 +403,7 @@ BFTEST_COVERAGE_FUNC(string_tests) {
 	BFTEST_LAUNCH(test_creatingstringfromformat);
 	BFTEST_LAUNCH(test_readingFromFile);
 	BFTEST_LAUNCH(test_data2string);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // STRING_TESTS_HPP
 

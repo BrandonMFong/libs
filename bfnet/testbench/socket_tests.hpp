@@ -206,15 +206,11 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 	BFRelease(c);
 })
 
-BFTEST_COVERAGE_FUNC(socket_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(socket_tests, {
 	BFTEST_LAUNCH(test_socketinitclient);
 	BFTEST_LAUNCH(test_socketinitserver);
 	BFTEST_LAUNCH(test_sendingandreceiving);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // SOCKET_TESTS_HPP
 

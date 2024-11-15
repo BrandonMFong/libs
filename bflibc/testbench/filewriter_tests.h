@@ -315,9 +315,7 @@ BFTEST_UNIT_FUNC(test_filetruncation, 2<<4, {
 	fclose(f);
 })
 
-BFTEST_COVERAGE_FUNC(filewriter_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(filewriter_tests, {
 	BFThreadResetStartedCount();
 	BFThreadResetStoppedCount();
 
@@ -335,9 +333,7 @@ BFTEST_COVERAGE_FUNC(filewriter_tests) {
 	if (BFFileSystemPathExists(FILE_WRITER_FILE_PATH)) {
 		remove(FILE_WRITER_FILE_PATH);
 	}
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // FILE_WRITER_TESTS_H
 

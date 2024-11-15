@@ -239,9 +239,7 @@ BFTEST_UNIT_FUNC(test_TraversingThroughDictionary, 1,  {
 	BFRelease(itr);
 })
 
-BFTEST_COVERAGE_FUNC(dictionary_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(dictionary_tests, {
 	BFTEST_LAUNCH(test_DictionaryInit);
 	BFTEST_LAUNCH(test_DictionarySize);
 	BFTEST_LAUNCH(test_AddingKeyValues);
@@ -253,9 +251,7 @@ BFTEST_COVERAGE_FUNC(dictionary_tests) {
 #if TEST_DICTIONARY_PRINT == 1
 	BFTEST_LAUNCH(test_DictionaryPrint);
 #endif
-	
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // DICTIONARY_TESTS_HPP
 

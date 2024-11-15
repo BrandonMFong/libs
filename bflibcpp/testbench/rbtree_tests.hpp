@@ -707,10 +707,7 @@ BFTEST_UNIT_FUNC(test_insertingStrings, 2<<4,  {
 	if (t.count() != expsize) result = 1;
 })
 
-//void rbtree_tests(int * pass, int * fail) {
-BFTEST_COVERAGE_FUNC(rbtree_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(rbtree_tests, {
 	BFTEST_LAUNCH(test_RBInitializer);
 	BFTEST_LAUNCH(test_AccessingNodeHierarchy);
 	BFTEST_LAUNCH(test_NodeColors);
@@ -727,9 +724,7 @@ BFTEST_COVERAGE_FUNC(rbtree_tests) {
 	BFTEST_LAUNCH(test_RBTreeCount);
 	BFTEST_LAUNCH(test_SearchingRBTree);
 	BFTEST_LAUNCH(test_insertingStrings);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // RBTREE_TESTS_HPP
 

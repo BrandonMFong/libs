@@ -188,10 +188,7 @@ BFTEST_UNIT_FUNC(test_LoadAndUnloadStrings, 1,  {
 	BFFree(array);
 })
 
-//void stack_tests(int * pass, int * fail) {
-BFTEST_COVERAGE_FUNC(stack_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(stack_tests, {
 	BFTEST_LAUNCH(test_StackInit);
 	BFTEST_LAUNCH(test_StackPush);
 	BFTEST_LAUNCH(test_StackPop);
@@ -199,9 +196,7 @@ BFTEST_COVERAGE_FUNC(stack_tests) {
 	BFTEST_LAUNCH(test_StackSize);
 	BFTEST_LAUNCH(test_LoadAndUnload);
 	BFTEST_LAUNCH(test_LoadAndUnloadStrings);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // STACK_TESTS_HPP
 

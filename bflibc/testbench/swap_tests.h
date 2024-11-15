@@ -32,13 +32,9 @@ BFTEST_UNIT_FUNC(test_swapping, 2<<10, {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(swap_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(swap_tests, {
 	BFTEST_LAUNCH(test_swapping);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // SWAP_TESTS_H
 

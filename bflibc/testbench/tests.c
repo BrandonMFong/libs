@@ -14,9 +14,7 @@
 #include "swap_tests.h"
 #include <stdio.h>
 
-int main() {
-	BFTEST_SUITE_START;
-
+BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(coreutils_tests);
 	BFTEST_SUITE_LAUNCH(lock_tests);
 	//BFTEST_SUITE_LAUNCH(checksum_tests);
@@ -26,9 +24,5 @@ int main() {
 	BFTEST_SUITE_LAUNCH(thread_tests);
 	BFTEST_SUITE_LAUNCH(filewriter_tests);
 	BFTEST_SUITE_LAUNCH(swap_tests);
-	
-	BFTEST_SUITE_END;
-
-	return 0;
-}
+})
 

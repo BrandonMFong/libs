@@ -12,15 +12,8 @@ void TestLog(const char * str) {
 	printf("\nbfnet: %s\n", str);
 }
 
-int main() {
-	BFTEST_SUITE_START;
-
+BFTEST_SUITE_FUNC({
 	Log::SetCallback(TestLog);
-	
 	BFTEST_SUITE_LAUNCH(socket_tests);
-
-	BFTEST_SUITE_END;
-
-	return 0;
-}
+})
 

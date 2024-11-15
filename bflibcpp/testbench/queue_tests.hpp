@@ -43,15 +43,10 @@ BFTEST_UNIT_FUNC(test_loadandunloadQueue, 1,  {
 	}
 })
 
-//void queue_tests(int * pass, int * fail) {
-BFTEST_COVERAGE_FUNC(queue_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(queue_tests, {
 	BFTEST_LAUNCH(test_queueinit);
 	BFTEST_LAUNCH(test_loadandunloadQueue);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // QUEUE_TESTS_HPP 
 

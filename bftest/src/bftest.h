@@ -16,14 +16,16 @@
 // a test suite is the high level function that will call
 // different sets of test coverage
 
-/**
- * Call at the start of your test suite function
- */
-#define BFTEST_SUITE_START \
-	int pass = 0, fail = 0;\
-	float tp = 0, tf = 0;
+#define BFTEST_SUITE_FUNC(...) \
+	int main () {\
+		int pass = 0, fail = 0;\
+		float tp = 0, tf = 0;\
+		__VA_ARGS__ \
+		printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));\
+		return 0;\
+	}
 
-/**
+/*
  * Calls test coverage function
  */
 #define BFTEST_SUITE_LAUNCH(foo) \
@@ -31,40 +33,26 @@
 	tp += pass; tf += fail;\
 	pass = 0; fail = 0;
 
-/**
- * call at the end of your test suite function
- */
-#define BFTEST_SUITE_END printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));
-
 /** TEST COVERAGE **/
 
 /**
  * defines the test coverage function
  */
-#define BFTEST_COVERAGE_FUNC(foo) \
-	void foo (int * pass, int * fail)
-
-/**
- * initializes your test coverage function
- */
-#define BFTEST_COVERAGE_START \
-	printf("---- %s started ----\n", __func__);\
-	int p = 0, f = 0;
-
+#define BFTEST_COVERAGE_FUNC(foo, ...) \
+	void foo (int * pass, int * fail) {\
+		printf("---- %s started ----\n", __func__);\
+		int p = 0, f = 0;\
+		__VA_ARGS__ \
+		if (pass) *pass += p;\
+		if (fail) *fail += f;\
+		printf("---- %s ended [+ %d, - %d] ----\n", __func__, *pass, *fail);\
+	}
 /**
  * each function should take no params and return 0 on success
  */
 #define BFTEST_LAUNCH(foo) \
 	if (!foo()) p++; \
 	else f++;
-
-/**
- * ends your test your coverage function
- */
-#define BFTEST_COVERAGE_END \
-	if (pass) *pass += p;\
-	if (fail) *fail += f;\
-	printf("---- %s ended [+ %d, - %d] ----\n", __func__, *pass, *fail);
 
 /** UNIT TEST **/
 
@@ -99,6 +87,8 @@
 	}\
 	return result;
 
+/** ASSERTS **/
+
 /**
  * exits function if expr fails then logs event
  */
@@ -121,6 +111,9 @@ typedef enum _BFTestLogType {
 
 /**
  * adds a message to the test log
+ * 
+ * all messages will get printed after the unit
+ * test finishes
  */
 void _BFTestLogPush(
 	const char * filename,

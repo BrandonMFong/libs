@@ -225,9 +225,7 @@ BFTEST_UNIT_FUNC(test_directoryWithAPeriod, 1, {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(filesystem_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(filesystem_tests, {
 	BFTEST_LAUNCH(test_HomePath);
 	BFTEST_LAUNCH(test_CalculateSizeForAvailability);
 	BFTEST_LAUNCH(test_GetFileExtensionForPath);
@@ -237,9 +235,7 @@ BFTEST_COVERAGE_FUNC(filesystem_tests) {
 	BFTEST_LAUNCH(test_GettingFullname);
 	BFTEST_LAUNCH(test_GettingLeafComponent);
 	BFTEST_LAUNCH(test_directoryWithAPeriod);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // CLIB_TESTS_H
 

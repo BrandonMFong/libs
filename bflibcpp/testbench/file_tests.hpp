@@ -240,16 +240,12 @@ BFTEST_UNIT_FUNC(test_directory, 1,  {
 	BFRelease(file);
 })
 
-BFTEST_COVERAGE_FUNC(file_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(file_tests, {
 	BFTEST_LAUNCH(test_filePath);
 	BFTEST_LAUNCH(test_basename);
 	BFTEST_LAUNCH(test_extension);
 	BFTEST_LAUNCH(test_directory);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // FILE_TESTS_HPP
 

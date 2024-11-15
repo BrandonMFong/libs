@@ -363,9 +363,7 @@ BFTEST_UNIT_FUNC(test_getNodeForObject, 2<<10,  {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(bintree_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(bintree_tests, {
 	BFTEST_LAUNCH(test_BinInitializer);
 	BFTEST_LAUNCH(test_BinInsert);
 	BFTEST_LAUNCH(test_BinMax);
@@ -380,9 +378,7 @@ BFTEST_COVERAGE_FUNC(bintree_tests) {
 	BFTEST_LAUNCH(test_SearchingBinTree);
 	BFTEST_LAUNCH(test_Iterations);
 	BFTEST_LAUNCH(test_getNodeForObject);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // BINTREE_TESTS_HPP
 

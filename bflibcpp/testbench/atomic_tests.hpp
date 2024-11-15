@@ -176,9 +176,7 @@ BFTEST_UNIT_FUNC(test_comparingObjectWithAnother, 2<<10, {
 	BF_ASSERT((val == i) && (i == val));
 })
 
-BFTEST_COVERAGE_FUNC(atomic_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(atomic_tests, {
 	BFTEST_LAUNCH(test_atomicinit);
 	BFTEST_LAUNCH(test_atomisetandget);
 	BFTEST_LAUNCH(test_atomicqueue);
@@ -188,9 +186,7 @@ BFTEST_COVERAGE_FUNC(atomic_tests) {
 	BFTEST_LAUNCH(test_castingoperator);
 	BFTEST_LAUNCH(test_changingvaluebyreference);
 	BFTEST_LAUNCH(test_comparingObjectWithAnother);
-
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // ATOMIC_TESTS_HPP
 

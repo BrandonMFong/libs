@@ -104,17 +104,13 @@ BFTEST_UNIT_FUNC(test_IndexOfStringInArray, 1, {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(coreutils_tests) {
-	BFTEST_COVERAGE_START;
-
+BFTEST_COVERAGE_FUNC(coreutils_tests, {
 	BFTEST_LAUNCH(test_DoesStringArrayContain);
 	BFTEST_LAUNCH(test_CreateBinaryStringFromNumber);
 	BFTEST_LAUNCH(test_IndexOfStringInArray);
 	BFTEST_LAUNCH(test_GetByteStringRepresentationUsingKibi);
 	BFTEST_LAUNCH(test_GetByteStringRepresentationUsingKilo);
-	
-	BFTEST_COVERAGE_END;
-}
+})
 
 #endif // COREUTILS_TESTS_H
 
