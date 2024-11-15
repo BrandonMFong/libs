@@ -9,30 +9,26 @@
 #include "clib_tests.h"
 #include "swap.h"
 
-//int test_swapping(void) {
-BFTEST_UNIT_FUNC(test_swapping, 1, {
-	int max = 2 << 21;
-	while (!result && max--) {
-		srand(time(0));
-		int a, b, c, d;
-		a = b = rand();
-		c = d = rand();
+BFTEST_UNIT_FUNC(test_swapping, 2<<10, {
+	srand(time(0));
+	int a, b, c, d;
+	a = b = rand();
+	c = d = rand();
+	BFSwap(a, c);
+	if (a != d) {
+		result = 1;
+	} else if (c != b) {
+		result = 2;
+	}
+
+	if (!result) {
+		a = b = c = d = rand();
 		BFSwap(a, c);
 		if (a != d) {
-			result = 1;
+			result = 3;
 		} else if (c != b) {
-			result = 2;
+			result = 4;
 		}
-
-		if (!result) {
-			a = b = c = d = rand();
-			BFSwap(a, c);
-			if (a != d) {
-				result = 3;
-			} else if (c != b) {
-				result = 4;
-			}
-		}		
 	}
 })
 

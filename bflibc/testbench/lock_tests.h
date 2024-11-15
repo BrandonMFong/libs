@@ -57,32 +57,29 @@ void thread_test_waitinglock(void * in) {
 }
 
 //int test_waitinglock() {
-BFTEST_UNIT_FUNC(test_waitinglock, 1, {
-	int max = 2 << 4;
-	while (!result && max--) {
-		thread_test_waitinglock_struct st;
-		st.i = 0;
-		result = BFLockCreate(&st.lock);
+BFTEST_UNIT_FUNC(test_waitinglock, 2<<4, {
+	thread_test_waitinglock_struct st;
+	st.i = 0;
+	result = BFLockCreate(&st.lock);
 
-		if (!result) {
-			if (!BFLockIsValid(&st.lock)) result = 1;
-		}
-
-		if (!result) {
-			BFThreadAsyncID tid = BFThreadAsync(thread_test_waitinglock, &st);
-			while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
-			BFLockWait(&st.lock);
-
-			BFThreadAsyncWait(tid);
-
-			if (st.i == 0) {
-				result = 1;
-			}
-			BFThreadAsyncDestroy(tid);
-		}
-
-		if (!result) result = BFLockDestroy(&st.lock);
+	if (!result) {
+		if (!BFLockIsValid(&st.lock)) result = 1;
 	}
+
+	if (!result) {
+		BFThreadAsyncID tid = BFThreadAsync(thread_test_waitinglock, &st);
+		while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
+		BFLockWait(&st.lock);
+
+		BFThreadAsyncWait(tid);
+
+		if (st.i == 0) {
+			result = 1;
+		}
+		BFThreadAsyncDestroy(tid);
+	}
+
+	if (!result) result = BFLockDestroy(&st.lock);
 })
 
 typedef struct {
@@ -97,34 +94,30 @@ void thread_test_destroyLockThatIsWaiting(void * in) {
 	st->ran = true;
 }
 
-//int test_destroyLockThatIsWaiting() {
-BFTEST_UNIT_FUNC(test_destroyLockThatIsWaiting, 1, {
-	int max = 2 << 14;
-	while (!result && max--) {
-		test_destroyLockThatIsWaiting_struct st;
-		BFLockCreate(&st.l);
-		st.ran = false;
-		st.err = 0;
+BFTEST_UNIT_FUNC(test_destroyLockThatIsWaiting, 2<<14, {
+	test_destroyLockThatIsWaiting_struct st;
+	BFLockCreate(&st.l);
+	st.ran = false;
+	st.err = 0;
 
-		BFThreadAsyncID tid = BFThreadAsync(thread_test_destroyLockThatIsWaiting, &st);
-		while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
+	BFThreadAsyncID tid = BFThreadAsync(thread_test_destroyLockThatIsWaiting, &st);
+	while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
 
-		while (!BFLockIsWaiting(&st.l)) {
-			usleep(50);
-		}
+	while (!BFLockIsWaiting(&st.l)) {
+		usleep(50);
+	}
 
-		BFLockDestroy(&st.l);
+	BFLockDestroy(&st.l);
 
-		BFThreadAsyncWait(tid);
-		BFThreadAsyncDestroy(tid);
+	BFThreadAsyncWait(tid);
+	BFThreadAsyncDestroy(tid);
 
-		if (!st.ran) {
-			result = 1;
-		}
+	if (!st.ran) {
+		result = 1;
+	}
 
-		if (st.err) {
-			result += 2;
-		}
+	if (st.err) {
+		result += 2;
 	}
 })
 
