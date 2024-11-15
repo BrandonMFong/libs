@@ -13,10 +13,8 @@
 #include <string.h>
 #include <time.h>
 
-int test_GettingTime(void) {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_GettingTime(void) {
+BFTEST_UNIT_FUNC(test_GettingTime, 1, {
 	time_t b = time(NULL);
 	sleep(1);
 	BFTime n = BFTimeGetCurrentTime();
@@ -27,15 +25,10 @@ int test_GettingTime(void) {
 		result = 1;
 		printf("Failed: %ld <= %f <= %ld\n", b, n, a);
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_GettingUTCTime(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int test_GettingUTCTime(void) {
+BFTEST_UNIT_FUNC(test_GettingUTCTime, 1, {
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
 	struct tm tm1, tm2;
@@ -49,15 +42,10 @@ int test_GettingUTCTime(void) {
 		time_t t1 = mktime(&tm1), t2 = mktime(&tm2);
 		if (difftime(t1, t2)) result = 2;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_GettingLocalTime(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int test_GettingLocalTime(void) {
+BFTEST_UNIT_FUNC(test_GettingLocalTime, 1, {
 	BFTime n = BFTimeGetCurrentTime();
 	time_t t = (time_t) n;
 	struct tm tm1, tm2;
@@ -71,14 +59,10 @@ int test_GettingLocalTime(void) {
 		time_t t1 = mktime(&tm1), t2 = mktime(&tm2);
 		if (difftime(t1, t2)) result = 2;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_GettingDateTime(void) {
-	int result = 0;
-
+//int test_GettingDateTime(void) {
+BFTEST_UNIT_FUNC(test_GettingDateTime, 1, {
 	BFTime n = BFTimeGetCurrentTime();
 	struct tm tm;
 	time_t t = (time_t) n;
@@ -111,79 +95,44 @@ int test_GettingDateTime(void) {
 	if (result) {
 		printf("Error: %d\n", result);
 	}
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int time_bftimesleep(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int time_bftimesleep(void) {
+BFTEST_UNIT_FUNC(time_bftimesleep, 1, {
 	BFTimeSleep(1);
-	
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
-int time_bftimesleepmicro(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int time_bftimesleepmicro(void) {
+BFTEST_UNIT_FUNC(time_bftimesleepmicro, 1, {
 	BFTimeSleep(BFTimeUS(100));
-	
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
-int time_bftimesleepmilli(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int time_bftimesleepmilli(void) {
+BFTEST_UNIT_FUNC(time_bftimesleepmilli, 1, {
 	BFTimeSleep(BFTimeMS(100));
-	
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
-int time_bftimesleepsecondswithmicro(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int time_bftimesleepsecondswithmicro(void) {
+BFTEST_UNIT_FUNC(time_bftimesleepsecondswithmicro, 1, {
 	BFTimeSleep(1.123456);
-	
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
-int time_bftimesleep0(void) {
-	UNIT_TEST_START;
-	int result = 0;
-	
+//int time_bftimesleep0(void) {
+BFTEST_UNIT_FUNC(time_bftimesleep0, 1, {
 	BFTimeSleep(0);
-	
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
-void time_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_GettingTime, p, f);
-	LAUNCH_TEST(test_GettingDateTime, p, f);
-	LAUNCH_TEST(test_GettingUTCTime, p, f);
-	LAUNCH_TEST(test_GettingLocalTime, p, f);
-	LAUNCH_TEST(time_bftimesleep, p, f);
-	LAUNCH_TEST(time_bftimesleep0, p, f);
-	LAUNCH_TEST(time_bftimesleepmicro, p, f);
-	LAUNCH_TEST(time_bftimesleepmilli, p, f);
-	LAUNCH_TEST(time_bftimesleepsecondswithmicro, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(time_tests, {
+	BFTEST_LAUNCH(test_GettingTime);
+	BFTEST_LAUNCH(test_GettingDateTime);
+	BFTEST_LAUNCH(test_GettingUTCTime);
+	BFTEST_LAUNCH(test_GettingLocalTime);
+	BFTEST_LAUNCH(time_bftimesleep);
+	BFTEST_LAUNCH(time_bftimesleep0);
+	BFTEST_LAUNCH(time_bftimesleepmicro);
+	BFTEST_LAUNCH(time_bftimesleepmilli);
+	BFTEST_LAUNCH(time_bftimesleepsecondswithmicro);
+})
 
 #endif // TIME_TESTS_H
 

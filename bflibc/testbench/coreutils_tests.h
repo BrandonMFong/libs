@@ -12,77 +12,40 @@
 #include <string.h>
 #include <stdio.h>
 
-int test_DoesStringArrayContain(void) {
-	int result = 0;
+BFTEST_UNIT_FUNC(test_DoesStringArrayContain, 1, {
 	char * array[] = {"Hello", "world", "we", "are", "clib"};
 	int size = sizeof(array) / sizeof(array[0]);
 
 	const char * string = "Hello";
 	bool value = BFArrayStringContainsString(array, size, string);
-	
-	if (!value) {
-		printf("Array should have contained: %s\n", string);
-		result = 1;
-	}
+	BF_ASSERT(value, "Array should have contained: %s", string);
 
-	if (result == 0) {
-		string = "tree";
-		value = BFArrayStringContainsString(array, size, string);
+	string = "tree";
+	value = BFArrayStringContainsString(array, size, string);
+	BF_ASSERT(!value, "Array should not have: %s", string);
+})
 
-		if (value) {
-			result = 1;
-			printf("Array should not have: %s\n", string);
-		}
-	}
-
-	PRINT_TEST_RESULTS(!result);
-
-	return result;
-}
-
-int test_GetByteStringRepresentationUsingKilo(void) {
-	int result = 0;
+BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKilo, 1, {
 	char buf[20];
 
-	result = BFByteGetString(1000 * 1000, 0, buf);
+	int err = BFByteGetString(1000 * 1000, 0, buf);
+	BF_ASSERT(err == 0);
 
 	const char * expected = "1.00 MB";
+	BF_ASSERT(!strcmp(expected, buf), "%s != %s", expected, buf);
+})
 
-	if (result == 0) {
-		if (strcmp(expected, buf)) {
-			result = 1;
-			printf("%s != %s\n", expected, buf);
-		}
-	}
-
-	PRINT_TEST_RESULTS(!result);
-
-	return result;
-}
-
-int test_GetByteStringRepresentationUsingKibi(void) {
-	int result = 0;
+BFTEST_UNIT_FUNC(test_GetByteStringRepresentationUsingKibi, 1, {
 	char buf[20];
 
-	result = BFByteGetString(1024 * 1024, 1, buf);
+	int err = BFByteGetString(1024 * 1024, 1, buf);
+	BF_ASSERT(err == 0);
 
 	const char * expected = "1.00 MiB";
+	BF_ASSERT(!strcmp(expected, buf), "%s != %s", expected, buf);
+})
 
-	if (result == 0) {
-		if (strcmp(expected, buf)) {
-			result = 1;
-			printf("%s != %s\n", expected, buf);
-		}
-	}
-
-	PRINT_TEST_RESULTS(!result);
-
-	return result;
-
-}
-
-int test_CreateBinaryStringFromNumber() {
-	int result = 0;
+BFTEST_UNIT_FUNC(test_CreateBinaryStringFromNumber, 1, {
 	char * string = 0;
 	unsigned char a = 0x00;
 
@@ -112,13 +75,9 @@ int test_CreateBinaryStringFromNumber() {
 		result = strcmp(string, "11110000");
 		free(string);
 	}
-	
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
+})
 
-int test_IndexOfStringInArray() {
-	int result = 0;
+BFTEST_UNIT_FUNC(test_IndexOfStringInArray, 1, {
 	int index = 0;
 	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
 
@@ -143,25 +102,15 @@ int test_IndexOfStringInArray() {
 			printf("3: index returned was %d\n", index);
 		}
 	}
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-void coreutils_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_DoesStringArrayContain, p, f);
-	LAUNCH_TEST(test_CreateBinaryStringFromNumber, p, f);
-	LAUNCH_TEST(test_IndexOfStringInArray, p, f);
-	LAUNCH_TEST(test_GetByteStringRepresentationUsingKibi, p, f);
-	LAUNCH_TEST(test_GetByteStringRepresentationUsingKilo, p, f);
-	
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(coreutils_tests, {
+	BFTEST_LAUNCH(test_DoesStringArrayContain);
+	BFTEST_LAUNCH(test_CreateBinaryStringFromNumber);
+	BFTEST_LAUNCH(test_IndexOfStringInArray);
+	BFTEST_LAUNCH(test_GetByteStringRepresentationUsingKibi);
+	BFTEST_LAUNCH(test_GetByteStringRepresentationUsingKilo);
+})
 
 #endif // COREUTILS_TESTS_H
 

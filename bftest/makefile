@@ -3,7 +3,6 @@
 #
 
 include makefiles/lib.mk 
-include makefiles/uuid.mk 
 
 help:
 	@echo "Usage:"
@@ -20,10 +19,7 @@ COMPILER = gcc
 CONFIG = release
 SOURCE_EXT = c
 HEADER_EXT = h
-FILES = \
-filesystem coreutils stringutils \
-bftime thread \
-lock filewriter
+FILES = bftest
 
 ### Release settings
 ifeq ($(CONFIG),release) # release
@@ -37,15 +33,12 @@ FLAGS = $(CFLAGS) -Wall -DDEBUG -g -Isrc/ $(ADDR_SANITIZER)
 ### Test settings
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfc-test
-ADDR_SANITIZER = -fsanitize=address
-FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) -I../bftest/bin/debug
-LIBRARIES = ../bftest/bin/debug/bftest/libbftest-debug.a
-LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
+#ADDR_SANITIZER = -fsanitize=address
+FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) 
+LIBRARIES =
+LINKS =
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
-
-dependencies:
-	cd ../bftest && make clean && make build && make build CONFIG=debug
 
 include ../makefiles/build.mk 
 

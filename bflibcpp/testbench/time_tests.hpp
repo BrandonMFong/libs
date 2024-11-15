@@ -7,18 +7,17 @@
 #define TIME_TESTS_HPP
 
 #include <time.hpp>
-#include "cpplib_tests.hpp"
-#include <delete.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
 #include <unistd.h>
+#include <bftest/bftest.h>
 }
 
 using namespace BF;
 
-int test_TimeInit() {
-	int result = 0;
+//int test_TimeInit() {
+BFTEST_UNIT_FUNC(test_TimeInit, 1,  {
 	BFTime t = BFTimeGetCurrentTime();
 	Time * tm = new Time(t);
 
@@ -28,7 +27,7 @@ int test_TimeInit() {
 		result = 2;
 	}
 
-	Delete(tm);
+	delete(tm);
 
 	Time tm2(t);
 
@@ -59,15 +58,10 @@ int test_TimeInit() {
 			result = 4;
 		}
 	}
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_TimeBasicOperations() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_TimeBasicOperations() {
+BFTEST_UNIT_FUNC(test_TimeBasicOperations, 1,  {
 	BFTime a = BFTimeGetCurrentTime();
 	sleep(1);
 	BFTime b = BFTimeGetCurrentTime();
@@ -76,25 +70,14 @@ int test_TimeBasicOperations() {
 
 	Time * tc = tb - ta;
 
-	Delete(tc);
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+	delete(tc);
+})
 
-void time_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
-
-	if (!test_TimeInit()) p++;
-	else f++;
-
-	if (!test_TimeBasicOperations()) p++;
-	else f++;
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+//void time_tests(int * pass, int * fail) {
+BFTEST_COVERAGE_FUNC(time_tests, {
+	BFTEST_LAUNCH(test_TimeInit);
+	BFTEST_LAUNCH(test_TimeBasicOperations);
+})
 
 #endif // TIME_TESTS_HPP
 

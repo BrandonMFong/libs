@@ -22,19 +22,14 @@ typedef struct {
 	Atomic<double> d;
 } AtomicInit;
 
-int test_atomicinit() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_atomicinit() {
+BFTEST_UNIT_FUNC(test_atomicinit, 1,  {
 	Atomic<int> a;
 	Atomic<int> b(5);
 	Atomic<int> c = 10;
 	AtomicInit sa;
 	sa.d = 15;
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
 void test_atomisetandget_callback(void * in) {
 	Atomic<int> * a = (Atomic<int> *) in;
@@ -46,10 +41,8 @@ void test_atomisetandget_callback(void * in) {
 	}
 }
 
-int test_atomisetandget() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_atomisetandget() {
+BFTEST_UNIT_FUNC(test_atomisetandget, 1,  {
 	Atomic<int> a = 10;
 	BFThreadAsyncID tid0 = BFThreadAsync(test_atomisetandget_callback, &a);
 	BFThreadAsyncID tid1 = BFThreadAsync(test_atomisetandget_callback, &a);
@@ -60,15 +53,10 @@ int test_atomisetandget() {
 	BFThreadAsyncCancel(tid1);
 	BFThreadAsyncDestroy(tid0);
 	BFThreadAsyncDestroy(tid1);
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_atomicqueue() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_atomicqueue() {
+BFTEST_UNIT_FUNC(test_atomicqueue, 1,  {
 	Atomic<Queue<int>> q;
 	const int max = 2 << 12;
 	for (int i = 0; i < max; i++) {
@@ -90,29 +78,16 @@ int test_atomicqueue() {
 			q.get().pop();
 		}
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-
-	return result;
-}
-
-int test_atomicvaluechange() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_atomicvaluechange() {
+BFTEST_UNIT_FUNC(test_atomicvaluechange, 2<<10,  {
 	Atomic<int> a;
-	long max = (long) 2 << 18;
-	while (!result && max) {
-		srand(time(0));
-		int val = rand();
-		a.set(val);
-		if (a.get() != val) result = (int) max;
-		max--;
-	}
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+	srand(time(0));
+	int val = rand();
+	a.set(val);
+	BF_ASSERT(a.get() = val);
+})
 
 void SetValue(void * in) {
 	const int max = 2 << 4;
@@ -130,141 +105,88 @@ void SetValue(void * in) {
 	}
 }
 
-int test_settingvalueonthreads() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_settingvalueonthreads() {
+BFTEST_UNIT_FUNC(test_settingvalueonthreads, 2<<8,  {
+	int ia = 0;
 
-	int max = 2 << 8;
-	while (!result && max) {
-		int ia = 0;
+	Atomic<int *> a(&ia);
+	BFThreadAsyncID tid0 = BFThreadAsync(SetValue, &a);
+	BFThreadAsyncID tid1 = BFThreadAsync(SetValue, &a);
 
-		Atomic<int *> a(&ia);
-		BFThreadAsyncID tid0 = BFThreadAsync(SetValue, &a);
-		BFThreadAsyncID tid1 = BFThreadAsync(SetValue, &a);
+	// wait for both threads to complete execution
+	BFThreadAsyncWait(tid0);
+	BFThreadAsyncWait(tid1);
 
-		// wait for both threads to complete execution
-		BFThreadAsyncWait(tid0);
-		BFThreadAsyncWait(tid1);
+	BFThreadAsyncDestroy(tid0);
+	BFThreadAsyncDestroy(tid1);
 
-		BFThreadAsyncDestroy(tid0);
-		BFThreadAsyncDestroy(tid1);
-
-		const int exp = 2 * (2 << 4); // expected val
-		if (ia != exp) {
-			printf("\n%d != %d\n", ia, exp);
-			result = max;
-		}
-
-		max--;
+	const int exp = 2 * (2 << 4); // expected val
+	if (ia != exp) {
+		printf("\n%d != %d\n", ia, exp);
+		result = max;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+//int test_equaloverloadop() {
+BFTEST_UNIT_FUNC(test_equaloverloadop, 2<<10,  {
+	srand(time(0));
+	int val = rand();
+	Atomic<int> a = val;
+	Atomic<int> b = val;
 
-int test_equaloverloadop() {
-	UNIT_TEST_START;
-	int result = 0;
+	result = a == b ? 0 : max;
 
-	int max = 2 << 18;
-	while (!result && max) {
-		srand(time(0));
-		int val = rand();
-		Atomic<int> a = val;
-		Atomic<int> b = val;
-
-		result = a == b ? 0 : max;
-
-		if (!result) {
-			a = rand();
-			b = rand();
-			result = a != b ? 0 : max;
-		}
-
-		max--;
+	if (!result) {
+		a = rand();
+		b = rand();
+		result = a != b ? 0 : max;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+//int test_castingoperator() {
+BFTEST_UNIT_FUNC(test_castingoperator, 2<<10,  {
+	srand(time(0));
+	Atomic<int> a = rand();
 
-int test_castingoperator() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	int max = 2 << 18;
-	while (!result && max--) {
-		srand(time(0));
-		Atomic<int> a = rand();
-
-		int val = a;
-		Atomic<int> b = val;
-		val = b;
-	}
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+	int val = a;
+	Atomic<int> b = val;
+	val = b;
+})
 
 void test_changebyref(Atomic<bool> & val) {
 	val = true;
 }
 
-int test_changingvaluebyreference() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	int max = 2 << 20;
-	while (!result && max--) {
-		Atomic<bool> val = false;
-		if (val) {
-			result = 1;
-		}
-
-		test_changebyref(val);
-		if (!val) {
-			result = 2;
-		}
+BFTEST_UNIT_FUNC(test_changingvaluebyreference, 2<<10,  {
+	Atomic<bool> val = false;
+	if (val) {
+		result = 1;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_comparingObjectWithAnother() {
-	UNIT_TEST_START;
-	int result = 0;
-
-	long long max = (long long) 2 << 20;
-	while (!result && max--) {
-		Atomic<long long> val = max;
-		if ((val != max) || (max != val)) {
-			result = max;
-		}
+	test_changebyref(val);
+	if (!val) {
+		result = 2;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+BFTEST_UNIT_FUNC(test_comparingObjectWithAnother, 2<<10, {
+	srand(time(0));
+	int i = rand();
+	Atomic<long long> val = i;
+	BF_ASSERT((val == i) && (i == val));
+})
 
-void atomic_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_atomicinit, p, f);
-	LAUNCH_TEST(test_atomisetandget, p, f);
-	LAUNCH_TEST(test_atomicqueue, p, f);
-	LAUNCH_TEST(test_atomicvaluechange, p, f);
-	LAUNCH_TEST(test_settingvalueonthreads, p, f);
-	LAUNCH_TEST(test_equaloverloadop, p, f);
-	LAUNCH_TEST(test_castingoperator, p, f);
-	LAUNCH_TEST(test_changingvaluebyreference, p, f);
-	LAUNCH_TEST(test_comparingObjectWithAnother, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(atomic_tests, {
+	BFTEST_LAUNCH(test_atomicinit);
+	BFTEST_LAUNCH(test_atomisetandget);
+	BFTEST_LAUNCH(test_atomicqueue);
+	BFTEST_LAUNCH(test_atomicvaluechange);
+	BFTEST_LAUNCH(test_settingvalueonthreads);
+	BFTEST_LAUNCH(test_equaloverloadop);
+	BFTEST_LAUNCH(test_castingoperator);
+	BFTEST_LAUNCH(test_changingvaluebyreference);
+	BFTEST_LAUNCH(test_comparingObjectWithAnother);
+})
 
 #endif // ATOMIC_TESTS_HPP
 

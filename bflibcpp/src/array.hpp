@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <initializer_list>
 #include <iostream>
-#include "delete.hpp"
 #include "access.hpp"
 #include "vector.hpp"
 #include <string.h>

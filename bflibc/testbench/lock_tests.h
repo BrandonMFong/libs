@@ -9,10 +9,8 @@
 #include "clib_tests.h"
 #include "lock.h"
 
-int test_CreatingBFLock(void) {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_CreatingBFLock(void) {
+BFTEST_UNIT_FUNC(test_CreatingBFLock, 1, {
 	BFLock lock;
 	result = BFLockCreate(&lock);
 
@@ -21,15 +19,10 @@ int test_CreatingBFLock(void) {
 	}
 
 	if (!result) result = BFLockDestroy(&lock);
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_CreatingTimedWaitLock(void) {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_CreatingTimedWaitLock(void) {
+BFTEST_UNIT_FUNC(test_CreatingTimedWaitLock, 1, {
 	BFLock lock;
 	result = BFLockCreate(&lock);
 
@@ -45,10 +38,7 @@ int test_CreatingTimedWaitLock(void) {
 	}
 
 	if (!result) result = BFLockDestroy(&lock);
-
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
 typedef struct {
 	BFLock lock;
@@ -66,40 +56,31 @@ void thread_test_waitinglock(void * in) {
 	BFLockRelease(&st->lock);
 }
 
-int test_waitinglock() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_waitinglock() {
+BFTEST_UNIT_FUNC(test_waitinglock, 2<<4, {
+	thread_test_waitinglock_struct st;
+	st.i = 0;
+	result = BFLockCreate(&st.lock);
 
-	int max = 2 << 4;
-	while (!result && max--) {
-		thread_test_waitinglock_struct st;
-		st.i = 0;
-		result = BFLockCreate(&st.lock);
-
-		if (!result) {
-			if (!BFLockIsValid(&st.lock)) result = 1;
-		}
-
-		if (!result) {
-			BFThreadAsyncID tid = BFThreadAsync(thread_test_waitinglock, &st);
-			while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
-			BFLockWait(&st.lock);
-
-			BFThreadAsyncWait(tid);
-
-			if (st.i == 0) {
-				result = 1;
-			}
-			BFThreadAsyncDestroy(tid);
-		}
-
-		if (!result) result = BFLockDestroy(&st.lock);
+	if (!result) {
+		if (!BFLockIsValid(&st.lock)) result = 1;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	if (!result) {
+		BFThreadAsyncID tid = BFThreadAsync(thread_test_waitinglock, &st);
+		while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
+		BFLockWait(&st.lock);
 
-}
+		BFThreadAsyncWait(tid);
+
+		if (st.i == 0) {
+			result = 1;
+		}
+		BFThreadAsyncDestroy(tid);
+	}
+
+	if (!result) result = BFLockDestroy(&st.lock);
+})
 
 typedef struct {
 	BFLock l;
@@ -113,56 +94,39 @@ void thread_test_destroyLockThatIsWaiting(void * in) {
 	st->ran = true;
 }
 
-int test_destroyLockThatIsWaiting() {
-	UNIT_TEST_START;
-	int result = 0;
+BFTEST_UNIT_FUNC(test_destroyLockThatIsWaiting, 2<<14, {
+	test_destroyLockThatIsWaiting_struct st;
+	BFLockCreate(&st.l);
+	st.ran = false;
+	st.err = 0;
 
-	int max = 2 << 14;
-	while (!result && max--) {
-		test_destroyLockThatIsWaiting_struct st;
-		BFLockCreate(&st.l);
-		st.ran = false;
-		st.err = 0;
+	BFThreadAsyncID tid = BFThreadAsync(thread_test_destroyLockThatIsWaiting, &st);
+	while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
 
-		BFThreadAsyncID tid = BFThreadAsync(thread_test_destroyLockThatIsWaiting, &st);
-		while (!BFThreadAsyncIsRunning(tid)) { usleep(50); }
-
-		while (!BFLockIsWaiting(&st.l)) {
-			usleep(50);
-		}
-
-		BFLockDestroy(&st.l);
-
-		BFThreadAsyncWait(tid);
-		BFThreadAsyncDestroy(tid);
-
-		if (!st.ran) {
-			result = 1;
-		}
-
-		if (st.err) {
-			result += 2;
-		}
+	while (!BFLockIsWaiting(&st.l)) {
+		usleep(50);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
+	BFLockDestroy(&st.l);
 
-}
+	BFThreadAsyncWait(tid);
+	BFThreadAsyncDestroy(tid);
 
-void lock_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
+	if (!st.ran) {
+		result = 1;
+	}
 
-	INTRO_TEST_FUNCTION;
+	if (st.err) {
+		result += 2;
+	}
+})
 
-	LAUNCH_TEST(test_CreatingBFLock, p, f);
-	LAUNCH_TEST(test_CreatingTimedWaitLock, p, f);
-	LAUNCH_TEST(test_waitinglock, p, f);
-	LAUNCH_TEST(test_destroyLockThatIsWaiting, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(lock_tests, {
+	BFTEST_LAUNCH(test_CreatingBFLock);
+	BFTEST_LAUNCH(test_CreatingTimedWaitLock);
+	BFTEST_LAUNCH(test_waitinglock);
+	BFTEST_LAUNCH(test_destroyLockThatIsWaiting);
+})
 
 #endif // LOCK_TESTS_H
 

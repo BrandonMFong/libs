@@ -11,8 +11,8 @@
 
 using namespace BF;
 
-int test_filePath() {
-	int result = 0;
+//int test_filePath() {
+BFTEST_UNIT_FUNC(test_filePath, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -23,7 +23,7 @@ int test_filePath() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "";
@@ -37,7 +37,7 @@ int test_filePath() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = NULL;
@@ -60,14 +60,11 @@ int test_filePath() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_basename() {
-	int result = 0;
+//int test_basename() {
+BFTEST_UNIT_FUNC(test_basename, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -78,7 +75,7 @@ int test_basename() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/.txt";
@@ -96,7 +93,7 @@ int test_basename() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 	
 	if (!result) {
 		file = new File(NULL, &result);
@@ -116,14 +113,11 @@ int test_basename() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_extension() {
-	int result = 0;
+//int test_extension() {
+BFTEST_UNIT_FUNC(test_extension, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -134,7 +128,7 @@ int test_extension() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/world.";
@@ -148,7 +142,7 @@ int test_extension() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/world";
@@ -162,7 +156,7 @@ int test_extension() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		file = new File(NULL, &result);
@@ -181,14 +175,11 @@ int test_extension() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_directory() {
-	int result = 0;
+//int test_directory() {
+BFTEST_UNIT_FUNC(test_directory, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -199,7 +190,7 @@ int test_directory() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/world.";
@@ -213,7 +204,7 @@ int test_directory() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test.txt";
@@ -227,7 +218,7 @@ int test_directory() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		file = new File(NULL, &result);
@@ -246,32 +237,15 @@ int test_directory() {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-void file_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-
-	INTRO_TEST_FUNCTION;
-
-	if (!test_filePath()) p++;
-	else f++;
-	
-	if (!(test_basename())) p++;
-	else f++;
-
-	if (!test_extension()) p++;
-	else f++;
-
-	if (!test_directory()) p++;
-	else f++;
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(file_tests, {
+	BFTEST_LAUNCH(test_filePath);
+	BFTEST_LAUNCH(test_basename);
+	BFTEST_LAUNCH(test_extension);
+	BFTEST_LAUNCH(test_directory);
+})
 
 #endif // FILE_TESTS_HPP
 

@@ -16,18 +16,13 @@ extern "C" {
 
 using namespace BF;
 
-int test_queueinit() {
-	int result = 0;
-
+//int test_queueinit() {
+BFTEST_UNIT_FUNC(test_queueinit, 1,  {
 	Queue<int> q;
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_loadandunloadQueue(void) {
-	int result = 0;
-
+//int test_loadandunloadQueue(void) {
+BFTEST_UNIT_FUNC(test_loadandunloadQueue, 1,  {
 	Queue<int> q;
 	const int max = 2 << 10;
 	for (int i = 0; i < max; i++) {
@@ -46,22 +41,12 @@ int test_loadandunloadQueue(void) {
 			q.pop();
 		}
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-void queue_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_queueinit, p, f);
-	LAUNCH_TEST(test_loadandunloadQueue, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(queue_tests, {
+	BFTEST_LAUNCH(test_queueinit);
+	BFTEST_LAUNCH(test_loadandunloadQueue);
+})
 
 #endif // QUEUE_TESTS_HPP 
 

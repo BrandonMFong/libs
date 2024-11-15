@@ -3,10 +3,12 @@
  * date: 6/30/22
  */
 
-#ifndef CLIB_TESTS_H
-#define CLIB_TESTS_H
+#ifndef CPPLIB_TESTS_HPP
+#define CPPLIB_TESTS_HPP
 
-#include "bftests.hpp"
+extern "C" {
+#include <bftest/bftest.h>
+}
 
-#endif // CLIB_TESTS_H
+#endif // CPPLIB_TESTS_HPP
 

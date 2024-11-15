@@ -16,18 +16,13 @@ extern "C" {
 
 using namespace BF;
 
-int test_StackInit() {
-	int result = 0;
-
+//int test_StackInit() {
+BFTEST_UNIT_FUNC(test_StackInit, 1,  {
 	Stack<int> stack;
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_StackPush() {
-	int result = 0;
-
+//int test_StackPush() {
+BFTEST_UNIT_FUNC(test_StackPush, 1,  {
 	Stack<int> stack;
 
 	result = stack.push(1);
@@ -40,14 +35,10 @@ int test_StackPush() {
 
 	if (!result)
 		result = stack.push(4);
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_StackPop() {
-	int result = 0;
-
+//int test_StackPop() {
+BFTEST_UNIT_FUNC(test_StackPop, 1,  {
 	Stack<int> stack;
 
 	result = stack.push(1);
@@ -77,14 +68,10 @@ int test_StackPop() {
 			result = 2;
 		}
 	}
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_StackTop() {
-	int result = 0;
-
+//int test_StackTop() {
+BFTEST_UNIT_FUNC(test_StackTop, 1,  {
 	Stack<int> stack;
 
 	result = stack.push(1);
@@ -106,14 +93,10 @@ int test_StackTop() {
 			printf("%d != 4\n", top);
 		}
 	}
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_StackSize() {
-	int result = 0;
-
+//int test_StackSize() {
+BFTEST_UNIT_FUNC(test_StackSize, 1,  {
 	Stack<int> stack;
 
 	if (!stack.empty()) {
@@ -142,14 +125,10 @@ int test_StackSize() {
 		result = 3;
 		printf("Size: %d != 4\n", stack.size());
 	}
+})
 
-	PRINT_TEST_RESULTS(!result);
-	return result;
-}
-
-int test_LoadAndUnload() {
-	UNIT_TEST_START;
-	int result = 0;
+//int test_LoadAndUnload() {
+BFTEST_UNIT_FUNC(test_LoadAndUnload, 1,  {
 	srand(time(0));
 	const int size = (2 << 8);
 	int * array = (int *) malloc(sizeof(int) * size);
@@ -173,20 +152,15 @@ int test_LoadAndUnload() {
 	}
 
 	BFFree(array);
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+})
 
-int test_LoadAndUnloadStrings() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_LoadAndUnloadStrings() {
+BFTEST_UNIT_FUNC(test_LoadAndUnloadStrings, 1,  {
 	const int size = (2 << 16);
 	char ** array = (char **) malloc(sizeof(char *) * size);
 	Stack<char *> stack;
 	for (int i = 0; i < size; i++) {
 		char uuidstr[kBFStringUUIDStringLength];
-		//BFStringGetRandomUUIDString(uuidstr);
 		strcpy(uuidstr, "uuid");
 		array[i] = BFStringCopyString(uuidstr);
 		if (array[i] == NULL) {
@@ -212,27 +186,17 @@ int test_LoadAndUnloadStrings() {
 	}
 	
 	BFFree(array);
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-void stack_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_StackInit, p, f);
-	LAUNCH_TEST(test_StackPush, p, f);
-	LAUNCH_TEST(test_StackPop, p, f);
-	LAUNCH_TEST(test_StackTop, p, f);
-	LAUNCH_TEST(test_StackSize, p, f);
-	LAUNCH_TEST(test_LoadAndUnload, p, f);
-	LAUNCH_TEST(test_LoadAndUnloadStrings, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(stack_tests, {
+	BFTEST_LAUNCH(test_StackInit);
+	BFTEST_LAUNCH(test_StackPush);
+	BFTEST_LAUNCH(test_StackPop);
+	BFTEST_LAUNCH(test_StackTop);
+	BFTEST_LAUNCH(test_StackSize);
+	BFTEST_LAUNCH(test_LoadAndUnload);
+	BFTEST_LAUNCH(test_LoadAndUnloadStrings);
+})
 
 #endif // STACK_TESTS_HPP
 

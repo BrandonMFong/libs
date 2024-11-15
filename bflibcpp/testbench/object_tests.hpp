@@ -18,23 +18,16 @@ extern "C" {
 
 using namespace BF;
 
-int test_objectinit() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_objectinit() {
+BFTEST_UNIT_FUNC(test_objectinit, 1,  {
 	Object o;
 
 	if (Object::retainCount(o) != 1)
 		result = 1;
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_objectretainer() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_objectretainer() {
+BFTEST_UNIT_FUNC(test_objectretainer, 1,  {
 	Object * o = new Object;
 
 	if (o == NULL)
@@ -74,15 +67,10 @@ int test_objectretainer() {
 		if (i) result = 4;
 		else if (o) result = 5;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_objectshallowcopy() {
-	UNIT_TEST_START;
-	int result = 0;
-
+//int test_objectshallowcopy() {
+BFTEST_UNIT_FUNC(test_objectshallowcopy, 1,  {
 	Object o;
 
 	if (Object::retainCount(o) != 1)
@@ -94,23 +82,13 @@ int test_objectshallowcopy() {
 		else if (Object::retainCount(so) != 1) result = 3;
 		else if (so->_lock == o._lock) result = 4;
 	}
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-void object_tests(int * pass, int * fail) {
-	int p = 0, f = 0;
-	
-	INTRO_TEST_FUNCTION;
-
-	LAUNCH_TEST(test_objectinit, p, f);
-	LAUNCH_TEST(test_objectretainer, p, f);
-	LAUNCH_TEST(test_objectshallowcopy, p, f);
-
-	if (pass) *pass += p;
-	if (fail) *fail += f;
-}
+BFTEST_COVERAGE_FUNC(object_tests, {
+	BFTEST_LAUNCH(test_objectinit);
+	BFTEST_LAUNCH(test_objectretainer);
+	BFTEST_LAUNCH(test_objectshallowcopy);
+})
 
 #endif // BF_OBJECT_TESTS_HPP
 
