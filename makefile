@@ -18,9 +18,9 @@ $(RUSTLIBS): setup
 	cd $@ && make debug release
 	cp -afv $@/bin/* bin/
 
-setup: bin
-	mkdir -p $^
+setup:
+	mkdir -p bin
 
-clean: bin
-	rm -rfv $^
+clean:
+	rm -rfv bin
 
