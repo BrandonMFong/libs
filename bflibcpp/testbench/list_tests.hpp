@@ -16,7 +16,7 @@ using namespace BF;
 //int test_Init() {
 BFTEST_UNIT_FUNC(test_Init, 1,  {
 	List<int> * l = new List<int>;
-	Delete(l);
+	BFRelease(l);
 })
 
 //int test_adding() {
@@ -42,7 +42,7 @@ BFTEST_UNIT_FUNC(test_adding, 1,  {
 		}
 	}
 
-	Delete(l);
+	BFRelease(l);
 })
 
 //int test_indexing() {
@@ -70,7 +70,7 @@ BFTEST_UNIT_FUNC(test_indexing, 1,  {
 		printf("%f\n", l->objectAtIndex(1));
 	}
 
-	Delete(l);
+	BFRelease(l);
 })
 
 //int test_inserting() {
@@ -103,7 +103,7 @@ BFTEST_UNIT_FUNC(test_inserting, 1,  {
 		printf("2: %f\n", l->objectAtIndex(2));
 	}
 
-	Delete(l);
+	BFRelease(l);
 })
 
 //int test_deletingAtIndex() {
@@ -136,7 +136,7 @@ BFTEST_UNIT_FUNC(test_deletingAtIndex, 1,  {
 		printf("Error %d\n", result);
 	}
 
-	Delete(l);
+	BFRelease(l);
 })
 
 //int test_deletingAllNodes() {

@@ -23,7 +23,7 @@ BFTEST_UNIT_FUNC(test_filePath, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "";
@@ -37,7 +37,7 @@ BFTEST_UNIT_FUNC(test_filePath, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = NULL;
@@ -60,7 +60,7 @@ BFTEST_UNIT_FUNC(test_filePath, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 })
 
 //int test_basename() {
@@ -75,7 +75,7 @@ BFTEST_UNIT_FUNC(test_basename, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/.txt";
@@ -93,7 +93,7 @@ BFTEST_UNIT_FUNC(test_basename, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 	
 	if (!result) {
 		file = new File(NULL, &result);
@@ -113,7 +113,7 @@ BFTEST_UNIT_FUNC(test_basename, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 })
 
 //int test_extension() {
@@ -128,7 +128,7 @@ BFTEST_UNIT_FUNC(test_extension, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/world.";
@@ -142,7 +142,7 @@ BFTEST_UNIT_FUNC(test_extension, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/world";
@@ -156,7 +156,7 @@ BFTEST_UNIT_FUNC(test_extension, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		file = new File(NULL, &result);
@@ -175,7 +175,7 @@ BFTEST_UNIT_FUNC(test_extension, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 })
 
 //int test_directory() {
@@ -190,7 +190,7 @@ BFTEST_UNIT_FUNC(test_directory, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test/hello/world.";
@@ -204,7 +204,7 @@ BFTEST_UNIT_FUNC(test_directory, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		path = "test.txt";
@@ -218,7 +218,7 @@ BFTEST_UNIT_FUNC(test_directory, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 
 	if (!result) {
 		file = new File(NULL, &result);
@@ -237,7 +237,7 @@ BFTEST_UNIT_FUNC(test_directory, 1,  {
 		}
 	}
 
-	Delete(file);
+	BFRelease(file);
 })
 
 BFTEST_COVERAGE_FUNC(file_tests) {

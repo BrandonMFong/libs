@@ -165,7 +165,7 @@ BFTEST_UNIT_FUNC(test_HexString, 2<<10,  {
 	}
 
 	BFFree(buf);
-	BFDelete(data);
+	BFRelease(data);
 })
 
 //int test_dataCompare() {

@@ -236,7 +236,7 @@ BFTEST_UNIT_FUNC(test_TraversingThroughDictionary, 1,  {
 		}
 	}
 
-	Delete(itr);
+	BFRelease(itr);
 })
 
 BFTEST_COVERAGE_FUNC(dictionary_tests) {

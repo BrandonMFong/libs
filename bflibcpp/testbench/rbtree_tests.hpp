@@ -31,10 +31,10 @@ BFTEST_UNIT_FUNC(test_RBInitializer, 1,  {
 	RBTree<float> * ff = new RBTree<float>;
 	RBTree<char> * cc = new RBTree<char>;
 
-	Delete(ii);
-	Delete(dd);
-	Delete(ff);
-	Delete(cc);
+	BFRelease(ii);
+	BFRelease(dd);
+	BFRelease(ff);
+	BFRelease(cc);
 })
 
 //static int test_InsertingLRCase() {
@@ -188,10 +188,10 @@ BFTEST_UNIT_FUNC(test_AccessingNodeHierarchy, 1,  {
 		result = 6;
 	}
 
-	Delete(n1);
-	Delete(n2);
-	Delete(n3);
-	Delete(n4);
+	BFRelease(n1);
+	BFRelease(n2);
+	BFRelease(n3);
+	BFRelease(n4);
 })
 
 //int test_NodeColors() {
@@ -247,7 +247,7 @@ BFTEST_UNIT_FUNC(test_NodeColors, 1,  {
 	
 	}
 
-	Delete(n1);
+	BFRelease(n1);
 })
 
 //int test_RotationCases() {
@@ -291,10 +291,10 @@ BFTEST_UNIT_FUNC(test_RotationCases, 1,  {
 		}
 	}
 	
-	Delete(n1);
-	Delete(n2);
-	Delete(n3);
-	Delete(n4);
+	BFRelease(n1);
+	BFRelease(n2);
+	BFRelease(n3);
+	BFRelease(n4);
 })
 
 //int test_NodeLevels() {
@@ -327,10 +327,10 @@ BFTEST_UNIT_FUNC(test_NodeLevels, 1,  {
 		result = 4;
 	}
 	
-	Delete(n1);
-	Delete(n2);
-	Delete(n3);
-	Delete(n4);
+	BFRelease(n1);
+	BFRelease(n2);
+	BFRelease(n3);
+	BFRelease(n4);
 })
 
 template <typename T>

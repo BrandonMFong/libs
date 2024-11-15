@@ -7,7 +7,6 @@
 #define TIME_TESTS_HPP
 
 #include <time.hpp>
-#include <delete.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -28,7 +27,7 @@ BFTEST_UNIT_FUNC(test_TimeInit, 1,  {
 		result = 2;
 	}
 
-	Delete(tm);
+	delete(tm);
 
 	Time tm2(t);
 
@@ -71,7 +70,7 @@ BFTEST_UNIT_FUNC(test_TimeBasicOperations, 1,  {
 
 	Time * tc = tb - ta;
 
-	Delete(tc);
+	delete(tc);
 })
 
 //void time_tests(int * pass, int * fail) {

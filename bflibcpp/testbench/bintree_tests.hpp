@@ -29,10 +29,10 @@ BFTEST_UNIT_FUNC(test_BinInitializer, 1,  {
 	BinTree<float> * ff = new BinTree<float>;
 	BinTree<char> * cc = new BinTree<char>;
 
-	Delete(ii);
-	Delete(dd);
-	Delete(ff);
-	Delete(cc);
+	BFRelease(ii);
+	BFRelease(dd);
+	BFRelease(ff);
+	BFRelease(cc);
 })
 
 //static int test_BinInsert() {
@@ -108,7 +108,7 @@ BFTEST_UNIT_FUNC(test_BinNodeKnowsItsLeaf, 1,  {
 	}
 })
 
-//static int test_BSTDelete() {
+//static int test_BSTBFRelease() {
 BFTEST_UNIT_FUNC(test_BSTDelete, 1,  {
 	BinTree<int> t;
 	t.insert(5);
@@ -260,13 +260,13 @@ BFTEST_UNIT_FUNC(test_ReplacingBinNodes, 1,  {
 		result = 3;
 	}
 
-	Delete(a);
-	Delete(b);
-	Delete(c);
-	Delete(d);
-	Delete(e);
-	Delete(f);
-	Delete(g);
+	BFRelease(a);
+	BFRelease(b);
+	BFRelease(c);
+	BFRelease(d);
+	BFRelease(e);
+	BFRelease(f);
+	BFRelease(g);
 })
 
 //int test_SearchingBinTree() {
@@ -343,7 +343,7 @@ BFTEST_UNIT_FUNC(test_Iterations, 1,  {
 		}
 	}
 
-	Delete(itr);
+	BFRelease(itr);
 })
 
 //int test_getNodeForObject(void) {

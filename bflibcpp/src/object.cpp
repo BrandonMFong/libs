@@ -4,7 +4,6 @@
  */
 
 #include "object.hpp"
-#include "delete.hpp"
 
 using namespace BF;
 
