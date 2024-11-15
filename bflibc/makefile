@@ -18,6 +18,7 @@ help:
 
 COMPILER = gcc
 CONFIG = release
+BUILD_TYPE = archive
 SOURCE_EXT = c
 HEADER_EXT = h
 FILES = \

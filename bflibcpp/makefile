@@ -19,6 +19,7 @@ help:
 COMPILER = g++
 CPPSTD = -std=c++20
 CONFIG = release
+BUILD_TYPE = archive
 SOURCE_EXT = cpp
 HEADER_EXT = hpp
 FILES = \

@@ -14,6 +14,11 @@ CONFIG = release
 BUILD_PATH = build/$(CONFIG)
 BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 
+# BUILD_TYPE = archive || executable
+ifeq ($(BUILD_TYPE),)
+$(error ERROR: "please define `BUILD_TYPE` in your makefile)
+endif
+
 # used to make universal binaries
 MACOS_TARGET_X86_64 = x86_64-apple-macos10--12
 MACOS_TARGET_ARM64 = arm64-apple-macos11
@@ -101,16 +106,25 @@ ifeq ($(UNAME_S),Darwin)
 ifeq ($(CONFIG),test)
 $(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
 	lipo -create -output $@ $^
-
 $(BIN_MACOS_TARGETS): \
 	$(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
 	$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@)) \
 	$(FLAGS) $(LINKS) $(LIBRARIES) \
 	-target $(subst --,.,$(subst .,,$(suffix $@)))
-else # ($(CONFIG),...)
+else # ($(CONFIG),release||debug)
+ifeq ($(BUILD_TYPE),archive)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.$(HEADER_EXT) $(BIN_PATH)
 	ar rsc $@ $^
+else ifeq ($(BUILD_TYPE),executable) # ($(BUILD_TYPE),executable)
+$(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
+	lipo -create -output $@ $^
+$(BIN_MACOS_TARGETS): \
+	$(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
+	$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@)) \
+	$(FLAGS) $(LINKS) $(LIBRARIES) \
+	-target $(subst --,.,$(subst .,,$(suffix $@)))
+endif # ($(BUILD_TYPE),...)
 
 $(BUILD_PATH)/%.o: \
 	$(BUILD_PATH)/%.$(MACOS_TARGET_X86_64) \
@@ -129,11 +143,17 @@ ifeq ($(CONFIG),test)
 $(BIN_PATH)/$(BIN_NAME): \
 	$(MAIN_FILE) $(OBJECTS) $(BIN_PREREQS)
 	$(COMPILER) -o $@ $< $(OBJECTS) $(LIBRARIES) $(FLAGS) $(LINKS)
-else # ($(CONFIG),...)
+else # ($(CONFIG),release||debug)
+ifeq ($(BUILD_TYPE),archive)
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	cp -afv src/*.$(HEADER_EXT) $(BIN_PATH)
 	ar rsc $@ $^
-endif # ($(CONFIG), test)
+else ifeq ($(BUILD_TYPE),executable) # ($(BUILD_TYPE),executable)
+$(BIN_PATH)/$(BIN_NAME): \
+	$(MAIN_FILE) $(OBJECTS) $(BIN_PREREQS)
+	$(COMPILER) -o $@ $< $(OBJECTS) $(LIBRARIES) $(FLAGS) $(LINKS)
+endif # ($(BUILD_TYPE),...)
+endif # ($(CONFIG), ...)
 
 $(BUILD_PATH)/%.o: src/%.$(SOURCE_EXT) src/%.$(HEADER_EXT)
 	$(COMPILER) -c $< -o $@ $(FLAGS)
