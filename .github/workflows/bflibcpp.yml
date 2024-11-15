@@ -22,6 +22,7 @@ jobs:
     - name: build
       run: |
         cd bflibcpp;
-        make clean build CONFIG=release
-        make clean build CONFIG=debug
+        make clean
+        make build CONFIG=release
+        make build CONFIG=debug
 

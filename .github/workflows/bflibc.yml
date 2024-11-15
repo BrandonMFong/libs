@@ -16,11 +16,13 @@ jobs:
     - name: test
       run: |
         cd bflibc;
-        make dependencies clean build CONFIG=test run
+        make dependencies
+        make clean build CONFIG=test run
 
     - name: build
       run: |
         cd bflibc;
-        make clean build CONFIG=release
-        make clean build CONFIG=debug
+        make clean
+        make build CONFIG=release
+        make build CONFIG=debug
 
