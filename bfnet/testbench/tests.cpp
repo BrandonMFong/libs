@@ -13,13 +13,13 @@ void TestLog(const char * str) {
 }
 
 int main() {
-	TEST_SUITE_START;
+	BFTEST_SUITE_START;
 
 	Log::SetCallback(TestLog);
 	
-	TEST_SUITE_LAUNCH(socket_tests);
+	BFTEST_SUITE_LAUNCH(socket_tests);
 
-	TEST_SUITE_END;
+	BFTEST_SUITE_END;
 
 	return 0;
 }

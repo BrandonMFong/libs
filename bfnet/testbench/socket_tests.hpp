@@ -26,73 +26,55 @@ void TestSocketPacketReceive(SocketEnvelope * envelope) { }
 
 void TestSocketNewConnection(SocketConnection * sc) { }
 
-int test_socketinitclient() {
-	UNIT_TEST_START;
-	int result = 0;
-	int max = 2 << 20;
+BFTEST_UNIT_FUNC(test_socketinitclient, 2<<10, {
+	Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
 
-	while (!result && max--) {
-		Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
-
-		if (!skt) {
-			result = 1;
-		} else if (skt->mode() != SOCKET_MODE_CLIENT) {
-			result = 2;
-		} else if (skt->isReady()) {
-			result = 3;
-		}
-
-		if (!result) {
-			skt->setInStreamCallback(TestSocketPacketReceive);
-			skt->setNewConnectionCallback(TestSocketNewConnection);
-			skt->setBufferSize(BUFFER_SIZE);
-			if (!skt->isReady()) {
-				result = 4;
-			}
-		}
-
-		BFRelease(skt);
+	if (!skt) {
+		result = 1;
+	} else if (skt->mode() != SOCKET_MODE_CLIENT) {
+		result = 2;
+	} else if (skt->isReady()) {
+		result = 3;
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
-
-int test_socketinitserver() {
-	UNIT_TEST_START;
-	int result = 0;
-	int max = 2 << 20;
-
-	while (!result && max--) {
-		Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
-
-		if (!skt) {
-			result = 1;
-		} else if (skt->mode() != SOCKET_MODE_SERVER) {
-			result = 2;
-		} else if (skt->port() != PORT) {
-			result = 2;
-		} else if (strcmp(skt->ipaddr(), LOCALHOST)) {
-			result = 2;
-		} else if (skt->isReady()) {
-			result = 3;
+	if (!result) {
+		skt->setInStreamCallback(TestSocketPacketReceive);
+		skt->setNewConnectionCallback(TestSocketNewConnection);
+		skt->setBufferSize(BUFFER_SIZE);
+		if (!skt->isReady()) {
+			result = 4;
 		}
-
-		if (!result) {
-			skt->setInStreamCallback(TestSocketPacketReceive);
-			skt->setNewConnectionCallback(TestSocketNewConnection);
-			skt->setBufferSize(BUFFER_SIZE);
-			if (!skt->isReady()) {
-				result = 4;
-			}
-		}
-
-		BFRelease(skt);
 	}
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+	BFRelease(skt);
+})
+
+BFTEST_UNIT_FUNC(test_socketinitserver, 2<<10, {
+	Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
+
+	if (!skt) {
+		result = 1;
+	} else if (skt->mode() != SOCKET_MODE_SERVER) {
+		result = 2;
+	} else if (skt->port() != PORT) {
+		result = 2;
+	} else if (strcmp(skt->ipaddr(), LOCALHOST)) {
+		result = 2;
+	} else if (skt->isReady()) {
+		result = 3;
+	}
+
+	if (!result) {
+		skt->setInStreamCallback(TestSocketPacketReceive);
+		skt->setNewConnectionCallback(TestSocketNewConnection);
+		skt->setBufferSize(BUFFER_SIZE);
+		if (!skt->isReady()) {
+			result = 4;
+		}
+	}
+
+	BFRelease(skt);
+})
 
 Atomic<SocketConnection *> serverConn = NULL;
 Atomic<SocketConnection *> clientConn = NULL;
@@ -101,7 +83,12 @@ Atomic<bool> serverInReceived = false;
 Data clientIn;
 Atomic<bool> clientInReceived = false;
 
-void test_sendingandreceiving_receive(SocketEnvelope * envelope, Data & in, Atomic<SocketConnection *> & conn, Atomic<bool> & received) {
+void test_sendingandreceiving_receive(
+	SocketEnvelope * envelope,
+	Data & in,
+	Atomic<SocketConnection *> & conn,
+	Atomic<bool> & received
+) {
 	uuid_t u0, u1;
 	envelope->connection()->getuuid(u0);
 	conn.get()->getuuid(u1);
@@ -127,10 +114,7 @@ void test_sendingandreceiving_client_new(SocketConnection * sc) {
 	clientConn = sc;
 }
 
-int test_sendingandreceiving() {
-	UNIT_TEST_START;
-	int result = 0;
-	
+BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 	Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
 	Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
 
@@ -220,19 +204,16 @@ int test_sendingandreceiving() {
 
 	BFRelease(s);
 	BFRelease(c);
+})
 
-	UNIT_TEST_END(!result, result);
-	return result;
-}
+BFTEST_COVERAGE_FUNC(socket_tests) {
+	BFTEST_COVERAGE_START;
 
-TEST_COVERAGE_FUNC(socket_tests) {
-	TEST_COVERAGE_START;
+	BFTEST_LAUNCH(test_socketinitclient);
+	BFTEST_LAUNCH(test_socketinitserver);
+	BFTEST_LAUNCH(test_sendingandreceiving);
 
-	LAUNCH_TEST(test_socketinitclient);
-	LAUNCH_TEST(test_socketinitserver);
-	LAUNCH_TEST(test_sendingandreceiving);
-
-	TEST_COVERAGE_END;
+	BFTEST_COVERAGE_END;
 }
 
 #endif // SOCKET_TESTS_HPP
