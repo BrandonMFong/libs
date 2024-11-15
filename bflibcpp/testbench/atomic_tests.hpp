@@ -23,17 +23,13 @@ typedef struct {
 } AtomicInit;
 
 //int test_atomicinit() {
-BFTEST_UNIT_FUNC(test_atomicinit) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_atomicinit, 1,  {
 	Atomic<int> a;
 	Atomic<int> b(5);
 	Atomic<int> c = 10;
 	AtomicInit sa;
 	sa.d = 15;
-
-	BFTEST_UNIT_END;
-}
+})
 
 void test_atomisetandget_callback(void * in) {
 	Atomic<int> * a = (Atomic<int> *) in;
@@ -46,9 +42,7 @@ void test_atomisetandget_callback(void * in) {
 }
 
 //int test_atomisetandget() {
-BFTEST_UNIT_FUNC(test_atomisetandget) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_atomisetandget, 1,  {
 	Atomic<int> a = 10;
 	BFThreadAsyncID tid0 = BFThreadAsync(test_atomisetandget_callback, &a);
 	BFThreadAsyncID tid1 = BFThreadAsync(test_atomisetandget_callback, &a);
@@ -59,14 +53,10 @@ BFTEST_UNIT_FUNC(test_atomisetandget) {
 	BFThreadAsyncCancel(tid1);
 	BFThreadAsyncDestroy(tid0);
 	BFThreadAsyncDestroy(tid1);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_atomicqueue() {
-BFTEST_UNIT_FUNC(test_atomicqueue) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_atomicqueue, 1,  {
 	Atomic<Queue<int>> q;
 	const int max = 2 << 12;
 	for (int i = 0; i < max; i++) {
@@ -88,26 +78,16 @@ BFTEST_UNIT_FUNC(test_atomicqueue) {
 			q.get().pop();
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_atomicvaluechange() {
-BFTEST_UNIT_FUNC(test_atomicvaluechange) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_atomicvaluechange, 2<<10,  {
 	Atomic<int> a;
-	long max = (long) 2 << 18;
-	while (!result && max) {
-		srand(time(0));
-		int val = rand();
-		a.set(val);
-		if (a.get() != val) result = (int) max;
-		max--;
-	}
-
-	BFTEST_UNIT_END;
-}
+	srand(time(0));
+	int val = rand();
+	a.set(val);
+	BF_ASSERT(a.get() = val);
+})
 
 void SetValue(void * in) {
 	const int max = 2 << 4;
@@ -126,116 +106,75 @@ void SetValue(void * in) {
 }
 
 //int test_settingvalueonthreads() {
-BFTEST_UNIT_FUNC(test_settingvalueonthreads) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_settingvalueonthreads, 2<<8,  {
+	int ia = 0;
 
-	int max = 2 << 8;
-	while (!result && max) {
-		int ia = 0;
+	Atomic<int *> a(&ia);
+	BFThreadAsyncID tid0 = BFThreadAsync(SetValue, &a);
+	BFThreadAsyncID tid1 = BFThreadAsync(SetValue, &a);
 
-		Atomic<int *> a(&ia);
-		BFThreadAsyncID tid0 = BFThreadAsync(SetValue, &a);
-		BFThreadAsyncID tid1 = BFThreadAsync(SetValue, &a);
+	// wait for both threads to complete execution
+	BFThreadAsyncWait(tid0);
+	BFThreadAsyncWait(tid1);
 
-		// wait for both threads to complete execution
-		BFThreadAsyncWait(tid0);
-		BFThreadAsyncWait(tid1);
+	BFThreadAsyncDestroy(tid0);
+	BFThreadAsyncDestroy(tid1);
 
-		BFThreadAsyncDestroy(tid0);
-		BFThreadAsyncDestroy(tid1);
-
-		const int exp = 2 * (2 << 4); // expected val
-		if (ia != exp) {
-			printf("\n%d != %d\n", ia, exp);
-			result = max;
-		}
-
-		max--;
+	const int exp = 2 * (2 << 4); // expected val
+	if (ia != exp) {
+		printf("\n%d != %d\n", ia, exp);
+		result = max;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_equaloverloadop() {
-BFTEST_UNIT_FUNC(test_equaloverloadop) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_equaloverloadop, 2<<10,  {
+	srand(time(0));
+	int val = rand();
+	Atomic<int> a = val;
+	Atomic<int> b = val;
 
-	int max = 2 << 18;
-	while (!result && max) {
-		srand(time(0));
-		int val = rand();
-		Atomic<int> a = val;
-		Atomic<int> b = val;
+	result = a == b ? 0 : max;
 
-		result = a == b ? 0 : max;
-
-		if (!result) {
-			a = rand();
-			b = rand();
-			result = a != b ? 0 : max;
-		}
-
-		max--;
+	if (!result) {
+		a = rand();
+		b = rand();
+		result = a != b ? 0 : max;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_castingoperator() {
-BFTEST_UNIT_FUNC(test_castingoperator) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_castingoperator, 2<<10,  {
+	srand(time(0));
+	Atomic<int> a = rand();
 
-	int max = 2 << 18;
-	while (!result && max--) {
-		srand(time(0));
-		Atomic<int> a = rand();
-
-		int val = a;
-		Atomic<int> b = val;
-		val = b;
-	}
-
-	BFTEST_UNIT_END;
-}
+	int val = a;
+	Atomic<int> b = val;
+	val = b;
+})
 
 void test_changebyref(Atomic<bool> & val) {
 	val = true;
 }
 
-//int test_changingvaluebyreference() {
-BFTEST_UNIT_FUNC(test_changingvaluebyreference) {
-	BFTEST_UNIT_START;
-
-	int max = 2 << 20;
-	while (!result && max--) {
-		Atomic<bool> val = false;
-		if (val) {
-			result = 1;
-		}
-
-		test_changebyref(val);
-		if (!val) {
-			result = 2;
-		}
+BFTEST_UNIT_FUNC(test_changingvaluebyreference, 2<<10,  {
+	Atomic<bool> val = false;
+	if (val) {
+		result = 1;
 	}
 
-	BFTEST_UNIT_END;
-}
-
-//int test_comparingObjectWithAnother() {
-BFTEST_UNIT_FUNC(test_comparingObjectWithAnother) {
-	BFTEST_UNIT_START;
-
-	long long max = (long long) 2 << 20;
-	while (!result && max--) {
-		Atomic<long long> val = max;
-		if ((val != max) || (max != val)) {
-			result = max;
-		}
+	test_changebyref(val);
+	if (!val) {
+		result = 2;
 	}
+})
 
-	BFTEST_UNIT_END;
-}
+BFTEST_UNIT_FUNC(test_comparingObjectWithAnother, 2<<10, {
+	srand(time(0));
+	int i = rand();
+	Atomic<long long> val = i;
+	BF_ASSERT((val == i) && (i == val));
+})
 
 BFTEST_COVERAGE_FUNC(atomic_tests) {
 	BFTEST_COVERAGE_START;

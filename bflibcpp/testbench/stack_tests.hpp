@@ -17,18 +17,12 @@ extern "C" {
 using namespace BF;
 
 //int test_StackInit() {
-BFTEST_UNIT_FUNC(test_StackInit) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_StackInit, 1,  {
 	Stack<int> stack;
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_StackPush() {
-BFTEST_UNIT_FUNC(test_StackPush) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_StackPush, 1,  {
 	Stack<int> stack;
 
 	result = stack.push(1);
@@ -41,14 +35,10 @@ BFTEST_UNIT_FUNC(test_StackPush) {
 
 	if (!result)
 		result = stack.push(4);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_StackPop() {
-BFTEST_UNIT_FUNC(test_StackPop) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_StackPop, 1,  {
 	Stack<int> stack;
 
 	result = stack.push(1);
@@ -78,14 +68,10 @@ BFTEST_UNIT_FUNC(test_StackPop) {
 			result = 2;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_StackTop() {
-BFTEST_UNIT_FUNC(test_StackTop) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_StackTop, 1,  {
 	Stack<int> stack;
 
 	result = stack.push(1);
@@ -107,14 +93,10 @@ BFTEST_UNIT_FUNC(test_StackTop) {
 			printf("%d != 4\n", top);
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_StackSize() {
-BFTEST_UNIT_FUNC(test_StackSize) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_StackSize, 1,  {
 	Stack<int> stack;
 
 	if (!stack.empty()) {
@@ -143,13 +125,10 @@ BFTEST_UNIT_FUNC(test_StackSize) {
 		result = 3;
 		printf("Size: %d != 4\n", stack.size());
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_LoadAndUnload() {
-BFTEST_UNIT_FUNC(test_LoadAndUnload) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_LoadAndUnload, 1,  {
 	srand(time(0));
 	const int size = (2 << 8);
 	int * array = (int *) malloc(sizeof(int) * size);
@@ -173,13 +152,10 @@ BFTEST_UNIT_FUNC(test_LoadAndUnload) {
 	}
 
 	BFFree(array);
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_LoadAndUnloadStrings() {
-BFTEST_UNIT_FUNC(test_LoadAndUnloadStrings) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_LoadAndUnloadStrings, 1,  {
 	const int size = (2 << 16);
 	char ** array = (char **) malloc(sizeof(char *) * size);
 	Stack<char *> stack;
@@ -210,9 +186,7 @@ BFTEST_UNIT_FUNC(test_LoadAndUnloadStrings) {
 	}
 	
 	BFFree(array);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //void stack_tests(int * pass, int * fail) {
 BFTEST_COVERAGE_FUNC(stack_tests) {

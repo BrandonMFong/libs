@@ -23,9 +23,7 @@ using namespace BF;
 /**
  * Just test that it can build and nothing crashes
  */
-//int test_Initializer() {
-BFTEST_UNIT_FUNC(test_Initializer) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_Initializer, 1, {
 	Array<int> intArr;
 	Array<char> charArr;
 	Array<double> doubleArr;
@@ -37,14 +35,10 @@ BFTEST_UNIT_FUNC(test_Initializer) {
 	delete intArrPtr;
 	delete doubleArrPtr;
 	delete charArrPtr;
-
-	BFTEST_UNIT_END(true, 0);
-}
+})
 
 //int test_Contains() {
-BFTEST_UNIT_FUNC(test_Contains) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_Contains, 1,  {
 	Array<int> arr({1, 2, 3, 4});
 
 	if (!arr.contains(2)) {
@@ -73,14 +67,10 @@ BFTEST_UNIT_FUNC(test_Contains) {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_ObjectAtIndex() {
-BFTEST_UNIT_FUNC(test_ObjectAtIndex) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_ObjectAtIndex, 1,  {
 	Array<double> d({1.1, 2.2, 3.3, 4.4, 5.5});
 
 	double a = d.objectAtIndex(2);
@@ -96,69 +86,52 @@ BFTEST_UNIT_FUNC(test_ObjectAtIndex) {
 		result = 1;
 		printf("%f != 4.4\n", a);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_indexForObject() {
-BFTEST_UNIT_FUNC(test_indexForObject) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_indexForObject, 2<<10,  {
+	Array<int> arr({1, 2, 3, 4});
 
-	int max = 2 << 20;
-	while (!result && max) {
-		Array<int> arr({1, 2, 3, 4});
-
-		if (arr.indexForObject(3) != 2) {
-			result = 1;
-			printf("index should be 2 but is %ld\n", arr.indexForObject(3));
-		}
-
-		Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
-		ch.setComparator(strcmp);
-		
-		char buf[100];
-		strcpy(buf, "world");
-		if (ch.indexForObject(buf) != 1) {
-			result = 1;
-			printf("index should be 1 but is %ld\n", ch.indexForObject(buf));
-		}
-		
-		strcpy(buf, "Hello");
-		if (ch.indexForObject(buf) != 0) {
-			result = 1;
-			printf("index should be 0 but is %ld\n", ch.indexForObject(buf));
-		}
-		
-		strcpy(buf, "hello");
-		if (ch.indexForObject(buf) != -1UL) {
-			result = 1;
-			printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
-		}
-
-		max--;
+	if (arr.indexForObject(3) != 2) {
+		result = 1;
+		printf("index should be 2 but is %ld\n", arr.indexForObject(3));
 	}
 
-	BFTEST_UNIT_END;
-}
+	Array<const char *> ch({"Hello", "world", "my", "name", "is", "lib"});
+	ch.setComparator(strcmp);
+	
+	char buf[100];
+	strcpy(buf, "world");
+	if (ch.indexForObject(buf) != 1) {
+		result = 1;
+		printf("index should be 1 but is %ld\n", ch.indexForObject(buf));
+	}
+	
+	strcpy(buf, "Hello");
+	if (ch.indexForObject(buf) != 0) {
+		result = 1;
+		printf("index should be 0 but is %ld\n", ch.indexForObject(buf));
+	}
+	
+	strcpy(buf, "hello");
+	if (ch.indexForObject(buf) != -1UL) {
+		result = 1;
+		printf("Index should be -1 but is %ld\n", ch.indexForObject(buf));
+	}
+})
 
 //int test_Count() {
-BFTEST_UNIT_FUNC(test_Count) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_Count, 1,  {
 	Array<int> a({1, 2, 3, 4, 5});
 
 	if (a.count() != 5) {
 		result = 1;
 		printf("Count %ld\n", a.count());
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_Setter() {
-BFTEST_UNIT_FUNC(test_Setter) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_Setter, 1,  {
 	Array<int> a;
 
 	a = {1, 2, 3, 4, 5};
@@ -174,184 +147,147 @@ BFTEST_UNIT_FUNC(test_Setter) {
 			result = 2;
 		}
 	}
+})
 
-	BFTEST_UNIT_END;
-}
+BFTEST_UNIT_FUNC(test_addanddelete, 2<<8,  {
+	int objcount = 2 << 9;
+	Array<int> a;
 
-//int test_addanddelete() {
-BFTEST_UNIT_FUNC(test_addanddelete) {
-	BFTEST_UNIT_START;
-
-	int max = 2 << 8;
-	while (!result && max) {
-		int objcount = 2 << 9;
-		Array<int> a;
-
-		// add
-		for (int i = 0; i < objcount; i++) {
-			result = a.add(i);
-			if (result) break;
-		}
-
-		// compare
-		if (!result) {
-			for (int i = 0; i < objcount; i++) {
-				if (a[i] != i) {
-					result = 2;
-					break;
-				}
-			}
-		}
-
-		// delete elements from the end of the array
-		while (!result && a.count()) {
-			result = a.removeObjectAtIndex(a.count() - 1);
-		}
-
-		max--;
+	// add
+	for (int i = 0; i < objcount; i++) {
+		result = a.add(i);
+		if (result) break;
 	}
 
-	BFTEST_UNIT_END;
-}
-
-//int test_deletingObjectAtRandomIndex() {
-BFTEST_UNIT_FUNC(test_deletingObjectAtRandomIndex) {
-	BFTEST_UNIT_START;
-
-	int max = 2 << 10;
-	while (!result && max) {
-		int objcount = 2 << 12;
-		Array<int, int> a;
-
-		// add
+	// compare
+	if (!result) {
 		for (int i = 0; i < objcount; i++) {
-			result = a.add(i);
-			if (result) break;
-		}
-
-		// compare
-		if (!result) {
-			for (int i = 0; i < objcount; i++) {
-				if (a[i] != i) {
-					result = 2;
-					break;
-				}
+			if (a[i] != i) {
+				result = 2;
+				break;
 			}
 		}
+	}
 
-		// delete at random index
-		unsigned int randindex = 0;
-		if (!result) {
-			srand(time(0));
-			randindex = ((unsigned int) rand() % objcount) - 1;
-			result = a.removeObjectAtIndex(randindex);
+	// delete elements from the end of the array
+	while (!result && a.count()) {
+		result = a.removeObjectAtIndex(a.count() - 1);
+	}
+})
+
+//int test_deletingObjectAtRandomIndex() {
+BFTEST_UNIT_FUNC(test_deletingObjectAtRandomIndex, 2<<10,  {
+	int objcount = 2 << 12;
+	Array<int, int> a;
+
+	// add
+	for (int i = 0; i < objcount; i++) {
+		result = a.add(i);
+		if (result) break;
+	}
+
+	// compare
+	if (!result) {
+		for (int i = 0; i < objcount; i++) {
+			if (a[i] != i) {
+				result = 2;
+				break;
+			}
 		}
+	}
 
-		if (!result) {
-			// scan objects
-			for (int i = 0; i < a.count(); i++) {
+	// delete at random index
+	unsigned int randindex = 0;
+	if (!result) {
+		srand(time(0));
+		randindex = ((unsigned int) rand() % objcount) - 1;
+		result = a.removeObjectAtIndex(randindex);
+	}
+
+	if (!result) {
+		// scan objects
+		for (int i = 0; i < a.count(); i++) {
+			int off = 0;
+			if (i >= (int) randindex) {
+				off = 1;
+			}
+			if (a[i] != (i + off)) {
+				result = 3;
+				break;
+			}
+		}
+	}
+})
+
+//int test_insertingAtRandomIndex() {
+BFTEST_UNIT_FUNC(test_insertingAtRandomIndex, 2<<8,  {
+	int objcount = 2 << 12;
+	Array<int, int> a;
+
+	// add
+	for (int i = 0; i < objcount; i++) {
+		result = a.add(i);
+		if (result) break;
+	}
+
+	// compare
+	if (!result) {
+		for (int i = 0; i < objcount; i++) {
+			if (a[i] != i) {
+				result = 2;
+				break;
+			}
+		}
+	}
+
+	// delete at random index
+	unsigned int randindex = 0;
+	int randnum = 0;
+	if (!result) {
+		srand(time(0));
+		randindex = ((unsigned int) rand() % objcount) - 1;
+		randnum = rand();
+		result = a.insertObjectAtIndex(randnum, randindex);
+	}
+
+	if (!result) {
+		// scan objects
+		for (int i = 0; i < a.count(); i++) {
+			if (i == (int) randindex) {
+				if (a[i] != (int) randnum) {
+					result = 4;
+					break;
+				}
+			} else {
 				int off = 0;
-				if (i >= (int) randindex) {
+				if (i > (int) randindex) {
 					off = 1;
 				}
-				if (a[i] != (i + off)) {
+
+				if (a[i] != (i - off)) {
 					result = 3;
 					break;
 				}
 			}
 		}
-
-		max--;
 	}
-
-	BFTEST_UNIT_END;
-}
-
-//int test_insertingAtRandomIndex() {
-BFTEST_UNIT_FUNC(test_insertingAtRandomIndex) {
-	BFTEST_UNIT_START;
-
-	int max = 2 << 8;
-	while (!result && max) {
-		int objcount = 2 << 12;
-		Array<int, int> a;
-
-		// add
-		for (int i = 0; i < objcount; i++) {
-			result = a.add(i);
-			if (result) break;
-		}
-
-		// compare
-		if (!result) {
-			for (int i = 0; i < objcount; i++) {
-				if (a[i] != i) {
-					result = 2;
-					break;
-				}
-			}
-		}
-
-		// delete at random index
-		unsigned int randindex = 0;
-		int randnum = 0;
-		if (!result) {
-			srand(time(0));
-			randindex = ((unsigned int) rand() % objcount) - 1;
-			randnum = rand();
-			result = a.insertObjectAtIndex(randnum, randindex);
-		}
-
-		if (!result) {
-			// scan objects
-			for (int i = 0; i < a.count(); i++) {
-				if (i == (int) randindex) {
-					if (a[i] != (int) randnum) {
-						result = 4;
-						break;
-					}
-				} else {
-					int off = 0;
-					if (i > (int) randindex) {
-						off = 1;
-					}
-
-					if (a[i] != (i - off)) {
-						result = 3;
-						break;
-					}
-				}
-			}
-		}
-
-		max--;
-	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 void TestArrayRelease(char * obj) {
 	BFFree(obj);
 }
 
-BFTEST_UNIT_FUNC(test_releasecallback) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_releasecallback, 2<<8,  {
+	Array<char *> a;
 
-	int max = 2 << 8;
-	while (!result && max--) {
-		Array<char *> a;
+	a.setReleaseCallback(TestArrayRelease);
 
-		a.setReleaseCallback(TestArrayRelease);
-
-		srand(time(0));
-		int asize = rand() % (2 << 16);
-		for (int i = 0; i < asize; i++) {
-			a.add(BFStringCopyString("word"));
-		}
+	srand(time(0));
+	int asize = rand() % (2 << 16);
+	for (int i = 0; i < asize; i++) {
+		a.add(BFStringCopyString("word"));
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(array_tests) {
 	BFTEST_COVERAGE_START;

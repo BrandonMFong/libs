@@ -19,21 +19,15 @@ extern "C" {
 using namespace BF;
 
 //int test_objectinit() {
-BFTEST_UNIT_FUNC(test_objectinit) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_objectinit, 1,  {
 	Object o;
 
 	if (Object::retainCount(o) != 1)
 		result = 1;
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_objectretainer() {
-BFTEST_UNIT_FUNC(test_objectretainer) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_objectretainer, 1,  {
 	Object * o = new Object;
 
 	if (o == NULL)
@@ -73,14 +67,10 @@ BFTEST_UNIT_FUNC(test_objectretainer) {
 		if (i) result = 4;
 		else if (o) result = 5;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_objectshallowcopy() {
-BFTEST_UNIT_FUNC(test_objectshallowcopy) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_objectshallowcopy, 1,  {
 	Object o;
 
 	if (Object::retainCount(o) != 1)
@@ -92,9 +82,7 @@ BFTEST_UNIT_FUNC(test_objectshallowcopy) {
 		else if (Object::retainCount(so) != 1) result = 3;
 		else if (so->_lock == o._lock) result = 4;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(object_tests) {
 	BFTEST_COVERAGE_START;

@@ -32,7 +32,7 @@ FLAGS = $(CFLAGS) -Isrc/ -Wall
 ### Debug settings
 else ifeq ($(CONFIG),debug) # debug
 BIN_NAME = $(LIB_FILE_NAME_DEBUG)
-ADDR_SANITIZER = -fsanitize=address
+#ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CFLAGS) -Wall -DDEBUG -g -Isrc/ $(ADDR_SANITIZER)
 ### Test settings
 else ifeq ($(CONFIG),test) # test

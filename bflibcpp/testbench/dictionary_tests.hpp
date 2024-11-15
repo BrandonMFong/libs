@@ -18,31 +18,21 @@ extern "C" {
 using namespace BF;
 
 //int test_DictionaryInit() {
-BFTEST_UNIT_FUNC(test_DictionaryInit) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_DictionaryInit, 1,  {
 	Dictionary<char *, char *> d;
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_DictionarySize() {
-BFTEST_UNIT_FUNC(test_DictionarySize) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_DictionarySize, 1,  {
 	Dictionary<char *, char *> d;
 
 	if (d.size() != 0) {
 		result = 1;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_AddingKeyValues() {
-BFTEST_UNIT_FUNC(test_AddingKeyValues) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_AddingKeyValues, 1,  {
 	Dictionary<const char *, int> d;
 	
 	result = d.setValueForKey("Hello", 1);
@@ -50,14 +40,10 @@ BFTEST_UNIT_FUNC(test_AddingKeyValues) {
 	if (!result) {
 		result = d.setValueForKey("World", 2);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_GettingValueForKey() {
-BFTEST_UNIT_FUNC(test_GettingValueForKey) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_GettingValueForKey, 1,  {
 	Dictionary<const char *, int> d;
 	
 	result = d.setValueForKey("Hello", 1);
@@ -73,9 +59,7 @@ BFTEST_UNIT_FUNC(test_GettingValueForKey) {
 			result = 2;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 int KeyStringCompare(const char * k1, const char * k2) {
 	int res = strcmp(k1, k2);
@@ -108,9 +92,7 @@ void KeyStringValueStringRelease(const char ** key, const char ** value) {
 	}
 }
 
-BFTEST_UNIT_FUNC(test_DictionaryRetainAndReleaseCallbacks) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_DictionaryRetainAndReleaseCallbacks, 1,  {
 	Dictionary<const char *, const char *> d(KeyStringCompare, KeyStringValueStringRetain, KeyStringValueStringRelease);
 
 	result = d.setValueForKey("one", "1");
@@ -141,14 +123,10 @@ BFTEST_UNIT_FUNC(test_DictionaryRetainAndReleaseCallbacks) {
 			result = 4;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RemovingEntryFromDictionary() {
-BFTEST_UNIT_FUNC(test_RemovingEntryFromDictionary) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_RemovingEntryFromDictionary, 1,  {
 	Dictionary<const char *, const char *> d;
 	d.setEntryReleaseCallback(KeyStringValueStringRelease);
 	d.setEntryRetainCallback(KeyStringValueStringRetain);
@@ -183,16 +161,12 @@ BFTEST_UNIT_FUNC(test_RemovingEntryFromDictionary) {
 			printf("Val should be null\n");
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 #define TEST_DICTIONARY_PRINT 0
 #if TEST_DICTIONARY_PRINT == 1
 //int test_DictionaryPrint() {
-BFTEST_UNIT_FUNC(test_DictionaryPrint) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_DictionaryPrint, 1,  {
 	Dictionary<const char *, const char *> d;
 	d.setEntryReleaseCallback(KeyStringValueStringRelease);
 	d.setEntryRetainCallback(KeyStringValueStringRetain);
@@ -218,9 +192,7 @@ BFTEST_UNIT_FUNC(test_DictionaryPrint) {
 
 	if (!result)
 		d.print();
-
-	BFTEST_UNIT_END;
-}
+})
 #endif
 
 int KeyLibStringCompare(String k1, String k2) {
@@ -235,9 +207,7 @@ bool DictionaryTestStringArrayContainsString(const char ** arr, int size, const 
 	return false;
 }
 
-BFTEST_UNIT_FUNC(test_TraversingThroughDictionary) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_TraversingThroughDictionary, 1,  {
 	Dictionary<String, String> d;
 	d.setKeyCompareCallback(KeyLibStringCompare);
 
@@ -267,9 +237,7 @@ BFTEST_UNIT_FUNC(test_TraversingThroughDictionary) {
 	}
 
 	Delete(itr);
-
-	BFTEST_UNIT_END;
-}
+})
 
 BFTEST_COVERAGE_FUNC(dictionary_tests) {
 	BFTEST_COVERAGE_START;

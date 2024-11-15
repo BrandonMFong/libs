@@ -18,8 +18,7 @@ extern "C" {
 using namespace BF;
 
 //int test_TimeInit() {
-BFTEST_UNIT_FUNC(test_TimeInit) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_TimeInit, 1,  {
 	BFTime t = BFTimeGetCurrentTime();
 	Time * tm = new Time(t);
 
@@ -60,14 +59,10 @@ BFTEST_UNIT_FUNC(test_TimeInit) {
 			result = 4;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_TimeBasicOperations() {
-BFTEST_UNIT_FUNC(test_TimeBasicOperations) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_TimeBasicOperations, 1,  {
 	BFTime a = BFTimeGetCurrentTime();
 	sleep(1);
 	BFTime b = BFTimeGetCurrentTime();
@@ -77,8 +72,7 @@ BFTEST_UNIT_FUNC(test_TimeBasicOperations) {
 	Time * tc = tb - ta;
 
 	Delete(tc);
-	BFTEST_UNIT_END;
-}
+})
 
 //void time_tests(int * pass, int * fail) {
 BFTEST_COVERAGE_FUNC(time_tests) {

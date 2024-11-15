@@ -17,18 +17,12 @@ extern "C" {
 using namespace BF;
 
 //int test_queueinit() {
-BFTEST_UNIT_FUNC(test_queueinit) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_queueinit, 1,  {
 	Queue<int> q;
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_loadandunloadQueue(void) {
-BFTEST_UNIT_FUNC(test_loadandunloadQueue) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_loadandunloadQueue, 1,  {
 	Queue<int> q;
 	const int max = 2 << 10;
 	for (int i = 0; i < max; i++) {
@@ -47,9 +41,7 @@ BFTEST_UNIT_FUNC(test_loadandunloadQueue) {
 			q.pop();
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //void queue_tests(int * pass, int * fail) {
 BFTEST_COVERAGE_FUNC(queue_tests) {

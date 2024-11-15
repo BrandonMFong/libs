@@ -20,9 +20,7 @@
 using namespace BF;
 
 //static int test_RBInitializer() {
-BFTEST_UNIT_FUNC(test_RBInitializer) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_RBInitializer, 1,  {
 	RBTree<int> i;
 	RBTree<double> d;
 	RBTree<float> f;
@@ -37,14 +35,10 @@ BFTEST_UNIT_FUNC(test_RBInitializer) {
 	Delete(dd);
 	Delete(ff);
 	Delete(cc);
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_InsertingLRCase() {
-BFTEST_UNIT_FUNC(test_InsertingLRCase) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_InsertingLRCase, 1,  {
 	RBTree<int> i;
 
 	result = i.insert(9);
@@ -69,14 +63,10 @@ BFTEST_UNIT_FUNC(test_InsertingLRCase) {
 		result = i.insert(2);
 		if (result) printf("Inserting error: %d\n", result);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_InsertingLLCase() {
-BFTEST_UNIT_FUNC(test_InsertingLLCase) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_InsertingLLCase, 1,  {
 	RBTree<int> i;
 
 	result = i.insert(5);
@@ -101,14 +91,10 @@ BFTEST_UNIT_FUNC(test_InsertingLLCase) {
 		result = i.insert(1);
 		if (result) printf("Inserting error: %d\n", result);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_InsertingRRCase() {
-BFTEST_UNIT_FUNC(test_InsertingRRCase) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_InsertingRRCase, 1,  {
 	RBTree<int> i;
 
 	result = i.insert(1);
@@ -133,14 +119,10 @@ BFTEST_UNIT_FUNC(test_InsertingRRCase) {
 		result = i.insert(5);
 		if (result) printf("Inserting error: %d\n", result);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_InsertingRLCase() {
-BFTEST_UNIT_FUNC(test_InsertingRLCase) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_InsertingRLCase, 1,  {
 	RBTree<int> i;
 
 	result = i.insert(1);
@@ -165,14 +147,10 @@ BFTEST_UNIT_FUNC(test_InsertingRLCase) {
 		result = i.insert(7);
 		if (result) printf("Inserting error: %d\n", result);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_AccessingNodeHierarchy() {
-BFTEST_UNIT_FUNC(test_AccessingNodeHierarchy) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_AccessingNodeHierarchy, 1,  {
 	RBTree<int>::RBNodeNonnull * n1;
 	RBTree<int>::RBNodeNonnull * n2;
 	RBTree<int>::RBNodeNonnull * n3;
@@ -214,14 +192,10 @@ BFTEST_UNIT_FUNC(test_AccessingNodeHierarchy) {
 	Delete(n2);
 	Delete(n3);
 	Delete(n4);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_NodeColors() {
-BFTEST_UNIT_FUNC(test_NodeColors) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_NodeColors, 1,  {
 	RBTree<int>::RBNodeNonnull * n1 = 0;
 
 	if (!RBTree<int>::isNodeBlack(n1)) {
@@ -274,13 +248,10 @@ BFTEST_UNIT_FUNC(test_NodeColors) {
 	}
 
 	Delete(n1);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RotationCases() {
-BFTEST_UNIT_FUNC(test_RotationCases) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RotationCases, 1,  {
 	RBTree<int> t;
 
 	RBTree<int>::RBNodeNonnull * n1;
@@ -324,14 +295,10 @@ BFTEST_UNIT_FUNC(test_RotationCases) {
 	Delete(n2);
 	Delete(n3);
 	Delete(n4);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_NodeLevels() {
-BFTEST_UNIT_FUNC(test_NodeLevels) {
-	BFTEST_UNIT_START;
-	
+BFTEST_UNIT_FUNC(test_NodeLevels, 1,  {
 	RBTree<int>::RBNodeNonnull * n1;
 	RBTree<int>::RBNodeNonnull * n2;
 	RBTree<int>::RBNodeNonnull * n3;
@@ -364,9 +331,7 @@ BFTEST_UNIT_FUNC(test_NodeLevels) {
 	Delete(n2);
 	Delete(n3);
 	Delete(n4);
-
-	BFTEST_UNIT_END;
-}
+})
 
 template <typename T>
 class RBTreeChecker : public RBTree<T> {
@@ -511,8 +476,7 @@ PUBLIC:
 };
 
 //int test_RBTreeChecker() {
-BFTEST_UNIT_FUNC(test_RBTreeChecker) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RBTreeChecker, 1,  {
 	int max = 3; // max nodes
 	
 	RBTreeChecker<int> t;
@@ -534,13 +498,10 @@ BFTEST_UNIT_FUNC(test_RBTreeChecker) {
 			result = 1;
 		}
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RBTreeMax() {
-BFTEST_UNIT_FUNC(test_RBTreeMax) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RBTreeMax, 1,  {
 	int max = 50; // max nodes
 	int maxValue = 100;
 	
@@ -568,13 +529,10 @@ BFTEST_UNIT_FUNC(test_RBTreeMax) {
 			printf("Max should be %d but is %d\n", maxValue + 1, t.max());
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RBTreeMin() {
-BFTEST_UNIT_FUNC(test_RBTreeMin) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RBTreeMin, 1,  {
 	int max = 50; // max nodes
 	int minValue = 10;
 	
@@ -602,16 +560,13 @@ BFTEST_UNIT_FUNC(test_RBTreeMin) {
 			printf("Min should be %d but is %d\n", minValue - 1, t.min());
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 /**
  * This will add values 0 to `addCount` and remove up to `removeCount` objects
  */
 //int test_RBRemove() {
-BFTEST_UNIT_FUNC(test_RBRemove) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RBRemove, 1,  {
 	int addCount = 500;
 	int removeCount = 25;
 
@@ -676,13 +631,10 @@ BFTEST_UNIT_FUNC(test_RBRemove) {
 #endif
 
 	if (result) printf("Error %d\n", result);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RBTreeCount() {
-BFTEST_UNIT_FUNC(test_RBTreeCount) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_RBTreeCount, 1,  {
 	RBTree<int> t;
 	const int size = 100;
 	int counter = size;
@@ -700,13 +652,10 @@ BFTEST_UNIT_FUNC(test_RBTreeCount) {
 			result = 2;
 		}
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_SearchingRBTree() {
-BFTEST_UNIT_FUNC(test_SearchingRBTree) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_SearchingRBTree, 1,  {
 	const int maxVal = 2000;
 	srand(time(0));
 
@@ -739,35 +688,24 @@ BFTEST_UNIT_FUNC(test_SearchingRBTree) {
 			result = 2;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_insertingStrings(void) {
-BFTEST_UNIT_FUNC(test_insertingStrings) {
-	BFTEST_UNIT_START;
-
-	int numtests = 2 << 4;
-	while (!result && numtests) {
-		RBTree<String> t;
-		char buf[4];
-		for (int i = 0x61; i <= 0x7a; i++) {
-			for (int j = 0x61; j <= 0x7a; j++) {
-				for (int k = 0x61; k <= 0x7a; k++) {
-					snprintf(buf, 4, "%c%c%c", i, j, k);
-					String str = buf;
-					t.insert(str);
-				}
+BFTEST_UNIT_FUNC(test_insertingStrings, 2<<4,  {
+	RBTree<String> t;
+	char buf[4];
+	for (int i = 0x61; i <= 0x7a; i++) {
+		for (int j = 0x61; j <= 0x7a; j++) {
+			for (int k = 0x61; k <= 0x7a; k++) {
+				snprintf(buf, 4, "%c%c%c", i, j, k);
+				String str = buf;
+				t.insert(str);
 			}
 		}
-		int expsize = pow(0x7a - 0x60, 3);
-		if (t.count() != expsize) result = 1;
-
-		numtests--;
 	}
-
-	BFTEST_UNIT_END;
-}
+	int expsize = pow(0x7a - 0x60, 3);
+	if (t.count() != expsize) result = 1;
+})
 
 //void rbtree_tests(int * pass, int * fail) {
 BFTEST_COVERAGE_FUNC(rbtree_tests) {

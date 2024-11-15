@@ -18,9 +18,7 @@
 using namespace BF;
 
 //static int test_BinInitializer() {
-BFTEST_UNIT_FUNC(test_BinInitializer) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_BinInitializer, 1,  {
 	BinTree<int> i;
 	BinTree<double> d;
 	BinTree<float> f;
@@ -35,13 +33,10 @@ BFTEST_UNIT_FUNC(test_BinInitializer) {
 	Delete(dd);
 	Delete(ff);
 	Delete(cc);
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_BinInsert() {
-BFTEST_UNIT_FUNC(test_BinInsert) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_BinInsert, 1,  {
 	BinTree<int> t;
 
 	result = t.insert(2);
@@ -57,14 +52,10 @@ BFTEST_UNIT_FUNC(test_BinInsert) {
 	if (result == 0) {
 		result = t.insert(5);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_BinMax() {
-BFTEST_UNIT_FUNC(test_BinMax) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_BinMax, 1,  {
 	BinTree<int> t;
 	t.insert(1);
 	t.insert(2);
@@ -77,14 +68,10 @@ BFTEST_UNIT_FUNC(test_BinMax) {
 		result = 1;
 		printf("Max is not: %d\n", t.max());
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_BinMin() {
-BFTEST_UNIT_FUNC(test_BinMin) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_BinMin, 1,  {
 	BinTree<int> t;
 	t.insert(1);
 	t.insert(2);
@@ -97,14 +84,10 @@ BFTEST_UNIT_FUNC(test_BinMin) {
 		result = 1;
 		printf("Min is not: %d\n", t.min());
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_BinNodeKnowsItsLeaf() {
-BFTEST_UNIT_FUNC(test_BinNodeKnowsItsLeaf) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_BinNodeKnowsItsLeaf, 1,  {
 	BinTree<int>::BinNode n1;
 	BinTree<int>::BinNode n2;
 	BinTree<int>::BinNode n3;
@@ -123,14 +106,10 @@ BFTEST_UNIT_FUNC(test_BinNodeKnowsItsLeaf) {
 			printf("Node should not be leaf\n");
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //static int test_BSTDelete() {
-BFTEST_UNIT_FUNC(test_BSTDelete) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_BSTDelete, 1,  {
 	BinTree<int> t;
 	t.insert(5);
 	t.insert(4);
@@ -155,14 +134,10 @@ BFTEST_UNIT_FUNC(test_BSTDelete) {
 		result = t.remove(5);
 		if (result) printf("Error removing 8\n");
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RemovingRoot() {
-BFTEST_UNIT_FUNC(test_RemovingRoot) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_RemovingRoot, 1,  {
 	BinTree<int> t0;
 	BinTree<int> t1;
 	BinTree<int> t2;
@@ -182,14 +157,10 @@ BFTEST_UNIT_FUNC(test_RemovingRoot) {
 	if (result == 0) {
 		result = t2.remove(2);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_RemovingAll() {
-BFTEST_UNIT_FUNC(test_RemovingAll) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_RemovingAll, 1,  {
 	BinTree<int> t;
 	t.insert(5);
 	t.insert(4);
@@ -209,14 +180,10 @@ BFTEST_UNIT_FUNC(test_RemovingAll) {
 			printf("Count is %d\n", t.count());
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_ReturningLeafValues() {
-BFTEST_UNIT_FUNC(test_ReturningLeafValues) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_ReturningLeafValues, 1,  {
 	BinTree<int> t;
 	t.insert(5);
 	t.insert(4);
@@ -238,13 +205,10 @@ BFTEST_UNIT_FUNC(test_ReturningLeafValues) {
 			result = 6;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_BinTreeCount() {
-BFTEST_UNIT_FUNC(test_BinTreeCount) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_BinTreeCount, 1,  {
 	BinTree<int> t;
 	const int size = 100;
 	int counter = size;
@@ -262,14 +226,10 @@ BFTEST_UNIT_FUNC(test_BinTreeCount) {
 			result = 2;
 		}
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_ReplacingBinNodes() {
-BFTEST_UNIT_FUNC(test_ReplacingBinNodes) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_ReplacingBinNodes, 1,  {
 	BinTree<char> t;
 
 	BinTree<char>::BinNode * a = new BinTree<char>::BinNode('a');
@@ -307,14 +267,10 @@ BFTEST_UNIT_FUNC(test_ReplacingBinNodes) {
 	Delete(e);
 	Delete(f);
 	Delete(g);
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_SearchingBinTree() {
-BFTEST_UNIT_FUNC(test_SearchingBinTree) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_SearchingBinTree, 1,  {
 	int target = 4;
 	BinTree<int> t;
 	t.insert(5);
@@ -342,14 +298,10 @@ BFTEST_UNIT_FUNC(test_SearchingBinTree) {
 		result = 1;
 		printf("Could not find %d\n", target);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_Iterations() {
-BFTEST_UNIT_FUNC(test_Iterations) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_Iterations, 1,  {
 	// randomly add to list so we can have a better chance of a balanced tree
 	List<int> l;
 
@@ -392,34 +344,24 @@ BFTEST_UNIT_FUNC(test_Iterations) {
 	}
 
 	Delete(itr);
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_getNodeForObject(void) {
-BFTEST_UNIT_FUNC(test_getNodeForObject) {
-	BFTEST_UNIT_START;
-
-	int numtests = 2 << 9;
-	while (!result && numtests) {
-		BinTree<int> t;
-		srand(time(0));
-		int size = rand() % (2 << 12);
-		int target = rand();
-		for (int i = 0; i < size; i++) {
-			t.insert(rand());
-		}
-		t.insert(target);
-
-		const BinTree<int>::BinNode * node = t.getNodeForObject(target);
-		if (!node) {
-			result = 1;
-		}
-
-		numtests--;
+BFTEST_UNIT_FUNC(test_getNodeForObject, 2<<10,  {
+	BinTree<int> t;
+	srand(time(0));
+	int size = rand() % (2 << 12);
+	int target = rand();
+	for (int i = 0; i < size; i++) {
+		t.insert(rand());
 	}
+	t.insert(target);
 
-	BFTEST_UNIT_END;
-}
+	const BinTree<int>::BinNode * node = t.getNodeForObject(target);
+	if (!node) {
+		result = 1;
+	}
+})
 
 BFTEST_COVERAGE_FUNC(bintree_tests) {
 	BFTEST_COVERAGE_START;

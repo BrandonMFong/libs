@@ -12,8 +12,7 @@
 using namespace BF;
 
 //int test_filePath() {
-BFTEST_UNIT_FUNC(test_filePath) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_filePath, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -62,13 +61,10 @@ BFTEST_UNIT_FUNC(test_filePath) {
 	}
 
 	Delete(file);
-
-	BFTEST_UNIT_END(1, 0);
-}
+})
 
 //int test_basename() {
-BFTEST_UNIT_FUNC(test_basename) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_basename, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -118,13 +114,10 @@ BFTEST_UNIT_FUNC(test_basename) {
 	}
 
 	Delete(file);
-
-	BFTEST_UNIT_END(1, 0);
-}
+})
 
 //int test_extension() {
-BFTEST_UNIT_FUNC(test_extension) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_extension, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -183,13 +176,10 @@ BFTEST_UNIT_FUNC(test_extension) {
 	}
 
 	Delete(file);
-
-	BFTEST_UNIT_END(1, 0);
-}
+})
 
 //int test_directory() {
-BFTEST_UNIT_FUNC(test_directory) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_directory, 1,  {
 	const char * path = "test/hello/world.txt";
 	File * file = new File(path, &result);
 
@@ -248,9 +238,7 @@ BFTEST_UNIT_FUNC(test_directory) {
 	}
 
 	Delete(file);
-
-	BFTEST_UNIT_END(1, 0);
-}
+})
 
 BFTEST_COVERAGE_FUNC(file_tests) {
 	BFTEST_COVERAGE_START;

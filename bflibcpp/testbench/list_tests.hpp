@@ -14,18 +14,13 @@
 using namespace BF;
 
 //int test_Init() {
-BFTEST_UNIT_FUNC(test_Init) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_Init, 1,  {
 	List<int> * l = new List<int>;
 	Delete(l);
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_adding() {
-BFTEST_UNIT_FUNC(test_adding) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_adding, 1,  {
 	List<int> * l = new List<int>;
 
 	if ((result = l->add((int) 1)) != 0) {
@@ -48,12 +43,10 @@ BFTEST_UNIT_FUNC(test_adding) {
 	}
 
 	Delete(l);
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_indexing() {
-BFTEST_UNIT_FUNC(test_indexing) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_indexing, 1,  {
 	List<double> * l = new List<double>;
 
 	if (l == 0) {
@@ -78,13 +71,10 @@ BFTEST_UNIT_FUNC(test_indexing) {
 	}
 
 	Delete(l);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_inserting() {
-BFTEST_UNIT_FUNC(test_inserting) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_inserting, 1,  {
 	List<double> * l = new List<double>;
 
 	if (l == 0) {
@@ -114,14 +104,10 @@ BFTEST_UNIT_FUNC(test_inserting) {
 	}
 
 	Delete(l);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_deletingAtIndex() {
-BFTEST_UNIT_FUNC(test_deletingAtIndex) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_deletingAtIndex, 1,  {
 	List<long> * l = new List<long>;
 
 	if (l->add(1)) {
@@ -151,14 +137,10 @@ BFTEST_UNIT_FUNC(test_deletingAtIndex) {
 	}
 
 	Delete(l);
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_deletingAllNodes() {
-BFTEST_UNIT_FUNC(test_deletingAllNodes) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_deletingAllNodes, 1,  {
 	List<char> * l = new List<char>;
 
 	if (l->add('a')) {
@@ -180,18 +162,14 @@ BFTEST_UNIT_FUNC(test_deletingAllNodes) {
 	if (result) {
 		printf("Error %d\n", result);
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 void intDelete(int * i) {
 	delete i;
 }
 
 //int test_listMemoryHandling() {
-BFTEST_UNIT_FUNC(test_listMemoryHandling) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_listMemoryHandling, 1,  {
 	List<int *> * l = new List<int *>;
 	l->setReleaseCallback(intDelete);
 
@@ -233,14 +211,10 @@ BFTEST_UNIT_FUNC(test_listMemoryHandling) {
 	}
 
 	l->deleteAll();
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_traversing() {
-BFTEST_UNIT_FUNC(test_traversing) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_traversing, 1,  {
 	int max = 2 << 31; // max nodes
 	int minValue = 10;
 	
@@ -271,14 +245,10 @@ BFTEST_UNIT_FUNC(test_traversing) {
 			result = 1;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_ListContains() {
-BFTEST_UNIT_FUNC(test_ListContains) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_ListContains, 1,  {
 	List<int> l;
 	l.add(1);
 	l.add(2);
@@ -289,25 +259,17 @@ BFTEST_UNIT_FUNC(test_ListContains) {
 	} else if (l.contains(4)) {
 		result = 2;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_InitializingWithInitList() {
-BFTEST_UNIT_FUNC(test_InitializingWithInitList) {
-	BFTEST_UNIT_START;
-	
+BFTEST_UNIT_FUNC(test_InitializingWithInitList, 1,  {
 	List<int> l = {1,2,3,4};
 
 	l = {5,6,7,8};
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_InitializingFromRawArray() {
-BFTEST_UNIT_FUNC(test_InitializingFromRawArray) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_InitializingFromRawArray, 1,  {
 	const size_t size = 5;
 	const char * strings[size] = {"one", "two", "three", "four", "five"};
 
@@ -320,25 +282,19 @@ BFTEST_UNIT_FUNC(test_InitializingFromRawArray) {
 	for (size_t i = 0; (i < size) && !result; i++) {
 		if (!l.contains(strings[i])) result = i + 10;
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_ListNullSwap() {
-BFTEST_UNIT_FUNC(test_ListNullSwap) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_ListNullSwap, 1,  {
 	List<int>::Node a, b;
 	a.obj = 0;
 	b.obj = 1;
 	result = List<int>::swap(&a, 0);
 	if (result) result = List<int>::swap(0, &b);
 	if (result) result = List<int>::swap(0, 0);
+})
 
-	BFTEST_UNIT_END;
-}
-
-BFTEST_UNIT_FUNC(test_ListSwap) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_ListSwap, 1,  {
 	List<int>::Node * a = new List<int>::Node;
 	a->obj = 1;
 	List<int>::Node * al = new List<int>::Node;
@@ -387,13 +343,10 @@ BFTEST_UNIT_FUNC(test_ListSwap) {
 	BFRelease(b);
 	BFRelease(bl);
 	BFRelease(br);
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_shuffle() {
-BFTEST_UNIT_FUNC(test_shuffle) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_shuffle, 1,  {
 	const int size = 2 << 14;
 	int array[size];
 	for (int i = 0; i < size; i++) {
@@ -419,14 +372,10 @@ BFTEST_UNIT_FUNC(test_shuffle) {
 			result = 5;
 		}
 	}
-	
-	BFTEST_UNIT_END;
-}
+})
 
 //int test_ShuffleLargeDataSet() {
-BFTEST_UNIT_FUNC(test_ShuffleLargeDataSet) {
-	BFTEST_UNIT_START;
-
+BFTEST_UNIT_FUNC(test_ShuffleLargeDataSet, 1,  {
 	srand(time(0));
 	const int size = 2 << 14;
 	int array[size];
@@ -453,9 +402,7 @@ BFTEST_UNIT_FUNC(test_ShuffleLargeDataSet) {
 			result = 5;
 		}
 	}
-
-	BFTEST_UNIT_END;
-}
+})
 
 bool TestPluckingObjectReleaseWasCalled = false;
 void TestPluckingObjectRelease(int * i) {
@@ -464,99 +411,85 @@ void TestPluckingObjectRelease(int * i) {
 }
 
 //int test_pluckingObject() {
-BFTEST_UNIT_FUNC(test_pluckingObject) {
-	BFTEST_UNIT_START;
+BFTEST_UNIT_FUNC(test_pluckingObject, 2,  {
+	srand(time(0));
 
-	int max = 2 << 1;
-	while (!result && max--) {
-		srand(time(0));
-
-		// make array and list
-		size_t size = 10;
-		int * arr[size];
-		List<int *> list;
-		list.setReleaseCallback(TestPluckingObjectRelease);
-		for (size_t i = 0; i < size; i++) {
-			arr[i] = (int *) malloc(sizeof(int));
-			*arr[i] = rand();
-			list.add(arr[i]);
-		}
-
-		// find a random position to delete from
-		int del = rand() % size;
-		int val = *arr[del];
-		list.pluckObject(arr[del]);
-
-		// test size
-		if (list.count() + 1 != size) {
-			result = max;
-		}
-
-		// make sure value hasn't been altered
-		if (!result) {
-			if (*arr[del] != val) {
-				result = max;
-			}
-		}
-
-		// make sure we can still play around with value
-		if (!result) {
-			for (size_t i = 0; i < size; i++) {
-				int t = *arr[i];
-				t++;
-			}
-			
-			// see if the release func was called
-			if (TestPluckingObjectReleaseWasCalled) {
-				result = max;
-			}
-		}
-
-		list.setReleaseCallback(0);
-		for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
+	// make array and list
+	size_t size = 10;
+	int * arr[size];
+	List<int *> list;
+	list.setReleaseCallback(TestPluckingObjectRelease);
+	for (size_t i = 0; i < size; i++) {
+		arr[i] = (int *) malloc(sizeof(int));
+		*arr[i] = rand();
+		list.add(arr[i]);
 	}
 
-	BFTEST_UNIT_END;
-}
+	// find a random position to delete from
+	int del = rand() % size;
+	int val = *arr[del];
+	list.pluckObject(arr[del]);
+
+	// test size
+	if (list.count() + 1 != size) {
+		result = max;
+	}
+
+	// make sure value hasn't been altered
+	if (!result) {
+		if (*arr[del] != val) {
+			result = max;
+		}
+	}
+
+	// make sure we can still play around with value
+	if (!result) {
+		for (size_t i = 0; i < size; i++) {
+			int t = *arr[i];
+			t++;
+		}
+		
+		// see if the release func was called
+		if (TestPluckingObjectReleaseWasCalled) {
+			result = max;
+		}
+	}
+
+	list.setReleaseCallback(0);
+	for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
+})
 
 //int test_rangeBasedLooping() {
-BFTEST_UNIT_FUNC(test_rangeBasedLooping) {
-	BFTEST_UNIT_START;
-
-	int max = 2 << 8;
-	while (!result && max--) {
-		List<int> list;
-		srand(time(0));
-		int arrsize = rand() % 2 << 15;
-		int * arr = (int *) malloc(sizeof(int) * arrsize);
-		for (int i = 0; i < arrsize; i++) {
-			arr[i] = rand();
-			list.add(arr[i]);
-		}
-
-		int i = 0;
-		for (int a : list) {
-			if (a != arr[i]) {
-				printf("%d != %d\n", a, arr[i]);
-				result = max;
-				break;
-			}
-			i++;
-		}
-
-		if (result) continue;
-
-		if (i != arrsize) {
-			printf("we did not go through the entire list: %d != %d\n", i, arrsize);
-			result = max;
-			continue;
-		}
-
-		BFFree(arr);
+BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<10,  {
+	List<int> list;
+	srand(time(0));
+	int arrsize = rand() % 2 << 15;
+	int * arr = (int *) malloc(sizeof(int) * arrsize);
+	for (int i = 0; i < arrsize; i++) {
+		arr[i] = rand();
+		list.add(arr[i]);
 	}
 
-	BFTEST_UNIT_END;
-}
+	int i = 0;
+	for (int a : list) {
+		if (a != arr[i]) {
+			printf("%d != %d\n", a, arr[i]);
+			result = max;
+			break;
+		}
+		i++;
+	}
+
+	if (result) continue;
+
+	if (i != arrsize) {
+		printf("we did not go through the entire list: %d != %d\n", i, arrsize);
+		result = max;
+		continue;
+	}
+
+	BFFree(arr);
+})
 
 BFTEST_COVERAGE_FUNC(list_tests) {
 	BFTEST_COVERAGE_START;
