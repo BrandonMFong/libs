@@ -3,28 +3,24 @@
 ## date: 3/7/23
 ##
 
-.PHONY: bflibc bflibcpp bflibrust bfnet bftest
+CLIBS = bflibc bflibcpp bflibrust bfnet bftest
+RUSTLIBS = bflibrust
 
-all: setup 
-	cd bflibc && make clean && make build CONFIG=debug && make build CONFIG=release
-	cd bflibcpp && make clean && make build CONFIG=debug && make build CONFIG=release
-	cd bfnet && make clean && make build CONFIG=debug && make build CONFIG=release
-	cd bftest && make clean && make build CONFIG=debug && make build CONFIG=release
-	cd bflibrust && make debug release
-	cp -afv bflibc/bin/* bin/
-	cp -afv bflibcpp/bin/* bin/
-	cp -afv bfnet/bin/* bin/
-	cp -afv bftest/bin/* bin/
-	cp -afv bflibrust/bin/* bin/
+.PHONY: $(CLIBS) $(RUSTLIBS)
 
-setup: 
-	mkdir -p bin
+build: setup $(CLIBS) $(RUSTLIBS)
 
-clean:
-	cd bflibc && make clean
-	cd bflibcpp && make clean
-	cd bfnet && make clean
-	cd bftest && make clean
-	cd bflibrust && make clean
-	rm -rfv bin
+$(CLIBS): setup
+	cd $@ && make clean && make build CONFIG=debug && make build CONFIG=release
+	cp -afv $@/bin/* bin/
+
+$(RUSTLIBS): setup
+	cd $@ && make debug release
+	cp -afv $@/bin/* bin/
+
+setup: bin
+	mkdir -p $^
+
+clean: bin
+	rm -rfv $^
 
