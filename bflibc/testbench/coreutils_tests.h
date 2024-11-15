@@ -77,7 +77,6 @@ BFTEST_UNIT_FUNC(test_CreateBinaryStringFromNumber, 1, {
 	}
 })
 
-//int test_IndexOfStringInArray() {
 BFTEST_UNIT_FUNC(test_IndexOfStringInArray, 1, {
 	int index = 0;
 	char * arr[] = {"hello", "world", "my", "name", "is", "lib"};
