@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "features/dev/brando-improvedTests" ]
     paths:
-      - 'bflibc/*'
+      - 'bflibc/**'
   # pull_request:
   #   branches: [ "dev" ]
 
