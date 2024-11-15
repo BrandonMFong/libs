@@ -1,4 +1,4 @@
-name: BFLibCpp
+name: BFNet
 
 on:
   push:
