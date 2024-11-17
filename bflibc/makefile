@@ -22,7 +22,7 @@ SOURCE_EXT = c
 HEADER_EXT = h
 FILES = \
 filesystem coreutils stringutils \
-bftime thread \
+bftime thread bfmath \
 lock filewriter
 
 ### Release settings

@@ -12,6 +12,7 @@
 #include "lock_tests.h"
 #include "filewriter_tests.h"
 #include "swap_tests.h"
+#include "math_tests.h"
 #include <stdio.h>
 
 BFTEST_SUITE_FUNC({
@@ -24,5 +25,6 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(thread_tests);
 	BFTEST_SUITE_LAUNCH(filewriter_tests);
 	BFTEST_SUITE_LAUNCH(swap_tests);
+	BFTEST_SUITE_LAUNCH(math_tests);
 })
 

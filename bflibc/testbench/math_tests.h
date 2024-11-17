@@ -1,0 +1,27 @@
+/**
+ * author: Brando
+ * date: 11/17/24
+ */
+
+#ifndef MATH_TESTS_H
+#define MATH_TESTS_H
+
+#include "clib_tests.h"
+#include "bfmath.h"
+#include <math.h>
+#include <time.h>
+
+BFTEST_UNIT_FUNC(test_sqrt, 2<<10, {
+	srand(time(0));
+	int num = rand();
+	float actual = BFMathSqrt(num);
+	float expected = sqrt(num);
+	BF_ASSERT(actual == expected, "expected=%f, actual=%f", actual, expected);
+})
+
+BFTEST_COVERAGE_FUNC(math_tests, {
+	BFTEST_LAUNCH(test_sqrt);
+})
+
+#endif // MATH_TESTS_H
+

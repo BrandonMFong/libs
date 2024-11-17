@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <uuid/uuid.h>
+#include <time.h>
 
 //int test_CopyString(void) {
 BFTEST_UNIT_FUNC(test_CopyString, 1, {
