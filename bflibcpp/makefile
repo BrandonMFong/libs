@@ -19,6 +19,7 @@ help:
 COMPILER = g++
 CPPSTD = -std=c++20
 CONFIG = release
+BUILD_TYPE = archive
 SOURCE_EXT = cpp
 HEADER_EXT = hpp
 FILES = \
@@ -32,7 +33,7 @@ FLAGS = $(CPPFLAGS) -Isrc/ $(CPPSTD) -I../bflibc/bin/release
 ### Debug settings
 else ifeq ($(CONFIG),debug) # debug
 BIN_NAME = $(LIB_FILE_NAME_DEBUG)
-ADDR_SANITIZER = -fsanitize=address
+#ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CPPFLAGS) -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
 ### Test settings
 else ifeq ($(CONFIG),test) # test
@@ -48,5 +49,6 @@ dependencies:
 	cd ../bflibc/ && make clean && make build && make build CONFIG=debug
 	cd ../bftest/ && make clean && make build && make build CONFIG=debug
 
+LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 

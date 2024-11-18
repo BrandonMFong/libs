@@ -18,6 +18,7 @@ help:
 
 COMPILER = gcc
 CONFIG = release
+BUILD_TYPE = archive
 SOURCE_EXT = c
 HEADER_EXT = h
 FILES = \
@@ -37,7 +38,7 @@ FLAGS = $(CFLAGS) -Wall -DDEBUG -g -Isrc/ $(ADDR_SANITIZER)
 ### Test settings
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfc-test
-ADDR_SANITIZER = -fsanitize=address
+#ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) -I../bftest/bin/debug
 LIBRARIES = ../bftest/bin/debug/bftest/libbftest-debug.a
 LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
@@ -47,5 +48,6 @@ endif # ($(CONFIG),...)
 dependencies:
 	cd ../bftest && make clean && make build && make build CONFIG=debug
 
+LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 

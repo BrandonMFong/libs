@@ -17,6 +17,7 @@ help:
 
 COMPILER = gcc
 CONFIG = release
+BUILD_TYPE = archive
 SOURCE_EXT = c
 HEADER_EXT = h
 FILES = bftest
@@ -40,5 +41,6 @@ LINKS =
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 
+LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 
