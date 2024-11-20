@@ -4,4 +4,5 @@
 [x] throw compiler warnings when using delete
 [] improve List sorting
 [] fix leaks
+[] hash map implementation
 ```
