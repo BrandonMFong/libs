@@ -23,7 +23,7 @@ HEADER_EXT = h
 FILES = \
 filesystem coreutils stringutils \
 bftime thread bfmath \
-lock filewriter
+lock filewriter hash
 
 ### Release settings
 ifeq ($(CONFIG),release) # release
