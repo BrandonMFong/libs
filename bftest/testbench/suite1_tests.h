@@ -51,12 +51,18 @@ BFTEST_UNIT_FUNC(test_assertfailureWithMessageAndCondition, 1, {
 	exit(1); // should never reach here
 })
 
+BFTEST_UNIT_FUNC(test_testLogging, 1, {
+	sleep(1);
+	BFTestPrint("this is a log message");
+})
+
 BFTEST_COVERAGE_FUNC(suite1_tests, {
 	BFTEST_LAUNCH(test_assertsuccess);
 	BFTEST_LAUNCH(test_assertfailure);
 	BFTEST_LAUNCH(test_assertfailureWithMessage);
 	BFTEST_LAUNCH(test_assertfailureWithMessageAndCondition);
 	BFTEST_LAUNCH(test_assertfailureWithCondition);
+	BFTEST_LAUNCH(test_testLogging);
 })
 
 #endif // TESTSUITE1_TESTS_H

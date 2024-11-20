@@ -122,7 +122,6 @@ void _BFTestLogPush(
 	const char * format,
 	...
 ) {
-	//if (strlen(format) == 0) return;
 	va_list valist;
 	va_start(valist, format);
 	_TestLogQueueEnqueue(
@@ -137,15 +136,24 @@ void _BFTestLogFlush() {
 	_TestLogQueueEntry * curr = _TestLogQueuePeek();
 	while (curr) {
 		switch (curr->logtype) {
+		case _kBFTestLogTypeAssertLog:
+			printf(" * %s:%d%s%s\n",
+				curr->filename,
+				curr->line,
+				strlen(curr->msg) > 0 ? " - " : "",
+				curr->msg
+			);
+			break;
 		case _kBFTestLogTypeAssertFailure:
 		default:
-			printf(" * %s:%d (expr: %s)%s%s\n",
+			printf(" ! %s:%d (expr: %s)%s%s\n",
 				curr->filename,
 				curr->line,
 				curr->expression,
 				strlen(curr->msg) > 0 ? " - " : "",
 				curr->msg
 			);
+			break;
 		}
 		_TestLogQueueDequeue();
 		curr = _TestLogQueuePeek();

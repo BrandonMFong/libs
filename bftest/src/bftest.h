@@ -83,8 +83,8 @@
 	if (result == 0) { printf("PASS\n"); }\
 	else {\
 		printf("FAIL\n");\
-		_BFTestLogFlush();\
 	}\
+	_BFTestLogFlush();\
 	return result;
 
 /** ASSERTS **/
@@ -107,6 +107,7 @@
 
 typedef enum _BFTestLogType {
 	_kBFTestLogTypeAssertFailure = 0,
+	_kBFTestLogTypeAssertLog = 1,
 } _BFTestLogType;
 
 /**
@@ -123,6 +124,8 @@ void _BFTestLogPush(
 	const char * format,
 	...
 );
+
+#define BFTestPrint(...) _BFTestLogPush(__FILE__, __LINE__, _kBFTestLogTypeAssertLog, "", "%s", __VA_ARGS__)
 
 /**
  * dumps all test log entries
