@@ -3,7 +3,6 @@
 #
 
 include makefiles/lib.mk 
-include makefiles/uuid.mk 
 
 help:
 	@echo "Usage:"
@@ -41,7 +40,7 @@ BIN_NAME = libbfc-test
 #ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CFLAGS) -Wall -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) -I../bftest/bin/debug
 LIBRARIES = ../bftest/bin/debug/bftest/libbftest-debug.a
-LINKS = $(BF_LIB_C_UUID_FLAGS) -lpthread
+LINKS = $(BF_LIB_C_FLAGS) -lpthread
 MAIN_FILE = testbench/tests.c
 endif # ($(CONFIG),...)
 
