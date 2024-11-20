@@ -2,8 +2,7 @@
 # date: 7/29/22
 #
 
-include makefiles/lib.mk 
-include ../bflibc/makefiles/uuid.mk 
+include ../bflibc/makefiles/lib.mk 
 
 help:
 	@echo "Usage:"
@@ -39,7 +38,7 @@ BIN_NAME = libbfnet-test
 #ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug -I../bflibcpp/bin/debug -I../bftest/bin/debug
 LIBRARIES = ../bflibc/bin/debug/bflibc/libbfc-debug.a ../bflibcpp/bin/debug/bflibcpp/libbfcpp-debug.a ../bftest/bin/debug/bftest/libbftest-debug.a
-LINKS = $(BF_LIB_C_UUID_FLAGS)
+LINKS = $(BF_LIB_C_FLAGS) -lpthread
 MAIN_FILE = testbench/tests.cpp
 endif # ($(CONFIG),...)
 
@@ -48,6 +47,7 @@ dependencies:
 	cd ../bflibcpp/ && make clean && make build CONFIG=release && make build CONFIG=debug
 	cd ../bftest/ && make clean && make build CONFIG=release && make build CONFIG=debug
 
+include makefiles/lib.mk 
 LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 
