@@ -9,7 +9,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include "nargs.h"
-#include "gettype.h"
 
 #define kBFMathSqrtFactor 0.0001
 float BFMathSqrt(float);
@@ -31,17 +30,37 @@ bool BFMathPrimeIsPrime(int num);
  */
 double _BFMathMinMax(int op, int datatype, int numargs,...);
 
+#define _kBFMathGetTypeInt 1
+#define _kBFMathGetTypeShort 2
+#define _kBFMathGetTypeLong 3
+#define _kBFMathGetTypeChar 4
+#define _kBFMathGetTypeFloat 5
+#define _kBFMathGetTypeDouble 6
+#define _kBFMathGetTypeDefault _kBFMathGetTypeInt
+
+#define _kBFMathGetType(x) \
+	_Generic(\
+		(x),\
+		int: _kBFMathGetTypeInt,\
+		short: _kBFMathGetTypeShort,\
+		long: _kBFMathGetTypeLong,\
+		char: _kBFMathGetTypeChar,\
+		float: _kBFMathGetTypeFloat,\
+		double: _kBFMathGetTypeDouble,\
+		default: _kBFMathGetTypeDefault \
+	)
+
 /**
  * Finds max out of the number list provided
  */
 #define BFMathMax(num,...) \
-	_BFMathMinMax ( 1, BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+	_BFMathMinMax ( 1, _kBFMathGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
 /**
  * Finds min out of the number list provided
  */
 #define BFMathMin(num,...) \
-	_BFMathMinMax( -1, BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+	_BFMathMinMax( -1, _kBFMathGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
 #endif // BF_MATH_H
 

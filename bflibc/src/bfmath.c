@@ -66,16 +66,16 @@ double _BFMathMinMax(int op, int datatype, int numargs, ...) {
 
 	double res = 0;
 	switch (datatype) {
-	case kGetTypeLong:
+	case _kBFMathGetTypeLong:
 		res = _BFMathMinMaxForType(long, op, numargs, valist);
 		break;
-	case kGetTypeDouble:
-	case kGetTypeFloat:
+	case _kBFMathGetTypeDouble:
+	case _kBFMathGetTypeFloat:
 		res = _BFMathMinMaxForType(double, op, numargs, valist);
 		break;
-	case kGetTypeShort:
-	case kGetTypeChar:
-	case kGetTypeInt:
+	case _kBFMathGetTypeShort:
+	case _kBFMathGetTypeChar:
+	case _kBFMathGetTypeInt:
 	default:
 		res = _BFMathMinMaxForType(int, op, numargs, valist);
 		break;
