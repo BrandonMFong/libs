@@ -35,7 +35,7 @@ double _BFMathMinMax(int op, int datatype, int numargs,...);
  * Finds max out of the number list provided
  */
 #define BFMathMax(num,...) \
-	_BFMathMinMax( 1, BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+	_BFMathMinMax ( 1, BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
 /**
  * Finds min out of the number list provided

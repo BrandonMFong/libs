@@ -90,4 +90,3 @@ double _BFMathMinMax(int op, int datatype, int numargs, ...) {
 
 	return res;
 }
-
