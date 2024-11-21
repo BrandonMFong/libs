@@ -4,9 +4,9 @@
  */
 
 #include "bfmath.h"
-#include "var.h"
 #include <limits.h>
 #include <stdarg.h>
+#include <bftest/bftest.h>
 
 float BFMathSqrt(float n) {
 	float x = n, y = 1;
@@ -47,20 +47,53 @@ bool BFMathPrimeIsPrime(int num) {
 	return true;
 }
 
-//double __BFMathMaxDouble__(int numargs,...) { 
-double __BFMathMax__(int numargs,...) {
-	va_list valist;
-	va_start(valist, numargs);
-	va_end(valist);
-
+int __BFMathMaxInt__(int numargs, va_list valist) {
+	int max = 0;
+	for (int i = 0; i < numargs; i++) {
+		int num = va_arg(valist, int);
+		max = (num > max) ? num : max;
+	}
+	return max;
+}
+double __BFMathMaxDouble__(int numargs, va_list valist) {
 	double max = 0;
 	for (int i = 0; i < numargs; i++) {
 		double num = va_arg(valist, double);
-		if (num > max) {
-			max = num;
-		}
+		max = (num > max) ? num : max;
+	}
+	return max;
+}
+long __BFMathMaxLong__(int numargs, va_list valist) {
+	long max = 0;
+	for (int i = 0; i < numargs; i++) {
+		long num = va_arg(valist, long);
+		max = (num > max) ? num : max;
+	}
+	return max;
+}
+double __BFMathMax__(int datatype, int numargs,...) {
+	va_list valist;
+	va_start(valist, numargs);
+
+	double res = 0;
+	switch (datatype) {
+	case kGetTypeLong:
+		res = __BFMathMaxLong__(numargs, valist);
+		break;
+	case kGetTypeDouble:
+	case kGetTypeFloat:
+		res = __BFMathMaxDouble__(numargs, valist);
+		break;
+	case kGetTypeShort:
+	case kGetTypeChar:
+	case kGetTypeInt:
+	default:
+		res = __BFMathMaxInt__(numargs, valist);
+		break;
 	}
 
-	return max;
+	va_end(valist);
+
+	return res;
 }
 

@@ -7,7 +7,9 @@
 #define BF_MATH_H
 
 #include <stdbool.h>
+#include <string.h>
 #include "nargs.h"
+#include "gettype.h"
 
 #define kBFMathSqrtFactor 0.0001
 float BFMathSqrt(float);
@@ -24,9 +26,9 @@ int BFMathPrimeGetNumberAtIndex(int index);
  */
 bool BFMathPrimeIsPrime(int num);
 
-double __BFMathMax__(int numargs,...);
-#define BFMathMax(...) \
-	__BFMathMax__( BF_NARGS(__VA_ARGS__) , __VA_ARGS__)
+double __BFMathMax__(int datatype, int numargs,...);
+#define BFMathMax(num,...) \
+	__BFMathMax__( BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
 #endif // BF_MATH_H
 

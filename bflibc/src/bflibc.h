@@ -20,7 +20,7 @@
 #include "hash.h"
 #include "bfmath.h"
 #include "nargs.h"
-#include "var.h"
+#include "gettype.h"
 
 #endif // BF_CLIB_H
 
