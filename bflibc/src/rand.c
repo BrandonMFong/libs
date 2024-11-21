@@ -7,19 +7,28 @@
 #include <stdlib.h>
 #include <time.h>
 
+static unsigned long seed = 1;
+
 void BFRandInit(unsigned int val) {
-	srand(val);
+	seed = (unsigned)val & 0x7fffffffU;
 }
 
 int BFRand() {
-	return rand();
+	return (int) BFRandLong();
 }
 
 double BFRandDouble() {
-	return rand();
+	double num = BFRandLong();
+	double fractional = BFRandLong();
+	while((int) fractional > 0) {
+		fractional /= 10;
+	}
+	return num + fractional;
 }
 
+// https://en.wikipedia.org/wiki/Linear_congruential_generator
 long BFRandLong() {
-	return rand();
+	seed = (seed * 1103515245U + 12345U) & 0x7fffffffU;
+    return seed;
 }
 

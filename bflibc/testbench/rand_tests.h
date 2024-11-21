@@ -9,21 +9,21 @@
 #include "clib_tests.h"
 #include "rand.h"
 
-BFTEST_UNIT_FUNC(test_rand, 2<<10, {
+BFTEST_UNIT_FUNC(test_rand, 2<<15, {
 	BFRandInit(time(0));
 	int a = BFRand();
 	int b = BFRand();
 	BF_ASSERT(a != b, "%d == %d", a, b);
 })
 
-BFTEST_UNIT_FUNC(test_randdouble, 2<<10, {
+BFTEST_UNIT_FUNC(test_randdouble, 2<<15, {
 	BFRandInit(time(0));
 	double a = BFRand();
 	double b = BFRand();
 	BF_ASSERT(a != b, "%lf == %lf", a, b);
 })
 
-BFTEST_UNIT_FUNC(test_randlong, 2<<10, {
+BFTEST_UNIT_FUNC(test_randlong, 2<<15, {
 	BFRandInit(time(0));
 	long a = BFRand();
 	long b = BFRand();
