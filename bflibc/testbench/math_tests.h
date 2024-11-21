@@ -46,6 +46,15 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor2Doubles, 2<<10, {
 	BF_ASSERT(max == expect, "max(%lf, %lf)=%lf expect=%lf", a, b, max, expect);
 })
 
+BFTEST_UNIT_FUNC(test_gettingMaxFor2Longs, 2<<10, {
+	BFRandInit(time(0));
+	long a = BFRand();
+	long b = BFRand();
+	long max = BFMathMax(a, b);
+	long expect = a > b ? a : b;
+	BF_ASSERT(max == expect, "max(%ld, %ld)=%ld expect=%ld", a, b, max, expect);
+})
+
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
 	BFTEST_LAUNCH(test_gettingNthPrimeNumber);

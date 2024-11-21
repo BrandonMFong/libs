@@ -19,4 +19,7 @@ double BFRandDouble() {
 	return rand();
 }
 
+long BFRandLong() {
+	return rand();
+}
 

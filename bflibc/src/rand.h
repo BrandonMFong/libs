@@ -9,6 +9,7 @@
 void BFRandInit(unsigned int val);
 int BFRand();
 double BFRandDouble();
+long BFRandLong();
 
 #endif // RAND_H
 
