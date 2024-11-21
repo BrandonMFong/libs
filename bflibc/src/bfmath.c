@@ -47,54 +47,42 @@ bool BFMathPrimeIsPrime(int num) {
 	return true;
 }
 
-int __BFMathMinMaxInt__(int op, int numargs, va_list valist) {
-	int max = 0;
-	for (int i = 0; i < numargs; i++) {
-		int num = va_arg(valist, int);
-		if (op == 1) max = (num > max) ? num : max;
-		else if (op == -1) max = (num < max) ? num : max;
-	}
-	return max;
-}
+#define _BFMathMinMaxForType(fmt, type, op, numargs, valist) ({\
+	type __res__ = 0;\
+	for (int i = 0; i < numargs; i++) {\
+		type num = va_arg(valist, type);\
+		BFTestPrint(fmt, i, num);\
+		if (op == 1) {\
+			BFTestPrint("find max");\
+			__res__ = (num > __res__) ? num : __res__;\
+		} else if (op == -1) {\
+			BFTestPrint("find min");\
+			__res__ = (num < __res__) ? num : __res__;\
+		}\
+	}\
+	__res__;\
+})
 
-double __BFMathMinMaxDouble__(int op, int numargs, va_list valist) {
-	double max = 0;
-	for (int i = 0; i < numargs; i++) {
-		double num = va_arg(valist, double);
-		if (op == 1) max = (num > max) ? num : max;
-		else if (op == -1) max = (num < max) ? num : max;
-	}
-	return max;
-}
-
-long __BFMathMinMaxLong__(int op, int numargs, va_list valist) {
-	long max = 0;
-	for (int i = 0; i < numargs; i++) {
-		long num = va_arg(valist, long);
-		if (op == 1) max = (num > max) ? num : max;
-		else if (op == -1) max = (num < max) ? num : max;
-	}
-	return max;
-}
-
-double __BFMathMinMax__(int op, int datatype, int numargs,...) {
+double _BFMathMinMax(int op, int datatype, int numargs, ...) {
 	va_list valist;
 	va_start(valist, numargs);
 
+	//BFTestPrint("datatype=%d", datatype);
+	//BFTestPrint("numargs=%d", numargs);
 	double res = 0;
 	switch (datatype) {
 	case kGetTypeLong:
-		res = __BFMathMinMaxLong__(op, numargs, valist);
+		res = _BFMathMinMaxForType("args[%d] %ld", long, op, numargs, valist);
 		break;
 	case kGetTypeDouble:
 	case kGetTypeFloat:
-		res = __BFMathMinMaxDouble__(op, numargs, valist);
+		res = _BFMathMinMaxForType("args[%d] %lf", double, op, numargs, valist);
 		break;
 	case kGetTypeShort:
 	case kGetTypeChar:
 	case kGetTypeInt:
 	default:
-		res = __BFMathMinMaxInt__(op, numargs, valist);
+		res = _BFMathMinMaxForType("args[%d] %d", int, op, numargs, valist);
 		break;
 	}
 
