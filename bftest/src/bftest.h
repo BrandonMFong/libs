@@ -125,7 +125,7 @@ void _BFTestLogPush(
 	...
 );
 
-#define BFTestPrint(...) _BFTestLogPush(__FILE__, __LINE__, _kBFTestLogTypeAssertLog, "", "%s", __VA_ARGS__)
+#define BFTestPrint(...) _BFTestLogPush(__FILE__, __LINE__, _kBFTestLogTypeAssertLog, "", "" __VA_ARGS__)
 
 /**
  * dumps all test log entries

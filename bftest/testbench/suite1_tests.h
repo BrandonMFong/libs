@@ -8,6 +8,8 @@
 
 #include "bftest.h"
 #include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
 
 BFTEST_UNIT_FUNC(test_assertsuccess, 1, {
 	sleep(1);
@@ -54,6 +56,11 @@ BFTEST_UNIT_FUNC(test_assertfailureWithMessageAndCondition, 1, {
 BFTEST_UNIT_FUNC(test_testLogging, 1, {
 	sleep(1);
 	BFTestPrint("this is a log message");
+	BFTestPrint("this is another log message");
+	srand(time(0));
+	int num = rand();
+	BFTestPrint("this is one with a random number: %d", num);
+	BFTestPrint("this is the last one");
 })
 
 BFTEST_COVERAGE_FUNC(suite1_tests, {
