@@ -94,9 +94,8 @@ void _TestLogQueueEnqueue(
 	if (!q.head) {
 		q.head = q.tail = ent;
 	} else {
-		_TestLogQueueEntry * curr = q.head;
-		while (!curr->next) { curr = curr->next; }
-		q.tail = curr->next = ent;
+		q.tail->next = ent;
+		q.tail = ent;
 	}
 	q.size++;
 }
