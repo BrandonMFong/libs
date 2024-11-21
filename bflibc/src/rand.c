@@ -7,10 +7,11 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define kBFRandSeedMask 0x7fffffffU
 static unsigned long seed = 1;
 
 void BFRandInit(unsigned int val) {
-	seed = (unsigned)val & 0x7fffffffU;
+	seed = (unsigned)val & kBFRandSeedMask;
 }
 
 int BFRand() {
@@ -26,9 +27,11 @@ double BFRandDouble() {
 	return num + fractional;
 }
 
+#define kBFRandMultiplier 1103515245U 
+#define kBFRandIncrement 12345U
 // https://en.wikipedia.org/wiki/Linear_congruential_generator
 long BFRandLong() {
-	seed = (seed * 1103515245U + 12345U) & 0x7fffffffU;
+	seed = (seed * kBFRandMultiplier + kBFRandIncrement) & kBFRandSeedMask;
     return seed;
 }
 
