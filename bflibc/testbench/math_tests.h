@@ -27,9 +27,20 @@ BFTEST_UNIT_FUNC(test_gettingNthPrimeNumber, 1, {
 	BF_ASSERT(BFMathPrimeIsPrime(prime), "%d is not a prime number", prime);
 })
 
+BFTEST_UNIT_FUNC(test_gettingMaxFor2Numbers, 1, {
+	srand(time(0));
+	double a = rand();
+	double b = rand();
+	BFTestPrint("max(%lf,%lf)", a, b);
+	int max = BFMathMax(a, b);
+	int expect = a > b ? a : b;
+	BF_ASSERT(max == expect, "max=%d expect=%d", max, expect);
+})
+
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
 	BFTEST_LAUNCH(test_gettingNthPrimeNumber);
+	BFTEST_LAUNCH(test_gettingMaxFor2Numbers);
 })
 
 #endif // MATH_TESTS_H

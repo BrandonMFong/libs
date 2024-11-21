@@ -4,7 +4,9 @@
  */
 
 #include "bfmath.h"
+#include "var.h"
 #include <limits.h>
+#include <stdarg.h>
 
 float BFMathSqrt(float n) {
 	float x = n, y = 1;
@@ -43,5 +45,22 @@ bool BFMathPrimeIsPrime(int num) {
 	}
 
 	return true;
+}
+
+//double __BFMathMaxDouble__(int numargs,...) { 
+double __BFMathMax__(int numargs,...) {
+	va_list valist;
+	va_start(valist, numargs);
+	va_end(valist);
+
+	double max = 0;
+	for (int i = 0; i < numargs; i++) {
+		double num = va_arg(valist, double);
+		if (num > max) {
+			max = num;
+		}
+	}
+
+	return max;
 }
 

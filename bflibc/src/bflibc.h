@@ -4,8 +4,8 @@
  * date: 6/2/22
  */
 
-#ifndef CLIB_H
-#define CLIB_H
+#ifndef BF_CLIB_H
+#define BF_CLIB_H
 
 #include "filesystem.h"
 #include "coreutils.h"
@@ -17,6 +17,10 @@
 #include "thread.h"
 #include "lock.h"
 #include "swap.h"
+#include "hash.h"
+#include "bfmath.h"
+#include "nargs.h"
+#include "var.h"
 
-#endif // CLIB_H
+#endif // BF_CLIB_H
 
