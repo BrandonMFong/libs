@@ -47,16 +47,13 @@ bool BFMathPrimeIsPrime(int num) {
 	return true;
 }
 
-#define _BFMathMinMaxForType(fmt, type, op, numargs, valist) ({\
-	type __res__ = 0;\
-	for (int i = 0; i < numargs; i++) {\
+#define _BFMathMinMaxForType(type, op, numargs, valist) ({\
+	type __res__ = va_arg(valist, type);\
+	for (int i = 1; i < numargs; i++) {\
 		type num = va_arg(valist, type);\
-		BFTestPrint(fmt, i, num);\
 		if (op == 1) {\
-			BFTestPrint("find max");\
 			__res__ = (num > __res__) ? num : __res__;\
 		} else if (op == -1) {\
-			BFTestPrint("find min");\
 			__res__ = (num < __res__) ? num : __res__;\
 		}\
 	}\
@@ -67,22 +64,20 @@ double _BFMathMinMax(int op, int datatype, int numargs, ...) {
 	va_list valist;
 	va_start(valist, numargs);
 
-	//BFTestPrint("datatype=%d", datatype);
-	//BFTestPrint("numargs=%d", numargs);
 	double res = 0;
 	switch (datatype) {
 	case kGetTypeLong:
-		res = _BFMathMinMaxForType("args[%d] %ld", long, op, numargs, valist);
+		res = _BFMathMinMaxForType(long, op, numargs, valist);
 		break;
 	case kGetTypeDouble:
 	case kGetTypeFloat:
-		res = _BFMathMinMaxForType("args[%d] %lf", double, op, numargs, valist);
+		res = _BFMathMinMaxForType(double, op, numargs, valist);
 		break;
 	case kGetTypeShort:
 	case kGetTypeChar:
 	case kGetTypeInt:
 	default:
-		res = _BFMathMinMaxForType("args[%d] %d", int, op, numargs, valist);
+		res = _BFMathMinMaxForType(int, op, numargs, valist);
 		break;
 	}
 
