@@ -35,6 +35,10 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor2Integers, 2<<10, {
 	int max = BFMathMax(a, b);
 	int expect = a > b ? a : b;
 	BF_ASSERT(max == expect, "max(%d, %d)=%d expect=%d", a, b, max, expect);
+
+	max = BFMathMin(a, b);
+	expect = a < b ? a : b;
+	BF_ASSERT(max == expect, "min(%d, %d)=%d expect=%d", a, b, max, expect);
 })
 
 BFTEST_UNIT_FUNC(test_gettingMaxFor2Doubles, 2<<10, {
@@ -44,6 +48,10 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor2Doubles, 2<<10, {
 	double max = BFMathMax(a, b);
 	double expect = a > b ? a : b;
 	BF_ASSERT(max == expect, "max(%lf, %lf)=%lf expect=%lf", a, b, max, expect);
+	
+	max = BFMathMin(a, b);
+	expect = a < b ? a : b;
+	BF_ASSERT(max == expect, "min(%d, %d)=%d expect=%d", a, b, max, expect);
 })
 
 BFTEST_UNIT_FUNC(test_gettingMaxFor2Longs, 2<<10, {
@@ -53,6 +61,10 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor2Longs, 2<<10, {
 	long max = BFMathMax(a, b);
 	long expect = a > b ? a : b;
 	BF_ASSERT(max == expect, "max(%ld, %ld)=%ld expect=%ld", a, b, max, expect);
+	
+	max = BFMathMin(a, b);
+	expect = a < b ? a : b;
+	BF_ASSERT(max == expect, "min(%d, %d)=%d expect=%d", a, b, max, expect);
 })
 
 BFTEST_COVERAGE_FUNC(math_tests, {

@@ -7,12 +7,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define kBFRandSeedMod (2<<31)
+#define kBFRandSeedMod 4294967296U
 
 static unsigned long seed = 1;
 
-void BFRandInit(unsigned int val) {
-	seed = (unsigned) val % kBFRandSeedMod;
+void BFRandInit(unsigned long val) {
+	seed = val % kBFRandSeedMod;
 }
 
 int BFRand() {

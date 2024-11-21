@@ -6,7 +6,7 @@
 #ifndef RAND_H
 #define RAND_H
 
-void BFRandInit(unsigned int val);
+void BFRandInit(unsigned long val);
 int BFRand();
 double BFRandDouble();
 long BFRandLong();

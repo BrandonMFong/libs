@@ -47,48 +47,54 @@ bool BFMathPrimeIsPrime(int num) {
 	return true;
 }
 
-int __BFMathMaxInt__(int numargs, va_list valist) {
+int __BFMathMinMaxInt__(int op, int numargs, va_list valist) {
 	int max = 0;
 	for (int i = 0; i < numargs; i++) {
 		int num = va_arg(valist, int);
-		max = (num > max) ? num : max;
+		if (op == 1) max = (num > max) ? num : max;
+		else if (op == -1) max = (num < max) ? num : max;
 	}
 	return max;
 }
-double __BFMathMaxDouble__(int numargs, va_list valist) {
+
+double __BFMathMinMaxDouble__(int op, int numargs, va_list valist) {
 	double max = 0;
 	for (int i = 0; i < numargs; i++) {
 		double num = va_arg(valist, double);
-		max = (num > max) ? num : max;
+		if (op == 1) max = (num > max) ? num : max;
+		else if (op == -1) max = (num < max) ? num : max;
 	}
 	return max;
 }
-long __BFMathMaxLong__(int numargs, va_list valist) {
+
+long __BFMathMinMaxLong__(int op, int numargs, va_list valist) {
 	long max = 0;
 	for (int i = 0; i < numargs; i++) {
 		long num = va_arg(valist, long);
-		max = (num > max) ? num : max;
+		if (op == 1) max = (num > max) ? num : max;
+		else if (op == -1) max = (num < max) ? num : max;
 	}
 	return max;
 }
-double __BFMathMax__(int datatype, int numargs,...) {
+
+double __BFMathMinMax__(int op, int datatype, int numargs,...) {
 	va_list valist;
 	va_start(valist, numargs);
 
 	double res = 0;
 	switch (datatype) {
 	case kGetTypeLong:
-		res = __BFMathMaxLong__(numargs, valist);
+		res = __BFMathMinMaxLong__(op, numargs, valist);
 		break;
 	case kGetTypeDouble:
 	case kGetTypeFloat:
-		res = __BFMathMaxDouble__(numargs, valist);
+		res = __BFMathMinMaxDouble__(op, numargs, valist);
 		break;
 	case kGetTypeShort:
 	case kGetTypeChar:
 	case kGetTypeInt:
 	default:
-		res = __BFMathMaxInt__(numargs, valist);
+		res = __BFMathMinMaxInt__(op, numargs, valist);
 		break;
 	}
 

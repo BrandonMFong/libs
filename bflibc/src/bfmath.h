@@ -26,9 +26,22 @@ int BFMathPrimeGetNumberAtIndex(int index);
  */
 bool BFMathPrimeIsPrime(int num);
 
-double __BFMathMax__(int datatype, int numargs,...);
+/**
+ * op: 1 if finding max, -1 if min
+ */
+double __BFMathMinMax__(int op, int datatype, int numargs,...);
+
+/**
+ * Finds max out of the number list provided
+ */
 #define BFMathMax(num,...) \
-	__BFMathMax__( BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+	__BFMathMinMax__( 1, BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+
+/**
+ * Finds min out of the number list provided
+ */
+#define BFMathMin(num,...) \
+	__BFMathMinMax__( -1, BFGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
 #endif // BF_MATH_H
 
