@@ -1,6 +1,9 @@
 /**
  * author: brando
  * date: 11/22/24
+ *
+ * looks like I am going to implement the map in c. I am going to 
+ * use a self balancing tree since search/insert/delete are O(logn)
  */
 
 #ifndef MAP_H

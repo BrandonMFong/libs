@@ -9,6 +9,7 @@
 	[] use binary search
 	[] store all known square root in a map
 [] map
+	[] make a tree object so data store is close to O(1)
 [] improve prime num getter
 [] remove checksum
 ```
