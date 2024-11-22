@@ -63,6 +63,11 @@ BFTEST_UNIT_FUNC(test_testLogging, 1, {
 	BFTestPrint("this is the last one");
 })
 
+BFTEST_UNIT_FUNC(test_testPrintingIteration, 10, {
+	usleep(500);
+	BFTestPrint("iteration %d", BFTEST_UNIT_FUNC_ITR);
+})
+
 BFTEST_COVERAGE_FUNC(suite1_tests, {
 	BFTEST_LAUNCH(test_assertsuccess);
 	BFTEST_LAUNCH(test_assertfailure);
@@ -70,6 +75,7 @@ BFTEST_COVERAGE_FUNC(suite1_tests, {
 	BFTEST_LAUNCH(test_assertfailureWithMessageAndCondition);
 	BFTEST_LAUNCH(test_assertfailureWithCondition);
 	BFTEST_LAUNCH(test_testLogging);
+	BFTEST_LAUNCH(test_testPrintingIteration);
 })
 
 #endif // TESTSUITE1_TESTS_H

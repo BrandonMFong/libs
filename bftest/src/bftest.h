@@ -59,13 +59,20 @@
 #define BFTEST_UNIT_FUNC(name, repeat, ...) \
 	int name (void) {\
 		BFTEST_UNIT_START;\
-		int max = repeat;\
+		const int __repeat__ = repeat;\
+		int max = __repeat__;\
 		while (!result && max--) {\
 			usleep(50);\
 			__VA_ARGS__ \
 		}\
 		BFTEST_UNIT_END;\
 	}
+
+/**
+ * returns the current iteration (0 indexed) of the
+ * unit test function reps
+ */
+#define BFTEST_UNIT_FUNC_ITR (__repeat__ - (max+1))
 
 /**
  * `result` is defined here and can be used in unit test functions
@@ -125,7 +132,16 @@ void _BFTestLogPush(
 	...
 );
 
-#define BFTestPrint(...) _BFTestLogPush(__FILE__, __LINE__, _kBFTestLogTypeAssertLog, "", "" __VA_ARGS__)
+/**
+ * prints dialog after test has finished, below result
+ *
+ * every call will be its own separate line. No need to specify \n
+ *
+ */
+#define BFTestPrint(...) \
+	_BFTestLogPush(__FILE__, __LINE__, \
+	_kBFTestLogTypeAssertLog, "", \
+	"" __VA_ARGS__)
 
 /**
  * dumps all test log entries
