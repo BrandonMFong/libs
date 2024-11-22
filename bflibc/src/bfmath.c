@@ -6,7 +6,6 @@
 #include "bfmath.h"
 #include <limits.h>
 #include <stdarg.h>
-#include <bftest/bftest.h>
 
 float BFMathSqrt(float n) {
     if (n < 2) {

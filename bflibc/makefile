@@ -24,17 +24,19 @@ FILES = \
 filesystem coreutils stringutils \
 bftime thread bfmath \
 lock filewriter hash \
-rand map tree
+rand map tree internal/_tree
 
 ### Release settings
 ifeq ($(CONFIG),release) # release
 BIN_NAME = $(LIB_FILE_NAME_RELEASE)
 FLAGS = $(CFLAGS) -Isrc/ -Wall
+
 ### Debug settings
 else ifeq ($(CONFIG),debug) # debug
 BIN_NAME = $(LIB_FILE_NAME_DEBUG)
 #ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CFLAGS) -Wall -DDEBUG -g -Isrc/ $(ADDR_SANITIZER)
+
 ### Test settings
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfc-test

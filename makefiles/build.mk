@@ -161,6 +161,7 @@ endif # ($(BUILD_TYPE),...)
 endif # ($(CONFIG), ...)
 
 $(BUILD_PATH)/%.o: src/%.$(SOURCE_EXT) src/%.$(HEADER_EXT)
+	mkdir -p $(dir $@);
 	$(COMPILER) -c $< -o $@ $(FLAGS)
 
 endif # ($(UNAME_S),...)

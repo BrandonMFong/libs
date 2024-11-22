@@ -34,10 +34,6 @@ void BFTreeRelease(BFTree * tree) {
 	BFFree(tree);
 }
 
-BFTreeNode * _BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
-
-}
-
 int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
 	if (!tree || !node) {
 		return -1;

@@ -6,6 +6,8 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include <stddef.h>
+
 typedef void * BFTreeNodeObject;
 
 typedef struct BFTreeNode {

@@ -66,7 +66,7 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 
 		// insert into tree
 		int err = BFTreeInsertNode(tree, node);
-		BF_ASSERT(err === 0, "node insertion failed, node(obj=%d)", i);
+		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
 
 	BFTreeRelease(tree);
