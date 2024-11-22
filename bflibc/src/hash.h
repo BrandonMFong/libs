@@ -20,7 +20,8 @@ int BFHashDivision(long long key, long long prime);
  * k = key
  * m = prime num
  */
-int BFHashMultiplication();
+int BFHashMultiplication(long long key, double fractional, long long prime);
+
 int BFHashMidSquare();
 int BFHashFolding();
 
