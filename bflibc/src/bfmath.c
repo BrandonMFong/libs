@@ -17,14 +17,21 @@ float BFMathSqrt(float n) {
 	return x;
 }
 
-int BFMathPrimeGetNumberAtIndex(int index) {
+#define kBFMathPrimeTableMaxSize 1000
+int primesTable[kBFMathPrimeTableMaxSize] = {0};
+int primesTableSize = 0;
+int BFMathPrimeGetNumberAtIndex(int nth) {
+	if (nth < primesTableSize) {
+		return primesTable[nth];
+	}
+
 	for (int i = 0; i < INT_MAX; i++) {
 		if (BFMathPrimeIsPrime(i)) {
-			if (index == 0) {
+			primesTable[primesTableSize++] = i;
+
+			if (primesTableSize - 1 == nth) {
 				return i;
 			}
-
-			index--;
 		}
 	}
 	return -1;

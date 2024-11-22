@@ -5,6 +5,6 @@
 [] make hashing function for bflibcpp library hash maps
 [x] make a max and min function like python3 using macros
 [x] random generator
-[] improve sqrt
+[] improve sqrt, it sometimes stalls
 [] improve prime num getter
 ```
