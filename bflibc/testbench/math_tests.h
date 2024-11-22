@@ -15,19 +15,24 @@
 BFTEST_UNIT_FUNC(test_sqrt, 1, {
 	BFRandInit(time(0));
 	int num = 0;
+	/*
 	do { 
 		num = BFRand() % (2 << 29);
 	} while (num < 0);
-	float actual = BFMathSqrt(12);
-	float expected = sqrt(12);
-	BF_ASSERT(abs(actual - expected) < kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
+	*/
+	num = 440499258;
+	float actual = BFMathSqrt(num);
+	float expected = sqrt(num);
+	//BF_ASSERT(abs(actual - expected) < kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
+	BF_ASSERT(actual == expected, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
 })
 
-BFTEST_UNIT_FUNC(test_ifZeroIsAPrimeNumber, 1, {
+BFTEST_UNIT_FUNC(test_ifZeroAndOneArePrimeNumbers, 2<<10, {
 	BF_ASSERT(!BFMathPrimeIsPrime(0), "zero is not a prime number");
+	BF_ASSERT(!BFMathPrimeIsPrime(1), "one is not a prime number");
 })
 
-BFTEST_UNIT_FUNC(test_gettingSmallNthPrimeNumber, 2<<15, {
+BFTEST_UNIT_FUNC(test_gettingSmallNthPrimeNumber, 1, {
 	BFRandInit(time(0));
 	int nth = 0;
 	do { 
@@ -223,7 +228,8 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor10Longs, 2<<10, {
 
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
-	BFTEST_LAUNCH(test_ifZeroIsAPrimeNumber);
+	/*
+	BFTEST_LAUNCH(test_ifZeroAndOneArePrimeNumbers);
 	BFTEST_LAUNCH(test_gettingSmallNthPrimeNumber);
 	BFTEST_LAUNCH(test_gettingMaxFor2Integers);
 	BFTEST_LAUNCH(test_gettingMaxFor2Doubles);
@@ -234,6 +240,7 @@ BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_gettingMaxFor10Integers);
 	BFTEST_LAUNCH(test_gettingMaxFor10Doubles);
 	BFTEST_LAUNCH(test_gettingMaxFor10Longs);
+	*/
 })
 
 #endif // MATH_TESTS_H

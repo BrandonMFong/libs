@@ -8,6 +8,7 @@
 #include <stdarg.h>
 #include <bftest/bftest.h>
 
+/*
 float BFMathSqrt(float n) {
    float x = n, y = 1;
    while ((x - y) > kBFMathSqrtFactor) {
@@ -15,6 +16,25 @@ float BFMathSqrt(float n) {
 		   y = n / x;
    }
    return x;
+}
+*/
+
+float BFMathSqrt(float n) {
+    if (n < 2) {
+        return n;
+    }
+    float low = 1, high = n;
+    while (low <= high) {
+        float mid = (low + high) / 2;
+        if (mid * mid == n) {
+            return mid;
+        } else if (mid * mid < n) {
+            low = mid + kBFMathSqrtFactor;
+        } else {
+            high = mid - kBFMathSqrtFactor;
+        }
+    }
+    return high;
 }
 
 // primesTable[n] = prime number at n
@@ -43,15 +63,22 @@ int BFMathPrimeGetNumberAtIndex(int nth) {
 }
 
 bool BFMathPrimeIsPrime(int num) {
-	if (num <= 1) {
-		return false; 
-	} else if (num % 2 == 0) {
-		return num == 2;
+	int n = num, i;
+
+	// 0 and 1 are not prime numbers
+	// change flag to 1 for non-prime number
+	if (n == 0 || n == 1) {
+		return false;
 	}
 
-	int maxdiv = (int) BFMathSqrt(num);
-	for (int i = 3; i < maxdiv + 1; i += 2) {
-		if (num % i == 0) {
+	if (num % 2 == 0) {
+		return false;
+	}
+
+	for (i = 2; i <= n / 2; ++i) {
+		// if n is divisible by i, then n is not prime
+		// change flag to 1 for non-prime number
+		if (n % i == 0) {
 			return false;
 		}
 	}

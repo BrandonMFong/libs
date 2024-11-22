@@ -10,7 +10,7 @@
 #include <string.h>
 #include "nargs.h"
 
-#define kBFMathSqrtFactor 0.0001
+#define kBFMathSqrtFactor 0.000001
 float BFMathSqrt(float);
 
 /**
