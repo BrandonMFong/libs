@@ -9,17 +9,18 @@
 #include <bftest/bftest.h>
 
 float BFMathSqrt(float n) {
-	float x = n, y = 1;
-	while ((x - y) > kBFMathSqrtFactor) {
-		x = (x + y) / 2;
-		y = n / x;
-	}
-	return x;
+   float x = n, y = 1;
+   while ((x - y) > kBFMathSqrtFactor) {
+		   x = (x + y) / 2;
+		   y = n / x;
+   }
+   return x;
 }
 
-#define kBFMathPrimeTableMaxSize 1000
-int primesTable[kBFMathPrimeTableMaxSize] = {0};
+// primesTable[n] = prime number at n
+int primesTable[kBFMathPrimeCachedPrimesCount] = {0};
 int primesTableSize = 0;
+
 int BFMathPrimeGetNumberAtIndex(int nth) {
 	if (nth < primesTableSize) {
 		return primesTable[nth];
@@ -27,7 +28,11 @@ int BFMathPrimeGetNumberAtIndex(int nth) {
 
 	for (int i = 0; i < INT_MAX; i++) {
 		if (BFMathPrimeIsPrime(i)) {
-			primesTable[primesTableSize++] = i;
+
+			// save the prime number if we have space
+			if (nth < kBFMathPrimeCachedPrimesCount) {
+				primesTable[primesTableSize++] = i;
+			}
 
 			if (primesTableSize - 1 == nth) {
 				return i;

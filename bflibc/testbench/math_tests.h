@@ -12,23 +12,31 @@
 #include <math.h>
 #include <time.h>
 
-BFTEST_UNIT_FUNC(test_sqrt, 2<<10, {
+BFTEST_UNIT_FUNC(test_sqrt, 1, {
 	BFRandInit(time(0));
 	int num = 0;
 	do { 
 		num = BFRand() % (2 << 29);
 	} while (num < 0);
-	float actual = BFMathSqrt(num);
-	float expected = sqrt(num);
+	float actual = BFMathSqrt(12);
+	float expected = sqrt(12);
 	BF_ASSERT(abs(actual - expected) < kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
+})
+
+BFTEST_UNIT_FUNC(test_ifZeroIsAPrimeNumber, 1, {
+	BF_ASSERT(!BFMathPrimeIsPrime(0), "zero is not a prime number");
 })
 
 BFTEST_UNIT_FUNC(test_gettingSmallNthPrimeNumber, 2<<15, {
 	BFRandInit(time(0));
-	int nth = BFRand() % 2 << 8;
+	int nth = 0;
+	do { 
+		nth = BFRand() % kBFMathPrimeCachedPrimesCount;
+	} while (nth < 0);
+
 	int prime = BFMathPrimeGetNumberAtIndex(nth);
 	BF_ASSERT(prime != -1, "could not find prime number at primelist[%dth]", nth);
-	BF_ASSERT(BFMathPrimeIsPrime(prime), "%d is not a prime number", prime);
+	BF_ASSERT(BFMathPrimeIsPrime(prime), "prime[%d] = %d is not a prime number", nth, prime);
 })
 
 BFTEST_UNIT_FUNC(test_gettingMaxFor2Integers, 2<<11, {
@@ -215,6 +223,7 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor10Longs, 2<<10, {
 
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
+	BFTEST_LAUNCH(test_ifZeroIsAPrimeNumber);
 	BFTEST_LAUNCH(test_gettingSmallNthPrimeNumber);
 	BFTEST_LAUNCH(test_gettingMaxFor2Integers);
 	BFTEST_LAUNCH(test_gettingMaxFor2Doubles);

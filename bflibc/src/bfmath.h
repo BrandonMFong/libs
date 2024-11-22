@@ -20,6 +20,8 @@ float BFMathSqrt(float);
  */
 int BFMathPrimeGetNumberAtIndex(int index);
 
+#define kBFMathPrimeCachedPrimesCount (2 << 20)
+
 /**
  * tests if number is prime
  */
