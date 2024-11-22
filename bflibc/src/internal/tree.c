@@ -72,20 +72,15 @@ BFTreeNode * BFTreeInsert(
 		return newNode;
 	}
 
-	//if (key < node->key) {
 	if (compare(newNode->object, node->object) < 0) {
-		//node->left = insert(node->left, key);
 		node->left = BFTreeInsert(node->left, newNode, compare);
-	//} else if (key > node->key) {
 	} else if (compare(newNode->object, node->object) > 0) {
-		//node->right = insert(node->right, key);
 		node->right = BFTreeInsert(node->right, newNode, compare);
 	} else { // Equal keys are not allowed in BST
 		return node;
 	}
 
 	/* 2. Update height of this ancestor node */
-	//node->height = 1 + max(height(node->left), height(node->right));
 	node->height = 1 + BFMathMax(
 		BFTreeNodeHeight(node->left),
 		BFTreeNodeHeight(node->right));
@@ -99,26 +94,22 @@ BFTreeNode * BFTreeInsert(
 	// there are 4 cases
 
 	// Left Left Case
-	//if (balance > 1 && key < node->left->key) {
 	if (balance > 1 && compare(newNode->object, node->left->object) < 0) {
 		return BFTreeNodeRightRotate(node);
 	}
 
 	// Right Right Case
-	//if (balance < -1 && key > node->right->key) {
 	if (balance < -1 && compare(newNode->object, node->right->object) > 0) {
 		return BFTreeNodeLeftRotate(node);
 	}
 
 	// Left Right Case
-	//if (balance > 1 && key > node->left->key) {
 	if (balance > 1 && compare(newNode->object, node->left->object) > 0) {
 		node->left = BFTreeNodeLeftRotate(node->left);
 		return BFTreeNodeRightRotate(node);
 	}
 
 	// Right Left Case
-	//if (balance < -1 && key < node->right->key) {
 	if (balance < -1 && compare(newNode->object, node->right->object) < 0) {
 		node->right = BFTreeNodeRightRotate(node->right);
 		return BFTreeNodeLeftRotate(node);
