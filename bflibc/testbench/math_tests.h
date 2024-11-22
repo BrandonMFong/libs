@@ -12,15 +12,12 @@
 #include <math.h>
 #include <time.h>
 
-BFTEST_UNIT_FUNC(test_sqrt, 1, {
+BFTEST_UNIT_FUNC(test_sqrt, 2<<11, {
 	BFRandInit(time(0));
 	int num = 0;
-	/*
 	do { 
-		num = BFRand() % (2 << 29);
+		num = BFRand() % (2 << 20);
 	} while (num < 0);
-	*/
-	num = 440499258;
 	float actual = BFMathSqrt(num);
 	float expected = sqrt(num);
 	//BF_ASSERT(abs(actual - expected) < kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);

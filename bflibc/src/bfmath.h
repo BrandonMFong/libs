@@ -10,7 +10,14 @@
 #include <string.h>
 #include "nargs.h"
 
+/**
+ * accuracy for BFMathSqrt
+ */
 #define kBFMathSqrtFactor 0.000001
+
+/**
+ * binary search approach
+ */
 float BFMathSqrt(float);
 
 /**
