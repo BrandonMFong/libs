@@ -23,7 +23,7 @@ BFTEST_UNIT_FUNC(test_sqrt, 2<<10, {
 	BF_ASSERT(abs(actual - expected) < kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
 })
 
-BFTEST_UNIT_FUNC(test_gettingSmallNthPrimeNumber, 2<<10, {
+BFTEST_UNIT_FUNC(test_gettingSmallNthPrimeNumber, 2<<15, {
 	BFRandInit(time(0));
 	int nth = BFRand() % 2 << 8;
 	int prime = BFMathPrimeGetNumberAtIndex(nth);
