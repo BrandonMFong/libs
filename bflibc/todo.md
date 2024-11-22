@@ -10,4 +10,5 @@
 	[] store all known square root in a map
 [] map
 [] improve prime num getter
+[] remove checksum
 ```
