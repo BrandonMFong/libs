@@ -8,6 +8,7 @@
 
 BFTreeNode * BFTreeNodeCreate() {
 	BFTreeNode * res = (BFTreeNode *) malloc(sizeof(BFTreeNode));
+	res->release = NULL;
 	res->left = NULL;
 	res->right = NULL;
 	res->object = NULL;
@@ -15,6 +16,9 @@ BFTreeNode * BFTreeNodeCreate() {
 }
 
 void BFTreeNodeRelease(BFTreeNode * node) {
+	if (node && node->release) {
+		node->release(node->object);
+	}
 	BFFree(node);
 }
 
@@ -22,7 +26,6 @@ BFTree * BFTreeCreate() {
 	BFTree * res = (BFTree *) malloc(sizeof(BFTree));
 	res->root = NULL;
 	res->compare = NULL;
-	res->release = NULL;
 	return res;
 }
 

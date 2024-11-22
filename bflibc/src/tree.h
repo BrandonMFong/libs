@@ -6,11 +6,12 @@
 #ifndef TREE_H
 #define TREE_H
 
-typedef const void * BFTreeNodeObject;
+typedef void * BFTreeNodeObject;
 
 typedef struct BFTreeNode {
 	struct BFTreeNode * left;
 	struct BFTreeNode * right;
+	void (*release)(BFTreeNodeObject obj);
 	BFTreeNodeObject object;
 } BFTreeNode;
 
@@ -20,7 +21,6 @@ void BFTreeNodeRelease(BFTreeNode * node);
 typedef struct BFTree {
 	BFTreeNode * root;
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
-	void (*release)(BFTreeNodeObject obj);
 } BFTree;
 
 BFTree * BFTreeCreate();
