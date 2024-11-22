@@ -58,7 +58,7 @@ void BFTestTreePrint(BFTreeNode * node) {
 	}
 }
 
-BFTEST_UNIT_FUNC(test_InsertNodes, 1, {
+BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	// create trees
 	BFTree * tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
@@ -81,8 +81,10 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 1, {
 		int err = BFTreeInsertNode(tree, node);
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
-	
-	BFTestTreePrint(tree->root);
+
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFTestTreePrint(tree->root);
+	}
 
 	BFTreeRelease(tree);
 })
