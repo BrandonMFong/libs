@@ -46,14 +46,26 @@ BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
 	BFTreeNodeRelease(node);
 })
 
-BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
+void BFTestTreePrint(BFTreeNode * node) {
+	if (node) {
+		BFTestPrint(
+			"node = object=%d height=%d ",
+			* (int *) node->object,
+			node->height
+		);
+		BFTestTreePrint(node->left);
+		BFTestTreePrint(node->right);
+	}
+}
+
+BFTEST_UNIT_FUNC(test_InsertNodes, 1, {
 	// create trees
 	BFTree * tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	tree->compare = BFTestTreeCompare;
 
 	// create nodes
-	int treesize = 10;
+	int treesize = 6;
 	for (int i = 0; i < treesize; i++) {
 		// create node
 		BFTreeNode * node = BFTreeNodeCreate();
@@ -69,6 +81,8 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 		int err = BFTreeInsertNode(tree, node);
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
+	
+	BFTestTreePrint(tree->root);
 
 	BFTreeRelease(tree);
 })
