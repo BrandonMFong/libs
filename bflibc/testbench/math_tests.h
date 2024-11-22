@@ -20,7 +20,6 @@ BFTEST_UNIT_FUNC(test_sqrt, 2<<11, {
 	} while (num < 0);
 	float actual = BFMathSqrt(num);
 	float expected = sqrt(num);
-	//BF_ASSERT(abs(actual - expected) < kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
 	BF_ASSERT(actual == expected, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
 })
 
@@ -225,7 +224,6 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor10Longs, 2<<10, {
 
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
-	/*
 	BFTEST_LAUNCH(test_ifZeroAndOneArePrimeNumbers);
 	BFTEST_LAUNCH(test_gettingSmallNthPrimeNumber);
 	BFTEST_LAUNCH(test_gettingMaxFor2Integers);
@@ -237,7 +235,6 @@ BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_gettingMaxFor10Integers);
 	BFTEST_LAUNCH(test_gettingMaxFor10Doubles);
 	BFTEST_LAUNCH(test_gettingMaxFor10Longs);
-	*/
 })
 
 #endif // MATH_TESTS_H

@@ -8,17 +8,6 @@
 #include <stdarg.h>
 #include <bftest/bftest.h>
 
-/*
-float BFMathSqrt(float n) {
-   float x = n, y = 1;
-   while ((x - y) > kBFMathSqrtFactor) {
-		   x = (x + y) / 2;
-		   y = n / x;
-   }
-   return x;
-}
-*/
-
 float BFMathSqrt(float n) {
     if (n < 2) {
         return n;
