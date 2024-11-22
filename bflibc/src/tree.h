@@ -13,6 +13,7 @@ typedef void * BFTreeNodeObject;
 typedef struct BFTreeNode {
 	struct BFTreeNode * left;
 	struct BFTreeNode * right;
+	size_t height;
 	void (*release)(BFTreeNodeObject obj);
 	BFTreeNodeObject object;
 } BFTreeNode;
@@ -23,6 +24,10 @@ void BFTreeNodeRelease(BFTreeNode * node);
 typedef struct BFTree {
 	BFTreeNode * root;
 	size_t size;
+
+	// a < b -> result < 0
+	// a > b -> result > 0
+	// a == b -> result == 0
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
 } BFTree;
 

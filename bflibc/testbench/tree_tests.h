@@ -9,12 +9,13 @@
 #include "clib_tests.h"
 #include "tree.h"
 
-int BFTestTreeCompare(BFTreeNodeObject a, BFTreeNodeObject b) {
-	return 0;
+int BFTestTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+	int a = *(int *) aobj;
+	int b = *(int *) bobj;
+	return a - b;
 }
 
 void BFTestNodeRelease(BFTreeNodeObject obj) {
-	BFTestPrint("freeing");
 	free(obj);
 }
 
@@ -76,6 +77,8 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeinit);
 	BFTEST_LAUNCH(test_treenodeinit);
 	BFTEST_LAUNCH(test_CreateNodeWithObject);
+	BFTEST_LAUNCH(test_InsertNodes);
+
 })
 
 #endif // TREE_TESTS_H

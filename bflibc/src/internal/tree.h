@@ -8,7 +8,14 @@
 
 #include "../tree.h"
 
-BFTreeNode * _BFTreeInsertNode(BFTree * tree, BFTreeNode * node);
+/**
+ * returns node
+ */
+BFTreeNode * BFTreeInsert(
+	BFTreeNode * node,
+	BFTreeNode * newNode,
+	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
+);
 
 #endif // INTERNAL_TREE_H
 

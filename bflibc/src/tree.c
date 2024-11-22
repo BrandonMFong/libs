@@ -5,6 +5,7 @@
 
 #include "tree.h"
 #include "free.h"
+#include "internal/tree.h"
 
 BFTreeNode * BFTreeNodeCreate() {
 	BFTreeNode * res = (BFTreeNode *) malloc(sizeof(BFTreeNode));
@@ -12,6 +13,7 @@ BFTreeNode * BFTreeNodeCreate() {
 	res->left = NULL;
 	res->right = NULL;
 	res->object = NULL;
+	res->height = 0;
 	return res;
 }
 
@@ -30,7 +32,16 @@ BFTree * BFTreeCreate() {
 	return res;
 }
 
+// left->right->node
+void BFTreeReleaseNode(BFTreeNode * node) {
+	if (!node) return;
+	BFTreeReleaseNode(node->left);
+	BFTreeReleaseNode(node->right);
+	BFTreeNodeRelease(node);
+}
+
 void BFTreeRelease(BFTree * tree) {
+	BFTreeReleaseNode(tree->root);
 	BFFree(tree);
 }
 
@@ -39,11 +50,7 @@ int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
 		return -1;
 	}
 
-	if (!tree->root) { // empty tree
-		tree->root = node;
-	} else {
-		
-	}
+	tree->root = BFTreeInsert(tree->root, node, tree->compare);
 
 	return 0;
 }
