@@ -20,6 +20,7 @@ void BFTreeNodeRelease(BFTreeNode * node);
 
 typedef struct BFTree {
 	BFTreeNode * root;
+	size_t size;
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
 } BFTree;
 

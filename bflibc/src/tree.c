@@ -26,6 +26,7 @@ BFTree * BFTreeCreate() {
 	BFTree * res = (BFTree *) malloc(sizeof(BFTree));
 	res->root = NULL;
 	res->compare = NULL;
+	res->size = 0;
 	return res;
 }
 
@@ -33,7 +34,21 @@ void BFTreeRelease(BFTree * tree) {
 	BFFree(tree);
 }
 
+BFTreeNode * _BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
+
+}
+
 int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
+	if (!tree || !node) {
+		return -1;
+	}
+
+	if (!tree->root) { // empty tree
+		tree->root = node;
+	} else {
+		
+	}
+
 	return 0;
 }
 

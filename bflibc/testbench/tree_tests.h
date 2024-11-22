@@ -46,13 +46,27 @@ BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
 })
 
 BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
+	// create trees
 	BFTree * tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	tree->compare = BFTestTreeCompare;
 
+	// create nodes
 	int treesize = 10;
 	for (int i = 0; i < treesize; i++) {
+		// create node
+		BFTreeNode * node = BFTreeNodeCreate();
+		BF_ASSERT(node, "a null node was returned");
+		node->release = BFTestNodeRelease;
 		
+		// set the value
+		int * value = (int *) malloc(sizeof(int));
+		*value = i;
+		node->object = value;
+
+		// insert into tree
+		int err = BFTreeInsertNode(tree, node);
+		BF_ASSERT(err === 0, "node insertion failed, node(obj=%d)", i);
 	}
 
 	BFTreeRelease(tree);
