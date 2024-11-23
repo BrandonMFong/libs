@@ -52,10 +52,13 @@ size_t BFTreeSize(BFTree * tree);
 int BFTreeInsertNode(BFTree * tree, BFTreeNode * node);
 
 /**
- * node: will be deleted
+ * node will not be deleted, caller is responsible for calling it
  */
 int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node);
 
+/**
+ * returns NULL if node with `obj` could not be found
+ */
 BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj);
 
 #endif // TREE_H

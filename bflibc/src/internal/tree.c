@@ -182,15 +182,17 @@ BFTreeNode * BFTreeNodeRemove(
 			}
 
 			// the non-empty child
-			BFTreeNodeRelease(temp); // releasing node?
+			//BFTreeNodeRelease(temp); // releasing node?
 		} else {
 			// node with two children: Get the inorder
 			// successor (smallest in the right subtree)
 			BFTreeNode * temp = BFTreeNodeMinValueNode(root->right);
 
+			/*
 			if (root->release) {
 				root->release(root->object);
 			}
+			*/
 
 			// Copy the inorder successor's data to this node
 			root->object = temp->object;

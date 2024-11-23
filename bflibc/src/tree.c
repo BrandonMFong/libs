@@ -43,9 +43,7 @@ void BFTreeReleaseNode(BFTree * tree, BFTreeNode * node) {
 	tree->size--;
 }
 
-#ifdef TESTING
 #include <bftest/bftest.h>
-#endif
 void BFTreeRelease(BFTree * tree) {
 	BFTreeReleaseNode(tree, tree->root);
 	if (tree->size > 0) {
