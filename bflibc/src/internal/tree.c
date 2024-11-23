@@ -162,6 +162,8 @@ BFTreeNode * BFTreeNodeRemove(
 	} else {
 		// node with only one child or no child
 		if (root->left == NULL || root->right == NULL) {
+			BFTreeNode *temp = root->left ? root->left : root->right;
+			/*
 			BFTreeNode *temp = NULL;
 			if (root->left) {
 				temp = root->left;
@@ -170,15 +172,16 @@ BFTreeNode * BFTreeNodeRemove(
 				temp = root->right;
 				root->right = NULL;
 			}
+			*/
 
 			// No child case
 			if (temp == NULL) {
 				temp = root;
 				root = NULL;
 			} else { // One child case
-				BFTreeNodeObject obj = root->object;
+				//BFTreeNodeObject obj = root->object;
 				*root = *temp; // Copy the contents of
-				temp->object = obj;
+				//temp->object = obj;
 			}
 
 			// the non-empty child

@@ -13,4 +13,8 @@
 [] improve prime num getter
 [] remove checksum
 [] abs() in bfmath
+[] tree
+	[x] insertion
+	[] removal
+	[x] getter
 ```
