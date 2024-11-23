@@ -31,10 +31,31 @@ typedef struct BFTree {
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
 } BFTree;
 
+/**
+ * mallocs BFTree
+ */
 BFTree * BFTreeCreate();
+
+/**
+ * frees tree
+ */
 void BFTreeRelease(BFTree * tree);
+
+/**
+ * number of nodes in tree
+ */
+size_t BFTreeSize(BFTree * tree);
+
+/**
+ * node: will be ownd by tree
+ */
 int BFTreeInsertNode(BFTree * tree, BFTreeNode * node);
+
+/**
+ * node: will be deleted
+ */
 int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node);
-BFTreeNode * BFTreeGetNodeForObject(BFTree * tree, BFTreeNodeObject obj);
+
+BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj);
 
 #endif // TREE_H

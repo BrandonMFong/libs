@@ -6,6 +6,7 @@
 #include "tree.h"
 #include "free.h"
 #include "internal/tree.h"
+#include <stdio.h>
 
 BFTreeNode * BFTreeNodeCreate() {
 	BFTreeNode * res = (BFTreeNode *) malloc(sizeof(BFTreeNode));
@@ -20,6 +21,7 @@ BFTreeNode * BFTreeNodeCreate() {
 void BFTreeNodeRelease(BFTreeNode * node) {
 	if (node && node->release) {
 		node->release(node->object);
+		node->object = NULL;
 	}
 	BFFree(node);
 }
@@ -45,21 +47,33 @@ void BFTreeRelease(BFTree * tree) {
 	BFFree(tree);
 }
 
+size_t BFTreeSize(BFTree * tree) {
+	if (!tree) return 0;
+	return tree->size;
+}
+
 int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
 	if (!tree || !node) {
 		return -1;
 	}
-
 	tree->root = BFTreeInsert(tree->root, node, tree->compare);
-
+	tree->size++;
 	return 0;
 }
 
 int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node) {
+	if (!tree || !node) {
+		return -1;
+	}
+	tree->root = BFTreeNodeRemove(tree->root, node, tree->compare);
+	tree->size--;
 	return 0;
 }
 
-BFTreeNode * BFTreeGetNodeForObject(BFTree * tree, BFTreeNodeObject obj) {
-	return NULL;
+BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj) {
+	if (!tree || !obj) {
+		return NULL;
+	}
+	return BFTreeNodeSearch(tree->root, obj, tree->compare);
 }
 
