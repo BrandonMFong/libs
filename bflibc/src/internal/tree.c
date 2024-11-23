@@ -68,7 +68,7 @@ BFTreeNode * BFTreeInsert(
 	BFTreeNode * newNode,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
-	/* 1.  Perform the normal BST insertion */
+	// 1.  Perform the normal BST insertion
 	if (node == NULL) {
 		return newNode;
 	}
@@ -81,14 +81,14 @@ BFTreeNode * BFTreeInsert(
 		return node;
 	}
 
-	/* 2. Update height of this ancestor node */
+	// 2. Update height of this ancestor node
 	node->height = 1 + BFMathMax(
 		BFTreeNodeHeight(node->left),
 		BFTreeNodeHeight(node->right));
 
-	/* 3. Get the balance factor of this ancestor
-	node to check whether this node became
-	unbalanced */
+	// 3. Get the balance factor of this ancestor
+	// node to check whether this node became
+	// unbalanced
 	int balance = BFTreeNodeGetBalance(node);
 
 	// If this node becomes unbalanced, then
@@ -116,7 +116,7 @@ BFTreeNode * BFTreeInsert(
 		return BFTreeNodeLeftRotate(node);
 	}
 
-	/* return the (unchanged) node pointer */
+	// return the (unchanged) node pointer
 	return node;
 }
 

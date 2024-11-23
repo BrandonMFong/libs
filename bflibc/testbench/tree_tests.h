@@ -58,7 +58,7 @@ void BFTestTreePrint(BFTreeNode * node) {
 	}
 }
 
-BFTEST_UNIT_FUNC(test_InsertNodes, 2<<8, {
+BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
@@ -69,7 +69,7 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<8, {
 	tree->compare = BFTestTreeCompare;
 
 	// create nodes
-	int treesize = 2<<10;
+	int treesize = 2<<9;
 	for (int i = 0; i < treesize; i++) {
 		// create node
 		BFTreeNode * node = BFTreeNodeCreate();
@@ -95,7 +95,7 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<8, {
 	BFTreeRelease(tree);
 })
 
-BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<8, {
+BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
@@ -106,7 +106,7 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<8, {
 	tree->compare = BFTestTreeCompare;
 
 	// create nodes
-	int treesize = 2<<10;
+	int treesize = 2<<5;
 	int * objects[treesize];
 	for (int i = 0; i < treesize; i++) {
 		// create node

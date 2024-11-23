@@ -35,15 +35,22 @@ BFTree * BFTreeCreate() {
 }
 
 // left->right->node
-void BFTreeReleaseNode(BFTreeNode * node) {
+void BFTreeReleaseNode(BFTree * tree, BFTreeNode * node) {
 	if (!node) return;
-	BFTreeReleaseNode(node->left);
-	BFTreeReleaseNode(node->right);
+	BFTreeReleaseNode(tree, node->left);
+	BFTreeReleaseNode(tree, node->right);
 	BFTreeNodeRelease(node);
+	tree->size--;
 }
 
+#ifdef TESTING
+#include <bftest/bftest.h>
+#endif
 void BFTreeRelease(BFTree * tree) {
-	BFTreeReleaseNode(tree->root);
+	BFTreeReleaseNode(tree, tree->root);
+	if (tree->size > 0) {
+		BFTestPrint("size=%d", tree->size);
+	}
 	BFFree(tree);
 }
 

@@ -12,4 +12,5 @@
 	[] make a tree object so data store is close to O(1)
 [] improve prime num getter
 [] remove checksum
+[] abs() in bfmath
 ```
