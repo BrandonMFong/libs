@@ -14,7 +14,7 @@ BFTreeNode * BFTreeNodeCreate() {
 	res->left = NULL;
 	res->right = NULL;
 	res->object = NULL;
-	res->height = 0;
+	res->height = 1;
 	return res;
 }
 
@@ -71,7 +71,9 @@ int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node) {
 }
 
 BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj) {
-	if (!tree || !obj) {
+	if (!tree) {
+		return NULL;
+	} else if (obj == NULL) {
 		return NULL;
 	}
 	return BFTreeNodeSearch(tree->root, obj, tree->compare);

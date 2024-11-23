@@ -241,15 +241,21 @@ BFTreeNode * BFTreeNodeRemove(
 	return root;
 }
 
+//#include <bftest/bftest.h>
 BFTreeNode * BFTreeNodeSearch(
 	BFTreeNode * node,
 	BFTreeNodeObject obj,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
 	if (!node) {
+		//BFTestPrint("node == NULL");
+		return NULL;
+	} else if (!obj) {
+		//BFTestPrint("object == NULL");
 		return NULL;
 	}
 
+	//BFTestPrint("compare(%d, %d)", *(int*) node->object, *(int*) obj);
 	int comp = compare(node->object, obj);
 	if (comp == 0) {
 		return node;

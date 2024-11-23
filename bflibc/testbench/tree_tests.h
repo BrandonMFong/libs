@@ -58,7 +58,7 @@ void BFTestTreePrint(BFTreeNode * node) {
 	}
 }
 
-BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
+BFTEST_UNIT_FUNC(test_InsertNodes, 2<<8, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
@@ -69,7 +69,7 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	tree->compare = BFTestTreeCompare;
 
 	// create nodes
-	int treesize = 6;
+	int treesize = 2<<10;
 	for (int i = 0; i < treesize; i++) {
 		// create node
 		BFTreeNode * node = BFTreeNodeCreate();
@@ -78,7 +78,7 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 		
 		// set the value
 		int * value = (int *) malloc(sizeof(int));
-		*value = i;
+		*value = abs(BFRand());
 		node->object = value;
 
 		// insert into tree
@@ -86,8 +86,56 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
 
+	/*
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFTestTreePrint(tree->root);
+	}
+	*/
+
+	BFTreeRelease(tree);
+})
+
+BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<8, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+
+	// create trees
+	BFTree * tree = BFTreeCreate();
+	BF_ASSERT(tree, "a null tree was returned");
+	tree->compare = BFTestTreeCompare;
+
+	// create nodes
+	int treesize = 2<<10;
+	int * objects[treesize];
+	for (int i = 0; i < treesize; i++) {
+		// create node
+		BFTreeNode * node = BFTreeNodeCreate();
+		BF_ASSERT(node, "a null node was returned");
+		node->release = BFTestNodeRelease;
+		
+		// set the value
+		int * value = (int *) malloc(sizeof(int));
+		*value = abs(BFRand());
+		node->object = value;
+		objects[i] = value;
+
+		// insert into tree
+		int err = BFTreeInsertNode(tree, node);
+		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
+	}
+
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		//BFTestTreePrint(tree->root);
+	}
+
+	int randNumSearch = 20;
+	while (randNumSearch--) {
+		int index = abs(BFRand()) % treesize;
+		int * object = objects[index];
+
+		BFTreeNode * node = BFTreeGetNode(tree, object);
+		BF_ASSERT(node != NULL, "a null node was returned");
 	}
 
 	BFTreeRelease(tree);
@@ -202,6 +250,7 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treenodeinit);
 	BFTEST_LAUNCH(test_CreateNodeWithObject);
 	BFTEST_LAUNCH(test_InsertNodes);
+	BFTEST_LAUNCH(test_InsertNodesAndSearch);
 	//BFTEST_LAUNCH(test_InsertAndRemovingNodes);
 	//BFTEST_LAUNCH(test_TreeBuildingWithRandomSizeAndNum);
 
