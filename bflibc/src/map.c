@@ -84,14 +84,14 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	return err;
 }
 
-BFMapValue _BFMapGetValueFromTree(BFTreeNode * node, BFMapKeyValuePair pair, int (*compare)(BFMapKey a, BFMapKey b)) {
+BFMapKeyValuePair _BFMapGetValueFromTree(BFTreeNode * node, BFMapKeyValuePair pair, int (*compare)(BFMapKey a, BFMapKey b)) {
 	if (!node) {
 		return NULL;
 	}
 
 	int comp = compare(pair, node->object);
 	if (comp == 0) {
-		return BFMapKeyValuePairGetValue((BFMapKeyValuePair) node->object);
+		return (BFMapKeyValuePair) node->object;
 	} else if (comp < 0) {
 		return _BFMapGetValueFromTree(node->left, pair, compare);
 	} else {
@@ -112,10 +112,15 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key) {
 
 	// temporarily using this structure so it can 
 	// pass through the compare callback
-	_BFMapKeyValuePair pair;
-	pair.key = key;
+	_BFMapKeyValuePair tmp;
+	tmp.key = key;
 
-	return _BFMapGetValueFromTree(tree->root, &pair, tree->compare);
+	BFMapKeyValuePair pair = _BFMapGetValueFromTree(tree->root, &tmp, tree->compare);
+	if (!pair) {
+		return NULL;
+	}
+
+	return BFMapKeyValuePairGetValue(pair);
 }
 
 int BFMapRemove(BFMap _map, BFMapKey key) {
@@ -123,7 +128,22 @@ int BFMapRemove(BFMap _map, BFMapKey key) {
 	if (!map || !key) {
 		return -1;
 	}
-	// how do we get the actual object from the tree to release the memory??
-	return -1;
+	
+	_BFTree * tree = (_BFTree *) map->tree;
+	if (!tree) {
+		return -1;
+	}
+
+	// temporarily using this structure so it can 
+	// pass through the compare callback
+	_BFMapKeyValuePair tmp;
+	tmp.key = key;
+
+	BFMapKeyValuePair pair = _BFMapGetValueFromTree(tree->root, &tmp, tree->compare);
+	if (!pair) {
+		return -1;
+	}
+
+	return BFTreeRemove(tree, pair);
 }
 

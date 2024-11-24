@@ -121,6 +121,8 @@ BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapinit);
 	BFTEST_LAUNCH(test_mapInsert);
 	BFTEST_LAUNCH(test_mapGet);
+	BFTEST_LAUNCH(test_mapRemove);
+
 })
 
 #endif // MAP_TESTS_H
