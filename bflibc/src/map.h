@@ -11,11 +11,17 @@
 
 #include "tree.h"
 
+typedef void * BFMap;
+
 typedef void * BFMapKey;
 typedef void * BFMapValue;
-typedef void * BFMap;
-typedef void * BFMapKeyValuePair;
 
+/**
+ * a pair object, contain key and value of any type
+ *
+ * use the accessors below to access data
+ */
+typedef void * BFMapKeyValuePair;
 BFMapKey BFMapKeyValuePairGetKey(BFMapKeyValuePair);
 BFMapValue BFMapKeyValuePairGetValue(BFMapKeyValuePair);
 
