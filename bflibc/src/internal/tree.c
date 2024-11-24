@@ -65,7 +65,6 @@ int BFTreeNodeGetBalance(BFTreeNode * node) {
 
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
-	//BFTreeNode * newNode,
 	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
@@ -78,10 +77,8 @@ BFTreeNode * BFTreeNodeInsert(
 	}
 
 	if (compare(object, node->object) < 0) {
-		//node->left = BFTreeNodeInsert(node->left, newNode, compare);
 		node->left = BFTreeNodeInsert(node->left, object, compare);
 	} else if (compare(object, node->object) > 0) {
-		//node->right = BFTreeNodeInsert(node->right, newNode, compare);
 		node->right = BFTreeNodeInsert(node->right, object, compare);
 	} else { // Equal keys are not allowed in BST
 		return node;
@@ -146,7 +143,6 @@ BFTreeNode * BFTreeNodeMinValueNode(BFTreeNode * node) {
 // the modified subtree.
 BFTreeNode * BFTreeNodeRemove(
 	BFTreeNode * root,
-	//BFTreeNode * oldNode,
 	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
