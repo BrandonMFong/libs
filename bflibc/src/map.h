@@ -17,10 +17,16 @@ typedef void * BFMapValue;
 typedef struct BFMapKeyValuePair {
 	BFMapKey key;
 	BFMapValue value;
+
+	// releases key and value
+	void (*release)(BFMapKey key, BFMapValue value);
 } BFMapKeyValuePair;
 
 typedef struct BFMap {
 	BFTree tree;
+	
+	// releases key and value
+	void (*release)(BFMapKey key, BFMapValue value);
 } BFMap;
 
 /**
@@ -32,6 +38,11 @@ BFMap * BFMapCreate();
  * sets a compare callback that compares keys during our operations
  */
 void BFMapSetCompare(BFMap * map, int (*compare)(BFMapKey a, BFMapKey b));
+
+/**
+ * defines how key and value are released when BFMapRemove is called
+ */
+void BFMapSetRelease(BFMap * map, void (*release)(BFMapKey key, BFMapValue value));
 
 /**
  * releases map

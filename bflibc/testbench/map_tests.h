@@ -11,26 +11,32 @@
 #include "free.h"
 #include <string.h>
 
-int BFMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+int BFTestMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 	BFMapKeyValuePair * a = (BFMapKeyValuePair *) aobj;
 	BFMapKeyValuePair * b = (BFMapKeyValuePair *) bobj;
 	return strcmp(a->key, b->key);
 }
 
-BFTEST_UNIT_FUNC(test_mapinit, 2<<15, {
+void BFTestMapTreeRelease(BFMapKey key, BFMapValue value) {
+	BFFree(key);
+	BFFree(value);
+}
+
+BFTEST_UNIT_FUNC(test_mapinit, 2<<10, {
 	BFMap * map = BFMapCreate();
 	BF_ASSERT(map, "null map");
-	BFMapSetCompare(map, BFMapTreeCompare);
+	BFMapSetCompare(map, BFTestMapTreeCompare);
 	BFMapRelease(map);
 })
 
-BFTEST_UNIT_FUNC(test_mapInsert, 1, {
+BFTEST_UNIT_FUNC(test_mapInsert, 2<<10, {
 	BFMap * map = BFMapCreate();
 	BF_ASSERT(map, "null map");
-	BFMapSetCompare(map, BFMapTreeCompare);
+	BFMapSetCompare(map, BFTestMapTreeCompare);
+	BFMapSetRelease(map, BFTestMapTreeRelease);
 
 	// making map<char*, int>[mapsize]
-	int mapsize = 10;
+	int mapsize = 2<<5;
 	char * keys[mapsize];
 	int * values[mapsize];
 	for (int i = 0; i < mapsize; i++) {
@@ -43,17 +49,12 @@ BFTEST_UNIT_FUNC(test_mapInsert, 1, {
 		BF_ASSERT(err == 0, "insert error %d", err);
 	}
 
-	for (int i = 0; i < mapsize; i++) {
-		BFFree(keys[i]);
-		BFFree(values[i]);
-	}
-
 	BFMapRelease(map);
 })
 
 BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapinit);
-	//BFTEST_LAUNCH(test_mapInsert);
+	BFTEST_LAUNCH(test_mapInsert);
 
 })
 
