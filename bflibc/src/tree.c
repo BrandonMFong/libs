@@ -63,7 +63,7 @@ int BFTreeRemove(BFTree _tree, BFTreeNodeObject object) {
 
 bool BFTreeContains(BFTree _tree, BFTreeNodeObject object) {
 	if (!_tree || !object) {
-		return -1;
+		return false;
 	}
 	_BFTree * tree = (_BFTree *) _tree;
 	return BFTreeNodeSearch(tree->root, object, tree->compare);

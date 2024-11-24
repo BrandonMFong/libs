@@ -7,9 +7,12 @@
 #define MAP_TESTS_H
 
 #include "clib_tests.h"
+#include "map.h"
 
-BFTEST_UNIT_FUNC(test_mapinit, 1, {
-
+BFTEST_UNIT_FUNC(test_mapinit, 2<<15, {
+	BFMap * map = BFMapCreate();
+	BF_ASSERT(map, "null map");
+	BFMapRelease(map);
 })
 
 BFTEST_COVERAGE_FUNC(map_tests, {

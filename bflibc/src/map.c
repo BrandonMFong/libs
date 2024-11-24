@@ -28,8 +28,14 @@ void BFMapRelease(BFMap * map) {
 	BFFree(map);
 }
 
-int BFMapAdd(BFMap * map, BFMapKey key, BFMapValue value) {
-	return 0;
+int BFMapInsert(BFMap * map, BFMapKey key, BFMapValue value) {
+	if (!map || !key || !value) {
+		return -1;
+	}
+	BFMapKeyValuePair * pair = (BFMapKeyValuePair *) malloc(sizeof(BFMapKeyValuePair));
+	pair->key = key;
+	pair->value = value;
+	return BFTreeInsert(map->tree, pair);
 }
 
 void * BFMapGetValue(BFMap * map, BFMapKey key) {

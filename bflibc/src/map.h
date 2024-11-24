@@ -41,7 +41,7 @@ void BFMapRelease(BFMap * map);
 /**
  * Adds entry for key and value
  */
-int BFMapAdd(BFMap * map, BFMapKey key, BFMapValue value);
+int BFMapInsert(BFMap * map, BFMapKey key, BFMapValue value);
 
 /**
  * returns value for key

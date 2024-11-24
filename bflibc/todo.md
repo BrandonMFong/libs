@@ -9,7 +9,8 @@
 	[] use binary search
 	[] store all known square root in a map
 [] map
-	[x] make a tree object so data store is close to O(1)
+	[x] make a tree object so data store is close to O(logn)
+	[] make a hash function good enough to use for O(1) operations
 [] improve prime num getter
 [] remove checksum
 [] abs() in bfmath
