@@ -26,6 +26,12 @@ typedef struct _BFTree {
 	// a > b -> result > 0
 	// a == b -> result == 0
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
+
+	/**
+	 * used to to release every object once
+	 * BFTreeRelease() is called
+	 */
+	void (*release)(BFTreeNodeObject object);
 } _BFTree;
 
 /**

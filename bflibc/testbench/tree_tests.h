@@ -9,6 +9,7 @@
 #include "clib_tests.h"
 #include "tree.h"
 #include "internal/tree.h"
+#include <stdlib.h>
 
 int BFTestTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 	int a = *(int *) aobj;
@@ -20,7 +21,7 @@ void BFTestNodeRelease(BFTreeNodeObject obj) {
 	BFFree(obj);
 }
 
-BFTEST_UNIT_FUNC(test_treeinit, 1, {
+BFTEST_UNIT_FUNC(test_treeinit, 2<<10, {
 	BFTree tree = BFTreeCreate();
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
 	BF_ASSERT(tree, "a null tree was returned");
@@ -67,6 +68,7 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
+	BFTreeSetRelease(tree, free); 
 
 	// create nodes
 	int treesize = 2<<9;
@@ -74,7 +76,8 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	for (int i = 0; i < treesize; i++) {
 		// create object
 		objects[i] = (int *) malloc(sizeof(int));
-		*objects[i] = abs(BFRand());
+		//*objects[i] = abs(BFRand());
+		*objects[i] = i;
 
 		// insert into tree
 		int err = BFTreeInsert(tree, objects[i]);
@@ -87,9 +90,11 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 
 	BFTreeRelease(tree);
 
+	/*
 	for (int i = 0; i < treesize; i++) {
 		BFFree(objects[i]);
 	}
+	*/
 })
 
 BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
@@ -101,6 +106,7 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
+	BFTreeSetRelease(tree, free); 
 
 	// create nodes
 	int treesize = 2<<9;
@@ -108,7 +114,8 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	for (int i = 0; i < treesize; i++) {
 		// create object
 		objects[i] = (int *) malloc(sizeof(int));
-		*objects[i] = abs(BFRand());
+		//*objects[i] = abs(BFRand());
+		*objects[i] = i;
 
 		// insert into tree
 		int err = BFTreeInsert(tree, objects[i]);
@@ -127,9 +134,11 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 
 	BFTreeRelease(tree);
 
+	/*
 	for (int i = 0; i < treesize; i++) {
 		BFFree(objects[i]);
 	}
+	*/
 })
 
 BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
@@ -137,6 +146,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
+	BFTreeSetRelease(tree, free); 
 
 	// create nodes and insert
 	int treesize = 2<<5;
@@ -144,7 +154,8 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	for (int i = 0; i < treesize; i++) {
 		// create object
 		objects[i] = (int *) malloc(sizeof(int));
-		*objects[i] = abs(BFRand());
+		//*objects[i] = abs(BFRand());
+		*objects[i] = i;
 
 		// insert into tree
 		int err = BFTreeInsert(tree, objects[i]);
@@ -162,6 +173,9 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		if (BFTreeContains(tree, object)) {
 			int err = BFTreeRemove(tree, object);
 			BF_ASSERT(err == 0, "couldn't remove node for object=%d", *object);
+
+			// clear from our object list since it has been released
+			objects[index] = NULL;
 		}
 	}
 
@@ -170,10 +184,12 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	}
 
 	BFTreeRelease(tree);
-	
+
+	/*
 	for (int i = 0; i < treesize; i++) {
 		BFFree(objects[i]);
 	}
+	*/
 })
 
 BFTEST_COVERAGE_FUNC(tree_tests, {

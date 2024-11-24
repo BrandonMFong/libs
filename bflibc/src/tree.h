@@ -26,7 +26,17 @@ BFTree BFTreeCreate();
 void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b));
 
 /**
+ * defines how each object is deleted when the node is 
+ * deleted
+ */
+void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeNodeObject object));
+
+/**
  * frees tree
+ *
+ * uses the release callback from BFTreeSetRelease to release all objects inserted
+ * inserted into the tree. If nothing was set, then we are assuming
+ * the caller will handle the memory
  */
 void BFTreeRelease(BFTree tree);
 
@@ -36,7 +46,9 @@ void BFTreeRelease(BFTree tree);
 size_t BFTreeSize(BFTree tree);
 
 /**
- * node: will be ownd by tree
+ * no duplicates allowed 
+ *
+ * node: will be owned by tree
  */
 int BFTreeInsert(BFTree tree, BFTreeNodeObject object);
 

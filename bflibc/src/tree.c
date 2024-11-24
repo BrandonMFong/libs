@@ -12,6 +12,7 @@ BFTree BFTreeCreate() {
 	_BFTree * res = (_BFTree *) malloc(sizeof(_BFTree));
 	res->root = NULL;
 	res->compare = NULL;
+	res->release = NULL;
 	res->size = 0;
 	return (BFTree) res;
 }
@@ -21,18 +22,31 @@ void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeNodeObject a, BFTreeNode
 	((_BFTree *) tree)->compare = compare;
 }
 
+void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeNodeObject object)) {
+	if (!tree) return;
+	((_BFTree *) tree)->release = release;
+}
+
 // left->right->node
 void BFTreeReleaseNode(_BFTree * tree, BFTreeNode * node) {
 	if (!node) return;
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
+
+	if (tree->release) {
+		tree->release(node->object);
+	}
 	BFTreeNodeRelease(node);
 	tree->size--;
 }
 
+#include <bftest/bftest.h>
 void BFTreeRelease(BFTree _tree) {
 	_BFTree * tree = (_BFTree *) _tree;
 	BFTreeReleaseNode(tree, tree->root);
+	if (tree->size > 0) {
+		BFTestPrint("tree.size = %d", tree->size);
+	}
 	BFFree(tree);
 }
 
@@ -57,6 +71,11 @@ int BFTreeRemove(BFTree _tree, BFTreeNodeObject object) {
 	}
 	_BFTree * tree = (_BFTree *) _tree;
 	tree->root = BFTreeNodeRemove(tree->root, object, tree->compare);
+
+	if (tree->release) {
+		tree->release(object);
+	}
+
 	tree->size--;
 	return 0;
 }
