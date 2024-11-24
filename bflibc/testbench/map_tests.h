@@ -9,6 +9,7 @@
 #include "clib_tests.h"
 
 BFTEST_UNIT_FUNC(test_mapinit, 1, {
+
 })
 
 BFTEST_COVERAGE_FUNC(map_tests, {

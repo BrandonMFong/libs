@@ -62,3 +62,4 @@ int BFTreeRemove(BFTree * tree, BFTreeNodeObject object);
 bool BFTreeContains(BFTree * tree, BFTreeNodeObject obj);
 
 #endif // TREE_H
+

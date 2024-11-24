@@ -6,16 +6,21 @@
 #include "map.h"
 #include "free.h"
 
-typedef struct _BFMap {
-
-} _BFMap;
-
-BFMap BFMapCreate() {
-	_BFMap * res = (_BFMap *) malloc(sizeof(_BFMap));
-	return (BFMap) res;
+int BFMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+	int a = *(int *) aobj;
+	int b = *(int *) bobj;
+	return a - b;
 }
 
-void BFMapRelease(BFMap map) {
+BFMap * BFMapCreate() {
+	BFMap * res = (BFMap *) malloc(sizeof(BFMap));
+	res->tree = BFTreeCreate();
+	res->tree->compare = BFMapTreeCompare;
+	return res;
+}
+
+void BFMapRelease(BFMap * map) {
+	BFTreeRelease(map->tree);
 	BFFree(map);
 }
 

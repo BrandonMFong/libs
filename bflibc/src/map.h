@@ -9,17 +9,21 @@
 #ifndef MAP_H
 #define MAP_H
 
-typedef void * BFMap;
+#include "tree.h"
+
+typedef struct BFMap {
+	BFTree * tree;
+} BFMap;
 
 /**
  * Caller owns memory
  */
-BFMap BFMapCreate();
+BFMap * BFMapCreate();
 
 /**
  * releases map
  */
-void BFMapRelease(BFMap map);
+void BFMapRelease(BFMap * map);
 
 /**
  * Adds entry for key and value
