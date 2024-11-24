@@ -6,8 +6,22 @@
  */
 
 #include "tree.h"
+#include "free.h"
 #include "../bfmath.h"
 #include <stdio.h>
+
+BFTreeNode * BFTreeNodeCreate() {
+	BFTreeNode * res = (BFTreeNode *) malloc(sizeof(BFTreeNode));
+	res->left = NULL;
+	res->right = NULL;
+	res->object = NULL;
+	res->height = 1;
+	return res;
+}
+
+void BFTreeNodeRelease(BFTreeNode * node) {
+	BFFree(node);
+}
 
 // A utility function to get the height of the tree
 int BFTreeNodeHeight(BFTreeNode * node) {

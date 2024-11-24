@@ -8,29 +8,21 @@
 #include "internal/tree.h"
 #include <stdio.h>
 
-BFTreeNode * BFTreeNodeCreate() {
-	BFTreeNode * res = (BFTreeNode *) malloc(sizeof(BFTreeNode));
-	res->left = NULL;
-	res->right = NULL;
-	res->object = NULL;
-	res->height = 1;
-	return res;
-}
-
-void BFTreeNodeRelease(BFTreeNode * node) {
-	BFFree(node);
-}
-
-BFTree * BFTreeCreate() {
-	BFTree * res = (BFTree *) malloc(sizeof(BFTree));
+BFTree BFTreeCreate() {
+	_BFTree * res = (_BFTree *) malloc(sizeof(_BFTree));
 	res->root = NULL;
 	res->compare = NULL;
 	res->size = 0;
-	return res;
+	return (BFTree) res;
+}
+
+void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)) {
+	if (!tree) return;
+	((_BFTree *) tree)->compare = compare;
 }
 
 // left->right->node
-void BFTreeReleaseNode(BFTree * tree, BFTreeNode * node) {
+void BFTreeReleaseNode(_BFTree * tree, BFTreeNode * node) {
 	if (!node) return;
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
@@ -38,38 +30,42 @@ void BFTreeReleaseNode(BFTree * tree, BFTreeNode * node) {
 	tree->size--;
 }
 
-void BFTreeRelease(BFTree * tree) {
+void BFTreeRelease(BFTree _tree) {
+	_BFTree * tree = (_BFTree *) _tree;
 	BFTreeReleaseNode(tree, tree->root);
 	BFFree(tree);
 }
 
-size_t BFTreeSize(BFTree * tree) {
+size_t BFTreeSize(BFTree tree) {
 	if (!tree) return 0;
-	return tree->size;
+	return ((_BFTree *) tree)->size;
 }
 
-int BFTreeInsert(BFTree * tree, BFTreeNodeObject object) {
-	if (!tree || !object) {
+int BFTreeInsert(BFTree _tree, BFTreeNodeObject object) {
+	if (!_tree || !object) {
 		return -1;
 	}
+	_BFTree * tree = (_BFTree *) _tree;
 	tree->root = BFTreeNodeInsert(tree->root, object, tree->compare);
 	tree->size++;
 	return 0;
 }
 
-int BFTreeRemove(BFTree * tree, BFTreeNodeObject object) {
-	if (!tree || !object) {
+int BFTreeRemove(BFTree _tree, BFTreeNodeObject object) {
+	if (!_tree || !object) {
 		return -1;
 	}
+	_BFTree * tree = (_BFTree *) _tree;
 	tree->root = BFTreeNodeRemove(tree->root, object, tree->compare);
 	tree->size--;
 	return 0;
 }
 
-bool BFTreeContains(BFTree * tree, BFTreeNodeObject object) {
-	if (!tree || !object) {
+bool BFTreeContains(BFTree _tree, BFTreeNodeObject object) {
+	if (!_tree || !object) {
 		return -1;
 	}
+	_BFTree * tree = (_BFTree *) _tree;
 	return BFTreeNodeSearch(tree->root, object, tree->compare);
 }
 

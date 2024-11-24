@@ -8,6 +8,7 @@
 
 #include "clib_tests.h"
 #include "tree.h"
+#include "internal/tree.h"
 
 int BFTestTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 	int a = *(int *) aobj;
@@ -19,16 +20,15 @@ void BFTestNodeRelease(BFTreeNodeObject obj) {
 	BFFree(obj);
 }
 
-BFTEST_UNIT_FUNC(test_treeinit, 2<<10, {
-	BFTree * tree = BFTreeCreate();
-	tree->compare = BFTestTreeCompare;
+BFTEST_UNIT_FUNC(test_treeinit, 1, {
+	BFTree tree = BFTreeCreate();
+	BFTreeSetCompare(tree, BFTestTreeCompare); 
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeRelease(tree);
 })
 
 BFTEST_UNIT_FUNC(test_treenodeinit, 2<<10, {
 	BFTreeNode * node = BFTreeNodeCreate();
-	//node->release = BFTestNodeRelease;
 	BF_ASSERT(node, "a null node was returned");
 	BFTreeNodeRelease(node);
 })
@@ -65,9 +65,9 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	}
 
 	// create trees
-	BFTree * tree = BFTreeCreate();
+	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
-	tree->compare = BFTestTreeCompare;
+	BFTreeSetCompare(tree, BFTestTreeCompare); 
 
 	// create nodes
 	int treesize = 2<<9;
@@ -99,9 +99,9 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	}
 
 	// create trees
-	BFTree * tree = BFTreeCreate();
+	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
-	tree->compare = BFTestTreeCompare;
+	BFTreeSetCompare(tree, BFTestTreeCompare); 
 
 	// create nodes
 	int treesize = 2<<9;
@@ -135,9 +135,9 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 
 BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	// create trees
-	BFTree * tree = BFTreeCreate();
+	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
-	tree->compare = BFTestTreeCompare;
+	BFTreeSetCompare(tree, BFTestTreeCompare); 
 
 	// create nodes and insert
 	int treesize = 2<<5;

@@ -8,12 +8,31 @@
 
 #include "../tree.h"
 
+typedef struct BFTreeNode {
+	struct BFTreeNode * left;
+	struct BFTreeNode * right;
+	size_t height;
+	BFTreeNodeObject object;
+} BFTreeNode;
+
+BFTreeNode * BFTreeNodeCreate();
+void BFTreeNodeRelease(BFTreeNode * node);
+
+typedef struct _BFTree {
+	BFTreeNode * root;
+	size_t size;
+
+	// a < b -> result < 0
+	// a > b -> result > 0
+	// a == b -> result == 0
+	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
+} _BFTree;
+
 /**
  * returns node
  */
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
-	//BFTreeNode * newNode,
 	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 );
@@ -23,7 +42,6 @@ BFTreeNode * BFTreeNodeInsert(
  */
 BFTreeNode * BFTreeNodeRemove(
 	BFTreeNode * node,
-	//BFTreeNode * oldNode,
 	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 );

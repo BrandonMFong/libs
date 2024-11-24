@@ -10,56 +10,45 @@
 #include <stdbool.h>
 
 typedef void * BFTreeNodeObject;
-
-typedef struct BFTreeNode {
-	struct BFTreeNode * left;
-	struct BFTreeNode * right;
-	size_t height;
-	BFTreeNodeObject object;
-} BFTreeNode;
-
-BFTreeNode * BFTreeNodeCreate();
-void BFTreeNodeRelease(BFTreeNode * node);
-
-typedef struct BFTree {
-	BFTreeNode * root;
-	size_t size;
-
-	// a < b -> result < 0
-	// a > b -> result > 0
-	// a == b -> result == 0
-	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b);
-} BFTree;
+typedef void * BFTree;
 
 /**
  * mallocs BFTree
  */
-BFTree * BFTreeCreate();
+BFTree BFTreeCreate();
+
+/**
+ * compare: how each object is compared to each other
+ *	a < b -> result < 0 
+ *	a > b -> result > 0
+ *	a == b -> result == 0
+ */
+void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b));
 
 /**
  * frees tree
  */
-void BFTreeRelease(BFTree * tree);
+void BFTreeRelease(BFTree tree);
 
 /**
  * number of nodes in tree
  */
-size_t BFTreeSize(BFTree * tree);
+size_t BFTreeSize(BFTree tree);
 
 /**
  * node: will be ownd by tree
  */
-int BFTreeInsert(BFTree * tree, BFTreeNodeObject object);
+int BFTreeInsert(BFTree tree, BFTreeNodeObject object);
 
 /**
  * node will not be deleted, caller is responsible for calling it
  */
-int BFTreeRemove(BFTree * tree, BFTreeNodeObject object);
+int BFTreeRemove(BFTree tree, BFTreeNodeObject object);
 
 /**
  * returns NULL if node with `obj` could not be found
  */
-bool BFTreeContains(BFTree * tree, BFTreeNodeObject obj);
+bool BFTreeContains(BFTree tree, BFTreeNodeObject obj);
 
 #endif // TREE_H
 

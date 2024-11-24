@@ -12,7 +12,7 @@
 #include "tree.h"
 
 typedef struct BFMap {
-	BFTree * tree;
+	BFTree tree;
 } BFMap;
 
 /**

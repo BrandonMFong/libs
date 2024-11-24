@@ -15,7 +15,7 @@ int BFMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 BFMap * BFMapCreate() {
 	BFMap * res = (BFMap *) malloc(sizeof(BFMap));
 	res->tree = BFTreeCreate();
-	res->tree->compare = BFMapTreeCompare;
+	BFTreeSetCompare(res->tree, BFMapTreeCompare);
 	return res;
 }
 
