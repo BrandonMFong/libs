@@ -84,13 +84,11 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	return err;
 }
 
-#include <stdio.h>
 BFMapValue _BFMapGetValueFromTree(BFTreeNode * node, BFMapKeyValuePair pair, int (*compare)(BFMapKey a, BFMapKey b)) {
 	if (!node) {
 		return NULL;
 	}
 
-	//printf("compare(%s, %s)\n", (char *) BFMapKeyValuePairGetKey((BFMapKeyValuePair) node->object), (char *) BFMapKeyValuePairGetKey(pair));
 	int comp = compare(pair, node->object);
 	if (comp == 0) {
 		return BFMapKeyValuePairGetValue((BFMapKeyValuePair) node->object);
@@ -121,6 +119,11 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key) {
 }
 
 int BFMapRemove(BFMap _map, BFMapKey key) {
-	return 0;
+	_BFMap * map = (_BFMap *) _map;
+	if (!map || !key) {
+		return -1;
+	}
+	// how do we get the actual object from the tree to release the memory??
+	return -1;
 }
 

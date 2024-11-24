@@ -55,7 +55,7 @@ size_t BFTreeSize(BFTree tree);
 int BFTreeInsert(BFTree tree, BFTreeNodeObject object);
 
 /**
- * node will not be deleted, caller is responsible for calling it
+ * will release the object memory if BFTreeSetRelease was defined
  */
 int BFTreeRemove(BFTree tree, BFTreeNodeObject object);
 

@@ -83,6 +83,40 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10, {
 	BFMapRelease(map);
 })
 
+BFTEST_UNIT_FUNC(test_mapRemove, 1, {
+	BFMap * map = BFMapCreate();
+	BF_ASSERT(map, "null map");
+	BFMapSetCompare(map, BFTestMapTreeCompare);
+	BFMapSetRelease(map, BFTestMapTreeRelease);
+
+	// making map<char*, int>[mapsize]
+	int mapsize = 2<<6;
+	char * keys[mapsize];
+	int * values[mapsize];
+	for (int i = 0; i < mapsize; i++) {
+		keys[i] = (char *) malloc(sizeof(char) * 32);
+		snprintf(keys[i], 32, "%d", i);
+		values[i] = (int *) malloc(sizeof(int));
+		*values[i] = i;
+
+		int err = BFMapInsert(map, keys[i], values[i]);
+		BF_ASSERT(err == 0, "insert error %d", err);
+	}
+	
+	int randNumRemove = 20;
+	while (randNumRemove--) {
+		int index = abs(BFRand()) % mapsize;
+
+		if (keys[index]) {
+			int err = BFMapRemove(map, keys[index]);
+			BF_ASSERT(err == 0, "removal error for key=%s", keys[index]);
+			keys[index] = NULL;
+		}
+	}
+
+	BFMapRelease(map);
+})
+
 BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapinit);
 	BFTEST_LAUNCH(test_mapInsert);
