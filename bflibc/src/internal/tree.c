@@ -258,13 +258,13 @@ bool BFTreeNodeSearch(
 		return false;
 	}
 
-	int comp = compare(node->object, obj);
+	int comp = compare(obj, node->object);
 	if (comp == 0) {
 		return true;
 	} else if (comp < 0) {
-		return BFTreeNodeSearch(node->right, obj, compare);
-	} else {
 		return BFTreeNodeSearch(node->left, obj, compare);
+	} else {
+		return BFTreeNodeSearch(node->right, obj, compare);
 	}
 }
 

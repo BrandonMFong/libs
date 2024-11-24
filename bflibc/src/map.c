@@ -91,10 +91,10 @@ BFMapValue _BFMapGetValueFromTree(BFTreeNode * node, BFMapKeyValuePair pair, int
 	}
 
 	//printf("compare(%s, %s)\n", (char *) BFMapKeyValuePairGetKey((BFMapKeyValuePair) node->object), (char *) BFMapKeyValuePairGetKey(pair));
-	int comp = compare(node->object, pair);
+	int comp = compare(pair, node->object);
 	if (comp == 0) {
 		return BFMapKeyValuePairGetValue((BFMapKeyValuePair) node->object);
-	} else if (comp > 0) {
+	} else if (comp < 0) {
 		return _BFMapGetValueFromTree(node->left, pair, compare);
 	} else {
 		return _BFMapGetValueFromTree(node->right, pair, compare);
