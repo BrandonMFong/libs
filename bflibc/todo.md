@@ -6,7 +6,7 @@
 [x] make a max and min function like python3 using macros
 [x] random generator
 [] improve sqrt, it sometimes stalls
-	[] use binary search
+	[x] use binary search
 	[] store all known square root in a map
 [] map
 	[x] make a tree object so data store is close to O(logn)
