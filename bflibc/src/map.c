@@ -15,8 +15,12 @@ int BFMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 BFMap * BFMapCreate() {
 	BFMap * res = (BFMap *) malloc(sizeof(BFMap));
 	res->tree = BFTreeCreate();
-	BFTreeSetCompare(res->tree, BFMapTreeCompare);
 	return res;
+}
+
+void BFMapSetCompare(BFMap * map, int (*compare)(BFMapKey a, BFMapKey b)) {
+	if (!map) return;
+	BFTreeSetCompare(map->tree, compare);
 }
 
 void BFMapRelease(BFMap * map) {
@@ -24,15 +28,15 @@ void BFMapRelease(BFMap * map) {
 	BFFree(map);
 }
 
-int BFMapAdd(BFMap * map, void * key, void * value) {
+int BFMapAdd(BFMap * map, BFMapKey key, BFMapValue value) {
 	return 0;
 }
 
-void * BFMapGetValue(BFMap * map, void * key) {
+void * BFMapGetValue(BFMap * map, BFMapKey key) {
 	return 0;
 }
 
-int BFMapRemove(BFMap * map, void * key) {
+int BFMapRemove(BFMap * map, BFMapKey key) {
 	return 0;
 }
 
