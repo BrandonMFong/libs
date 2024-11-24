@@ -64,14 +64,15 @@ int BFTreeInsert(BFTree * tree, BFTreeNodeObject object) {
 	if (!tree || !object) {
 		return -1;
 	}
-	BFTreeNode * node = BFTreeNodeCreate();
-	node->object = object;
-	tree->root = BFTreeNodeInsert(tree->root, node, tree->compare);
+	//BFTreeNode * node = BFTreeNodeCreate();
+	//node->object = object;
+	tree->root = BFTreeNodeInsert(tree->root, object, tree->compare);
 	tree->size++;
 	return 0;
 }
 
 int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node) {
+//int BFTreeRemove(BFTree * tree, BFTreeNodeObject object) {
 	if (!tree || !node) {
 		return -1;
 	}

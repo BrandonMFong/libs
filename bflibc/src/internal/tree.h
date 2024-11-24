@@ -13,7 +13,8 @@
  */
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
-	BFTreeNode * newNode,
+	//BFTreeNode * newNode,
+	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 );
 

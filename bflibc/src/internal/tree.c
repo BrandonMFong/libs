@@ -65,18 +65,24 @@ int BFTreeNodeGetBalance(BFTreeNode * node) {
 
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
-	BFTreeNode * newNode,
+	//BFTreeNode * newNode,
+	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
 	// 1.  Perform the normal BST insertion
 	if (node == NULL) {
-		return newNode;
+		//return newNode;
+		BFTreeNode * node = BFTreeNodeCreate();
+		node->object = object;
+		return node;
 	}
 
-	if (compare(newNode->object, node->object) < 0) {
-		node->left = BFTreeNodeInsert(node->left, newNode, compare);
-	} else if (compare(newNode->object, node->object) > 0) {
-		node->right = BFTreeNodeInsert(node->right, newNode, compare);
+	if (compare(object, node->object) < 0) {
+		//node->left = BFTreeNodeInsert(node->left, newNode, compare);
+		node->left = BFTreeNodeInsert(node->left, object, compare);
+	} else if (compare(object, node->object) > 0) {
+		//node->right = BFTreeNodeInsert(node->right, newNode, compare);
+		node->right = BFTreeNodeInsert(node->right, object, compare);
 	} else { // Equal keys are not allowed in BST
 		return node;
 	}
@@ -95,23 +101,23 @@ BFTreeNode * BFTreeNodeInsert(
 	// there are 4 cases
 
 	// Left Left Case
-	if (balance > 1 && compare(newNode->object, node->left->object) < 0) {
+	if (balance > 1 && compare(object, node->left->object) < 0) {
 		return BFTreeNodeRightRotate(node);
 	}
 
 	// Right Right Case
-	if (balance < -1 && compare(newNode->object, node->right->object) > 0) {
+	if (balance < -1 && compare(object, node->right->object) > 0) {
 		return BFTreeNodeLeftRotate(node);
 	}
 
 	// Left Right Case
-	if (balance > 1 && compare(newNode->object, node->left->object) > 0) {
+	if (balance > 1 && compare(object, node->left->object) > 0) {
 		node->left = BFTreeNodeLeftRotate(node->left);
 		return BFTreeNodeRightRotate(node);
 	}
 
 	// Right Left Case
-	if (balance < -1 && compare(newNode->object, node->right->object) < 0) {
+	if (balance < -1 && compare(object, node->right->object) < 0) {
 		node->right = BFTreeNodeRightRotate(node->right);
 		return BFTreeNodeLeftRotate(node);
 	}
