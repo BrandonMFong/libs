@@ -12,9 +12,9 @@
 #include <string.h>
 
 int BFTestMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
-	BFMapKeyValuePair * a = (BFMapKeyValuePair *) aobj;
-	BFMapKeyValuePair * b = (BFMapKeyValuePair *) bobj;
-	return strcmp(a->key, b->key);
+	BFMapKey a = BFMapKeyValuePairGetKey((BFMapKeyValuePair) aobj);
+	BFMapKey b = BFMapKeyValuePairGetKey((BFMapKeyValuePair) bobj);
+	return strcmp(a, b);
 }
 
 void BFTestMapTreeRelease(BFMapKey key, BFMapValue value) {
@@ -36,7 +36,7 @@ BFTEST_UNIT_FUNC(test_mapInsert, 2<<10, {
 	BFMapSetRelease(map, BFTestMapTreeRelease);
 
 	// making map<char*, int>[mapsize]
-	int mapsize = 2<<5;
+	int mapsize = 2<<6;
 	char * keys[mapsize];
 	int * values[mapsize];
 	for (int i = 0; i < mapsize; i++) {
