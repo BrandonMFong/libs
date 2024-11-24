@@ -63,7 +63,7 @@ int BFTreeNodeGetBalance(BFTreeNode * node) {
     return BFTreeNodeHeight(node->left) - BFTreeNodeHeight(node->right);
 }
 
-BFTreeNode * BFTreeInsert(
+BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
 	BFTreeNode * newNode,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
@@ -74,9 +74,9 @@ BFTreeNode * BFTreeInsert(
 	}
 
 	if (compare(newNode->object, node->object) < 0) {
-		node->left = BFTreeInsert(node->left, newNode, compare);
+		node->left = BFTreeNodeInsert(node->left, newNode, compare);
 	} else if (compare(newNode->object, node->object) > 0) {
-		node->right = BFTreeInsert(node->right, newNode, compare);
+		node->right = BFTreeNodeInsert(node->right, newNode, compare);
 	} else { // Equal keys are not allowed in BST
 		return node;
 	}

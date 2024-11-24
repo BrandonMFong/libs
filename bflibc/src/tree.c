@@ -59,11 +59,14 @@ size_t BFTreeSize(BFTree * tree) {
 	return tree->size;
 }
 
-int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
-	if (!tree || !node) {
+//int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
+int BFTreeInsert(BFTree * tree, BFTreeNodeObject object) {
+	if (!tree || !object) {
 		return -1;
 	}
-	tree->root = BFTreeInsert(tree->root, node, tree->compare);
+	BFTreeNode * node = BFTreeNodeCreate();
+	node->object = object;
+	tree->root = BFTreeNodeInsert(tree->root, node, tree->compare);
 	tree->size++;
 	return 0;
 }

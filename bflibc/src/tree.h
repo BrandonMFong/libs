@@ -49,7 +49,8 @@ size_t BFTreeSize(BFTree * tree);
 /**
  * node: will be ownd by tree
  */
-int BFTreeInsertNode(BFTree * tree, BFTreeNode * node);
+//int BFTreeInsertNode(BFTree * tree, BFTreeNode * node);
+int BFTreeInsert(BFTree * tree, BFTreeNodeObject object);
 
 /**
  * node will not be deleted, caller is responsible for calling it

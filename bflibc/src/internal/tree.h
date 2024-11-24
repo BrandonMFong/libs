@@ -11,7 +11,7 @@
 /**
  * returns node
  */
-BFTreeNode * BFTreeInsert(
+BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
 	BFTreeNode * newNode,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
