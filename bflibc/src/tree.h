@@ -49,6 +49,8 @@ size_t BFTreeSize(BFTree tree);
  * no duplicates allowed 
  *
  * node: will be owned by tree
+ *
+ * returns: -1 if object couldn't be inserted. Object may be a duplicate
  */
 int BFTreeInsert(BFTree tree, BFTreeNodeObject object);
 

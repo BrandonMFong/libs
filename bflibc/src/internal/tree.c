@@ -80,7 +80,8 @@ int BFTreeNodeGetBalance(BFTreeNode * node) {
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
 	BFTreeNodeObject object,
-	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
+	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b),
+	int * error
 ) {
 	// 1.  Perform the normal BST insertion
 	if (node == NULL) {
@@ -91,10 +92,11 @@ BFTreeNode * BFTreeNodeInsert(
 	}
 
 	if (compare(object, node->object) < 0) {
-		node->left = BFTreeNodeInsert(node->left, object, compare);
+		node->left = BFTreeNodeInsert(node->left, object, compare, error);
 	} else if (compare(object, node->object) > 0) {
-		node->right = BFTreeNodeInsert(node->right, object, compare);
+		node->right = BFTreeNodeInsert(node->right, object, compare, error);
 	} else { // Equal keys are not allowed in BST
+		*error = -1;
 		return node;
 	}
 

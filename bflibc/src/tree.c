@@ -40,13 +40,9 @@ void BFTreeReleaseNode(_BFTree * tree, BFTreeNode * node) {
 	tree->size--;
 }
 
-#include <bftest/bftest.h>
 void BFTreeRelease(BFTree _tree) {
 	_BFTree * tree = (_BFTree *) _tree;
 	BFTreeReleaseNode(tree, tree->root);
-	if (tree->size > 0) {
-		BFTestPrint("tree.size = %d", tree->size);
-	}
 	BFFree(tree);
 }
 
@@ -60,9 +56,13 @@ int BFTreeInsert(BFTree _tree, BFTreeNodeObject object) {
 		return -1;
 	}
 	_BFTree * tree = (_BFTree *) _tree;
-	tree->root = BFTreeNodeInsert(tree->root, object, tree->compare);
-	tree->size++;
-	return 0;
+	int err = 0;
+	tree->root = BFTreeNodeInsert(tree->root, object, tree->compare, &err);
+
+	if (err == 0) {
+		tree->size++;
+	}
+	return err;
 }
 
 int BFTreeRemove(BFTree _tree, BFTreeNodeObject object) {

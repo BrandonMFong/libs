@@ -76,7 +76,6 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	for (int i = 0; i < treesize; i++) {
 		// create object
 		objects[i] = (int *) malloc(sizeof(int));
-		//*objects[i] = abs(BFRand());
 		*objects[i] = i;
 
 		// insert into tree
@@ -89,12 +88,6 @@ BFTEST_UNIT_FUNC(test_InsertNodes, 2<<10, {
 	}
 
 	BFTreeRelease(tree);
-
-	/*
-	for (int i = 0; i < treesize; i++) {
-		BFFree(objects[i]);
-	}
-	*/
 })
 
 BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
@@ -114,7 +107,6 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	for (int i = 0; i < treesize; i++) {
 		// create object
 		objects[i] = (int *) malloc(sizeof(int));
-		//*objects[i] = abs(BFRand());
 		*objects[i] = i;
 
 		// insert into tree
@@ -133,12 +125,6 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	}
 
 	BFTreeRelease(tree);
-
-	/*
-	for (int i = 0; i < treesize; i++) {
-		BFFree(objects[i]);
-	}
-	*/
 })
 
 BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
@@ -154,7 +140,6 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	for (int i = 0; i < treesize; i++) {
 		// create object
 		objects[i] = (int *) malloc(sizeof(int));
-		//*objects[i] = abs(BFRand());
 		*objects[i] = i;
 
 		// insert into tree
@@ -184,12 +169,41 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	}
 
 	BFTreeRelease(tree);
+})
 
-	/*
-	for (int i = 0; i < treesize; i++) {
-		BFFree(objects[i]);
+BFTEST_UNIT_FUNC(test_InsertDuplicates, 2<<10, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
 	}
-	*/
+
+	// create trees
+	BFTree tree = BFTreeCreate();
+	BF_ASSERT(tree, "a null tree was returned");
+	BFTreeSetCompare(tree, BFTestTreeCompare); 
+	BFTreeSetRelease(tree, free);
+
+	int val = BFRand();
+
+	// object 1
+	int * object = (int *) malloc(sizeof(int));
+	*object = val;
+	int err = BFTreeInsert(tree, object);
+	BF_ASSERT(err == 0, "error inserting %d", err);
+
+	// object 2 using the same value
+	object = (int *) malloc(sizeof(int));
+	*object = val;
+	err = BFTreeInsert(tree, object);
+	BF_ASSERT(err != 0, "should be an error inserting %d since it is a duplicate", err);
+
+	// now free since the tree doesn't hold onto it
+	BFFree(object);
+
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		//BFTestTreePrint(tree->root);
+	}
+
+	BFTreeRelease(tree);
 })
 
 BFTEST_COVERAGE_FUNC(tree_tests, {
@@ -199,6 +213,7 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_InsertNodes);
 	BFTEST_LAUNCH(test_InsertNodesAndSearch);
 	BFTEST_LAUNCH(test_InsertAndRemovingNodes);
+	BFTEST_LAUNCH(test_InsertDuplicates);
 
 })
 

@@ -35,12 +35,16 @@ typedef struct _BFTree {
 } _BFTree;
 
 /**
+ * error: will nonzero if object couldn't be inserted.
+ * 	one reason is there may be a duplicate
+ *
  * returns node
  */
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
 	BFTreeNodeObject object,
-	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
+	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b),
+	int * error
 );
 
 /**
