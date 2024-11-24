@@ -146,7 +146,8 @@ BFTreeNode * BFTreeNodeMinValueNode(BFTreeNode * node) {
 // the modified subtree.
 BFTreeNode * BFTreeNodeRemove(
 	BFTreeNode * root,
-	BFTreeNode * oldNode,
+	//BFTreeNode * oldNode,
+	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
 	// STEP 1: PERFORM STANDARD BST DELETE
@@ -157,12 +158,12 @@ BFTreeNode * BFTreeNodeRemove(
 
 	// If the key to be deleted is smaller than the
 	// root's key, then it lies in left subtree
-	if (compare(oldNode->object, root->object) < 0) {
-		root->left = BFTreeNodeRemove(root->left, oldNode, compare);
+	if (compare(object, root->object) < 0) {
+		root->left = BFTreeNodeRemove(root->left, object, compare);
 	// If the key to be deleted is greater than the
 	// root's key, then it lies in right subtree
-	} else if (compare(oldNode->object, root->object) > 0) {
-		root->right = BFTreeNodeRemove(root->right, oldNode, compare);
+	} else if (compare(object, root->object) > 0) {
+		root->right = BFTreeNodeRemove(root->right, object, compare);
 	// if key is same as root's key, then This is
 	// the node to be deleted
 	} else {
@@ -185,18 +186,12 @@ BFTreeNode * BFTreeNodeRemove(
 			// successor (smallest in the right subtree)
 			BFTreeNode * temp = BFTreeNodeMinValueNode(root->right);
 
-			/*
-			if (root->release) {
-				root->release(root->object);
-			}
-			*/
-
 			// Copy the inorder successor's data to this node
 			root->object = temp->object;
 				
 
 			// Delete the inorder successor
-			root->right = BFTreeNodeRemove(root->right, temp, compare);
+			root->right = BFTreeNodeRemove(root->right, temp->object, compare);
 		}
 	}
 
@@ -240,24 +235,20 @@ BFTreeNode * BFTreeNodeRemove(
 	return root;
 }
 
-//#include <bftest/bftest.h>
-BFTreeNode * BFTreeNodeSearch(
+bool BFTreeNodeSearch(
 	BFTreeNode * node,
 	BFTreeNodeObject obj,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 ) {
 	if (!node) {
-		//BFTestPrint("node == NULL");
-		return NULL;
+		return false;
 	} else if (!obj) {
-		//BFTestPrint("object == NULL");
-		return NULL;
+		return false;
 	}
 
-	//BFTestPrint("compare(%d, %d)", *(int*) node->object, *(int*) obj);
 	int comp = compare(node->object, obj);
 	if (comp == 0) {
-		return node;
+		return true;
 	} else if (comp < 0) {
 		return BFTreeNodeSearch(node->right, obj, compare);
 	} else {

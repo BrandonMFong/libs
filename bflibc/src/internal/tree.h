@@ -23,14 +23,15 @@ BFTreeNode * BFTreeNodeInsert(
  */
 BFTreeNode * BFTreeNodeRemove(
 	BFTreeNode * node,
-	BFTreeNode * oldNode,
+	//BFTreeNode * oldNode,
+	BFTreeNodeObject object,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
 );
 
 /**
  * returns node
  */
-BFTreeNode * BFTreeNodeSearch(
+bool BFTreeNodeSearch(
 	BFTreeNode * node,
 	BFTreeNodeObject obj,
 	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)

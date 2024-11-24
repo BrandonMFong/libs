@@ -19,12 +19,6 @@ BFTreeNode * BFTreeNodeCreate() {
 }
 
 void BFTreeNodeRelease(BFTreeNode * node) {
-	/*
-	if (node && node->release) {
-		node->release(node->object);
-		node->object = NULL;
-	}
-	*/
 	BFFree(node);
 }
 
@@ -45,12 +39,8 @@ void BFTreeReleaseNode(BFTree * tree, BFTreeNode * node) {
 	tree->size--;
 }
 
-#include <bftest/bftest.h>
 void BFTreeRelease(BFTree * tree) {
 	BFTreeReleaseNode(tree, tree->root);
-	if (tree->size > 0) {
-		BFTestPrint("size=%d", tree->size);
-	}
 	BFFree(tree);
 }
 
@@ -59,34 +49,28 @@ size_t BFTreeSize(BFTree * tree) {
 	return tree->size;
 }
 
-//int BFTreeInsertNode(BFTree * tree, BFTreeNode * node) {
 int BFTreeInsert(BFTree * tree, BFTreeNodeObject object) {
 	if (!tree || !object) {
 		return -1;
 	}
-	//BFTreeNode * node = BFTreeNodeCreate();
-	//node->object = object;
 	tree->root = BFTreeNodeInsert(tree->root, object, tree->compare);
 	tree->size++;
 	return 0;
 }
 
-int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node) {
-//int BFTreeRemove(BFTree * tree, BFTreeNodeObject object) {
-	if (!tree || !node) {
+int BFTreeRemove(BFTree * tree, BFTreeNodeObject object) {
+	if (!tree || !object) {
 		return -1;
 	}
-	tree->root = BFTreeNodeRemove(tree->root, node, tree->compare);
+	tree->root = BFTreeNodeRemove(tree->root, object, tree->compare);
 	tree->size--;
 	return 0;
 }
 
-BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj) {
-	if (!tree) {
-		return NULL;
-	} else if (obj == NULL) {
-		return NULL;
+bool BFTreeContains(BFTree * tree, BFTreeNodeObject object) {
+	if (!tree || !object) {
+		return -1;
 	}
-	return BFTreeNodeSearch(tree->root, obj, tree->compare);
+	return BFTreeNodeSearch(tree->root, object, tree->compare);
 }
 

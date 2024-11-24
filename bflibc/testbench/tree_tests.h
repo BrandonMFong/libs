@@ -123,10 +123,7 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	int randNumSearch = 20;
 	while (randNumSearch--) {
 		int index = abs(BFRand()) % treesize;
-		int * object = objects[index];
-
-		BFTreeNode * node = BFTreeGetNode(tree, object);
-		BF_ASSERT(node != NULL, "a null node was returned");
+		BF_ASSERT(BFTreeContains(tree, objects[index]), "a null node was returned");
 	}
 
 	BFTreeRelease(tree);
@@ -163,11 +160,9 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		int index = abs(BFRand()) % treesize;
 		int * object = objects[index];
 
-		BFTreeNode * node = BFTreeGetNode(tree, object);
-		if (node) {
-			int err = BFTreeRemoveNode(tree, node);
+		if (BFTreeContains(tree, object)) {
+			int err = BFTreeRemove(tree, object);
 			BF_ASSERT(err == 0, "couldn't remove node for object=%d", *object);
-			BFTreeNodeRelease(node);
 		}
 	}
 

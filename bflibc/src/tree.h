@@ -7,6 +7,7 @@
 #define TREE_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef void * BFTreeNodeObject;
 
@@ -55,12 +56,13 @@ int BFTreeInsert(BFTree * tree, BFTreeNodeObject object);
 /**
  * node will not be deleted, caller is responsible for calling it
  */
-int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node);
-//int BFTreeRemove(BFTree * tree, BFTreeNodeObject object);
+//int BFTreeRemoveNode(BFTree * tree, BFTreeNode * node);
+int BFTreeRemove(BFTree * tree, BFTreeNodeObject object);
 
 /**
  * returns NULL if node with `obj` could not be found
  */
-BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj);
+//BFTreeNode * BFTreeGetNode(BFTree * tree, BFTreeNodeObject obj);
+bool BFTreeContains(BFTree * tree, BFTreeNodeObject obj);
 
 #endif // TREE_H
