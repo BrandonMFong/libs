@@ -14,14 +14,14 @@
 BFTEST_UNIT_FUNC(test_hashDivision, 2<<10, {
 	BFRandInit(time(0));
 	int key = BFRand();
-	int prime = BFMathPrimeGetNumberAtIndex(BFRand() % 2 << 8);
+	int prime = BFMathPrimeGetNumberAtIndex(abs(BFRand()) % (2<<8));
 	BFHashDivision(key, prime);
 })
 
 BFTEST_UNIT_FUNC(test_hashMultiplication, 2<<10, {
 	BFRandInit(time(0));
 	int key = BFRand();
-	int prime = BFMathPrimeGetNumberAtIndex(BFRand() % 2 << 8);
+	int prime = BFMathPrimeGetNumberAtIndex(abs(BFRand()) % (2<<8));
 	double fractional = BFRandDouble();
 	fractional = fractional - ((int) fractional);
 	
