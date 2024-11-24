@@ -53,7 +53,7 @@ int BFMapInsert(BFMap map, BFMapKey key, BFMapValue value);
 /**
  * returns value for key
  */
-void * BFMapGetValue(BFMap map, BFMapKey key);
+BFMapValue BFMapGetValue(BFMap map, BFMapKey key);
 
 /**
  * removes entry with key

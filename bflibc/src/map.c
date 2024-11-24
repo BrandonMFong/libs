@@ -5,6 +5,7 @@
 
 #include "map.h"
 #include "free.h"
+#include "internal/tree.h"
 
 typedef struct _BFMapKeyValuePair {
 	BFMapKey key;
@@ -83,8 +84,40 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	return err;
 }
 
-void * BFMapGetValue(BFMap _map, BFMapKey key) {
-	return 0;
+#include <stdio.h>
+BFMapValue _BFMapGetValueFromTree(BFTreeNode * node, BFMapKeyValuePair pair, int (*compare)(BFMapKey a, BFMapKey b)) {
+	if (!node) {
+		return NULL;
+	}
+
+	//printf("compare(%s, %s)\n", (char *) BFMapKeyValuePairGetKey((BFMapKeyValuePair) node->object), (char *) BFMapKeyValuePairGetKey(pair));
+	int comp = compare(node->object, pair);
+	if (comp == 0) {
+		return BFMapKeyValuePairGetValue((BFMapKeyValuePair) node->object);
+	} else if (comp > 0) {
+		return _BFMapGetValueFromTree(node->left, pair, compare);
+	} else {
+		return _BFMapGetValueFromTree(node->right, pair, compare);
+	}
+}
+
+BFMapValue BFMapGetValue(BFMap _map, BFMapKey key) {
+	_BFMap * map = (_BFMap *) _map;
+	if (!map || !key) {
+		return NULL;
+	}
+	
+	_BFTree * tree = (_BFTree *) map->tree;
+	if (!tree) {
+		return NULL;
+	}
+
+	// temporarily using this structure so it can 
+	// pass through the compare callback
+	_BFMapKeyValuePair pair;
+	pair.key = key;
+
+	return _BFMapGetValueFromTree(tree->root, &pair, tree->compare);
 }
 
 int BFMapRemove(BFMap _map, BFMapKey key) {
