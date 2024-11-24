@@ -19,10 +19,12 @@ BFTreeNode * BFTreeNodeCreate() {
 }
 
 void BFTreeNodeRelease(BFTreeNode * node) {
+	/*
 	if (node && node->release) {
 		node->release(node->object);
 		node->object = NULL;
 	}
+	*/
 	BFFree(node);
 }
 
