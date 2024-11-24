@@ -10,7 +10,7 @@
 
 BFTreeNode * BFTreeNodeCreate() {
 	BFTreeNode * res = (BFTreeNode *) malloc(sizeof(BFTreeNode));
-	res->release = NULL;
+	//res->release = NULL;
 	res->left = NULL;
 	res->right = NULL;
 	res->object = NULL;

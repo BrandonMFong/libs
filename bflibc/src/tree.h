@@ -14,7 +14,7 @@ typedef struct BFTreeNode {
 	struct BFTreeNode * left;
 	struct BFTreeNode * right;
 	size_t height;
-	void (*release)(BFTreeNodeObject obj);
+	//void (*release)(BFTreeNodeObject obj);
 	BFTreeNodeObject object;
 } BFTreeNode;
 
