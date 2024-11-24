@@ -6,12 +6,6 @@
 #include "map.h"
 #include "free.h"
 
-int BFMapTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
-	int a = *(int *) aobj;
-	int b = *(int *) bobj;
-	return a - b;
-}
-
 BFMap * BFMapCreate() {
 	BFMap * res = (BFMap *) malloc(sizeof(BFMap));
 	res->tree = BFTreeCreate();

@@ -36,7 +36,6 @@ BFTEST_UNIT_FUNC(test_treenodeinit, 2<<10, {
 BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
 	BFTreeNode * node = BFTreeNodeCreate();
 	BF_ASSERT(node, "a null node was returned");
-	//node->release = BFTestNodeRelease;
 
 	BFRandInit(time(0));
 	int * value = (int *) malloc(sizeof(int));
