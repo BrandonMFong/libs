@@ -7,11 +7,6 @@
 #include <limits.h>
 #include <stdarg.h>
 
-double BFMathAbs(double num) {
-	if (num < 0) return -1 * num;
-	return num;
-}
-
 /*
 double BFMathAbsDouble(double num) {
 	if (num < 0) return -1 * num;

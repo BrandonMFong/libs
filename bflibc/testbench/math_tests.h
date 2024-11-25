@@ -232,8 +232,9 @@ BFTEST_UNIT_FUNC(test_absoluteValue, 2<<11, {
 
 BFTEST_UNIT_FUNC(test_absoluteValueDouble, 2<<11, {
 	for (int i = -1; i > (-1 * (2<<10)); i--) {
-		int a = BFMathAbs(i);
-		int b = abs(i);
+		double value = BFRandDouble();
+		int a = BFMathAbs(value);
+		int b = abs(value);
 		BF_ASSERT(a == b, "%d != %d", a, b);
 	}
 })
@@ -252,6 +253,7 @@ BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_gettingMaxFor10Doubles);
 	BFTEST_LAUNCH(test_gettingMaxFor10Longs);
 	BFTEST_LAUNCH(test_absoluteValue);
+	BFTEST_LAUNCH(test_absoluteValueDouble);
 
 })
 
