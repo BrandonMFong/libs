@@ -71,5 +71,10 @@ double _BFMathMinMax(int op, int datatype, int numargs,...);
 #define BFMathMin(num,...) \
 	_BFMathMinMax( -1, _kBFMathGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
+/**
+ * returns absolute value of num. similar to abs(num)
+ */
+float BFMathAbs(float num);
+
 #endif // BF_MATH_H
 

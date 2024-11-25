@@ -222,6 +222,14 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor10Longs, 2<<10, {
 	BF_ASSERT(min == expect, "min(%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld)=%ld expect=%ld", a, b, c, d, e, f, g, h, i, j, min, expect);
 })
 
+BFTEST_UNIT_FUNC(test_absoluteValue, 2<<11, {
+	for (int i = -1; i > (-1 * (2<<10)); i--) {
+		int a = BFMathAbs(i);
+		int b = abs(i);
+		BF_ASSERT(a == b, "%d != %d", a, b);
+	}
+})
+
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
 	BFTEST_LAUNCH(test_ifZeroAndOneArePrimeNumbers);
@@ -235,6 +243,8 @@ BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_gettingMaxFor10Integers);
 	BFTEST_LAUNCH(test_gettingMaxFor10Doubles);
 	BFTEST_LAUNCH(test_gettingMaxFor10Longs);
+	BFTEST_LAUNCH(test_absoluteValue);
+
 })
 
 #endif // MATH_TESTS_H
