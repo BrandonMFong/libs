@@ -63,11 +63,11 @@ void BFHashMapRelease(BFHashMap _map) {
 }
 
 int BFHashMapInsert(BFHashMap map, BFHashMapKey key, BFHashMapValue value) {
-	if (!map || !key || !value) {
+	if (!map) {
 		return -1;
 	}
 	
-	return -1;
+	return 0;
 }
 
 int BFHashMapRemove(BFHashMap map, BFHashMapKey key) {
