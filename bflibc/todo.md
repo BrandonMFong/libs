@@ -18,4 +18,5 @@
 	[x] insertion
 	[x] removal
 	[x] getter
+[] consider allowing duplicate values into tree
 ```

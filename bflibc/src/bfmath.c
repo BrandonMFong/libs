@@ -7,6 +7,12 @@
 #include <limits.h>
 #include <stdarg.h>
 
+double BFMathAbs(double num) {
+	if (num < 0) return -1 * num;
+	return num;
+}
+
+/*
 double BFMathAbsDouble(double num) {
 	if (num < 0) return -1 * num;
 	return num;
@@ -15,6 +21,7 @@ double BFMathAbsDouble(double num) {
 int BFMathAbs(int num) {
 	return BFMathAbsDouble(num);
 }
+*/
 
 float BFMathSqrt(float n) {
     if (n < 2) {
@@ -102,16 +109,16 @@ double _BFMathMinMax(int op, int datatype, int numargs, ...) {
 
 	double res = 0;
 	switch (datatype) {
-	case _kBFMathGetTypeLong:
+	case _kBFMathGetTypeIDLong:
 		res = _BFMathMinMaxForType(long, op, numargs, valist);
 		break;
-	case _kBFMathGetTypeDouble:
-	case _kBFMathGetTypeFloat:
+	case _kBFMathGetTypeIDDouble:
+	case _kBFMathGetTypeIDFloat:
 		res = _BFMathMinMaxForType(double, op, numargs, valist);
 		break;
-	case _kBFMathGetTypeShort:
-	case _kBFMathGetTypeChar:
-	case _kBFMathGetTypeInt:
+	case _kBFMathGetTypeIDShort:
+	case _kBFMathGetTypeIDChar:
+	case _kBFMathGetTypeIDInt:
 	default:
 		res = _BFMathMinMaxForType(int, op, numargs, valist);
 		break;

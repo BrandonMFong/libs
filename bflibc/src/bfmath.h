@@ -39,43 +39,39 @@ bool BFMathPrimeIsPrime(int num);
  */
 double _BFMathMinMax(int op, int datatype, int numargs,...);
 
-#define _kBFMathGetTypeInt 1
-#define _kBFMathGetTypeShort 2
-#define _kBFMathGetTypeLong 3
-#define _kBFMathGetTypeChar 4
-#define _kBFMathGetTypeFloat 5
-#define _kBFMathGetTypeDouble 6
-#define _kBFMathGetTypeDefault _kBFMathGetTypeInt
+#define _kBFMathGetTypeIDInt 1
+#define _kBFMathGetTypeIDShort 2
+#define _kBFMathGetTypeIDLong 3
+#define _kBFMathGetTypeIDChar 4
+#define _kBFMathGetTypeIDFloat 5
+#define _kBFMathGetTypeIDDouble 6
+#define _kBFMathGetTypeIDDefault _kBFMathGetTypeIDInt
 
-#define _kBFMathGetType(x) \
+#define _kBFMathGetTypeID(x) \
 	_Generic(\
 		(x),\
-		int: _kBFMathGetTypeInt,\
-		short: _kBFMathGetTypeShort,\
-		long: _kBFMathGetTypeLong,\
-		char: _kBFMathGetTypeChar,\
-		float: _kBFMathGetTypeFloat,\
-		double: _kBFMathGetTypeDouble,\
-		default: _kBFMathGetTypeDefault \
+		int: _kBFMathGetTypeIDInt,\
+		short: _kBFMathGetTypeIDShort,\
+		long: _kBFMathGetTypeIDLong,\
+		char: _kBFMathGetTypeIDChar,\
+		float: _kBFMathGetTypeIDFloat,\
+		double: _kBFMathGetTypeIDDouble,\
+		default: _kBFMathGetTypeIDDefault \
 	)
 
 /**
  * Finds max out of the number list provided
  */
 #define BFMathMax(num,...) \
-	_BFMathMinMax ( 1, _kBFMathGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+	_BFMathMinMax ( 1, _kBFMathGetTypeID(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
 /**
  * Finds min out of the number list provided
  */
 #define BFMathMin(num,...) \
-	_BFMathMinMax( -1, _kBFMathGetType(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
+	_BFMathMinMax( -1, _kBFMathGetTypeID(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
-/**
- * returns absolute value of num. similar to abs(num)
- */
-int BFMathAbs(int num);
-double BFMathAbsDouble(double num);
+double BFMathAbs(double);
 
 #endif // BF_MATH_H
 
