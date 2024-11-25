@@ -1,6 +1,8 @@
 /**
  * author: brando
  * date: 11/25/24
+ *
+ * https://www.geeksforgeeks.org/implementation-of-hash-table-in-c-using-separate-chaining/
  */
 
 #include "hashmap.h"
