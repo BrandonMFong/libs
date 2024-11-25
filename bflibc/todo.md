@@ -13,7 +13,7 @@
 	[] make a hash function good enough to use for O(1) operations
 [] improve prime num getter
 [] remove checksum
-[] abs() in bfmath
+[x] abs() in bfmath
 [x] tree
 	[x] insertion
 	[x] removal
