@@ -118,8 +118,8 @@ BFTEST_UNIT_FUNC(test_mapRemove, 1, {
 })
 
 int BFTestMapTreeCompareInteger(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
-	int a = (intptr_t) aobj;
-	int b = (intptr_t) bobj;
+	int a = (intptr_t) BFMapKeyValuePairGetKey((BFMapKeyValuePair) aobj);
+	int b = (intptr_t) BFMapKeyValuePairGetKey((BFMapKeyValuePair) bobj);
 	return a - b;
 }
 
@@ -159,7 +159,7 @@ BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapInsert);
 	BFTEST_LAUNCH(test_mapGet);
 	BFTEST_LAUNCH(test_mapRemove);
-	//BFTEST_LAUNCH(test_mapKeyValueNoPointers);
+	BFTEST_LAUNCH(test_mapKeyValueNoPointers);
 
 })
 

@@ -85,7 +85,11 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	return err;
 }
 
-BFMapKeyValuePair _BFMapGetValueFromTree(BFTreeNode * node, BFMapKeyValuePair pair, int (*compare)(BFMapKey a, BFMapKey b)) {
+BFMapKeyValuePair _BFMapGetValueFromTree(
+	BFTreeNode * node,
+	BFMapKeyValuePair pair,
+	int (*compare)(BFMapKey a, BFMapKey b)
+) {
 	if (!node) {
 		return NULL;
 	}
