@@ -88,6 +88,16 @@ typedef struct _BFHashMap {
 	 * defines how keys and values memory are released
 	 */
 	void (*release)(BFHashMapKey key, BFHashMapValue value);
+
+	/**
+	 * used to compare keys when caller wants a value for key. see 
+	 * `BFHashMapRelease`
+	 *
+	 * akey < bkey, return() < 0
+	 * akey > bkey, return() > 0
+	 * akey == bkey, return() == 0
+	 */
+	int (*compare)(BFHashMapKey akey, BFHashMapKey bkey);
 } _BFHashMap;
 
 BFHashMap BFHashMapCreate() {
@@ -98,6 +108,7 @@ BFHashMap BFHashMapCreate() {
 	memset(res->nodes, 0, sizeof(BFHashMapNode) * res->size);
 	res->hash = NULL;
 	res->release = NULL;
+	res->compare = NULL;
 
 	return res;
 }
@@ -106,6 +117,12 @@ void BFHashMapSetHashFunction(BFHashMap _map, unsigned long (*hash)(BFHashMapKey
 	_BFHashMap * map = (_BFHashMap *) _map;
 	if (!map) return;
 	map->hash = hash;
+}
+
+void BFHashMapSetCompare(BFHashMap _map, int (*compare)(BFHashMapKey a, BFHashMapKey b)) {
+	_BFHashMap * map = (_BFHashMap *) _map;
+	if (!map) return;
+	map->compare = compare;
 }
 
 void BFHashMapRelease(BFHashMap _map) {
@@ -127,7 +144,7 @@ int BFHashMapInsert(BFHashMap _map, BFHashMapKey key, BFHashMapValue value) {
 		return -1;
 	}
 
-	// get keys
+	// get index using hash
 	unsigned long index = map->hash(key) % map->size;
 	
 	// get node
@@ -153,11 +170,27 @@ int BFHashMapRemove(BFHashMap map, BFHashMapKey key) {
 	return -1;
 }
 
-BFHashMapValue BFHashMapGetValue(BFHashMap map, BFHashMapKey key) {
-	if (!map) {
+BFHashMapValue BFHashMapGetValue(BFHashMap _map, BFHashMapKey key) {
+	_BFHashMap * map = (_BFHashMap *) _map;
+	if (!map || !map->compare) {
 		return NULL;
 	}
 	
+	// get index using hash
+	unsigned long index = map->hash(key) % map->size;
+	
+	// get node
+	BFHashMapNode node = map->nodes[index];
+
+	// get the object for key
+	BFHashMapObject * object = node.first;
+	while (object) {
+		if (map->compare(object->key, key) == 0) {
+			return object->value;
+		}
+		object = object->next;
+	}
+
 	return NULL;
 }
 

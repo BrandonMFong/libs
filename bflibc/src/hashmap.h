@@ -16,6 +16,7 @@ typedef void * BFHashMapValue;
 
 BFHashMap BFHashMapCreate();
 void BFHashMapSetHashFunction(BFHashMap map, unsigned long (*hash)(BFHashMapKey key));
+void BFHashMapSetCompare(BFHashMap map, int (*compare)(BFHashMapKey a, BFHashMapKey b));
 void BFHashMapRelease(BFHashMap map);
 int BFHashMapInsert(BFHashMap map, BFHashMapKey key, BFHashMapValue value);
 int BFHashMapRemove(BFHashMap map, BFHashMapKey key);
