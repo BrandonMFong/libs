@@ -19,4 +19,5 @@
 	[x] removal
 	[x] getter
 [] consider allowing duplicate values into tree
+[] add tests to nonexistent entries in tree, map, and hashmap
 ```
