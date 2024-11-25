@@ -8,22 +8,7 @@
 #ifndef HASH_H
 #define HASH_H
 
-/**
- * h(k)=k mod m
- * k = key
- * m = prime number
- */
-int BFHashDivision(long long key, long long prime);
-
-/**
- * h(k)=⌊m(kAmod1)⌋
- * k = key
- * m = prime num
- */
-int BFHashMultiplication(long long key, double fractional, long long prime);
-
-int BFHashMidSquare();
-int BFHashFolding();
+unsigned long BFHashDjb2(unsigned char * str);
 
 #endif // HASH_H
 

@@ -5,11 +5,14 @@
 
 #include "hash.h"
 
-int BFHashDivision(long long key, long long prime) {
-	return key % prime;
-}
+unsigned long BFHashDjb2(unsigned char * str) {
+	unsigned long hash = 5381;
+	int c;
 
-int BFHashMultiplication(long long key, double fractional, long long prime) {
-	return (int) prime * ((int)(key * fractional) % 1);
+	while ((c = *str++)) {
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	}
+
+	return hash;
 }
 

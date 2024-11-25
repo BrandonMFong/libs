@@ -8,29 +8,40 @@
 
 #include "clib_tests.h"
 #include "hash.h"
-#include "bfmath.h"
-#include "rand.h"
+#include "tree.h"
 
-BFTEST_UNIT_FUNC(test_hashDivision, 2<<10, {
-	BFRandInit(time(0));
-	int key = BFRand();
-	int prime = BFMathPrimeGetNumberAtIndex(abs(BFRand()) % (2<<8));
-	BFHashDivision(key, prime);
-})
+int BFHashTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+	unsigned long a = (unsigned long) aobj;
+	unsigned long b = (unsigned long) bobj;
+	return a - b;
+}
 
-BFTEST_UNIT_FUNC(test_hashMultiplication, 2<<10, {
-	BFRandInit(time(0));
-	int key = BFRand();
-	int prime = BFMathPrimeGetNumberAtIndex(abs(BFRand()) % (2<<8));
-	double fractional = BFRandDouble();
-	fractional = fractional - ((int) fractional);
-	
-	//int BFHashMultiplication(long long key, double fractional, long long prime);
-	BFHashMultiplication(key, fractional, prime);
+BFTEST_UNIT_FUNC(test_djb2, 1, {
+	BFTree hashes = BFTreeCreate();
+	BF_ASSERT(hashes, "tree null");
+	BFTreeSetCompare(hashes, BFHashTreeCompare);
+
+	char text[2<<8];
+	strcpy(text, "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua");
+	char * token = strtok(text, " ");
+	int collisions = 0;
+	while (token != NULL) {
+		unsigned long hash = BFHashDjb2((unsigned char *) token);
+		if (BFTreeContains(hashes, (BFTreeNodeObject) hash)) {
+			collisions++;
+		} else {
+			int err = BFTreeInsert(hashes, (BFTreeNodeObject) hash);
+			BF_ASSERT(err == 0, "error inserting %d", err);
+		}
+		token = strtok(NULL, " ");
+	}
+
+	BFTreeRelease(hashes);
+	BF_ASSERT(collisions == 0, "there were %d collisions", collisions);
 })
 
 BFTEST_COVERAGE_FUNC(hash_tests, {
-	BFTEST_LAUNCH(test_hashDivision);
+	BFTEST_LAUNCH(test_djb2);
 })
 
 #endif // HASH_TESTS_H
