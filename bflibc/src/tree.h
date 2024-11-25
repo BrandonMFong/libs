@@ -60,7 +60,7 @@ int BFTreeInsert(BFTree tree, BFTreeNodeObject object);
 int BFTreeRemove(BFTree tree, BFTreeNodeObject object);
 
 /**
- * returns NULL if node with `obj` could not be found
+ * returns false if node with `obj` could not be found
  */
 bool BFTreeContains(BFTree tree, BFTreeNodeObject obj);
 
