@@ -7,17 +7,6 @@
 #include <limits.h>
 #include <stdarg.h>
 
-/*
-double BFMathAbsDouble(double num) {
-	if (num < 0) return -1 * num;
-	return num;
-}
-
-int BFMathAbs(int num) {
-	return BFMathAbsDouble(num);
-}
-*/
-
 float BFMathSqrt(float n) {
     if (n < 2) {
         return n;
@@ -123,3 +112,12 @@ double _BFMathMinMax(int op, int datatype, int numargs, ...) {
 
 	return res;
 }
+
+double BFMathAbsDouble(double num) {
+	return (num < 0) ? (num * -1) : num;
+}
+
+long BFMathAbs(long num) {
+	return BFMathAbsDouble(num);
+}
+

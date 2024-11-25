@@ -224,15 +224,16 @@ BFTEST_UNIT_FUNC(test_gettingMaxFor10Longs, 2<<10, {
 
 BFTEST_UNIT_FUNC(test_absoluteValue, 2<<11, {
 	for (int i = -1; i > (-1 * (2<<10)); i--) {
-		int a = BFMathAbs(i);
-		int b = abs(i);
+		int value = abs(BFRand()) * -1;
+		int a = BFMathAbs(value);
+		int b = abs(value);
 		BF_ASSERT(a == b, "%d != %d", a, b);
 	}
 })
 
 BFTEST_UNIT_FUNC(test_absoluteValueDouble, 2<<11, {
 	for (int i = -1; i > (-1 * (2<<10)); i--) {
-		double value = BFRandDouble();
+		double value = abs(BFRandDouble()) * -1;
 		int a = BFMathAbs(value);
 		int b = abs(value);
 		BF_ASSERT(a == b, "%d != %d", a, b);

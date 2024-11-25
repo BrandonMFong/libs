@@ -143,7 +143,6 @@ BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 2<<10, {
 	int randNumRemove = 20;
 	while (randNumRemove--) {
 		int index = BFMathAbs(BFRand()) % mapsize;
-
 		if (keys[index] > 0) {
 			int err = BFMapRemove(map, (BFMapKey) (intptr_t) keys[index]);
 			BF_ASSERT(err == 0, "removal error for key=%d", keys[index]);

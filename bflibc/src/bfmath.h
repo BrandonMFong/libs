@@ -71,9 +71,8 @@ double _BFMathMinMax(int op, int datatype, int numargs,...);
 #define BFMathMin(num,...) \
 	_BFMathMinMax( -1, _kBFMathGetTypeID(num), BF_NARGS(__VA_ARGS__) + 1, num, __VA_ARGS__ )
 
-//double BFMathAbs(double);
-#define BFMathAbs(num) \
-	(((num) < 0) ? (-1 * (num)) : (num))
+long BFMathAbs(long);
+double BFMathAbsDouble(double);
 
 #endif // BF_MATH_H
 
