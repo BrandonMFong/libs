@@ -83,7 +83,7 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10, {
 	BFMapRelease(map);
 })
 
-BFTEST_UNIT_FUNC(test_mapRemove, 1, {
+BFTEST_UNIT_FUNC(test_mapRemove, 2<<10, {
 	BFMap * map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompare);
@@ -123,13 +123,13 @@ int BFTestMapTreeCompareInteger(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 	return a - b;
 }
 
-BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 1, {
+BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 2<<10, {
 	BFMap * map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompareInteger);
 
 	// making map<char*, int>[mapsize]
-	int mapsize = 10;
+	int mapsize = 2<<6;
 	int keys[mapsize];
 	int values[mapsize];
 	for (int i = 0; i < mapsize; i++) {
