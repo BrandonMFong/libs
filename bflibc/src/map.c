@@ -46,6 +46,7 @@ void _BFMapNodeRelease(BFTreeNodeObject object) {
 BFMap BFMapCreate() {
 	_BFMap * res = (_BFMap *) malloc(sizeof(_BFMap));
 	res->tree = BFTreeCreate();
+	res->release = NULL;
 	BFTreeSetRelease(res->tree, _BFMapNodeRelease);
 	return res;
 }

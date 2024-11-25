@@ -110,7 +110,44 @@ BFTEST_UNIT_FUNC(test_mapRemove, 1, {
 		if (keys[index]) {
 			int err = BFMapRemove(map, keys[index]);
 			BF_ASSERT(err == 0, "removal error for key=%s", keys[index]);
-			keys[index] = NULL;
+			keys[index] = NULL; // mark as already removed
+		}
+	}
+
+	BFMapRelease(map);
+})
+
+int BFTestMapTreeCompareInteger(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+	int a = (intptr_t) aobj;
+	int b = (intptr_t) bobj;
+	return a - b;
+}
+
+BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 1, {
+	BFMap * map = BFMapCreate();
+	BF_ASSERT(map, "null map");
+	BFMapSetCompare(map, BFTestMapTreeCompareInteger);
+
+	// making map<char*, int>[mapsize]
+	int mapsize = 10;
+	int keys[mapsize];
+	int values[mapsize];
+	for (int i = 0; i < mapsize; i++) {
+		keys[i] = i+1;
+		values[i] = i+1;
+
+		int err = BFMapInsert(map, (BFMapKey) (intptr_t) keys[i], (BFMapValue) (intptr_t) values[i]);
+		BF_ASSERT(err == 0, "insert error %d", err);
+	}
+
+	int randNumRemove = 20;
+	while (randNumRemove--) {
+		int index = abs(BFRand()) % mapsize;
+
+		if (keys[index] > 0) {
+			int err = BFMapRemove(map, (BFMapKey) (intptr_t) keys[index]);
+			BF_ASSERT(err == 0, "removal error for key=%d", keys[index]);
+			keys[index] = 0; // mark as already removed
 		}
 	}
 
@@ -122,6 +159,7 @@ BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapInsert);
 	BFTEST_LAUNCH(test_mapGet);
 	BFTEST_LAUNCH(test_mapRemove);
+	//BFTEST_LAUNCH(test_mapKeyValueNoPointers);
 
 })
 

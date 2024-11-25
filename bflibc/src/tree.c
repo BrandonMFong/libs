@@ -62,6 +62,7 @@ int BFTreeInsert(BFTree _tree, BFTreeNodeObject object) {
 	if (err == 0) {
 		tree->size++;
 	}
+
 	return err;
 }
 
