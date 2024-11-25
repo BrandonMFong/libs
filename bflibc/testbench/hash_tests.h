@@ -22,7 +22,7 @@ BFTEST_UNIT_FUNC(test_djb2, 1, {
 	BFTreeSetCompare(hashes, BFHashTreeCompare);
 
 	char text[2<<8];
-	strcpy(text, "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua");
+	strcpy(text, "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum");
 	char * token = strtok(text, " ");
 	int collisions = 0;
 	while (token != NULL) {
