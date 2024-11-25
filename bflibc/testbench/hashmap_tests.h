@@ -9,6 +9,11 @@
 #include "clib_tests.h"
 #include "hashmap.h"
 #include "tree.h"
+#include "hash.h"
+
+unsigned long BFTestHashMapHashString(BFHashMapKey key) {
+	return BFHashDjb2((unsigned char *) key);
+}
 
 BFTEST_UNIT_FUNC(test_hashMapInit, 2<<11, {
 	BFHashMap map = BFHashMapCreate();
@@ -16,9 +21,10 @@ BFTEST_UNIT_FUNC(test_hashMapInit, 2<<11, {
 	BFHashMapRelease(map);
 })
 
-BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<11, {
+BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10, {
 	BFHashMap map = BFHashMapCreate();
 	BF_ASSERT(map, "map is null");
+	BFHashMapSetHashFunction(map, BFTestHashMapHashString);
 
 	int hmsize = 10;
 	char keys[hmsize][64];
