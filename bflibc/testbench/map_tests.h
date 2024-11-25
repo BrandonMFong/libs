@@ -74,7 +74,7 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10, {
 	
 	int randNumSearch = 20;
 	while (randNumSearch--) {
-		int index = abs(BFRand()) % mapsize;
+		int index = BFMathAbs(BFRand()) % mapsize;
 		BFMapValue value = BFMapGetValue(map, keys[index]);
 		BF_ASSERT(value, "value is null");
 		BF_ASSERT(*(int*) value == *values[index], "%d != %d", *(int*) value, *values[index]);
@@ -105,7 +105,7 @@ BFTEST_UNIT_FUNC(test_mapRemove, 2<<10, {
 	
 	int randNumRemove = 20;
 	while (randNumRemove--) {
-		int index = abs(BFRand()) % mapsize;
+		int index = BFMathAbs(BFRand()) % mapsize;
 
 		if (keys[index]) {
 			int err = BFMapRemove(map, keys[index]);
@@ -142,7 +142,7 @@ BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 2<<10, {
 
 	int randNumRemove = 20;
 	while (randNumRemove--) {
-		int index = abs(BFRand()) % mapsize;
+		int index = BFMathAbs(BFRand()) % mapsize;
 
 		if (keys[index] > 0) {
 			int err = BFMapRemove(map, (BFMapKey) (intptr_t) keys[index]);

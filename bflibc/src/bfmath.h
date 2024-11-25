@@ -74,7 +74,8 @@ double _BFMathMinMax(int op, int datatype, int numargs,...);
 /**
  * returns absolute value of num. similar to abs(num)
  */
-float BFMathAbs(float num);
+int BFMathAbs(int num);
+double BFMathAbsDouble(double num);
 
 #endif // BF_MATH_H
 

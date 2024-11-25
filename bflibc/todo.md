@@ -11,7 +11,7 @@
 [] map
 	[x] make a tree object so data store is close to O(logn)
 	[] make a hash function good enough to use for O(1) operations
-[] improve prime num getter
+[] improve prime num getter using hash map
 [] remove checksum
 [x] abs() in bfmath
 [x] tree

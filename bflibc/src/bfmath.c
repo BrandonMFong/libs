@@ -7,9 +7,13 @@
 #include <limits.h>
 #include <stdarg.h>
 
-float BFMathAbs(float num) {
+double BFMathAbsDouble(double num) {
 	if (num < 0) return -1 * num;
 	return num;
+}
+
+int BFMathAbs(int num) {
+	return BFMathAbsDouble(num);
 }
 
 float BFMathSqrt(float n) {
