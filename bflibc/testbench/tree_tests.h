@@ -212,14 +212,14 @@ int BFTestTreeCompareIntegers(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 	return a - b;
 }
 
-BFTEST_UNIT_FUNC(test_InsertAndRemovingNoPointers, 1, {
+BFTEST_UNIT_FUNC(test_InsertAndRemovingNoPointers, 2<<10, {
 	// create trees
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeSetCompare(tree, BFTestTreeCompareIntegers); 
 
 	// create nodes and insert
-	int treesize = 2<<5;
+	int treesize = 2<<6;
 	int objects[treesize];
 	for (int i = 0; i < treesize; i++) {
 		// create object
