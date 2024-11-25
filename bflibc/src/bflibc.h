@@ -8,6 +8,7 @@
 #define BF_CLIB_H
 
 #include "filesystem.h"
+#include "filewriter.h"
 #include "coreutils.h"
 #include "stringutils.h"
 #include "log.h"
@@ -18,9 +19,12 @@
 #include "lock.h"
 #include "swap.h"
 #include "hash.h"
+#include "map.h"
+#include "hashmap.h"
 #include "bfmath.h"
 #include "nargs.h"
-#include "gettype.h"
+#include "rand.h"
+#include "tree.h"
 
 #endif // BF_CLIB_H
 
