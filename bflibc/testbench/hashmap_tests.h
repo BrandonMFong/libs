@@ -76,10 +76,41 @@ BFTEST_UNIT_FUNC(test_hashMapInsertAndGet, 2<<10, {
 	BFHashMapRelease(map);
 })
 
+BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10, {
+	BFHashMap map = BFHashMapCreate();
+	BF_ASSERT(map, "map is null");
+	BFHashMapSetHashFunction(map, BFTestHashMapHashString);
+	BFHashMapSetCompare(map, BFTestHashMapKeyCompare);
+
+	int hmsize = 2<<8;
+	char keys[hmsize][64];
+	int values[hmsize];
+	for (int i = 0; i < hmsize; i++) {
+		snprintf(keys[i], 64, "%d", i);
+		values[i] = i;
+
+		int err = BFHashMapInsert(map, (BFHashMapKey) keys[i], (BFHashMapValue) (intptr_t) values[i]);
+		BF_ASSERT(err == 0, "error inserting %d", err);
+	}
+
+	int randGetCount = 20;
+	while (randGetCount--) {
+		int i = BFMathAbs(BFRand()) % hmsize;
+		const char * key = keys[i];
+		if (BFHashMapContains(map, (BFHashMapKey) key)) {
+			int err = BFHashMapRemove(map, (BFHashMapKey) key);
+			BF_ASSERT(err == 0, "error removing %d", err);
+		}
+	}
+
+	BFHashMapRelease(map);
+})
+
 BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
 	BFTEST_LAUNCH(test_hashMapInsert);
 	BFTEST_LAUNCH(test_hashMapInsertAndGet);
+	BFTEST_LAUNCH(test_hashMapRemove);
 
 })
 

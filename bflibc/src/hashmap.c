@@ -24,22 +24,34 @@ BFHashMapObject * BFHashMapObjectCreate() {
 	return res;
 }
 
-/**
- * traverse through list and releases from end to start
- */
 void BFHashMapObjectRelease(
 	BFHashMapObject * object,
 	void (*release)(BFHashMapKey key, BFHashMapValue value)
 ) {
 	if (!object) return;
-	BFHashMapObjectRelease(object->next, release);
+	
 	object->next = NULL;
 	
 	if (release) {
 		release(object->key, object->value);
+	} else {
+		object->key = 0;
+		object->value = 0;
 	}
-	
+
 	BFFree(object);
+}
+
+/**
+ * traverse through list and releases from end to start
+ */
+void BFHashMapObjectReleaseTraverse(
+	BFHashMapObject * object,
+	void (*release)(BFHashMapKey key, BFHashMapValue value)
+) {
+	if (!object) return;
+	BFHashMapObjectReleaseTraverse(object->next, release);
+	BFHashMapObjectRelease(object, release);
 }
 
 typedef struct BFHashMapNode {
@@ -67,6 +79,46 @@ int BFHashMapNodeSetKeyValue(BFHashMapNode * node, BFHashMapKey key, BFHashMapVa
 	}
 
 	node->size++;
+
+	return 0;
+}
+
+int BFHashMapNodeRemoveKeyValue(
+	BFHashMapNode * node,
+	BFHashMapKey key,
+	int (*compare)(BFHashMapKey akey, BFHashMapKey bkey),
+	void (*release)(BFHashMapKey key, BFHashMapValue value)
+) {
+	if (!node) {
+		return -1;
+	}
+
+	BFHashMapObject * object = node->first;
+	BFHashMapObject * prev = NULL;
+
+	// delete head
+	if (compare(node->first->key, key) == 0) {
+		node->first = object->next;
+		BFHashMapObjectRelease(object, release);
+		node->size--;
+		return 0;
+	}
+
+	// if not at head, then go to the next
+	prev = object;
+	object = object->next;
+
+	while (object) {
+		if (compare(object->key, key) == 0) {
+			prev->next = object->next;
+			BFHashMapObjectRelease(object, release);
+			break;
+		}
+		prev = object;
+		object = object->next;
+	}
+
+	node->size--;
 
 	return 0;
 }
@@ -131,7 +183,7 @@ void BFHashMapRelease(BFHashMap _map) {
 
 	// go through each node and release memory
 	for (int i = 0; i < map->size; i++) {
-		BFHashMapObjectRelease(map->nodes[i].first, map->release);
+		BFHashMapObjectReleaseTraverse(map->nodes[i].first, map->release);
 		map->nodes[i].size = 0;
 	}
 	BFFree(map->nodes);
@@ -162,15 +214,54 @@ int BFHashMapInsert(BFHashMap _map, BFHashMapKey key, BFHashMapValue value) {
 	return 0;
 }
 
-int BFHashMapRemove(BFHashMap map, BFHashMapKey key) {
-	if (!map) {
+int BFHashMapRemove(BFHashMap _map, BFHashMapKey key) {
+	_BFHashMap * map = (_BFHashMap *) _map;
+	if (!map || !map->compare) {
 		return -1;
 	}
+		
+	// get index using hash
+	unsigned long index = map->hash(key) % map->size;
 	
-	return -1;
+	// get node
+	BFHashMapNode node = map->nodes[index];
+	
+	int err = BFHashMapNodeRemoveKeyValue(&node, key, map->compare, map->release);
+	if (err != 0) {
+		return err;
+	}
+
+	// save node
+	map->nodes[index] = node;
+
+	return 0;
 }
 
-BFHashMapValue BFHashMapGetValue(BFHashMap _map, BFHashMapKey key) {
+bool BFHashMapContains(BFHashMap _map, const BFHashMapKey key) {
+	_BFHashMap * map = (_BFHashMap *) _map;
+	if (!map || !map->compare) {
+		return false;
+	}
+	
+	// get index using hash
+	unsigned long index = map->hash(key) % map->size;
+	
+	// get node
+	BFHashMapNode node = map->nodes[index];
+
+	// get the object for key
+	BFHashMapObject * object = node.first;
+	while (object) {
+		if (map->compare(object->key, key) == 0) {
+			return true;
+		}
+		object = object->next;
+	}
+	
+	return false;
+}
+
+BFHashMapValue BFHashMapGetValue(BFHashMap _map, const BFHashMapKey key) {
 	_BFHashMap * map = (_BFHashMap *) _map;
 	if (!map || !map->compare) {
 		return NULL;
