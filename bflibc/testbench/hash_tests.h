@@ -16,7 +16,7 @@ int BFHashTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
 	return a - b;
 }
 
-BFTEST_UNIT_FUNC(test_djb2, 1, {
+BFTEST_UNIT_FUNC(test_djb2, 2<<11, {
 	BFTree hashes = BFTreeCreate();
 	BF_ASSERT(hashes, "tree null");
 	BFTreeSetCompare(hashes, BFHashTreeCompare);
