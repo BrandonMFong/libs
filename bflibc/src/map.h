@@ -10,10 +10,7 @@
 #define MAP_H
 
 #include <stddef.h>
-
-typedef void * BFMap;
-typedef void * BFMapKey;
-typedef void * BFMapValue;
+#include "typemap.h"
 
 /**
  * Caller owns memory
