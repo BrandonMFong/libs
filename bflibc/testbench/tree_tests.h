@@ -265,7 +265,7 @@ BFTEST_UNIT_FUNC(test_treeGettingNonexistentValues, 2<<10, {
 	int objects[treesize];
 	for (int i = 0; i < treesize; i += 2) {
 		// create object
-		objects[i] = i+1;
+		objects[i] = i;
 
 		// insert into tree
 		int err = BFTreeInsert(tree, (BFTreeObject) (intptr_t) objects[i]);
@@ -276,7 +276,7 @@ BFTEST_UNIT_FUNC(test_treeGettingNonexistentValues, 2<<10, {
 
 	for (int i = 1; i < treesize; i += 2) {
 		BF_ASSERT(
-			!BFTreeContains(tree, (BFTreeObject) (intptr_t) objects[i]), 
+			!BFTreeContains(tree, (BFTreeObject) (intptr_t) i), 
 			"there should not be an object of value %d", objects[i]);
 	}
 

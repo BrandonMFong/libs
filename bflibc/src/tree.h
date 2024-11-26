@@ -48,7 +48,7 @@ size_t BFTreeSize(BFTree tree);
 /**
  * no duplicates allowed 
  *
- * node: will be owned by tree
+ * object: pointer or integer value. value=0 is allowed
  *
  * returns: -1 if object couldn't be inserted. Object may be a duplicate
  */
