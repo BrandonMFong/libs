@@ -77,7 +77,7 @@ size_t BFMapGetSize(BFMap _map) {
 
 int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	_BFMap * map = (_BFMap *) _map;
-	if (!map || !key || !value) {
+	if (!map) {
 		return -1;
 	}
 	_BFMapKeyValuePair * pair = (_BFMapKeyValuePair *) malloc(sizeof(_BFMapKeyValuePair));

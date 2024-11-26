@@ -187,6 +187,7 @@ BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapGet);
 	BFTEST_LAUNCH(test_mapRemove);
 	BFTEST_LAUNCH(test_mapKeyValueNoPointers);
+	BFTEST_LAUNCH(test_mapGetNonexistentKeyValue);
 
 })
 

@@ -52,6 +52,9 @@ size_t BFMapGetSize(BFMap map);
 
 /**
  * Adds entry for key and value
+ *
+ * key: can be a pointer or integer, 0 is allowed
+ * value: can be a pointer or integer, 0 is allowed
  */
 int BFMapInsert(BFMap map, BFMapKey key, BFMapValue value);
 
