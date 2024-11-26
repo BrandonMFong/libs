@@ -82,14 +82,14 @@
  * NOTE: using `result` is scheduled to be deprecated
  */
 #define BFTEST_UNIT_START \
-	printf("%s - ", __func__);\
+	printf("%s - ", __func__);fflush(stdout);\
 	fflush(stdout);\
 	int result = 0;
 
 #define BFTEST_UNIT_END \
-	if (result == 0) { printf("PASS\n"); }\
+	if (result == 0) { printf("PASS\n");fflush(stdout); }\
 	else {\
-		printf("FAIL\n");\
+		printf("FAIL\n");fflush(stdout);\
 	}\
 	_BFTestLogFlush();\
 	return result;

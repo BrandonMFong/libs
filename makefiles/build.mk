@@ -116,7 +116,6 @@ $(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
 	lipo -create -output $@ $^
 $(BIN_MACOS_TARGETS): \
 	$(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
-	#$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@))
 	$(COMPILER) -o $@ $< $(call rwildcard,$(BUILD_PATH),*$(suffix $@)) \
 	$(FLAGS) $(LINKS) $(LIBRARIES) \
 	-target $(subst --,.,$(subst .,,$(suffix $@)))
@@ -130,7 +129,6 @@ $(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
 	lipo -create -output $@ $^
 $(BIN_MACOS_TARGETS): \
 	$(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
-	#$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@))
 	$(COMPILER) -o $@ $< $(call rwildcard,$(BUILD_PATH),*$(suffix $@)) \
 	$(FLAGS) $(LINKS) $(LIBRARIES) \
 	-target $(subst --,.,$(subst .,,$(suffix $@)))
