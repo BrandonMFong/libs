@@ -17,14 +17,12 @@ typedef struct _BFMapKeyValuePair {
 	int (*compare)(BFMapKey a, BFMapKey b);
 } _BFMapKeyValuePair;
 
-BFMapKey BFMapKeyValuePairGetKey(BFMapKeyValuePair _pair) {
-	_BFMapKeyValuePair * pair = (_BFMapKeyValuePair *) _pair;
+BFMapKey BFMapKeyValuePairGetKey(_BFMapKeyValuePair * pair) {
 	if (!pair) return NULL;
 	return pair->key;
 }
 
-BFMapValue BFMapKeyValuePairGetValue(BFMapKeyValuePair _pair) {
-	_BFMapKeyValuePair * pair = (_BFMapKeyValuePair *) _pair;
+BFMapValue BFMapKeyValuePairGetValue(_BFMapKeyValuePair * pair) {
 	if (!pair) return NULL;
 	return pair->value;
 }
@@ -106,7 +104,7 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	return err;
 }
 
-BFMapKeyValuePair _BFMapGetValueFromTree(
+_BFMapKeyValuePair * _BFMapGetValueFromTree(
 	BFTreeNode * node,
 	_BFMapKeyValuePair * inpair,
 	int (*compare)(BFMapKey a, BFMapKey b)
@@ -128,7 +126,7 @@ BFMapKeyValuePair _BFMapGetValueFromTree(
 
 	int comp = compare(akey, bkey);
 	if (comp == 0) {
-		return (BFMapKeyValuePair) BFTreeNodeGetObject(node);
+		return (_BFMapKeyValuePair *) BFTreeNodeGetObject(node);
 	} else if (comp < 0) {
 		return _BFMapGetValueFromTree(BFTreeNodeGetLeft(node), inpair, compare);
 	} else {
@@ -153,7 +151,7 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 	_BFMapKeyValuePair tmp;
 	tmp.key = key;
 
-	BFMapKeyValuePair pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
+	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
 	if (!pair) {
 		if (error) *error = -1;
 		return NULL;
@@ -179,7 +177,7 @@ int BFMapRemove(BFMap _map, BFMapKey key) {
 
 	// is there a better way than traversing through the tree
 	// to find the object we want to delete?
-	BFMapKeyValuePair pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
+	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
 	if (!pair) {
 		return -1;
 	}
