@@ -2,6 +2,7 @@
 [] queue object
 	[] add to the traversal test case for trees "Level Order Traversal"
 [x] add documentation to hash, map, tree, hashmap
+[] remove the pair from map header
 [] add node accessor to tree class
 [] sprintf is deprecated
 [] improve sqrt, it sometimes stalls
