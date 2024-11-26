@@ -35,7 +35,7 @@ typedef struct _BFMap {
 	void (*release)(BFMapKey key, BFMapValue value);
 } _BFMap;
 
-void _BFMapNodeRelease(BFTreeNodeObject object) {
+void _BFMapNodeRelease(BFTreeObject object) {
 	_BFMapKeyValuePair * pair = (_BFMapKeyValuePair *) object;
 	if (pair->release) {
 		pair->release(pair->key, pair->value);

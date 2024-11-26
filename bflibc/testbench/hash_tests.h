@@ -10,7 +10,7 @@
 #include "hash.h"
 #include "tree.h"
 
-int BFHashTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+int BFHashTreeCompare(BFTreeObject aobj, BFTreeObject bobj) {
 	unsigned long a = (unsigned long) aobj;
 	unsigned long b = (unsigned long) bobj;
 	return a - b;
@@ -27,10 +27,10 @@ BFTEST_UNIT_FUNC(test_djb2, 2<<11, {
 	int collisions = 0;
 	while (token != NULL) {
 		unsigned long hash = BFHashDjb2((unsigned char *) token);
-		if (BFTreeContains(hashes, (BFTreeNodeObject) hash)) {
+		if (BFTreeContains(hashes, (BFTreeObject) hash)) {
 			collisions++;
 		} else {
-			int err = BFTreeInsert(hashes, (BFTreeNodeObject) hash);
+			int err = BFTreeInsert(hashes, (BFTreeObject) hash);
 			BF_ASSERT(err == 0, "error inserting %d", err);
 		}
 		token = strtok(NULL, " ");

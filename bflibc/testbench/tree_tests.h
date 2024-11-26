@@ -11,13 +11,13 @@
 #include "internal/tree.h"
 #include <stdlib.h>
 
-int BFTestTreeCompare(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+int BFTestTreeCompare(BFTreeObject aobj, BFTreeObject bobj) {
 	int a = *(int *) aobj;
 	int b = *(int *) bobj;
 	return a - b;
 }
 
-void BFTestNodeRelease(BFTreeNodeObject obj) {
+void BFTestNodeRelease(BFTreeObject obj) {
 	BFFree(obj);
 }
 
@@ -206,7 +206,7 @@ BFTEST_UNIT_FUNC(test_InsertDuplicates, 2<<10, {
 	BFTreeRelease(tree);
 })
 
-int BFTestTreeCompareIntegers(BFTreeNodeObject aobj, BFTreeNodeObject bobj) {
+int BFTestTreeCompareIntegers(BFTreeObject aobj, BFTreeObject bobj) {
 	int a = (intptr_t) aobj;
 	int b = (intptr_t) bobj;
 	return a - b;
@@ -226,7 +226,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNoPointers, 2<<10, {
 		objects[i] = i+1;
 
 		// insert into tree
-		int err = BFTreeInsert(tree, (BFTreeNodeObject) (intptr_t) objects[i]);
+		int err = BFTreeInsert(tree, (BFTreeObject) (intptr_t) objects[i]);
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
 
@@ -238,8 +238,8 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNoPointers, 2<<10, {
 		int index = abs(BFRand()) % treesize;
 		int object = objects[index];
 
-		if (BFTreeContains(tree, (BFTreeNodeObject) (intptr_t) object)) {
-			int err = BFTreeRemove(tree, (BFTreeNodeObject) (intptr_t) object);
+		if (BFTreeContains(tree, (BFTreeObject) (intptr_t) object)) {
+			int err = BFTreeRemove(tree, (BFTreeObject) (intptr_t) object);
 			BF_ASSERT(err == 0, "couldn't remove node for object=%d", object);
 
 			// clear from our object list since it has been released
@@ -268,7 +268,7 @@ BFTEST_UNIT_FUNC(test_treeGettingNonexistentValues, 2<<10, {
 		objects[i] = i+1;
 
 		// insert into tree
-		int err = BFTreeInsert(tree, (BFTreeNodeObject) (intptr_t) objects[i]);
+		int err = BFTreeInsert(tree, (BFTreeObject) (intptr_t) objects[i]);
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
 
@@ -276,7 +276,7 @@ BFTEST_UNIT_FUNC(test_treeGettingNonexistentValues, 2<<10, {
 
 	for (int i = 1; i < treesize; i += 2) {
 		BF_ASSERT(
-			!BFTreeContains(tree, (BFTreeNodeObject) (intptr_t) objects[i]), 
+			!BFTreeContains(tree, (BFTreeObject) (intptr_t) objects[i]), 
 			"there should not be an object of value %d", objects[i]);
 	}
 

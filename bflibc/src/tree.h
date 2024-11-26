@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-typedef void * BFTreeNodeObject;
+typedef void * BFTreeObject;
 typedef void * BFTree;
 
 /**
@@ -23,13 +23,13 @@ BFTree BFTreeCreate();
  *	a > b -> result > 0
  *	a == b -> result == 0
  */
-void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b));
+void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeObject a, BFTreeObject b));
 
 /**
  * defines how each object is deleted when the node is 
  * deleted
  */
-void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeNodeObject object));
+void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object));
 
 /**
  * frees tree
@@ -52,17 +52,17 @@ size_t BFTreeSize(BFTree tree);
  *
  * returns: -1 if object couldn't be inserted. Object may be a duplicate
  */
-int BFTreeInsert(BFTree tree, BFTreeNodeObject object);
+int BFTreeInsert(BFTree tree, BFTreeObject object);
 
 /**
  * will release the object memory if BFTreeSetRelease was defined
  */
-int BFTreeRemove(BFTree tree, BFTreeNodeObject object);
+int BFTreeRemove(BFTree tree, BFTreeObject object);
 
 /**
  * returns false if node with `obj` could not be found
  */
-bool BFTreeContains(BFTree tree, BFTreeNodeObject obj);
+bool BFTreeContains(BFTree tree, BFTreeObject obj);
 
 #endif // TREE_H
 

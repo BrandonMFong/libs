@@ -79,8 +79,8 @@ int BFTreeNodeGetBalance(BFTreeNode * node) {
 
 BFTreeNode * BFTreeNodeInsert(
 	BFTreeNode * node,
-	BFTreeNodeObject object,
-	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b),
+	BFTreeObject object,
+	int (*compare)(BFTreeObject a, BFTreeObject b),
 	int * error
 ) {
 	// 1.  Perform the normal BST insertion
@@ -159,8 +159,8 @@ BFTreeNode * BFTreeNodeMinValueNode(BFTreeNode * node) {
 // the modified subtree.
 BFTreeNode * BFTreeNodeRemove(
 	BFTreeNode * root,
-	BFTreeNodeObject object,
-	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
+	BFTreeObject object,
+	int (*compare)(BFTreeObject a, BFTreeObject b)
 ) {
 	// STEP 1: PERFORM STANDARD BST DELETE
 
@@ -249,8 +249,8 @@ BFTreeNode * BFTreeNodeRemove(
 
 bool BFTreeNodeSearch(
 	BFTreeNode * node,
-	BFTreeNodeObject obj,
-	int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)
+	BFTreeObject obj,
+	int (*compare)(BFTreeObject a, BFTreeObject b)
 ) {
 	if (!node) {
 		return false;

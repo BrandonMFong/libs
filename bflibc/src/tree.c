@@ -17,12 +17,12 @@ BFTree BFTreeCreate() {
 	return (BFTree) res;
 }
 
-void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeNodeObject a, BFTreeNodeObject b)) {
+void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeObject a, BFTreeObject b)) {
 	if (!tree) return;
 	((_BFTree *) tree)->compare = compare;
 }
 
-void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeNodeObject object)) {
+void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object)) {
 	if (!tree) return;
 	((_BFTree *) tree)->release = release;
 }
@@ -51,7 +51,7 @@ size_t BFTreeSize(BFTree tree) {
 	return ((_BFTree *) tree)->size;
 }
 
-int BFTreeInsert(BFTree _tree, BFTreeNodeObject object) {
+int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 	if (!_tree || !object) {
 		return -1;
 	}
@@ -66,7 +66,7 @@ int BFTreeInsert(BFTree _tree, BFTreeNodeObject object) {
 	return err;
 }
 
-int BFTreeRemove(BFTree _tree, BFTreeNodeObject object) {
+int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 	if (!_tree || !object) {
 		return -1;
 	}
@@ -81,7 +81,7 @@ int BFTreeRemove(BFTree _tree, BFTreeNodeObject object) {
 	return 0;
 }
 
-bool BFTreeContains(BFTree _tree, BFTreeNodeObject object) {
+bool BFTreeContains(BFTree _tree, BFTreeObject object) {
 	if (!_tree || !object) {
 		return false;
 	}
