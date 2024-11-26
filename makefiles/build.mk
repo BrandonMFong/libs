@@ -13,6 +13,8 @@ endif
 include $(LIBS_MAKEFILES_PATH)/libpaths.mk 
 include $(LIBS_MAKEFILES_PATH)/platforms.mk 
 
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+
 UNAME_S := $(shell uname -s)
 
 CONFIG = release
@@ -113,7 +115,8 @@ $(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
 	lipo -create -output $@ $^
 $(BIN_MACOS_TARGETS): \
 	$(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
-	$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@)) \
+	#$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@))
+	$(COMPILER) -o $@ $< $(call rwildcard,$(BUILD_PATH),*$(suffix $@)) \
 	$(FLAGS) $(LINKS) $(LIBRARIES) \
 	-target $(subst --,.,$(subst .,,$(suffix $@)))
 else # ($(CONFIG),release||debug)
@@ -126,7 +129,8 @@ $(BIN_PATH)/$(BIN_NAME): $(BIN_MACOS_TARGETS)
 	lipo -create -output $@ $^
 $(BIN_MACOS_TARGETS): \
 	$(MAIN_FILE) $(OBJECTS_MACOS_TARGETS) $(BIN_PREREQS)
-	$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@)) \
+	#$(COMPILER) -o $@ $< $(wildcard $(BUILD_PATH)/*$(suffix $@))
+	$(COMPILER) -o $@ $< $(call rwildcard,$(BUILD_PATH),*$(suffix $@)) \
 	$(FLAGS) $(LINKS) $(LIBRARIES) \
 	-target $(subst --,.,$(subst .,,$(suffix $@)))
 endif # ($(BUILD_TYPE),...)
@@ -140,6 +144,7 @@ endif # ($(CONFIG), test)
 $(OBJECTS_MACOS_TARGETS): \
 	$$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).$(SOURCE_EXT) \
 	$$(subst $(BUILD_PATH), src, $$(subst $$(suffix $$@),, $$@)).$(HEADER_EXT)
+	@mkdir -p $(dir $@);
 	$(COMPILER) -c -o $@ $< $(FLAGS) -target $(subst --,.,$(subst .,,$(suffix $@)))
 
 else # ($(UNAME_S),Linux)
