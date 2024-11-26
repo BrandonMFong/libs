@@ -23,14 +23,14 @@ void BFTestMapTreeRelease(BFMapKey key, BFMapValue value) {
 }
 
 BFTEST_UNIT_FUNC(test_mapinit, 2<<10, {
-	BFMap * map = BFMapCreate();
+	BFMap map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompare);
 	BFMapRelease(map);
 })
 
 BFTEST_UNIT_FUNC(test_mapInsert, 2<<10, {
-	BFMap * map = BFMapCreate();
+	BFMap map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompare);
 	BFMapSetRelease(map, BFTestMapTreeRelease);
@@ -53,7 +53,7 @@ BFTEST_UNIT_FUNC(test_mapInsert, 2<<10, {
 })
 
 BFTEST_UNIT_FUNC(test_mapGet, 2<<10, {
-	BFMap * map = BFMapCreate();
+	BFMap map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompare);
 	BFMapSetRelease(map, BFTestMapTreeRelease);
@@ -75,7 +75,7 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10, {
 	int randNumSearch = 20;
 	while (randNumSearch--) {
 		int index = BFMathAbs(BFRand()) % mapsize;
-		BFMapValue value = BFMapGetValue(map, keys[index]);
+		BFMapValue value = BFMapGetValue(map, keys[index], NULL);
 		BF_ASSERT(value, "value is null");
 		BF_ASSERT(*(int*) value == *values[index], "%d != %d", *(int*) value, *values[index]);
 	}
@@ -84,7 +84,7 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10, {
 })
 
 BFTEST_UNIT_FUNC(test_mapRemove, 2<<10, {
-	BFMap * map = BFMapCreate();
+	BFMap map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompare);
 	BFMapSetRelease(map, BFTestMapTreeRelease);
@@ -124,7 +124,7 @@ int BFTestMapTreeCompareInteger(BFTreeObject aobj, BFTreeObject bobj) {
 }
 
 BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 2<<10, {
-	BFMap * map = BFMapCreate();
+	BFMap map = BFMapCreate();
 	BF_ASSERT(map, "null map");
 	BFMapSetCompare(map, BFTestMapTreeCompareInteger);
 
@@ -148,6 +148,34 @@ BFTEST_UNIT_FUNC(test_mapKeyValueNoPointers, 2<<10, {
 			BF_ASSERT(err == 0, "removal error for key=%d", keys[index]);
 			keys[index] = 0; // mark as already removed
 		}
+	}
+
+	BFMapRelease(map);
+})
+
+BFTEST_UNIT_FUNC(test_mapGetNonexistentKeyValue, 2<<10, {
+	BFMap map = BFMapCreate();
+	BF_ASSERT(map, "null map");
+	BFMapSetCompare(map, BFTestMapTreeCompareInteger);
+
+	// making map<char*, int>[mapsize]
+	int mapsize = 2<<6;
+	int keys[mapsize];
+	int values[mapsize];
+	for (int i = 0; i < mapsize; i += 2) {
+		keys[i] = i;
+		values[i] = i;
+
+		int err = BFMapInsert(map, (BFMapKey) (intptr_t) keys[i], (BFMapValue) (intptr_t) values[i]);
+		BF_ASSERT(err == 0, "insert error %d", err);
+	}
+
+	BF_ASSERT(BFMapGetSize(map) == mapsize / 2, "size is not correct, actual=%ld expect=%ld", BFMapGetSize(map), mapsize / 2);
+
+	for (int i = 1; i < mapsize; i += 2) {
+		int err = 0;
+		BFMapGetValue(map, (BFMapKey) (intptr_t) i, &err);
+		BF_ASSERT(err != 0, "", err);
 	}
 
 	BFMapRelease(map);

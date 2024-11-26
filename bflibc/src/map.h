@@ -46,14 +46,23 @@ void BFMapSetRelease(BFMap map, void (*release)(BFMapKey key, BFMapValue value))
 void BFMapRelease(BFMap map);
 
 /**
+ * returns size of map (number of key/value pairs)
+ */
+size_t BFMapGetSize(BFMap map);
+
+/**
  * Adds entry for key and value
  */
 int BFMapInsert(BFMap map, BFMapKey key, BFMapValue value);
 
 /**
- * returns value for key
+ * error: nonzero if no pair was found
+ *
+ * returns value for key. Can be null based on what the caller inserted
+ * into map. I.e. the caller could have defined keys=char* & value=int,
+ * which permits value to be a zero
  */
-BFMapValue BFMapGetValue(BFMap map, BFMapKey key);
+BFMapValue BFMapGetValue(BFMap map, BFMapKey key, int * error);
 
 /**
  * removes entry with key

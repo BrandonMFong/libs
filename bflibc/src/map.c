@@ -69,6 +69,12 @@ void BFMapRelease(BFMap _map) {
 	BFFree(map);
 }
 
+size_t BFMapGetSize(BFMap _map) {
+	_BFMap * map = (_BFMap *) _map;
+	if (!map) return 0;
+	return BFTreeSize(map->tree);
+}
+
 int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	_BFMap * map = (_BFMap *) _map;
 	if (!map || !key || !value) {
@@ -104,14 +110,16 @@ BFMapKeyValuePair _BFMapGetValueFromTree(
 	}
 }
 
-BFMapValue BFMapGetValue(BFMap _map, BFMapKey key) {
+BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 	_BFMap * map = (_BFMap *) _map;
 	if (!map || !key) {
+		*error = -1;
 		return NULL;
 	}
 	
 	_BFTree * tree = (_BFTree *) map->tree;
 	if (!tree) {
+		*error = -1;
 		return NULL;
 	}
 
@@ -122,6 +130,7 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key) {
 
 	BFMapKeyValuePair pair = _BFMapGetValueFromTree(tree->root, &tmp, tree->compare);
 	if (!pair) {
+		*error = -1;
 		return NULL;
 	}
 
