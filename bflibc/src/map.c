@@ -17,17 +17,6 @@ typedef struct _BFMapKeyValuePair {
 	int (*compare)(BFMapKey a, BFMapKey b);
 } _BFMapKeyValuePair;
 
-BFMapKey BFMapKeyValuePairGetKey(_BFMapKeyValuePair * pair) {
-	if (!pair) return NULL;
-	return pair->key;
-}
-
-BFMapValue BFMapKeyValuePairGetValue(_BFMapKeyValuePair * pair) {
-	if (!pair) return NULL;
-	return pair->value;
-}
-
-
 typedef struct _BFMap {
 	BFTree tree;
 	
@@ -151,13 +140,17 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 	_BFMapKeyValuePair tmp;
 	tmp.key = key;
 
-	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
+	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(
+		BFTreeGetRoot(map->tree),
+		&tmp,
+		map->compare
+	);
 	if (!pair) {
 		if (error) *error = -1;
 		return NULL;
 	}
 
-	return BFMapKeyValuePairGetValue(pair);
+	return pair->value;
 }
 
 int BFMapRemove(BFMap _map, BFMapKey key) {
@@ -177,7 +170,11 @@ int BFMapRemove(BFMap _map, BFMapKey key) {
 
 	// is there a better way than traversing through the tree
 	// to find the object we want to delete?
-	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
+	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(
+		BFTreeGetRoot(map->tree),
+		&tmp,
+		map->compare
+	);
 	if (!pair) {
 		return -1;
 	}
