@@ -17,10 +17,10 @@ BFTEST_UNIT_FUNC(test_sqrt, 2<<11, {
 		BFRandInit(time(0));
 	}
 
-	int num = abs(BFRand()) % (2 << 5);
+	int num = BFMathAbs(BFRand()) % (2 << 5);
 	float actual = BFMathSqrt(num);
 	float expected = sqrt(num);
-	BF_ASSERT(abs(actual - expected) <= kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
+	BF_ASSERT(BFMathAbsDouble(actual - expected) <= kBFMathSqrtFactor, "sqrt(%d) expected=%f, actual=%f", num, expected, actual);
 })
 
 BFTEST_UNIT_FUNC(test_ifZeroAndOneArePrimeNumbers, 2<<10, {
@@ -32,7 +32,6 @@ BFTEST_UNIT_FUNC(test_gettingSmallNthPrimeNumber, 1, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
-	//int nth = abs(BFRand()) % kBFMathPrimeCachedPrimesCount;
 	int nth = abs(BFRand()) % (2<<5);
 
 	int prime = BFMathPrimeGetNumberAtIndex(nth);
@@ -233,9 +232,9 @@ BFTEST_UNIT_FUNC(test_absoluteValue, 2<<11, {
 
 BFTEST_UNIT_FUNC(test_absoluteValueDouble, 2<<11, {
 	for (int i = -1; i > (-1 * (2<<10)); i--) {
-		double value = abs(BFRandDouble()) * -1;
-		int a = BFMathAbs(value);
-		int b = abs(value);
+		double value = fabs(BFRandDouble()) * -1;
+		int a = BFMathAbsDouble(value);
+		int b = fabs(value);
 		BF_ASSERT(a == b, "%d != %d", a, b);
 	}
 })

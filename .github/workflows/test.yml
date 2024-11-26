@@ -1,15 +1,43 @@
-name: Testing All Libs
+name: CI
 
 on:
   push:
     branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
+    path-ignore:
+      - '**.md'
 
 jobs:
-  unit-tests:
+  unit-tests-linux:
 
     runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: bftest
+      run: |
+        cd bftest;
+        make clean build CONFIG=test run
+    - name: bflibc
+      run: |
+        cd bflibc;
+        make dependencies 
+        make clean build CONFIG=test run
+    - name: bflibcpp
+      run: |
+        cd bflibcpp;
+        make dependencies 
+        make clean build CONFIG=test run
+    - name: bfnet
+      run: |
+        cd bfnet;
+        make dependencies 
+        make clean build CONFIG=test run
+
+  unit-tests-macos:
+
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
