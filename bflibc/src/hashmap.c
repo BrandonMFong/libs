@@ -129,7 +129,12 @@ typedef struct _BFHashMap {
 	/**
 	 * size of nodes array above
 	 */
-	size_t size;
+	size_t nodeListSize;
+
+	/**
+	 * number of key/value pairs
+	 */
+	size_t count;
 
 	/**
 	 * the hash function used to index nodes
@@ -155,12 +160,13 @@ typedef struct _BFHashMap {
 BFHashMap BFHashMapCreate() {
 	_BFHashMap * res = (_BFHashMap *) malloc(sizeof(_BFHashMap));
 
-	res->size = 2 << 10;
-	res->nodes = (BFHashMapNode *) malloc(sizeof(BFHashMapNode) * res->size);
-	memset(res->nodes, 0, sizeof(BFHashMapNode) * res->size);
+	res->nodeListSize = 2 << 10;
+	res->nodes = (BFHashMapNode *) malloc(sizeof(BFHashMapNode) * res->nodeListSize);
+	memset(res->nodes, 0, sizeof(BFHashMapNode) * res->nodeListSize);
 	res->hash = NULL;
 	res->release = NULL;
 	res->compare = NULL;
+	res->count = 0;
 
 	return res;
 }
@@ -182,12 +188,20 @@ void BFHashMapRelease(BFHashMap _map) {
 	if (!map) return;
 
 	// go through each node and release memory
-	for (int i = 0; i < map->size; i++) {
+	for (int i = 0; i < map->nodeListSize; i++) {
 		BFHashMapObjectReleaseTraverse(map->nodes[i].first, map->release);
 		map->nodes[i].size = 0;
 	}
 	BFFree(map->nodes);
 	BFFree(map);
+}
+
+size_t BFHashMapGetSize(BFHashMap _map) {
+	_BFHashMap * map = (_BFHashMap *) _map;
+	if (!map) {
+		return 0;
+	}
+	return map->count;
 }
 
 int BFHashMapInsert(BFHashMap _map, BFHashMapKey key, BFHashMapValue value) {
@@ -197,7 +211,7 @@ int BFHashMapInsert(BFHashMap _map, BFHashMapKey key, BFHashMapValue value) {
 	}
 
 	// get index using hash
-	unsigned long index = map->hash(key) % map->size;
+	unsigned long index = map->hash(key) % map->nodeListSize;
 	
 	// get node
 	BFHashMapNode node = map->nodes[index];
@@ -210,6 +224,7 @@ int BFHashMapInsert(BFHashMap _map, BFHashMapKey key, BFHashMapValue value) {
 
 	// save node
 	map->nodes[index] = node;
+	map->count++;
 
 	return 0;
 }
@@ -221,7 +236,7 @@ int BFHashMapRemove(BFHashMap _map, BFHashMapKey key) {
 	}
 		
 	// get index using hash
-	unsigned long index = map->hash(key) % map->size;
+	unsigned long index = map->hash(key) % map->nodeListSize;
 	
 	// get node
 	BFHashMapNode node = map->nodes[index];
@@ -233,6 +248,7 @@ int BFHashMapRemove(BFHashMap _map, BFHashMapKey key) {
 
 	// save node
 	map->nodes[index] = node;
+	map->count--;
 
 	return 0;
 }
@@ -244,7 +260,7 @@ bool BFHashMapContains(BFHashMap _map, const BFHashMapKey key) {
 	}
 	
 	// get index using hash
-	unsigned long index = map->hash(key) % map->size;
+	unsigned long index = map->hash(key) % map->nodeListSize;
 	
 	// get node
 	BFHashMapNode node = map->nodes[index];
@@ -261,14 +277,15 @@ bool BFHashMapContains(BFHashMap _map, const BFHashMapKey key) {
 	return false;
 }
 
-BFHashMapValue BFHashMapGetValue(BFHashMap _map, const BFHashMapKey key) {
+BFHashMapValue BFHashMapGetValue(BFHashMap _map, const BFHashMapKey key, int * error) {
 	_BFHashMap * map = (_BFHashMap *) _map;
 	if (!map || !map->compare) {
+		*error = -1;
 		return NULL;
 	}
 	
 	// get index using hash
-	unsigned long index = map->hash(key) % map->size;
+	unsigned long index = map->hash(key) % map->nodeListSize;
 	
 	// get node
 	BFHashMapNode node = map->nodes[index];
@@ -282,6 +299,8 @@ BFHashMapValue BFHashMapGetValue(BFHashMap _map, const BFHashMapKey key) {
 		object = object->next;
 	}
 
+	// value could not be found here
+	*error = -1;
 	return NULL;
 }
 

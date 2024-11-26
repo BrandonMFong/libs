@@ -11,6 +11,7 @@
 #define HASH_MAP_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 typedef void * BFHashMap;
 typedef void * BFHashMapKey;
@@ -21,8 +22,9 @@ void BFHashMapSetHashFunction(BFHashMap map, unsigned long (*hash)(BFHashMapKey 
 void BFHashMapSetCompare(BFHashMap map, int (*compare)(BFHashMapKey a, BFHashMapKey b));
 void BFHashMapRelease(BFHashMap map);
 int BFHashMapInsert(BFHashMap map, BFHashMapKey key, BFHashMapValue value);
+size_t BFHashMapGetSize(BFHashMap map);
 int BFHashMapRemove(BFHashMap map, BFHashMapKey key);
-BFHashMapValue BFHashMapGetValue(BFHashMap map, const BFHashMapKey key);
+BFHashMapValue BFHashMapGetValue(BFHashMap map, const BFHashMapKey key, int * error);
 bool BFHashMapContains(BFHashMap map, const BFHashMapKey key);
 
 #endif // HASH_MAP_H
