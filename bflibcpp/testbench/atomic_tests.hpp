@@ -171,7 +171,7 @@ BFTEST_UNIT_FUNC(test_changingvaluebyreference, 2<<10,  {
 
 BFTEST_UNIT_FUNC(test_comparingObjectWithAnother, 2<<10, {
 	srand(time(0));
-	int i = rand();
+	long long i = rand();
 	Atomic<long long> val = i;
 	BF_ASSERT((val == i) && (i == val));
 })
