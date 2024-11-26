@@ -65,9 +65,26 @@ int BFTreeRemove(BFTree tree, BFTreeObject object);
  */
 bool BFTreeContains(BFTree tree, BFTreeObject obj);
 
+/**
+ * returns tree's root
+ *
+ * will be empty if BFTreeSize() == 0
+ */
 BFTreeNode BFTreeGetRoot(BFTree tree);
+
+/**
+ * returns node's left child
+ */
 BFTreeNode BFTreeNodeGetLeft(BFTreeNode node);
+
+/**
+ * returns node's right child
+ */
 BFTreeNode BFTreeNodeGetRight(BFTreeNode node);
+
+/**
+ * returns node's object
+ */
 BFTreeObject BFTreeNodeGetObject(BFTreeNode node);
 
 #endif // TREE_H
