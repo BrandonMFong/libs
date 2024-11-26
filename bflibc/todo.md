@@ -1,5 +1,5 @@
 ```
-[] add documentation to hash, map, tree, hashmap
+[x] add documentation to hash, map, tree, hashmap
 [] add node accessor to tree class
 [] sprintf is deprecated
 [] improve sqrt, it sometimes stalls
