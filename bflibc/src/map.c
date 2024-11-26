@@ -8,27 +8,6 @@
 #include "internal/map.h"
 #include "tree.h"
 
-typedef struct _BFMapKeyValuePair {
-	BFMapKey key;
-	BFMapValue value;
-
-	// releases key and value
-	void (*release)(BFMapKey key, BFMapValue value);
-	int (*compare)(BFMapKey a, BFMapKey b);
-} _BFMapKeyValuePair;
-
-typedef struct _BFMap {
-	BFTree tree;
-	
-	// releases key and value
-	void (*release)(BFMapKey key, BFMapValue value);
-
-	// defines how the tree's compare callback
-	// we keep a copy for ourselves when we traverse
-	// the tree
-	int (*compare)(BFMapKey a, BFMapKey b);
-} _BFMap;
-
 void _BFMapNodeRelease(BFTreeObject object) {
 	_BFMapKeyValuePair * pair = (_BFMapKeyValuePair *) object;
 	if (pair->release) {
@@ -125,12 +104,7 @@ _BFMapKeyValuePair * _BFMapGetValueFromTree(
 
 BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 	_BFMap * map = (_BFMap *) _map;
-	if (!map || !key) {
-		if (error) *error = -1;
-		return NULL;
-	}
-	
-	if (!map->tree) {
+	if (!map || !map->tree) {
 		if (error) *error = -1;
 		return NULL;
 	}
@@ -155,11 +129,7 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 
 int BFMapRemove(BFMap _map, BFMapKey key) {
 	_BFMap * map = (_BFMap *) _map;
-	if (!map || !key) {
-		return -1;
-	}
-	
-	if (!map->tree) {
+	if (!map || !map->tree) {
 		return -1;
 	}
 
