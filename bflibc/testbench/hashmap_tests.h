@@ -44,6 +44,7 @@ BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10, {
 		int err = BFHashMapInsert(map, (BFHashMapKey) keys[i], (BFHashMapValue) (intptr_t) values[i]);
 		BF_ASSERT(err == 0, "error inserting %d", err);
 	}
+	BF_ASSERT(BFHashMapGetSize(map) == hmsize, "size %ld != %ld", BFHashMapGetSize(map), hmsize);
 
 	BFHashMapRelease(map);
 })
@@ -64,6 +65,7 @@ BFTEST_UNIT_FUNC(test_hashMapInsertAndGet, 2<<10, {
 		int err = BFHashMapInsert(map, (BFHashMapKey) keys[i], (BFHashMapValue) (intptr_t) values[i]);
 		BF_ASSERT(err == 0, "error inserting %d", err);
 	}
+	BF_ASSERT(BFHashMapGetSize(map) == hmsize, "size %ld != %ld", BFHashMapGetSize(map), hmsize);
 
 	int randGetCount = 20;
 	while (randGetCount--) {
@@ -92,6 +94,7 @@ BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10, {
 		int err = BFHashMapInsert(map, (BFHashMapKey) keys[i], (BFHashMapValue) (intptr_t) values[i]);
 		BF_ASSERT(err == 0, "error inserting %d", err);
 	}
+	BF_ASSERT(BFHashMapGetSize(map) == hmsize, "size %ld != %ld", BFHashMapGetSize(map), hmsize);
 
 	int randGetCount = 20;
 	while (randGetCount--) {
