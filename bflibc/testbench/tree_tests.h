@@ -25,6 +25,8 @@ BFTEST_UNIT_FUNC(test_treeinit, 2<<10, {
 	BFTree tree = BFTreeCreate();
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
 	BF_ASSERT(tree, "a null tree was returned");
+	BF_ASSERT(BFTreeGetRoot(tree) == NULL, "root should be null at the start");
+
 	BFTreeRelease(tree);
 })
 
@@ -287,6 +289,64 @@ BFTEST_UNIT_FUNC(test_treeGettingNonexistentValues, 2<<10, {
 	BFTreeRelease(tree);
 })
 
+void _BFTestTreeTraverseInorder(BFTreeNode node) {
+	if (!node) return;
+	_BFTestTreeTraverseInorder(BFTreeNodeGetLeft(node));
+	if (BFTreeNodeGetObject(node) != 0) {
+		// TODO: assert nonzero value
+	}
+	_BFTestTreeTraverseInorder(BFTreeNodeGetRight(node));
+}
+
+void _BFTestTreeTraversePreorder(BFTreeNode node) {
+	if (!node) return;
+	if (BFTreeNodeGetObject(node) != 0) {
+		// TODO: assert nonzero value
+	}
+	_BFTestTreeTraverseInorder(BFTreeNodeGetLeft(node));
+	_BFTestTreeTraverseInorder(BFTreeNodeGetRight(node));
+}
+
+void _BFTestTreeTraversePostorder(BFTreeNode node) {
+	if (!node) return;
+	_BFTestTreeTraverseInorder(BFTreeNodeGetLeft(node));
+	_BFTestTreeTraverseInorder(BFTreeNodeGetRight(node));
+	if (BFTreeNodeGetObject(node) != 0) {
+		// TODO: assert nonzero value
+	}
+}
+
+BFTEST_UNIT_FUNC(test_treeTraversal, 2<<10, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+
+	// create trees
+	BFTree tree = BFTreeCreate();
+	BF_ASSERT(tree, "a null tree was returned");
+	BFTreeSetCompare(tree, BFTestTreeCompareIntegers);
+
+	// create nodes
+	int treesize = 2<<10;
+	int objects[treesize];
+	for (int i = 0; i < treesize; i++) {
+		// create object
+		objects[i] = i+1;
+
+		// insert into tree
+		int err = BFTreeInsert(tree, (BFTreeObject) (intptr_t) objects[i]);
+		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
+	}
+
+	BF_ASSERT(BFTreeSize(tree) == treesize, "size does not match %ld != %ld", BFTreeSize(tree), treesize);
+	
+	_BFTestTreeTraverseInorder(BFTreeGetRoot(tree));
+	_BFTestTreeTraversePreorder(BFTreeGetRoot(tree));
+	_BFTestTreeTraversePostorder(BFTreeGetRoot(tree));
+
+	BFTreeRelease(tree);
+
+})
 
 BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeinit);
@@ -298,6 +358,7 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_InsertDuplicates);
 	BFTEST_LAUNCH(test_InsertAndRemovingNoPointers);
 	BFTEST_LAUNCH(test_treeGettingNonexistentValues);
+	BFTEST_LAUNCH(test_treeTraversal);
 
 })
 
