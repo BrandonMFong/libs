@@ -5,7 +5,8 @@
 
 #include "map.h"
 #include "free.h"
-#include "internal/tree.h"
+//#include "internal/tree.h"
+#include "tree.h"
 
 typedef struct _BFMapKeyValuePair {
 	BFMapKey key;
@@ -33,6 +34,11 @@ typedef struct _BFMap {
 	
 	// releases key and value
 	void (*release)(BFMapKey key, BFMapValue value);
+
+	// defines how the tree's compare callback
+	// we keep a copy for ourselves when we traverse
+	// the tree
+	int (*compare)(BFMapKey a, BFMapKey b);
 } _BFMap;
 
 void _BFMapNodeRelease(BFTreeObject object) {
@@ -55,6 +61,7 @@ void BFMapSetCompare(BFMap _map, int (*compare)(BFMapKey a, BFMapKey b)) {
 	_BFMap * map = (_BFMap *) _map;
 	if (!map) return;
 	BFTreeSetCompare(map->tree, compare);
+	map->compare = compare;
 }
 
 void BFMapSetRelease(BFMap _map, void (*release)(BFMapKey key, BFMapValue value)) {
@@ -100,13 +107,13 @@ BFMapKeyValuePair _BFMapGetValueFromTree(
 		return NULL;
 	}
 
-	int comp = compare(pair, node->object);
+	int comp = compare(pair, BFTreeNodeGetObject(node));
 	if (comp == 0) {
-		return (BFMapKeyValuePair) node->object;
+		return (BFMapKeyValuePair) BFTreeNodeGetObject(node);
 	} else if (comp < 0) {
-		return _BFMapGetValueFromTree(node->left, pair, compare);
+		return _BFMapGetValueFromTree(BFTreeNodeGetLeft(node), pair, compare);
 	} else {
-		return _BFMapGetValueFromTree(node->right, pair, compare);
+		return _BFMapGetValueFromTree(BFTreeNodeGetRight(node), pair, compare);
 	}
 }
 
@@ -117,8 +124,7 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 		return NULL;
 	}
 	
-	_BFTree * tree = (_BFTree *) map->tree;
-	if (!tree) {
+	if (!map->tree) {
 		*error = -1;
 		return NULL;
 	}
@@ -128,7 +134,7 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 	_BFMapKeyValuePair tmp;
 	tmp.key = key;
 
-	BFMapKeyValuePair pair = _BFMapGetValueFromTree(tree->root, &tmp, tree->compare);
+	BFMapKeyValuePair pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
 	if (!pair) {
 		*error = -1;
 		return NULL;
@@ -143,8 +149,7 @@ int BFMapRemove(BFMap _map, BFMapKey key) {
 		return -1;
 	}
 	
-	_BFTree * tree = (_BFTree *) map->tree;
-	if (!tree) {
+	if (!map->tree) {
 		return -1;
 	}
 
@@ -155,11 +160,11 @@ int BFMapRemove(BFMap _map, BFMapKey key) {
 
 	// is there a better way than traversing through the tree
 	// to find the object we want to delete?
-	BFMapKeyValuePair pair = _BFMapGetValueFromTree(tree->root, &tmp, tree->compare);
+	BFMapKeyValuePair pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
 	if (!pair) {
 		return -1;
 	}
 
-	return BFTreeRemove(tree, pair);
+	return BFTreeRemove(map->tree, pair);
 }
 

@@ -8,18 +8,18 @@
 
 #include "../tree.h"
 
-typedef struct BFTreeNode {
-	struct BFTreeNode * left;
-	struct BFTreeNode * right;
+typedef struct _BFTreeNode {
+	struct _BFTreeNode * left;
+	struct _BFTreeNode * right;
 	size_t height;
 	BFTreeObject object;
-} BFTreeNode;
+} _BFTreeNode;
 
-BFTreeNode * BFTreeNodeCreate();
-void BFTreeNodeRelease(BFTreeNode * node);
+_BFTreeNode * _BFTreeNodeCreate();
+void _BFTreeNodeRelease(_BFTreeNode * node);
 
 typedef struct _BFTree {
-	BFTreeNode * root;
+	_BFTreeNode * root;
 	size_t size;
 
 	// a < b -> result < 0
@@ -40,8 +40,8 @@ typedef struct _BFTree {
  *
  * returns node
  */
-BFTreeNode * BFTreeNodeInsert(
-	BFTreeNode * node,
+_BFTreeNode * _BFTreeNodeInsert(
+	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
 	int * error
@@ -50,8 +50,8 @@ BFTreeNode * BFTreeNodeInsert(
 /**
  * returns node
  */
-BFTreeNode * BFTreeNodeRemove(
-	BFTreeNode * node,
+_BFTreeNode * _BFTreeNodeRemove(
+	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b)
 );
@@ -59,8 +59,8 @@ BFTreeNode * BFTreeNodeRemove(
 /**
  * returns node
  */
-bool BFTreeNodeSearch(
-	BFTreeNode * node,
+bool _BFTreeNodeSearch(
+	_BFTreeNode * node,
 	BFTreeObject obj,
 	int (*compare)(BFTreeObject a, BFTreeObject b)
 );

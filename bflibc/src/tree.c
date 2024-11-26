@@ -28,7 +28,7 @@ void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object)) {
 }
 
 // left->right->node
-void BFTreeReleaseNode(_BFTree * tree, BFTreeNode * node) {
+void BFTreeReleaseNode(_BFTree * tree, _BFTreeNode * node) {
 	if (!node) return;
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
@@ -36,7 +36,7 @@ void BFTreeReleaseNode(_BFTree * tree, BFTreeNode * node) {
 	if (tree->release) {
 		tree->release(node->object);
 	}
-	BFTreeNodeRelease(node);
+	_BFTreeNodeRelease(node);
 	tree->size--;
 }
 
@@ -57,7 +57,7 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 	}
 	_BFTree * tree = (_BFTree *) _tree;
 	int err = 0;
-	tree->root = BFTreeNodeInsert(tree->root, object, tree->compare, &err);
+	tree->root = _BFTreeNodeInsert(tree->root, object, tree->compare, &err);
 
 	if (err == 0) {
 		tree->size++;
@@ -71,7 +71,7 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 		return -1;
 	}
 	_BFTree * tree = (_BFTree *) _tree;
-	tree->root = BFTreeNodeRemove(tree->root, object, tree->compare);
+	tree->root = _BFTreeNodeRemove(tree->root, object, tree->compare);
 
 	if (tree->release) {
 		tree->release(object);
@@ -82,10 +82,41 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 }
 
 bool BFTreeContains(BFTree _tree, BFTreeObject object) {
-	if (!_tree || !object) {
+	_BFTree * tree = (_BFTree *) _tree;
+	if (!tree) {
 		return false;
 	}
-	_BFTree * tree = (_BFTree *) _tree;
-	return BFTreeNodeSearch(tree->root, object, tree->compare);
+	return _BFTreeNodeSearch(tree->root, object, tree->compare);
 }
 
+BFTreeNode BFTreeGetRoot(BFTree _tree) {
+	_BFTree * tree = (_BFTree *) _tree;
+	if (!tree) {
+		return NULL;
+	}
+	return tree->root;
+}
+
+BFTreeNode BFTreeNodeGetLeft(BFTreeNode _node) {
+	_BFTreeNode * node = (_BFTreeNode *) _node;
+	if (!node) {
+		return NULL;
+	}
+	return node->left;
+}
+
+BFTreeNode BFTreeNodeGetRight(BFTreeNode _node) {
+	_BFTreeNode * node = (_BFTreeNode *) _node;
+	if (!node) {
+		return NULL;
+	}
+	return node->right;
+}
+
+BFTreeObject BFTreeNodeGetObject(BFTreeNode _node) {
+	_BFTreeNode * node = (_BFTreeNode *) _node;
+	if (!node) {
+		return NULL;
+	}
+	return node->object;
+}

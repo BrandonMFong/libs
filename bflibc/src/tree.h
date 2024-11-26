@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 typedef void * BFTreeObject;
+typedef void * BFTreeNode;
 typedef void * BFTree;
 
 /**
@@ -63,6 +64,11 @@ int BFTreeRemove(BFTree tree, BFTreeObject object);
  * returns false if node with `obj` could not be found
  */
 bool BFTreeContains(BFTree tree, BFTreeObject obj);
+
+BFTreeNode BFTreeGetRoot(BFTree tree);
+BFTreeNode BFTreeNodeGetLeft(BFTreeNode node);
+BFTreeNode BFTreeNodeGetRight(BFTreeNode node);
+BFTreeObject BFTreeNodeGetObject(BFTreeNode node);
 
 #endif // TREE_H
 

@@ -9,7 +9,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "tree.h"
+#include <stddef.h>
 
 typedef void * BFMap;
 

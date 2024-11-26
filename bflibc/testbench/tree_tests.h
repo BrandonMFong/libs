@@ -29,13 +29,13 @@ BFTEST_UNIT_FUNC(test_treeinit, 2<<10, {
 })
 
 BFTEST_UNIT_FUNC(test_treenodeinit, 2<<10, {
-	BFTreeNode * node = BFTreeNodeCreate();
+	_BFTreeNode * node = _BFTreeNodeCreate();
 	BF_ASSERT(node, "a null node was returned");
-	BFTreeNodeRelease(node);
+	_BFTreeNodeRelease(node);
 })
 
 BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
-	BFTreeNode * node = BFTreeNodeCreate();
+	_BFTreeNode * node = _BFTreeNodeCreate();
 	BF_ASSERT(node, "a null node was returned");
 
 	BFRandInit(time(0));
@@ -43,11 +43,11 @@ BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
 	*value = BFRand();
 	node->object = value;
 
-	BFTreeNodeRelease(node);
+	_BFTreeNodeRelease(node);
 	BFFree(value);
 })
 
-void BFTestTreePrint(BFTreeNode * node) {
+void BFTestTreePrint(_BFTreeNode * node) {
 	if (node) {
 		BFTestPrint(
 			"node = object=%d height=%d ",
