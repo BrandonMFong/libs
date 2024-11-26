@@ -1,4 +1,4 @@
-name: Testing All Libs
+name: CI
 
 on:
   push:
