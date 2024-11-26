@@ -1,4 +1,5 @@
 ```
+[] add documentation to hash, map, tree, hashmap
 [] sprintf is deprecated
 [x] link math lib for linux only
 [x] put all these flags into the libs file and couple it
@@ -18,6 +19,6 @@
 	[x] insertion
 	[x] removal
 	[x] getter
-[] consider allowing duplicate values into tree
+[x] consider allowing duplicate values into tree - no
 [] add tests to nonexistent entries in tree, map, and hashmap
 ```
