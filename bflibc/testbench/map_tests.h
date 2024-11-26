@@ -11,9 +11,7 @@
 #include "free.h"
 #include <string.h>
 
-int BFTestMapTreeCompare(BFTreeObject aobj, BFTreeObject bobj) {
-	BFMapKey a = BFMapKeyValuePairGetKey((BFMapKeyValuePair) aobj);
-	BFMapKey b = BFMapKeyValuePairGetKey((BFMapKeyValuePair) bobj);
+int BFTestMapTreeCompare(BFMapKey a, BFMapKey b) {
 	return strcmp(a, b);
 }
 
@@ -117,9 +115,9 @@ BFTEST_UNIT_FUNC(test_mapRemove, 2<<10, {
 	BFMapRelease(map);
 })
 
-int BFTestMapTreeCompareInteger(BFTreeObject aobj, BFTreeObject bobj) {
-	int a = (intptr_t) BFMapKeyValuePairGetKey((BFMapKeyValuePair) aobj);
-	int b = (intptr_t) BFMapKeyValuePairGetKey((BFMapKeyValuePair) bobj);
+int BFTestMapTreeCompareInteger(BFMapKey aobj, BFMapKey bobj) {
+	int a = (intptr_t) aobj;
+	int b = (intptr_t) bobj;
 	return a - b;
 }
 

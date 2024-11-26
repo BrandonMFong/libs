@@ -5,7 +5,7 @@
 
 #include "map.h"
 #include "free.h"
-//#include "internal/tree.h"
+#include "internal/map.h"
 #include "tree.h"
 
 typedef struct _BFMapKeyValuePair {
@@ -14,6 +14,7 @@ typedef struct _BFMapKeyValuePair {
 
 	// releases key and value
 	void (*release)(BFMapKey key, BFMapValue value);
+	int (*compare)(BFMapKey a, BFMapKey b);
 } _BFMapKeyValuePair;
 
 BFMapKey BFMapKeyValuePairGetKey(BFMapKeyValuePair _pair) {
@@ -49,10 +50,17 @@ void _BFMapNodeRelease(BFTreeObject object) {
 	BFFree(pair);
 }
 
+int _BFMapNodeCompare(BFTreeObject aobj, BFTreeObject bobj) {
+	_BFMapKeyValuePair * apair = (_BFMapKeyValuePair *) aobj;
+	_BFMapKeyValuePair * bpair = (_BFMapKeyValuePair *) bobj;
+	return apair->compare(apair->key, bpair->key);
+}
+
 BFMap BFMapCreate() {
 	_BFMap * res = (_BFMap *) malloc(sizeof(_BFMap));
 	res->tree = BFTreeCreate();
 	res->release = NULL;
+	BFTreeSetCompare(res->tree, _BFMapNodeCompare);
 	BFTreeSetRelease(res->tree, _BFMapNodeRelease);
 	return res;
 }
@@ -60,7 +68,6 @@ BFMap BFMapCreate() {
 void BFMapSetCompare(BFMap _map, int (*compare)(BFMapKey a, BFMapKey b)) {
 	_BFMap * map = (_BFMap *) _map;
 	if (!map) return;
-	BFTreeSetCompare(map->tree, compare);
 	map->compare = compare;
 }
 
@@ -91,6 +98,7 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 	pair->key = key;
 	pair->value = value;
 	pair->release = map->release;
+	pair->compare = map->compare;
 	int err = BFTreeInsert(map->tree, pair);
 	if (err) {
 		BFFree(pair);
@@ -100,32 +108,43 @@ int BFMapInsert(BFMap _map, BFMapKey key, BFMapValue value) {
 
 BFMapKeyValuePair _BFMapGetValueFromTree(
 	BFTreeNode * node,
-	BFMapKeyValuePair pair,
+	_BFMapKeyValuePair * inpair,
 	int (*compare)(BFMapKey a, BFMapKey b)
 ) {
-	if (!node) {
+	if (!node || !inpair) {
 		return NULL;
 	}
 
-	int comp = compare(pair, BFTreeNodeGetObject(node));
+	_BFMapKeyValuePair * pair = BFTreeNodeGetObject(node);
+	if (!pair) {
+		return NULL;
+	}
+
+	BFMapKey akey = inpair->key;
+	BFMapKey bkey = pair->key;
+	if (!akey || !bkey) {
+		return NULL;
+	}
+
+	int comp = compare(akey, bkey);
 	if (comp == 0) {
 		return (BFMapKeyValuePair) BFTreeNodeGetObject(node);
 	} else if (comp < 0) {
-		return _BFMapGetValueFromTree(BFTreeNodeGetLeft(node), pair, compare);
+		return _BFMapGetValueFromTree(BFTreeNodeGetLeft(node), inpair, compare);
 	} else {
-		return _BFMapGetValueFromTree(BFTreeNodeGetRight(node), pair, compare);
+		return _BFMapGetValueFromTree(BFTreeNodeGetRight(node), inpair, compare);
 	}
 }
 
 BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 	_BFMap * map = (_BFMap *) _map;
 	if (!map || !key) {
-		*error = -1;
+		if (error) *error = -1;
 		return NULL;
 	}
 	
 	if (!map->tree) {
-		*error = -1;
+		if (error) *error = -1;
 		return NULL;
 	}
 
@@ -136,7 +155,7 @@ BFMapValue BFMapGetValue(BFMap _map, BFMapKey key, int * error) {
 
 	BFMapKeyValuePair pair = _BFMapGetValueFromTree(BFTreeGetRoot(map->tree), &tmp, map->compare);
 	if (!pair) {
-		*error = -1;
+		if (error) *error = -1;
 		return NULL;
 	}
 

@@ -12,18 +12,8 @@
 #include <stddef.h>
 
 typedef void * BFMap;
-
 typedef void * BFMapKey;
 typedef void * BFMapValue;
-
-/**
- * a pair object, contain key and value of any type
- *
- * use the accessors below to access data
- */
-typedef void * BFMapKeyValuePair;
-BFMapKey BFMapKeyValuePairGetKey(BFMapKeyValuePair);
-BFMapValue BFMapKeyValuePairGetValue(BFMapKeyValuePair);
 
 /**
  * Caller owns memory
