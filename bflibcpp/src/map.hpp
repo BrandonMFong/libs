@@ -83,6 +83,24 @@ public:
 		return BFMapInsert(this->_map, key, value);
 	}
 
+	V getValueForKey(K k, int * error) {
+		if (!this->_map) return -1;
+		Key key(k, this);
+
+		int err = 0;
+		Value * value = (Value *) BFMapGetValue(this->_map, &key, &err);
+		if (!value) {
+			if (error) *error = err;
+			return 0;
+		}
+
+		return value->_obj;
+	}
+
+	V at(K k) {
+		this->getValueForKey(k, NULL);
+	}
+
 private:
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);

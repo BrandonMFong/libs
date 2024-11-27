@@ -36,9 +36,32 @@ BFTEST_UNIT_FUNC(test_mapInsert, 2<<10,  {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_mapGet, 2<<10,  {
+	Map<String, int> map;
+	map.setCompare(BFTestMapCompareString);
+
+	// insert	
+	int mapsize = 2<<7;
+	for (int i = 0; i < mapsize; i++) {
+		String key("%d", i);
+		int err = map.insert(key, i);
+		BF_ASSERT(err == 0, "error inserting %d", err);
+	}
+
+	// get
+	for (int i = 0; i < mapsize; i++) {
+		String key("%d", i);
+		int err = 0;
+		int value = map.getValueForKey(key, &err);
+		BF_ASSERT(err == 0, "error getting: %d", err);
+		BF_ASSERT(value == i, "%d != %d", value, i);
+	}
+})
+
 BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapInit);
 	BFTEST_LAUNCH(test_mapInsert);
+	BFTEST_LAUNCH(test_mapGet);
 
 })
 
