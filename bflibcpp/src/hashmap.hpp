@@ -19,9 +19,9 @@ namespace BF {
  * Map implemented using self-balancing tree. See bflibc/map.h
  */
 template <typename K, typename V, typename S = size_t>
-class Map : public BasicMap<K,V,S> {
+class HashMap : public BasicMap<K,V,S> {
 public:
-	Map() : _map(NULL), BasicMap<K,V,S>() {
+	HashMap() : _map(NULL), BasicMap<K,V,S>() {
 		this->_map = BFHashMapCreate();
 		if (!this->_map) return;
 		BFHashMapSetCompare(this->_map, this->_BFMapCompare);
@@ -29,11 +29,12 @@ public:
 		BFHashMapSetHashFunction(this->_map, this->_BFHashMapHashFunction);
 	}
 
-	virtual ~Map() {
+	virtual ~HashMap() {
 		BFHashMapRelease(this->_map);
 	}
 
 	void setHash(unsigned long (*hash)(K key)) {
+		this->_hash = hash;
 	}
 
 private:
@@ -61,8 +62,13 @@ private:
 		return BFHashMapContains(this->_map, key);
 	}
 	
-	static unsigned long _BFHashMapHashFunction(BFHashMapKey key) {
-		return 0;
+	static unsigned long _BFHashMapHashFunction(void * k) {
+		typename BasicMap<K,V,S>::Key<K> * key = (typename BasicMap<K,V,S>::Key<K> *) k;
+		HashMap * map = (HashMap *) key->_mapRef;
+		if (!key || !map->_hash) {
+			return -1;
+		}
+		return map->_hash(key->_obj);
 	}
 
 	unsigned long (*_hash)(K key);

@@ -25,7 +25,7 @@ int BFTestHashMapCompareString(String & a, String & b) {
 }
 
 unsigned long BFTestHashMapHashFunction(BFHashMapKey key) {
-
+	return BFHashDjb2((unsigned char *) key);
 }
 
 BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10,  {
@@ -89,7 +89,7 @@ BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10,  {
 	}
 })
 
-BFTEST_COVERAGE_FUNC(map_tests, {
+BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
 	BFTEST_LAUNCH(test_hashMapInsert);
 	BFTEST_LAUNCH(test_hashMapGet);
