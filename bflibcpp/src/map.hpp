@@ -6,7 +6,7 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include "object.hpp"
+#include "collection.hpp"
 #include "release.hpp"
 
 extern "C" {
@@ -19,7 +19,7 @@ namespace BF {
  * Map implemented using self-balancing tree. See bflibc/map.h
  */
 template <typename K, typename V, typename S = size_t>
-class Map : public Object {
+class Map : public Collection<S> {
 	template<typename T>
 	class Container : public Object {
 	public:
@@ -64,7 +64,7 @@ class Map : public Object {
 public:
 	Map()
 	: _compare(NULL), _releaseKey(NULL),
-	_releaseValue(NULL), _map(NULL), Object() {
+	_releaseValue(NULL), _map(NULL), Collection<S>() {
 		this->_map = BFMapCreate();
 		if (!this->_map) return;
 		BFMapSetCompare(this->_map, this->_BFMapCompare);
