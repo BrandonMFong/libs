@@ -97,7 +97,7 @@ public:
 
 	V getValueForKey(K k, int * error) {
 		if (!this->_map) return -1;
-		Key key(k, this);
+		Key<K> key(k, this);
 
 		int err = 0;
 		Value<V> * value = (Value<V> *) BFMapGetValue(this->_map, &key, &err);
