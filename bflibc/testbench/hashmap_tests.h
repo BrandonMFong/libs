@@ -33,7 +33,7 @@ BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10, {
 	BFHashMap map = BFHashMapCreate();
 	BF_ASSERT(map, "map is null");
 	BFHashMapSetHashFunction(map, BFTestHashMapHashString);
-	//BFHashMapSetCompare(map, BFTestHashMapKeyCompare);
+	BFHashMapSetCompare(map, BFTestHashMapKeyCompare);
 
 	int hmsize = 2<<8;
 	char keys[hmsize][64];

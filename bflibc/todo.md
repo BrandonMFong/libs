@@ -2,13 +2,13 @@
 [] queue object
 	[] add to the traversal test case for trees "Level Order Traversal"
 [x] add documentation to hash, map, tree, hashmap
-[] remove the pair from map header
-[] add node accessor to tree class
+[x] remove the pair from map header
+[x] add node accessor to tree class
 [] sprintf is deprecated
 [] improve sqrt, it sometimes stalls
 	[x] use binary search
 	[] store all known square root in a map
-[] BFMapContains
+[x] BFMapContains
 [x] map
 	[x] make a tree object so data store is close to O(logn)
 	[x] make a hash function good enough to use for O(1) operations
