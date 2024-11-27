@@ -9,6 +9,7 @@
 #define HASH_H
 
 unsigned long BFHashDjb2(unsigned char * str);
+unsigned long BFHashDivision(unsigned long k, unsigned long prime);
 
 #endif // HASH_H
 

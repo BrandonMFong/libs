@@ -37,6 +37,11 @@ void BFHashMapSetHashFunction(BFHashMap map, unsigned long (*hash)(BFHashMapKey 
 void BFHashMapSetCompare(BFHashMap map, int (*compare)(BFHashMapKey a, BFHashMapKey b));
 
 /**
+ * sets how the keys and values are released
+ */
+void BFHashMapSetRelease(BFHashMap _map, void (*release)(BFHashMapKey key, BFHashMapValue value));
+
+/**
  * releases map from memory
  */
 void BFHashMapRelease(BFHashMap map);

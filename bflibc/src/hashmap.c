@@ -183,6 +183,12 @@ void BFHashMapSetCompare(BFHashMap _map, int (*compare)(BFHashMapKey a, BFHashMa
 	map->compare = compare;
 }
 
+void BFHashMapSetRelease(BFHashMap _map, void (*release)(BFHashMapKey key, BFHashMapValue value)) {
+	_BFHashMap * map = (_BFHashMap *) _map;
+	if (!map) return;
+	map->release = release;
+}
+
 void BFHashMapRelease(BFHashMap _map) {
 	_BFHashMap * map = (_BFHashMap *) _map;
 	if (!map) return;

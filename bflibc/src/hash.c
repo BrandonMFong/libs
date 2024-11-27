@@ -16,3 +16,7 @@ unsigned long BFHashDjb2(unsigned char * str) {
 	return hash;
 }
 
+unsigned long BFHashDivision(unsigned long k, unsigned long prime) {
+	return k % prime;
+}
+
