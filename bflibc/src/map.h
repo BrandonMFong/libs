@@ -11,7 +11,10 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "typemap.h"
+
+typedef void * BFMap;
+typedef void * BFMapKey;
+typedef void * BFMapValue;
 
 /**
  * Caller owns memory
