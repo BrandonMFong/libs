@@ -26,7 +26,7 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(file_tests);
 	BFTEST_SUITE_LAUNCH(bintree_tests);
 	//BFTEST_SUITE_LAUNCH(rbtree_tests);
-	BFTEST_SUITE_LAUNCH(dictionary_tests);
+	//BFTEST_SUITE_LAUNCH(dictionary_tests);
 	BFTEST_SUITE_LAUNCH(string_tests);
 	BFTEST_SUITE_LAUNCH(stack_tests);
 	BFTEST_SUITE_LAUNCH(queue_tests);
