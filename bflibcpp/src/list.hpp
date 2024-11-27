@@ -405,7 +405,7 @@ private:
 	 * Deletes currNode and pulls everything forward
 	 */
 	int deleteObjectAtIndex(S reqIndex, Node * currNode, S currIndex) {
-		if (currNode == 0) return 2;
+		if (currNode == 0) return -1;
 		else {
 			if (currIndex < reqIndex) {
 				return this->deleteObjectAtIndex(reqIndex, currNode->right, ++currIndex);
