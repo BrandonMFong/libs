@@ -65,27 +65,11 @@ public:
 public:
 	BasicMap()
 	: _compare(NULL), _releaseKey(NULL),
-	_releaseValue(NULL), Collection<S>() {
-		/*
-		this->_map = BFMapCreate();
-		if (!this->_map) return;
-		BFMapSetCompare(this->_map, this->_BFMapCompare);
-		BFMapSetRelease(this->_map, this->_BFMapRelease);
-		*/
-		//this->_init();
-	}
+	_releaseValue(NULL), Collection<S>() { }
 
-	virtual ~BasicMap() {
-		//BFMapRelease(this->_map);
-		//this->_deinit();
-	}
+	virtual ~BasicMap() { }
 
 	virtual size_t size() const = 0;
-	/*
-	size_t size() const {
-		return BFMapGetSize(this->_map);
-	}
-	*/
 
 	void setCompare(int (*compare)(K & a, K & b)) {
 		this->_compare = compare;
@@ -97,19 +81,15 @@ public:
 	}
 
 	int insert(K k, V v) {
-		//if (!this->_map) return -1;
 		Key<K> * key = new Key<K>(k, this);
 		Value<V> * value = new Value<V>(v, this);
-		//return BFMapInsert(this->_map, key, value);
 		return this->_insert(key, value);
 	}
 
 	V getValueForKey(K k, int * error) {
-		//if (!this->_map) return -1;
 		Key<K> key(k, this);
 
 		int err = 0;
-		//Value<V> * value = (Value<V> *) BFMapGetValue(this->_map, &key, &err);
 		Value<V> * value = (Value<V> *) this->_getValueForKey(&key, &err);
 		if (!value) {
 			if (error) *error = err;
@@ -124,24 +104,16 @@ public:
 	}
 
 	int remove(K k) {
-		//if (!this->_map) return -1;
-
 		Key<K> key(k, this);
-		//return BFMapRemove(this->_map, &key);
 		return this->_remove(&key);
 	}
 
 	bool contains(K k) {
-		//if (!this->_map) return false;
-
 		Key<K> key(k, this);
-		//return BFMapContains(this->_map, &key);
 		return this->_contains(&key);
 	}
 
 private:
-	virtual void _init() { }
-	virtual void _deinit() { }
 	virtual int _insert(void * key, void * value) = 0;
 	virtual void * _getValueForKey(void * key, int * error) = 0;
 	virtual int _remove(void * key) = 0;
@@ -164,8 +136,6 @@ private:
 		BFRelease(key);
 		BFRelease(value);
 	}
-
-	//BFMap _map;
 };
 }
 

@@ -33,47 +33,29 @@ public:
 	}
 
 private:
-	virtual void _init() {
-		/*
-		this->_map = BFMapCreate();
-		if (!this->_map) return;
-		BFMapSetCompare(this->_map, this->_BFMapCompare);
-		BFMapSetRelease(this->_map, this->_BFMapRelease);
-		*/
-	}
-
-	virtual void _deinit() {
-		//BFMapRelease(this->_map);
-	}
-
 	size_t size() const {
 		return BFMapGetSize(this->_map);
 	}
 
-	//int insert(K k, V v) {
 	virtual int _insert(void * key, void * value) {
 		if (!this->_map) return -1;
 		return BFMapInsert(this->_map, key, value);
 	}
 
-	//V getValueForKey(K k, int * error) {
 	virtual void * _getValueForKey(void * key, int * error) {
 		if (!this->_map) return NULL;
 		return BFMapGetValue(this->_map, key, error);
 	}
 
-	//int remove(K k) {
 	virtual int _remove(void * key) {
 		if (!this->_map) return -1;
 		return BFMapRemove(this->_map, key);
 	}
 
-	//bool contains(K k) {
 	virtual bool _contains(void * key) {
 		if (!this->_map) return false;
 		return BFMapContains(this->_map, key);
 	}
-
 
 	BFMap _map;
 };
