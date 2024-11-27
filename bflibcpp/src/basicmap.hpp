@@ -16,11 +16,22 @@ extern "C" {
 namespace BF {
 
 /**
- * Map implemented using self-balancing tree. See bflibc/map.h
+ * General implementation of a Map
+ *
+ * This is formatted to fit the bflibc implementation of
+ * HashMap and Map
  */
 template <typename K, typename V, typename S = size_t>
 class BasicMap : public Collection<S> {
-public:
+protected:
+
+	/**
+	 * template on how Key and Value objects are
+	 * held
+	 *
+	 * this object will get injected into the
+	 * map implementations
+	 */
 	template<typename T>
 	class Container : public Object {
 	public:
@@ -69,23 +80,35 @@ public:
 
 	virtual ~BasicMap() { }
 
-	virtual size_t size() const = 0;
-
+	/**
+	 * compare callback for keys
+	 *
+	 * similar behavior to strcmp and memcmp
+	 */
 	void setCompare(int (*compare)(K & a, K & b)) {
 		this->_compare = compare;
 	}
 
+	/**
+	 * defines how Key and values are released
+	 */
 	void setRelease(void (*releaseKey)(K obj), void (*releaseValue)(V obj)) {
 		this->_releaseKey = releaseKey;
 		this->_releaseValue = releaseValue;
 	}
 
+	/**
+	 * adds key and value into map
+	 */
 	int insert(K k, V v) {
 		Key<K> * key = new Key<K>(k, this);
 		Value<V> * value = new Value<V>(v, this);
 		return this->_insert(key, value);
 	}
 
+	/**
+	 * returns value for key with optional error
+	 */
 	V getValueForKey(K k, int * error) {
 		Key<K> key(k, this);
 
@@ -99,15 +122,24 @@ public:
 		return value->_obj;
 	}
 
+	/**
+	 * returns value for key
+	 */
 	V at(K k) {
 		this->getValueForKey(k, NULL);
 	}
 
+	/**
+	 * removes key/value pair with key
+	 */
 	int remove(K k) {
 		Key<K> key(k, this);
 		return this->_remove(&key);
 	}
 
+	/**
+	 * true if there is an entry with key=k
+	 */
 	bool contains(K k) {
 		Key<K> key(k, this);
 		return this->_contains(&key);
