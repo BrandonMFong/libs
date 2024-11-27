@@ -250,7 +250,6 @@ BFTEST_UNIT_FUNC(test_ListSwap, 2<<10, {
 	BFRelease(br);
 })
 
-//int test_shuffle() {
 BFTEST_UNIT_FUNC(test_shuffle, 1,  {
 	const int size = 2 << 14;
 	int array[size];
@@ -279,7 +278,6 @@ BFTEST_UNIT_FUNC(test_shuffle, 1,  {
 	}
 })
 
-//int test_ShuffleLargeDataSet() {
 BFTEST_UNIT_FUNC(test_ShuffleLargeDataSet, 1,  {
 	srand(time(0));
 	const int size = 2 << 14;
@@ -315,7 +313,6 @@ void TestPluckingObjectRelease(int * i) {
 	TestPluckingObjectReleaseWasCalled = true;
 }
 
-//int test_pluckingObject() {
 BFTEST_UNIT_FUNC(test_pluckingObject, 2,  {
 	srand(time(0));
 
@@ -364,34 +361,25 @@ BFTEST_UNIT_FUNC(test_pluckingObject, 2,  {
 	for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
 })
 
-//int test_rangeBasedLooping() {
-BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<10,  {
+BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<10, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
 	List<int> list;
-	srand(time(0));
-	int arrsize = rand() % 2 << 15;
+	int arrsize = BFMathAbs(BFRand()) % 2 << 15;
 	int * arr = (int *) malloc(sizeof(int) * arrsize);
 	for (int i = 0; i < arrsize; i++) {
 		arr[i] = rand();
-		list.add(arr[i]);
+		BF_ASSERT(!list.add(arr[i]));
 	}
 
 	int i = 0;
 	for (int a : list) {
-		if (a != arr[i]) {
-			printf("%d != %d\n", a, arr[i]);
-			result = max;
-			break;
-		}
+		BF_ASSERT(a == arr[i], "%d != %d\n", a, arr[i]);
 		i++;
 	}
 
-	if (result) continue;
-
-	if (i != arrsize) {
-		printf("we did not go through the entire list: %d != %d\n", i, arrsize);
-		result = max;
-		continue;
-	}
+	BF_ASSERT(i == arrsize, "we did not go through the entire list: %d != %d\n", i, arrsize);
 
 	BFFree(arr);
 })
