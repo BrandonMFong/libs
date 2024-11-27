@@ -139,7 +139,6 @@ BFTEST_UNIT_FUNC(test_deletingAtIndex, 1,  {
 	BFRelease(l);
 })
 
-//int test_deletingAllNodes() {
 BFTEST_UNIT_FUNC(test_deletingAllNodes, 1,  {
 	List<char> * l = new List<char>;
 
@@ -162,13 +161,13 @@ BFTEST_UNIT_FUNC(test_deletingAllNodes, 1,  {
 	if (result) {
 		printf("Error %d\n", result);
 	}
+	BFRelease(l);
 })
 
 void intDelete(int * i) {
 	delete i;
 }
 
-//int test_listMemoryHandling() {
 BFTEST_UNIT_FUNC(test_listMemoryHandling, 1,  {
 	List<int *> * l = new List<int *>;
 	l->setReleaseCallback(intDelete);
@@ -211,6 +210,7 @@ BFTEST_UNIT_FUNC(test_listMemoryHandling, 1,  {
 	}
 
 	l->deleteAll();
+	BFRelease(l);
 })
 
 //int test_traversing() {
@@ -284,14 +284,13 @@ BFTEST_UNIT_FUNC(test_InitializingFromRawArray, 1,  {
 	}
 })
 
-//int test_ListNullSwap() {
 BFTEST_UNIT_FUNC(test_ListNullSwap, 1,  {
 	List<int>::Node a, b;
 	a.obj = 0;
 	b.obj = 1;
-	result = List<int>::swap(&a, 0);
-	if (result) result = List<int>::swap(0, &b);
-	if (result) result = List<int>::swap(0, 0);
+	BF_ASSERT(List<int>::swap(&a, 0) != 0);
+	BF_ASSERT(List<int>::swap(0, &b) != 0);
+	BF_ASSERT(List<int>::swap(0, 0) != 0);
 })
 
 BFTEST_UNIT_FUNC(test_ListSwap, 1,  {
