@@ -122,6 +122,15 @@ private:
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);
 	void (*_releaseValue)(V obj);
+
+protected:
+	/**
+	 * compares a with b
+	 *
+	 * we assume similar behavior to strcmp or memcmp
+	 *
+	 * default return(-1)
+	 */
 	static int _BFMapCompare(void * a, void * b) {
 		Key<K> * akey = (Key<K> *) a;
 		Key<K> * bkey = (Key<K> *) b;
@@ -130,6 +139,10 @@ private:
 		}
 		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
 	}
+
+	/**
+	 * Releases the Key & Value objects
+	 */
  	static void _BFMapRelease(void * k, void * v) {
 		Key<K> * key = (Key<K> *) k;
 		Value<V> * value = (Value<V> *) v;

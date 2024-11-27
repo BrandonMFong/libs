@@ -26,10 +26,14 @@ public:
 		if (!this->_map) return;
 		BFHashMapSetCompare(this->_map, this->_BFMapCompare);
 		BFHashMapSetRelease(this->_map, this->_BFMapRelease);
+		BFHashMapSetHashFunction(this->_map, this->_BFHashMapHashFunction);
 	}
 
 	virtual ~Map() {
 		BFHashMapRelease(this->_map);
+	}
+
+	void setHash(unsigned long (*hash)(K key)) {
 	}
 
 private:
@@ -56,6 +60,12 @@ private:
 		if (!this->_map) return false;
 		return BFHashMapContains(this->_map, key);
 	}
+	
+	static unsigned long _BFHashMapHashFunction(BFHashMapKey key) {
+		return 0;
+	}
+
+	unsigned long (*_hash)(K key);
 
 	BFHashMap _map;
 };

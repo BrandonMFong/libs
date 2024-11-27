@@ -1,14 +1,14 @@
 /**
  * author: Brando
- * date: 11/26/24
+ * date: 11/27/24
  */
 
-#ifndef MAP_TESTS_HPP
-#define MAP_TESTS_HPP
+#ifndef HASH_MAP_TESTS_HPP
+#define HASH_MAP_TESTS_HPP
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
-#include "map.hpp"
+#include "hashmap.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -16,17 +16,21 @@ extern "C" {
 
 using namespace BF;
 
-BFTEST_UNIT_FUNC(test_mapInit, 2<<10,  {
-	Map<String, int> map;
+BFTEST_UNIT_FUNC(test_hashMapInit, 2<<10,  {
+	HashMap<String, int> map;
 })
 
-int BFTestMapCompareString(String & a, String & b) {
+int BFTestHashMapCompareString(String & a, String & b) {
 	return a.compareString(b);
 }
 
-BFTEST_UNIT_FUNC(test_mapInsert, 2<<10,  {
-	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+unsigned long BFTestHashMapHashFunction(BFHashMapKey key) {
+
+}
+
+BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10,  {
+	HashMap<String, int> map;
+	map.setCompare(BFTestHashMapCompareString);
 	
 	int mapsize = 2<<7;
 	for (int i = 0; i < mapsize; i++) {
@@ -36,9 +40,9 @@ BFTEST_UNIT_FUNC(test_mapInsert, 2<<10,  {
 	}
 })
 
-BFTEST_UNIT_FUNC(test_mapGet, 2<<10,  {
-	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+BFTEST_UNIT_FUNC(test_hashMapGet, 2<<10,  {
+	HashMap<String, int> map;
+	map.setCompare(BFTestHashMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -58,12 +62,12 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10,  {
 	}
 })
 
-BFTEST_UNIT_FUNC(test_mapRemove, 2<<10,  {
+BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10,  {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
-	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+	HashMap<String, int> map;
+	map.setCompare(BFTestHashMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -86,10 +90,10 @@ BFTEST_UNIT_FUNC(test_mapRemove, 2<<10,  {
 })
 
 BFTEST_COVERAGE_FUNC(map_tests, {
-	BFTEST_LAUNCH(test_mapInit);
-	BFTEST_LAUNCH(test_mapInsert);
-	BFTEST_LAUNCH(test_mapGet);
-	BFTEST_LAUNCH(test_mapRemove);
+	BFTEST_LAUNCH(test_hashMapInit);
+	BFTEST_LAUNCH(test_hashMapInsert);
+	BFTEST_LAUNCH(test_hashMapGet);
+	BFTEST_LAUNCH(test_hashMapRemove);
 
 })
 
