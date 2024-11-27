@@ -20,7 +20,7 @@ BFTEST_UNIT_FUNC(test_mapInit, 2<<10,  {
 	Map<String, int> map;
 })
 
-int BFTestMapCompareString(String a, String b) {
+int BFTestMapCompareString(String & a, String & b) {
 	return a.compareString(b);
 }
 
@@ -85,7 +85,7 @@ BFTEST_UNIT_FUNC(test_mapRemove, 2<<10,  {
 	}
 })
 
-int BFTestMapCompareCString(char * a, char * b) {
+int BFTestMapCompareCString(char * &a, char * &b) {
 	return strcmp(a, b);
 }
 

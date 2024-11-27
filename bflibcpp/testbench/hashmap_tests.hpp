@@ -21,7 +21,7 @@ BFTEST_UNIT_FUNC(test_hashMapInit, 2<<10,  {
 	HashMap<String, int> map;
 })
 
-int BFTestHashMapCompareString(String a, String b) {
+int BFTestHashMapCompareString(String & a, String & b) {
 	return a.compareString(b);
 }
 
@@ -90,11 +90,45 @@ BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10,  {
 	}
 })
 
+int BFTestHashMapCompareCString(char * &a, char * &b) {
+	return strcmp(a, b);
+}
+
+void BFTestHashMapReleaseKeyCString(char * obj) {
+	BFFree(obj);
+}
+
+void BFTestHashMapReleaseValueInteger(int * obj) {
+	BFFree(obj);
+}
+
+BFTEST_UNIT_FUNC(test_hashMapWithAllocMem, 2<<10,  {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+	HashMap<char *, int *> map;
+	map.setCompare(BFTestHashMapCompareCString);
+	map.setRelease(BFTestHashMapReleaseKeyCString, BFTestHashMapReleaseValueInteger);
+
+	// insert	
+	int mapsize = 2<<7;
+	for (int i = 0; i < mapsize; i++) {
+		char * key = (char *) malloc(sizeof(char) * 32);
+		snprintf(key, 32, "%d", i);
+		int * value = (int *) malloc(sizeof(int));
+		*value = i;
+		int err = map.insert(key, value);
+		BF_ASSERT(err == 0, "error inserting %d", err);
+	}
+})
+
+
 BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
 	BFTEST_LAUNCH(test_hashMapInsert);
 	BFTEST_LAUNCH(test_hashMapGet);
 	BFTEST_LAUNCH(test_hashMapRemove);
+	BFTEST_LAUNCH(test_hashMapWithAllocMem);
 
 })
 

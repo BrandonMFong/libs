@@ -85,7 +85,7 @@ public:
 	 *
 	 * similar behavior to strcmp and memcmp
 	 */
-	void setCompare(int (*compare)(K a, K b)) {
+	void setCompare(int (*compare)(K & a, K & b)) {
 		this->_compare = compare;
 	}
 
@@ -151,7 +151,7 @@ private:
 	virtual int _remove(void * key) = 0;
 	virtual bool _contains(void * key) = 0;
 
-	int (*_compare)(K a, K b);
+	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);
 	void (*_releaseValue)(V obj);
 
