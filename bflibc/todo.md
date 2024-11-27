@@ -8,6 +8,7 @@
 [] improve sqrt, it sometimes stalls
 	[x] use binary search
 	[] store all known square root in a map
+[] BFMapContains
 [x] map
 	[x] make a tree object so data store is close to O(logn)
 	[x] make a hash function good enough to use for O(1) operations

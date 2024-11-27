@@ -152,3 +152,25 @@ int BFMapRemove(BFMap _map, BFMapKey key) {
 	return BFTreeRemove(map->tree, pair);
 }
 
+bool BFMapContains(BFMap _map, BFMapKey key) {
+	_BFMap * map = (_BFMap *) _map;
+	if (!map || !map->tree) {
+		return -1;
+	}
+
+	// temporarily using this structure so it can 
+	// pass through the compare callback
+	_BFMapKeyValuePair tmp;
+	tmp.key = key;
+
+	// is there a better way than traversing through the tree
+	// to find the object we want to delete?
+	_BFMapKeyValuePair * pair = _BFMapGetValueFromTree(
+		BFTreeGetRoot(map->tree),
+		&tmp,
+		map->compare
+	);
+
+	return pair != NULL;
+}
+

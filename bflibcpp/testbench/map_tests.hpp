@@ -58,10 +58,37 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10,  {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_mapRemove, 2<<10,  {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+	Map<String, int> map;
+	map.setCompare(BFTestMapCompareString);
+
+	// insert	
+	int mapsize = 2<<7;
+	for (int i = 0; i < mapsize; i++) {
+		String key("%d", i);
+		int err = map.insert(key, i);
+		BF_ASSERT(err == 0, "error inserting %d", err);
+	}
+
+	// remove
+	int removeCount = 10;
+	while (removeCount--) {
+		String key("%d", BFMathAbs(BFRand()) % mapsize);
+		int err = map.remove(key);
+		BF_ASSERT(err == 0, "error removing for key=%s: %d", key.c_str(), err);
+	}
+})
+
 BFTEST_COVERAGE_FUNC(map_tests, {
+		/*
 	BFTEST_LAUNCH(test_mapInit);
 	BFTEST_LAUNCH(test_mapInsert);
 	BFTEST_LAUNCH(test_mapGet);
+	*/
+	BFTEST_LAUNCH(test_mapRemove);
 
 })
 

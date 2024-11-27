@@ -101,6 +101,13 @@ public:
 		this->getValueForKey(k, NULL);
 	}
 
+	int remove(K k) {
+		if (!this->_map) return -1;
+
+		Key key(k, this);
+		return BFMapRemove(this->_map, &key);
+	}
+
 private:
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);

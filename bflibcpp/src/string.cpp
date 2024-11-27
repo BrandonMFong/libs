@@ -73,6 +73,10 @@ const char * String::cString() const {
 	return (const char *) this->address();
 }
 
+const char * String::c_str() const {
+	return this->cString();
+}
+
 char * String::cStringCopy() const {
 	return BFStringCopyString((const char *) this->address());
 }
