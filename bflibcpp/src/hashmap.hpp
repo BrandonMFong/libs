@@ -63,7 +63,7 @@ private:
 	}
 	
 	static unsigned long _BFHashMapHashFunction(void * k) {
-		typename BasicMap<K,V,S>::Key<K> * key = (typename BasicMap<K,V,S>::Key<K> *) k;
+		typename BasicMap<K,V,S>::template Key<K> * key = (typename BasicMap<K,V,S>::template Key<K> *) k;
 		HashMap * map = (HashMap *) key->_mapRef;
 		if (!key || !map->_hash) {
 			return -1;
