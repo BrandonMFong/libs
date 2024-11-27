@@ -108,6 +108,13 @@ public:
 		return BFMapRemove(this->_map, &key);
 	}
 
+	bool contains(K k) {
+		if (!this->_map) return false;
+
+		Key key(k, this);
+		return BFMapContains(this->_map, &key);
+	}
+
 private:
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);
