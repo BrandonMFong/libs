@@ -86,11 +86,10 @@ _BFMapKeyValuePair * _BFMapGetValueFromTree(
 		return NULL;
 	}
 
+	// keys could be 0x0 as I allow
+	// BFMapKey=int|long|long long|etc
 	BFMapKey akey = inpair->key;
 	BFMapKey bkey = pair->key;
-	if (!akey || !bkey) {
-		return NULL;
-	}
 
 	int comp = compare(akey, bkey);
 	if (comp == 0) {
