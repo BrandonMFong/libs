@@ -18,70 +18,52 @@ extern "C" {
 
 using namespace BF;
 
-//int test_objectinit() {
-BFTEST_UNIT_FUNC(test_objectinit, 1,  {
+BFTEST_UNIT_FUNC(test_objectinit, 2<<10,  {
 	Object o;
-
-	if (Object::retainCount(o) != 1)
-		result = 1;
+	BF_ASSERT(Object::retainCount(o) == 1);
 })
 
-//int test_objectretainer() {
-BFTEST_UNIT_FUNC(test_objectretainer, 1,  {
+BFTEST_UNIT_FUNC(test_objectretainer, 2<<8,  {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		srand(time(0));
+	}
+	int retain = rand() % (2 << 16);
+
 	Object * o = new Object;
 
-	if (o == NULL)
-		result = 1;
-	else if (Object::retainCount(o) != 1)
-		result = 2;
+	BF_ASSERT(o != NULL);
+	BF_ASSERT(Object::retainCount(o) == 1);
 
-	int max = 2 << 8;
-	while (!result && max) {
-		srand(time(0));
-		int retain = rand() % (2 << 16);
-
-		for (int i = 0; i < retain; i++) {
-			BFRetain(o);
-		}
-
-		if (Object::retainCount(o) != (retain + 1)) {
-			result = max;
-		}
-
-		if (!result) {
-			for (int i = 0; i < retain; i++) {
-				BFRelease(o);
-			}
-
-			if (Object::retainCount(o) != 1) {
-				result = max;
-			}
-		}
-
-		max--;
+	for (int i = 0; i < retain; i++) {
+		BFRetain(o);
 	}
 
-	if (!result) {
+	BF_ASSERT(Object::retainCount(o) == (retain + 1));
+
+	for (int i = 0; i < retain; i++) {
 		BFRelease(o);
-		int i = Object::retainCount(o);
-		if (i) result = 4;
-		else if (o) result = 5;
 	}
+
+	BF_ASSERT(Object::retainCount(o) == 1);
+
+	BFRelease(o);
+	
+	int i = Object::retainCount(o);
+	BF_ASSERT(i == 0);
+	BF_ASSERT(o == NULL);
 })
 
-//int test_objectshallowcopy() {
-BFTEST_UNIT_FUNC(test_objectshallowcopy, 1,  {
+BFTEST_UNIT_FUNC(test_objectshallowcopy, 2<<12,  {
 	Object o;
 
-	if (Object::retainCount(o) != 1)
-		result = 1;
+	BF_ASSERT(Object::retainCount(o) == 1);
+	
+	Object * so = new Object(o);
+	BF_ASSERT(so != NULL);
+	BF_ASSERT(Object::retainCount(so) == 1);
+	BF_ASSERT(so->_lock != o._lock);
 
-	if (!result) {
-		Object * so = new Object(o);
-		if (so == NULL) result = 2;
-		else if (Object::retainCount(so) != 1) result = 3;
-		else if (so->_lock == o._lock) result = 4;
-	}
+	BFRelease(so);
 })
 
 BFTEST_COVERAGE_FUNC(object_tests, {
