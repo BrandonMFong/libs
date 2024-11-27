@@ -122,7 +122,7 @@ private:
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);
 	void (*_releaseValue)(V obj);
-	static int _BFMapCompare(BFMapKey a, BFMapKey b) {
+	static int _BFMapCompare(void * a, void * b) {
 		Key<K> * akey = (Key<K> *) a;
 		Key<K> * bkey = (Key<K> *) b;
 		if (!akey || !bkey || !akey->_mapRef->_compare) {
@@ -130,7 +130,7 @@ private:
 		}
 		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
 	}
- 	static void _BFMapRelease(BFMapKey k, BFMapValue v) {
+ 	static void _BFMapRelease(void * k, void * v) {
 		Key<K> * key = (Key<K> *) k;
 		Value<V> * value = (Value<V> *) v;
 		BFRelease(key);
