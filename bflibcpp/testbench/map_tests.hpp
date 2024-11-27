@@ -20,7 +20,7 @@ BFTEST_UNIT_FUNC(test_mapInit, 2<<10,  {
 	Map<String, int> map;
 })
 
-int BFTestMapCompareString(String & a, String & b) {
+int BFTestMapCompareString(String a, String b) {
 	return a.compareString(b);
 }
 
@@ -82,6 +82,38 @@ BFTEST_UNIT_FUNC(test_mapRemove, 2<<10,  {
 			BF_ASSERT(err == 0, "error removing for key=%s: %d", key.c_str(), err);
 			removeCount--;
 		}
+	}
+})
+
+int BFTestMapCompareCString(char * a, char * b) {
+	return strcmp(a, b);
+}
+
+void BFTestMapReleaseKeyCString(char * obj) {
+	BFFree(obj);
+}
+
+void BFTestMapReleaseValueInteger(int * obj) {
+	BFFree(obj);
+}
+
+BFTEST_UNIT_FUNC(test_mapWithAllocMem, 2<<10,  {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+	Map<char *, int *> map;
+	map.setCompare(BFTestMapCompareCString);
+	map.setRelease(BFTestMapReleaseKeyCString, BFTestMapReleaseValueInteger);
+
+	// insert	
+	int mapsize = 2<<7;
+	for (int i = 0; i < mapsize; i++) {
+		char * key = (char *) malloc(sizeof(char) * 32);
+		snprintf(key, 32, "%d", i);
+		int * value = (int *) malloc(sizeof(int));
+		*value = i;
+		int err = map.insert(key, value);
+		BF_ASSERT(err == 0, "error inserting %d", err);
 	}
 })
 

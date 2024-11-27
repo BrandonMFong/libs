@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include "hashmap.hpp"
+#include "string.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -20,7 +21,7 @@ BFTEST_UNIT_FUNC(test_hashMapInit, 2<<10,  {
 	HashMap<String, int> map;
 })
 
-int BFTestHashMapCompareString(String & a, String & b) {
+int BFTestHashMapCompareString(String a, String b) {
 	return a.compareString(b);
 }
 

@@ -37,8 +37,8 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(list_tests);
 	BFTEST_SUITE_LAUNCH(array_tests);
 	BFTEST_SUITE_LAUNCH(vector_tests);
-	BFTEST_SUITE_LAUNCH(map_tests);
 	*/
+	BFTEST_SUITE_LAUNCH(map_tests);
 	BFTEST_SUITE_LAUNCH(hashmap_tests);
 
 })
