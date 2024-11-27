@@ -6,7 +6,7 @@
 #ifndef MAP_TESTS_HPP
 #define MAP_TESTS_HPP
 
-#define ASSERT_PUBLIC_MEMBER_ACCESS
+#undef ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include "map.hpp"
 
