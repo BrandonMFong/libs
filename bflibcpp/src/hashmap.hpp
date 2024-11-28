@@ -33,7 +33,7 @@ public:
 		BFHashMapRelease(this->_map);
 	}
 
-	void setHash(unsigned long (*hash)(K key)) {
+	void setHash(unsigned long (*hash)(K & key)) {
 		this->_hash = hash;
 	}
 
@@ -74,7 +74,7 @@ private:
 		return map->_hash(key->_obj);
 	}
 
-	unsigned long (*_hash)(K key);
+	unsigned long (*_hash)(K & key);
 
 	BFHashMap _map;
 };
