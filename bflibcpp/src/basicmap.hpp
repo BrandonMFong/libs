@@ -109,15 +109,15 @@ public:
 	/**
 	 * returns value for key with optional error
 	 */
-	V getValueForKey(K k, int * error) {
+	V & getValueForKey(K k, int * error) {
 		Key<K> key(k, this);
 
 		int err = 0;
-		Value<V> * value = (Value<V> *) this->_getValueForKey(&key, &err);
-		if (!value) {
-			if (error) *error = err;
-			return 0;
+		Value<V> * value = this->_getValueForKey(&key, &err);
+		if (!value || err != 0) {
+			throw Exception("Couldn't get value for key");
 		}
+		if (error) *error = err;
 
 		return value->_obj;
 	}
@@ -125,7 +125,7 @@ public:
 	/**
 	 * returns value for key
 	 */
-	V at(K k) {
+	V & at(K k) {
 		this->getValueForKey(k, NULL);
 	}
 
@@ -147,7 +147,7 @@ public:
 
 private:
 	virtual int _insert(void * key, void * value) = 0;
-	virtual void * _getValueForKey(void * key, int * error) = 0;
+	virtual Value<V> * _getValueForKey(void * key, int * error) = 0;
 	virtual int _remove(void * key) = 0;
 	virtual bool _contains(void * key) = 0;
 
