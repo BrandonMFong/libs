@@ -306,7 +306,7 @@ BFHashMapValue BFHashMapGetValue(BFHashMap _map, const BFHashMapKey key, int * e
 	}
 
 	// value could not be found here
-	*error = -1;
+	if (error) *error = -1;
 	return NULL;
 }
 

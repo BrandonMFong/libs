@@ -51,10 +51,12 @@ BFTEST_UNIT_FUNC(test_mapGet, 2<<10,  {
 	// get
 	for (int i = 0; i < mapsize; i++) {
 		String key("%d", i);
-		int err = 0;
-		int value = map.getValueForKey(key, &err);
-		BF_ASSERT(err == 0, "error getting: %d", err);
-		BF_ASSERT(value == i, "%d != %d", value, i);
+		try {
+			int value = map.getValueForKey(key);
+			BF_ASSERT(value == i, "%d != %d", value, i);
+		} catch (Exception & e) {
+			BF_ASSERT(false, "%s", e.what());
+		}
 	}
 })
 

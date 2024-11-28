@@ -42,18 +42,13 @@ private:
 		return BFMapInsert(this->_map, key, value);
 	}
 
-	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key, int * error) {
+	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key) {
 		if (!this->_map) {
-			if (error) *error = -1;
 			return NULL;
 		}
 		
 		typename BasicMap<K,V,S>::template Value<V> * value = 
-			(typename BasicMap<K,V,S>::template Value<V> *) BFMapGetValue(this->_map, key, error);
-		if (!value) {
-			if (error && *error != 0) *error = -1;
-			return NULL;
-		}
+			(typename BasicMap<K,V,S>::template Value<V> *) BFMapGetValue(this->_map, key, NULL);
 
 		return value;
 	}

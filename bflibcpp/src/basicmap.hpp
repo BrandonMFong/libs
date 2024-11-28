@@ -8,6 +8,7 @@
 
 #include "collection.hpp"
 #include "release.hpp"
+#include "exception.hpp"
 
 extern "C" {
 #include <bflibc/map.h>
@@ -108,25 +109,27 @@ public:
 
 	/**
 	 * returns value for key with optional error
+	 *
+	 * throws an exception if no value could be found for key
 	 */
-	V & getValueForKey(K k, int * error) {
+	V & getValueForKey(K k) {
 		Key<K> key(k, this);
 
-		int err = 0;
-		Value<V> * value = this->_getValueForKey(&key, &err);
-		if (!value || err != 0) {
-			throw Exception("Couldn't get value for key");
+		Value<V> * value = this->_getValueForKey(&key);
+		if (value) {
+			return value->_obj;
+		} else {
+			throw Exception("could not get value for key");
 		}
-		if (error) *error = err;
-
-		return value->_obj;
 	}
 
 	/**
 	 * returns value for key
+	 *
+	 * if no value is found, an exception is thrown
 	 */
 	V & at(K k) {
-		this->getValueForKey(k, NULL);
+		return this->getValueForKey(k);
 	}
 
 	/**
@@ -147,9 +150,13 @@ public:
 
 private:
 	virtual int _insert(void * key, void * value) = 0;
-	virtual Value<V> * _getValueForKey(void * key, int * error) = 0;
 	virtual int _remove(void * key) = 0;
 	virtual bool _contains(void * key) = 0;
+
+	/**
+	 * returns NULL if there is no value for key
+	 */
+	virtual Value<V> * _getValueForKey(void * key) = 0;
 
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);
