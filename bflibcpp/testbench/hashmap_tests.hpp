@@ -26,7 +26,9 @@ int BFTestHashMapCompareString(String & a, String & b) {
 }
 
 unsigned long BFTestHashMapHashFunction(BFHashMapKey key) {
-	if (!key) return 0;
+	if (!key) {
+		return 0;
+	}
 	return BFHashDjb2((unsigned char *) key);
 }
 
