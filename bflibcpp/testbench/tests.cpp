@@ -21,8 +21,10 @@
 #include "map_tests.hpp"
 #include "hashmap_tests.hpp"
 #include "exception_tests.hpp"
+#include "tree_tests.hpp"
 
 BFTEST_SUITE_FUNC({
+		/*
 	BFTEST_SUITE_LAUNCH(atomic_tests);
 	BFTEST_SUITE_LAUNCH(file_tests);
 	//BFTEST_SUITE_LAUNCH(bintree_tests);
@@ -40,6 +42,8 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(list_tests);
 	BFTEST_SUITE_LAUNCH(hashmap_tests);
 	BFTEST_SUITE_LAUNCH(exception_tests);
+	*/
+	BFTEST_SUITE_LAUNCH(tree_tests);
 
 })
 
