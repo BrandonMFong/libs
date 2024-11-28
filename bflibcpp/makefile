@@ -18,6 +18,8 @@ help:
 COMPILER = g++
 CPPSTD = -std=c++20
 CONFIG = release
+BUILD_PATH = build/$(CONFIG)
+BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 BUILD_TYPE = archive
 SOURCE_EXT = cpp
 HEADER_EXT = hpp

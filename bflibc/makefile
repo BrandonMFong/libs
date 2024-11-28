@@ -17,6 +17,8 @@ help:
 
 COMPILER = gcc
 CONFIG = release
+BUILD_PATH = build/$(CONFIG)
+BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 BUILD_TYPE = archive
 SOURCE_EXT = c
 HEADER_EXT = h
