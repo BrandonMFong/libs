@@ -62,6 +62,12 @@ public:
 		return BFTreeInsert(this->_tree, c);
 	}
 
+	int remove(T object) {
+		if (!this->_tree) return -1;
+		Container c(object, this);
+		return BFTreeRemove(this->_tree, &c);
+	}
+
 private:
 	int (*_compare)(T & a, T & b);
 	static int _BFTreeCompare(BFTreeObject a, BFTreeObject b) {

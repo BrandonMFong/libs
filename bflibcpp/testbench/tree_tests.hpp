@@ -41,9 +41,28 @@ BFTEST_UNIT_FUNC(test_treeInsert, 2<<10,  {
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 })
 
+BFTEST_UNIT_FUNC(test_treeRemove, 2<<10,  {
+	Tree<int> tree;
+	tree.setCompare(BFTestTreeCompare);
+	tree.setRelease(BFTestTreeRelease);
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i++) {
+		BF_ASSERT(!tree.insert(i));
+	}
+	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
+
+	// remove
+	for (int i = 0; i < treesize; i++) {
+		BF_ASSERT(!tree.remove(i));
+	}
+	BF_ASSERT(tree.size() == 0, "size is %ld", tree.size());
+})
+
 BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
+	BFTEST_LAUNCH(test_treeRemove);
 
 })
 
