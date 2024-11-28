@@ -2,6 +2,7 @@
 [] improve List sorting
 [] fix leaks in (RBTree specifically)
 [x] map and hash map implementation
+[] tree implementaion
 [] standard pair
 [] tuple
 [] address compiler warning regarding ambiguous operations
