@@ -33,6 +33,7 @@ BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10, {
 	BFHashMap map = BFHashMapCreate();
 	BF_ASSERT(map, "map is null");
 	BFHashMapSetHashFunction(map, BFTestHashMapHashString);
+	BFHashMapSetCompare(map, BFTestHashMapKeyCompare);
 
 	int hmsize = 2<<8;
 	char keys[hmsize][64];
@@ -140,12 +141,45 @@ BFTEST_UNIT_FUNC(test_hashMapGetNonExistentKeyValue, 2<<10, {
 	BFHashMapRelease(map);
 })
 
+void BFTestHashMapKeyValueRelease(BFHashMapKey key, BFHashMapValue value) {
+	BFFree(key);
+	BFFree(value);
+}
+
+unsigned long BFTestHashMapHashInteger(BFHashMapKey key) {
+	int * num = (int *) key;
+	return BFHashDivision(*num, 7979);
+}
+
+BFTEST_UNIT_FUNC(test_hashMapHandleMalloc, 2<<10, {
+	BFHashMap map = BFHashMapCreate();
+	BF_ASSERT(map, "map is null");
+	BFHashMapSetHashFunction(map, BFTestHashMapHashInteger);
+	BFHashMapSetCompare(map, BFTestHashMapKeyCompare);
+	BFHashMapSetRelease(map, BFTestHashMapKeyValueRelease);
+
+	int hmsize = 2<<8;
+	int * keys[hmsize];
+	int * values[hmsize];
+	for (int i = 0; i < hmsize; i++) {
+		keys[i] = (int *) malloc(sizeof(int));
+		values[i] = (int *) malloc(sizeof(int));
+
+		int err = BFHashMapInsert(map, (BFHashMapKey) keys[i], (BFHashMapValue) values[i]);
+		BF_ASSERT(err == 0, "error inserting %d", err);
+	}
+	BF_ASSERT(BFHashMapGetSize(map) == hmsize, "size %ld != %ld", BFHashMapGetSize(map), hmsize);
+
+	BFHashMapRelease(map);
+})
+
 BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
 	BFTEST_LAUNCH(test_hashMapInsert);
 	BFTEST_LAUNCH(test_hashMapInsertAndGet);
 	BFTEST_LAUNCH(test_hashMapRemove);
 	BFTEST_LAUNCH(test_hashMapGetNonExistentKeyValue);
+	BFTEST_LAUNCH(test_hashMapHandleMalloc);
 
 })
 

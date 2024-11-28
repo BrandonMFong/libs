@@ -139,6 +139,11 @@ int BFFileWriterCreate(BFFileWriter * filewriter, const char * filepath) {
 
 	_FileWriter * fw = malloc(sizeof(_FileWriter));
 	if (!fw) return -1;
+	fw->file = NULL;
+	fw->path[0] = '\0';
+	fw->q.lock = NULL;
+	fw->lock = NULL;
+	fw->tid = NULL;
 
 	// open the file
 	fw->file = fopen(filepath, "a");

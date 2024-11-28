@@ -10,6 +10,7 @@
 #define MAP_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef void * BFMap;
 typedef void * BFMapKey;
@@ -61,6 +62,11 @@ BFMapValue BFMapGetValue(BFMap map, BFMapKey key, int * error);
  * removes entry with key
  */
 int BFMapRemove(BFMap map, BFMapKey key);
+
+/**
+ * true if map contains key
+ */
+bool BFMapContains(BFMap map, BFMapKey key);
 
 #endif // MAP_H
 

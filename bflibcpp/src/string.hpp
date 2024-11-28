@@ -46,6 +46,7 @@ public:
 
 	// Returns raw c string
 	const char * cString() const;
+	const char * c_str() const;
 
 	// returns a copy of string
 	//

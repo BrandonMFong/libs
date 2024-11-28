@@ -179,6 +179,37 @@ BFTEST_UNIT_FUNC(test_mapGetNonexistentKeyValue, 2<<10, {
 	BFMapRelease(map);
 })
 
+BFTEST_UNIT_FUNC(test_mapContains, 2<<10, {
+	BFMap map = BFMapCreate();
+	BF_ASSERT(map, "null map");
+	BFMapSetCompare(map, BFTestMapTreeCompareInteger);
+
+	// making map<char*, int>[mapsize]
+	int mapsize = 2<<6;
+	int keys[mapsize];
+	int values[mapsize];
+	for (int i = 0; i < mapsize; i++) {
+		keys[i] = i;
+		values[i] = i;
+
+		if (i % 2 == 0) {
+			int err = BFMapInsert(map, (BFMapKey) (intptr_t) keys[i], (BFMapValue) (intptr_t) values[i]);
+			BF_ASSERT(err == 0, "insert error %d", err);
+		}
+	}
+
+	BF_ASSERT(BFMapGetSize(map) == mapsize / 2, "size is not correct, actual=%ld expect=%ld", BFMapGetSize(map), mapsize / 2);
+
+	for (int i = 0; i < mapsize; i++) {
+		BF_ASSERT(
+			BFMapContains(map, (BFMapKey) (intptr_t) keys[i]) == (keys[i] % 2 == 0 ? true : false),
+			"BFMapContains(key=%d) should be %s",
+			keys[i], (i % 2 == 0 ? "true" : "false"));
+	}
+
+	BFMapRelease(map);
+})
+
 BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapinit);
 	BFTEST_LAUNCH(test_mapInsert);
@@ -186,6 +217,7 @@ BFTEST_COVERAGE_FUNC(map_tests, {
 	BFTEST_LAUNCH(test_mapRemove);
 	BFTEST_LAUNCH(test_mapKeyValueNoPointers);
 	BFTEST_LAUNCH(test_mapGetNonexistentKeyValue);
+	BFTEST_LAUNCH(test_mapContains);
 
 })
 
