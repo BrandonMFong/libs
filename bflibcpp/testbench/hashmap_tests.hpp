@@ -132,6 +132,31 @@ BFTEST_UNIT_FUNC(test_hashMapWithAllocMem, 2<<10,  {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_hashMapGetterWithSubscript, 2<<10,  {
+	HashMap<String, int> map;
+	map.setCompare(BFTestHashMapCompareString);
+	map.setHash(BFTestHashMapHashFunctionString);
+
+	// insert	
+	int mapsize = 2<<7;
+	for (int i = 0; i < mapsize; i++) {
+		String key("%d", i);
+		int err = map.insert(key, i);
+		BF_ASSERT(err == 0, "error inserting %d", err);
+	}
+
+	// get
+	for (int i = 0; i < mapsize; i++) {
+		String key("%d", i);
+		try {
+			int value = map[key];
+			BF_ASSERT(value == i, "%d != %d", value, i);
+		} catch (Exception & e) {
+			BF_ASSERT(false, "%s", e.what());
+		}
+	}
+
+})
 
 BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
@@ -139,6 +164,7 @@ BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapGet);
 	BFTEST_LAUNCH(test_hashMapRemove);
 	BFTEST_LAUNCH(test_hashMapWithAllocMem);
+	BFTEST_LAUNCH(test_hashMapGetterWithSubscript);
 
 })
 

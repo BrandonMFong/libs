@@ -132,6 +132,10 @@ public:
 		return this->getValueForKey(k);
 	}
 
+	V & operator[](K k) {
+		return this->at(k);
+	}
+
 	/**
 	 * removes key/value pair with key
 	 */
