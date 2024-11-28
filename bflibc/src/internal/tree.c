@@ -16,10 +16,14 @@ _BFTreeNode * _BFTreeNodeCreate() {
 	res->right = NULL;
 	res->object = NULL;
 	res->height = 1;
+	res->release = NULL;
 	return res;
 }
 
 void _BFTreeNodeRelease(_BFTreeNode * node) {
+	if (node && node->release) {
+		node->release(node->object);
+	}
 	BFFree(node);
 }
 
@@ -81,6 +85,7 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	void (*release)(BFTreeObject object),
 	int * error
 ) {
 	// 1.  Perform the normal BST insertion
@@ -88,13 +93,18 @@ _BFTreeNode * _BFTreeNodeInsert(
 		//return newNode;
 		_BFTreeNode * node = _BFTreeNodeCreate();
 		node->object = object;
+		node->release = release;
 		return node;
 	}
 
 	if (compare(object, node->object) < 0) {
-		node->left = _BFTreeNodeInsert(node->left, object, compare, error);
+		node->left = _BFTreeNodeInsert(
+			node->left, object, compare, release, error
+		);
 	} else if (compare(object, node->object) > 0) {
-		node->right = _BFTreeNodeInsert(node->right, object, compare, error);
+		node->right = _BFTreeNodeInsert(
+			node->right, object, compare, release, error
+		);
 	} else { // Equal keys are not allowed in BST
 		*error = -1;
 		return node;

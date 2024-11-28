@@ -57,7 +57,13 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 	}
 	_BFTree * tree = (_BFTree *) _tree;
 	int err = 0;
-	tree->root = _BFTreeNodeInsert(tree->root, object, tree->compare, &err);
+	tree->root = _BFTreeNodeInsert(
+		tree->root,
+		object,
+		tree->compare,
+		tree->release,
+		&err
+	);
 
 	if (err == 0) {
 		tree->size++;
@@ -73,9 +79,11 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 	_BFTree * tree = (_BFTree *) _tree;
 	tree->root = _BFTreeNodeRemove(tree->root, object, tree->compare);
 
+	/*
 	if (tree->release) {
 		tree->release(object);
 	}
+	*/
 
 	tree->size--;
 	return 0;
