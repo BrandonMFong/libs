@@ -75,7 +75,7 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 }
 
 int BFTreeRemove(BFTree _tree, BFTreeObject object) {
-	if (!_tree || !object) {
+	if (!_tree) {
 		return -1;
 	}
 	_BFTree * tree = (_BFTree *) _tree;

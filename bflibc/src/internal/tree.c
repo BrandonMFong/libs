@@ -207,18 +207,16 @@ _BFTreeNode * _BFTreeNodeRemove(
 				temp->object = o;
 			}
 		
-		/*	
-			if (release) {
-				release(object);
-			}
-			*/
-	
 			// the non-empty child
 			_BFTreeNodeRelease(temp, release);
 		} else {
 			// node with two children: Get the inorder
 			// successor (smallest in the right subtree)
 			_BFTreeNode * temp = _BFTreeNodeMinValueNode(root->right);
+
+			if (release) {
+				release(root->object);
+			}
 
 			// Copy the inorder successor's data to this node
 			root->object = temp->object;
