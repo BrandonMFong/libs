@@ -187,11 +187,6 @@ _BFTreeNode * _BFTreeNodeRemove(
 	// if key is same as root's key, then This is
 	// the node to be deleted
 	} else {
-		if (release) {
-			release(root->object);
-			root->object = NULL;
-		}
-
 		// node with only one child or no child
 		if (root->left == NULL || root->right == NULL) {
 			_BFTreeNode * temp = root->left ? root->left : root->right;
@@ -203,7 +198,13 @@ _BFTreeNode * _BFTreeNodeRemove(
 			} else { // One child case
 				*root = *temp; // Copy the contents of
 			}
-
+		
+		/*	
+			if (release) {
+				release(object);
+			}
+			*/
+	
 			// the non-empty child
 			_BFTreeNodeRelease(temp);
 		} else {
@@ -216,7 +217,7 @@ _BFTreeNode * _BFTreeNodeRemove(
 
 			// Delete the inorder successor
 			root->right = _BFTreeNodeRemove(
-				root->right, temp->object, compare, release
+				root->right, temp->object, compare, NULL 
 			);
 		}
 	}

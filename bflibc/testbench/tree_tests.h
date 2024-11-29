@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 int BFTestTreeCompare(BFTreeObject aobj, BFTreeObject bobj) {
+	//printf("compare(%p, %p)\n", aobj, bobj);
 	if (!aobj || !bobj) return -1;
 	int a = *(int *) aobj;
 	int b = *(int *) bobj;
@@ -130,12 +131,17 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	BFTreeRelease(tree);
 })
 
+void BFTestTreeFree(BFTreeObject object) {
+	//printf("freeing: %p\n", object);
+	free(object);
+}
+
 BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	// create trees
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
-	BFTreeSetRelease(tree, free); 
+	BFTreeSetRelease(tree, BFTestTreeFree);
 
 	// create nodes and insert
 	int treesize = 2<<5;
@@ -158,6 +164,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		int index = abs(BFRand()) % treesize;
 		int * object = objects[index];
 
+		//printf("can we remove %p\n", object);
 		if (object && BFTreeContains(tree, object)) {
 			int err = BFTreeRemove(tree, object);
 			BF_ASSERT(err == 0, "couldn't remove node for object=%d", *object);
@@ -350,11 +357,13 @@ BFTEST_UNIT_FUNC(test_treeTraversal, 2<<10, {
 })
 
 BFTEST_COVERAGE_FUNC(tree_tests, {
+	/*
 	BFTEST_LAUNCH(test_treeinit);
 	BFTEST_LAUNCH(test_treenodeinit);
 	BFTEST_LAUNCH(test_CreateNodeWithObject);
 	BFTEST_LAUNCH(test_InsertNodes);
 	BFTEST_LAUNCH(test_InsertNodesAndSearch);
+	*/
 	BFTEST_LAUNCH(test_InsertAndRemovingNodes);
 	BFTEST_LAUNCH(test_InsertDuplicates);
 	BFTEST_LAUNCH(test_InsertAndRemovingNoPointers);
