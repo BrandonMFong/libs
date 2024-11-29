@@ -78,7 +78,9 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 		return -1;
 	}
 	_BFTree * tree = (_BFTree *) _tree;
-	tree->root = _BFTreeNodeRemove(tree->root, object, tree->compare, tree->release);
+	tree->root = _BFTreeNodeRemove(
+		tree->root, object, tree->compare, tree->release
+	);
 
 	tree->size--;
 	return 0;
