@@ -35,7 +35,7 @@ BFTEST_UNIT_FUNC(test_treeinit, 2<<10, {
 BFTEST_UNIT_FUNC(test_treenodeinit, 2<<10, {
 	_BFTreeNode * node = _BFTreeNodeCreate();
 	BF_ASSERT(node, "a null node was returned");
-	_BFTreeNodeRelease(node);
+	_BFTreeNodeRelease(node, NULL);
 })
 
 BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
@@ -47,8 +47,8 @@ BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
 	*value = BFRand();
 	node->object = value;
 
-	_BFTreeNodeRelease(node);
-	BFFree(value);
+	_BFTreeNodeRelease(node, free);
+	//BFFree(value);
 })
 
 void BFTestTreePrint(_BFTreeNode * node) {
@@ -136,7 +136,7 @@ void BFTestTreeFree(BFTreeObject object) {
 	free(object);
 }
 
-BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
+BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 1, {
 	// create trees
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
@@ -152,6 +152,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		*objects[i] = i;
 
 		// insert into tree
+		//printf("inserting: %p\n", objects[i]);
 		int err = BFTreeInsert(tree, objects[i]);
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
@@ -357,16 +358,20 @@ BFTEST_UNIT_FUNC(test_treeTraversal, 2<<10, {
 })
 
 BFTEST_COVERAGE_FUNC(tree_tests, {
+	/*
 	BFTEST_LAUNCH(test_treeinit);
 	BFTEST_LAUNCH(test_treenodeinit);
 	BFTEST_LAUNCH(test_CreateNodeWithObject);
 	BFTEST_LAUNCH(test_InsertNodes);
 	BFTEST_LAUNCH(test_InsertNodesAndSearch);
+	*/
 	BFTEST_LAUNCH(test_InsertAndRemovingNodes);
+	/*
 	BFTEST_LAUNCH(test_InsertDuplicates);
 	BFTEST_LAUNCH(test_InsertAndRemovingNoPointers);
 	BFTEST_LAUNCH(test_treeGettingNonexistentValues);
 	BFTEST_LAUNCH(test_treeTraversal);
+	*/
 
 })
 

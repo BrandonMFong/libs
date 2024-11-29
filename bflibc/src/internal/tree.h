@@ -16,7 +16,10 @@ typedef struct _BFTreeNode {
 } _BFTreeNode;
 
 _BFTreeNode * _BFTreeNodeCreate();
-void _BFTreeNodeRelease(_BFTreeNode * node);
+void _BFTreeNodeRelease(
+	_BFTreeNode * node,
+	void (*release)(BFTreeObject object)
+);
 
 typedef struct _BFTree {
 	_BFTreeNode * root;

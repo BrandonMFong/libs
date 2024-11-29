@@ -19,7 +19,13 @@ _BFTreeNode * _BFTreeNodeCreate() {
 	return res;
 }
 
-void _BFTreeNodeRelease(_BFTreeNode * node) {
+void _BFTreeNodeRelease(
+	_BFTreeNode * node,
+	void (*release)(BFTreeObject object)
+) {
+	if (release) {
+		release(node->object);
+	}
 	BFFree(node);
 }
 
@@ -196,7 +202,9 @@ _BFTreeNode * _BFTreeNodeRemove(
 				temp = root;
 				root = NULL;
 			} else { // One child case
+				BFTreeObject o = root->object;
 				*root = *temp; // Copy the contents of
+				temp->object = o;
 			}
 		
 		/*	
@@ -206,7 +214,7 @@ _BFTreeNode * _BFTreeNodeRemove(
 			*/
 	
 			// the non-empty child
-			_BFTreeNodeRelease(temp);
+			_BFTreeNodeRelease(temp, release);
 		} else {
 			// node with two children: Get the inorder
 			// successor (smallest in the right subtree)
@@ -217,7 +225,7 @@ _BFTreeNode * _BFTreeNodeRemove(
 
 			// Delete the inorder successor
 			root->right = _BFTreeNodeRemove(
-				root->right, temp->object, compare, NULL 
+				root->right, temp->object, compare, NULL
 			);
 		}
 	}

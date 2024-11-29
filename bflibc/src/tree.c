@@ -33,11 +33,13 @@ void BFTreeReleaseNode(_BFTree * tree, _BFTreeNode * node) {
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
 
+	/*
 	if (tree->release) {
 		tree->release(node->object);
 	}
+	*/
 
-	_BFTreeNodeRelease(node);
+	_BFTreeNodeRelease(node, tree->release);
 	tree->size--;
 }
 
@@ -81,9 +83,11 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 		tree->root, object, tree->compare, tree->release
 	);
 
+	/*
 	if (tree->release) {
 		tree->release(object);
 	}
+	*/
 
 	tree->size--;
 	return 0;
