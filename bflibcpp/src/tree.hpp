@@ -15,6 +15,10 @@ extern "C" {
 }
 
 namespace BF {
+
+/**
+ * AVL Tree
+ */
 template<typename T, typename S = size_t>
 class Tree : public Collection<S> {
 	/**
