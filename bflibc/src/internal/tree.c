@@ -189,14 +189,7 @@ _BFTreeNode * _BFTreeNodeRemove(
 	} else {
 		// node with only one child or no child
 		if (root->left == NULL || root->right == NULL) {
-			_BFTreeNode * temp = NULL;
-			if (root->left) {
-				temp = root->left;
-				root->left = NULL;
-			} else if (root->left) {
-				temp = root->right;
-				root->right = NULL;
-			}
+			_BFTreeNode * temp = root->left ? root->left : root->right;
 
 			// No child case
 			if (temp == NULL) {
