@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 int BFTestTreeCompare(BFTreeObject aobj, BFTreeObject bobj) {
+	if (!aobj || !bobj) return -1;
 	int a = *(int *) aobj;
 	int b = *(int *) bobj;
 	return a - b;
