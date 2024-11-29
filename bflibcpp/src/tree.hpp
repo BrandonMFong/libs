@@ -8,6 +8,7 @@
 
 #include "collection.hpp"
 #include "release.hpp"
+#include "exception.hpp"
 
 extern "C" {
 #include <bflibc/tree.h>
@@ -33,6 +34,23 @@ class Tree : public Collection<S> {
 	};
 
 public:
+	class Node : public Object {
+		BFTreeNode _node;
+	public:
+		Node(BFTreeNode node) : _node(node), Object() { }
+		virtual ~Node() { }
+		Node left() { return BFTreeNodeGetLeft(this->_node); }
+		Node right() { return BFTreeNodeGetRight(this->_node); }
+		T & object() {
+			Container * cont = (Container *) BFTreeNodeGetObject(this->_node);
+			if (!cont) {
+				throw Exception("object is null");
+			}
+			return cont->_obj;
+		}
+		bool isNull() { return this->_node == NULL; }
+	};
+
 	Tree() : Collection<S>() {
 		this->_tree = BFTreeCreate();
 		if (!this->_tree) return;
@@ -72,6 +90,10 @@ public:
 		if (!this->_tree) return -1;
 		Container c(object, this);
 		return BFTreeContains(this->_tree, &c);
+	}
+
+	Node root() {
+		return BFTreeGetRoot(this->_tree);
 	}
 
 private:

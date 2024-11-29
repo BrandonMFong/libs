@@ -3,7 +3,8 @@
 [] fix leaks in (RBTree specifically)
 [x] map and hash map implementation
 [] tree implementaion
-    [] make BFTree release the node mem
+    [x] make BFTree release the node mem
+	[] review for any places we can pass by ref
 [] standard pair
 [] tuple
 [] address compiler warning regarding ambiguous operations
