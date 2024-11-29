@@ -6,6 +6,8 @@
 #ifndef DICTIONARY_HPP
 #define DICTIONARY_HPP
 
+#warning "Dictionary will be deprecated. Please start using BasicMap"
+
 #include "rbtree.hpp"
 #include "access.hpp"
 #include "collection.hpp"
