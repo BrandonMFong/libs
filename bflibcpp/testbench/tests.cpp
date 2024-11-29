@@ -7,9 +7,6 @@
 #include "array_tests.hpp"
 #include "list_tests.hpp"
 #include "file_tests.hpp"
-#include "rbtree_tests.hpp"
-#include "bintree_tests.hpp"
-#include "dictionary_tests.hpp"
 #include "string_tests.hpp"
 #include "stack_tests.hpp"
 #include "time_tests.hpp"
@@ -26,9 +23,6 @@
 BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(atomic_tests);
 	BFTEST_SUITE_LAUNCH(file_tests);
-	//BFTEST_SUITE_LAUNCH(bintree_tests);
-	//BFTEST_SUITE_LAUNCH(rbtree_tests);
-	//BFTEST_SUITE_LAUNCH(dictionary_tests);
 	BFTEST_SUITE_LAUNCH(string_tests);
 	BFTEST_SUITE_LAUNCH(stack_tests);
 	BFTEST_SUITE_LAUNCH(queue_tests);
