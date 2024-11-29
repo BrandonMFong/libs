@@ -19,6 +19,11 @@ typedef struct _BFTreeNode {
 _BFTreeNode * _BFTreeNodeCreate();
 void _BFTreeNodeRelease(_BFTreeNode * node);
 
+/**
+ * swaps content of a and b
+ */
+void _BFTreeNodeSwap(_BFTreeNode * a, _BFTreeNode * b);
+
 typedef struct _BFTree {
 	_BFTreeNode * root;
 	size_t size;

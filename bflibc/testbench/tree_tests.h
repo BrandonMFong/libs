@@ -157,7 +157,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		int index = abs(BFRand()) % treesize;
 		int * object = objects[index];
 
-		if (BFTreeContains(tree, object)) {
+		if (object && BFTreeContains(tree, object)) {
 			int err = BFTreeRemove(tree, object);
 			BF_ASSERT(err == 0, "couldn't remove node for object=%d", *object);
 

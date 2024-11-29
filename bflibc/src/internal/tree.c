@@ -21,10 +21,24 @@ _BFTreeNode * _BFTreeNodeCreate() {
 }
 
 void _BFTreeNodeRelease(_BFTreeNode * node) {
+	/*
 	if (node && node->release) {
 		node->release(node->object);
 	}
+	*/
 	BFFree(node);
+}
+
+void _BFTreeNodeSwap(_BFTreeNode * a, _BFTreeNode * b) {
+	if (!a || !b) return;
+	_BFTreeNode tmp = *a;
+	*a = *b;
+	*b = tmp;
+	/*
+	BFTreeObject obj = a->object;
+	a->object = b->object;
+	b->object = obj;
+	*/
 }
 
 // A utility function to get the height of the tree
@@ -90,7 +104,6 @@ _BFTreeNode * _BFTreeNodeInsert(
 ) {
 	// 1.  Perform the normal BST insertion
 	if (node == NULL) {
-		//return newNode;
 		_BFTreeNode * node = _BFTreeNodeCreate();
 		node->object = object;
 		node->release = release;
@@ -106,7 +119,7 @@ _BFTreeNode * _BFTreeNodeInsert(
 			node->right, object, compare, release, error
 		);
 	} else { // Equal keys are not allowed in BST
-		*error = -1;
+		if (error) *error = -1;
 		return node;
 	}
 
@@ -191,14 +204,26 @@ _BFTreeNode * _BFTreeNodeRemove(
 	} else {
 		// node with only one child or no child
 		if (root->left == NULL || root->right == NULL) {
-			_BFTreeNode *temp = root->left ? root->left : root->right;
+			_BFTreeNode * temp = NULL;
+			if (root->left) {
+				temp = root->left;
+				root->left = NULL;
+			} else if (root->left) {
+				temp = root->right;
+				root->right = NULL;
+			}
 
 			// No child case
 			if (temp == NULL) {
 				temp = root;
 				root = NULL;
 			} else { // One child case
+				if (root->release) {
+					root->release(root->object);
+				}
+
 				*root = *temp; // Copy the contents of
+				//_BFTreeNodeSwap(root, temp);
 			}
 
 			// the non-empty child
@@ -207,6 +232,10 @@ _BFTreeNode * _BFTreeNodeRemove(
 			// node with two children: Get the inorder
 			// successor (smallest in the right subtree)
 			_BFTreeNode * temp = _BFTreeNodeMinValueNode(root->right);
+
+			if (root->release) {
+				root->release(root->object);
+			}
 
 			// Copy the inorder successor's data to this node
 			root->object = temp->object;
