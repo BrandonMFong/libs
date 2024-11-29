@@ -59,10 +59,32 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10,  {
 	BF_ASSERT(tree.size() == 0, "size is %ld", tree.size());
 })
 
+BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
+	Tree<int> tree;
+	tree.setCompare(BFTestTreeCompare);
+	tree.setRelease(BFTestTreeRelease);
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i += 2) {
+		BF_ASSERT(!tree.insert(i));
+	}
+	BF_ASSERT(tree.size() == treesize/2, "%ld != %ld", tree.size(), treesize);
+
+	// contains
+	for (int i = 0; i < treesize; i++) {
+		if (i % 2 == 0) {
+			BF_ASSERT(tree.contains(i));
+		} else {
+			BF_ASSERT(!tree.contains(i));
+		}
+	}
+})
+
 BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
 	BFTEST_LAUNCH(test_treeRemove);
+	BFTEST_LAUNCH(test_treeContains);
 
 })
 
