@@ -81,7 +81,7 @@ BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
 })
 
 template<typename T>
-void _BFTestTreeTraverseInorder(typename Tree<T>::Node node) {
+void _BFTestTreeTraverseInorder(const typename Tree<T>::Node node) {
 	if (node.isNull()) return;
 	_BFTestTreeTraverseInorder<T>(node.left());
 	if (node.object() != 0) {
@@ -91,7 +91,7 @@ void _BFTestTreeTraverseInorder(typename Tree<T>::Node node) {
 }
 
 template<typename T>
-void _BFTestTreeTraversePreorder(typename Tree<T>::Node node) {
+void _BFTestTreeTraversePreorder(const typename Tree<T>::Node node) {
 	if (node.isNull()) return;
 	if (node.object() != 0) {
 		// TODO: assert nonzero value
@@ -101,7 +101,7 @@ void _BFTestTreeTraversePreorder(typename Tree<T>::Node node) {
 }
 
 template<typename T>
-void _BFTestTreeTraversePostorder(typename Tree<T>::Node node) {
+void _BFTestTreeTraversePostorder(const typename Tree<T>::Node node) {
 	if (node.isNull()) return;
 	_BFTestTreeTraverseInorder<T>(node.left());
 	_BFTestTreeTraverseInorder<T>(node.right());
@@ -121,7 +121,7 @@ BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 	}
 	BF_ASSERT(tree.size() == treesize/2, "%ld != %ld", tree.size(), treesize);
 
-	Tree<int>::Node root = tree.root();
+	const Tree<int>::Node root = tree.root();
 	_BFTestTreeTraverseInorder<int>(root);
 	_BFTestTreeTraversePreorder<int>(root);
 	_BFTestTreeTraversePostorder<int>(root);
