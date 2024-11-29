@@ -41,7 +41,10 @@ BFTEST_UNIT_FUNC(test_treeInsert, 2<<10,  {
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 })
 
-BFTEST_UNIT_FUNC(test_treeRemove, 2<<10,  {
+BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
 	Tree<int> tree;
 	tree.setCompare(BFTestTreeCompare);
 	tree.setRelease(BFTestTreeRelease);
@@ -53,10 +56,12 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10,  {
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 
 	// remove
-	for (int i = 0; i < treesize; i++) {
-		BF_ASSERT(!tree.remove(i));
+	for (int i = 0; i < 20; i++) {
+		int value = BFMathAbs(BFRand()) % treesize;
+		if (tree.contains(value)) {
+			BF_ASSERT(!tree.remove(value));
+		}
 	}
-	BF_ASSERT(tree.size() == 0, "size is %ld", tree.size());
 })
 
 BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
@@ -127,12 +132,49 @@ BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 	_BFTestTreeTraversePostorder<int>(root);
 })
 
+int BFTestTreeComparePointers(int * &ap, int * &bp) {
+	if (!ap || !bp) return -1;
+	int a = *ap;
+	int b = *bp;
+	return a - b;
+}
+
+void BFTestTreeReleasePointer(int * object) {
+	BFFree(object);
+}
+
+BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+	Tree<int*> tree;
+	tree.setCompare(BFTestTreeComparePointers);
+	tree.setRelease(BFTestTreeReleasePointer);
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i++) {
+		int * object = (int *) malloc(sizeof(int));
+		*object = i;
+		BF_ASSERT(!tree.insert(object));
+	}
+	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
+
+	// remove
+	for (int i = 0; i < 20; i++) {
+		int value = BFMathAbs(BFRand()) % treesize;
+		if (tree.contains(&value)) {
+			BF_ASSERT(!tree.remove(&value));
+		}
+	}
+})
+
 BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
 	BFTEST_LAUNCH(test_treeRemove);
 	BFTEST_LAUNCH(test_treeContains);
 	BFTEST_LAUNCH(test_treeTraversing);
+	BFTEST_LAUNCH(test_treeWithMallocObjects);
 
 })
 

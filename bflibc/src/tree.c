@@ -83,12 +83,6 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 		tree->root, object, tree->compare, tree->release
 	);
 
-	/*
-	if (tree->release) {
-		tree->release(object);
-	}
-	*/
-
 	tree->size--;
 	return 0;
 }
