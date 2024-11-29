@@ -367,20 +367,16 @@ BFTEST_UNIT_FUNC(test_treeTraversal, 2<<10, {
 })
 
 BFTEST_COVERAGE_FUNC(tree_tests, {
-	/*
 	BFTEST_LAUNCH(test_treeinit);
 	BFTEST_LAUNCH(test_treenodeinit);
 	BFTEST_LAUNCH(test_CreateNodeWithObject);
 	BFTEST_LAUNCH(test_InsertNodes);
 	BFTEST_LAUNCH(test_InsertNodesAndSearch);
-	*/
 	BFTEST_LAUNCH(test_InsertAndRemovingNodes);
-	/*
 	BFTEST_LAUNCH(test_InsertDuplicates);
 	BFTEST_LAUNCH(test_InsertAndRemovingNoPointers);
 	BFTEST_LAUNCH(test_treeGettingNonexistentValues);
 	BFTEST_LAUNCH(test_treeTraversal);
-	*/
 
 })
 
