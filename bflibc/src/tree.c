@@ -33,10 +33,13 @@ void BFTreeReleaseNode(_BFTree * tree, _BFTreeNode * node) {
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
 
+	/*
 	if (tree->release) {
 		tree->release(node->object);
 	}
-	_BFTreeNodeRelease(node);
+	*/
+
+	_BFTreeNodeRelease(node, tree->release);
 	tree->size--;
 }
 
@@ -57,7 +60,12 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 	}
 	_BFTree * tree = (_BFTree *) _tree;
 	int err = 0;
-	tree->root = _BFTreeNodeInsert(tree->root, object, tree->compare, &err);
+	tree->root = _BFTreeNodeInsert(
+		tree->root,
+		object,
+		tree->compare,
+		&err
+	);
 
 	if (err == 0) {
 		tree->size++;
@@ -67,15 +75,13 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 }
 
 int BFTreeRemove(BFTree _tree, BFTreeObject object) {
-	if (!_tree || !object) {
+	if (!_tree) {
 		return -1;
 	}
 	_BFTree * tree = (_BFTree *) _tree;
-	tree->root = _BFTreeNodeRemove(tree->root, object, tree->compare);
-
-	if (tree->release) {
-		tree->release(object);
-	}
+	tree->root = _BFTreeNodeRemove(
+		tree->root, object, tree->compare, tree->release
+	);
 
 	tree->size--;
 	return 0;

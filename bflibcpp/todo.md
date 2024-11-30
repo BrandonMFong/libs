@@ -1,8 +1,11 @@
 ```
 [] improve List sorting
-[] fix leaks in (RBTree specifically)
+[x] fix leaks in (RBTree specifically) - replaced with map
 [x] map and hash map implementation
-[] tree implementaion
+[x] tree implementaion
+    [x] make BFTree release the node mem
+	[x] review for any places we can pass by ref
+[] json to map
 [] standard pair
 [] tuple
 [] address compiler warning regarding ambiguous operations

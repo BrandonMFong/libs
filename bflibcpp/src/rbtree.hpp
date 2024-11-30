@@ -6,6 +6,8 @@
 #ifndef RBTREE_HPP
 #define RBTREE_HPP
 
+#warning "RBTree will be deprecated. Please start using Tree"
+
 #include "access.hpp"
 #include "bintree.hpp"
 #include "release.hpp"

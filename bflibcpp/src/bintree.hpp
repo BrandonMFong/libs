@@ -6,6 +6,8 @@
 #ifndef BINTREE_HPP
 #define BINTREE_HPP
 
+#warning "BinTree will be deprecated. Please start using Tree"
+
 #include "access.hpp"
 #include "release.hpp"
 #include "collection.hpp"

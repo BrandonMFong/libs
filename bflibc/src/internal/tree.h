@@ -16,7 +16,10 @@ typedef struct _BFTreeNode {
 } _BFTreeNode;
 
 _BFTreeNode * _BFTreeNodeCreate();
-void _BFTreeNodeRelease(_BFTreeNode * node);
+void _BFTreeNodeRelease(
+	_BFTreeNode * node,
+	void (*release)(BFTreeObject object)
+);
 
 typedef struct _BFTree {
 	_BFTreeNode * root;
@@ -53,7 +56,8 @@ _BFTreeNode * _BFTreeNodeInsert(
 _BFTreeNode * _BFTreeNodeRemove(
 	_BFTreeNode * node,
 	BFTreeObject object,
-	int (*compare)(BFTreeObject a, BFTreeObject b)
+	int (*compare)(BFTreeObject a, BFTreeObject b),
+	void (*release)(BFTreeObject object)
 );
 
 /**

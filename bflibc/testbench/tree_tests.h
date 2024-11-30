@@ -12,6 +12,8 @@
 #include <stdlib.h>
 
 int BFTestTreeCompare(BFTreeObject aobj, BFTreeObject bobj) {
+	//printf("compare(%p, %p)\n", aobj, bobj);
+	if (!aobj || !bobj) return -1;
 	int a = *(int *) aobj;
 	int b = *(int *) bobj;
 	return a - b;
@@ -33,7 +35,7 @@ BFTEST_UNIT_FUNC(test_treeinit, 2<<10, {
 BFTEST_UNIT_FUNC(test_treenodeinit, 2<<10, {
 	_BFTreeNode * node = _BFTreeNodeCreate();
 	BF_ASSERT(node, "a null node was returned");
-	_BFTreeNodeRelease(node);
+	_BFTreeNodeRelease(node, NULL);
 })
 
 BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
@@ -45,8 +47,8 @@ BFTEST_UNIT_FUNC(test_CreateNodeWithObject, 2<<10, {
 	*value = BFRand();
 	node->object = value;
 
-	_BFTreeNodeRelease(node);
-	BFFree(value);
+	_BFTreeNodeRelease(node, free);
+	//BFFree(value);
 })
 
 void BFTestTreePrint(_BFTreeNode * node) {
@@ -129,15 +131,24 @@ BFTEST_UNIT_FUNC(test_InsertNodesAndSearch, 2<<10, {
 	BFTreeRelease(tree);
 })
 
+void BFTestTreeFree(BFTreeObject object) {
+	//printf("freeing: %p\n", object);
+	free(object);
+}
+
 BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFRandInit(time(0));
+	}
+
 	// create trees
 	BFTree tree = BFTreeCreate();
 	BF_ASSERT(tree, "a null tree was returned");
 	BFTreeSetCompare(tree, BFTestTreeCompare); 
-	BFTreeSetRelease(tree, free); 
+	BFTreeSetRelease(tree, BFTestTreeFree);
 
 	// create nodes and insert
-	int treesize = 2<<5;
+	int treesize = 2<<8;
 	int * objects[treesize];
 	for (int i = 0; i < treesize; i++) {
 		// create object
@@ -145,6 +156,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		*objects[i] = i;
 
 		// insert into tree
+		//printf("inserting: %p\n", objects[i]);
 		int err = BFTreeInsert(tree, objects[i]);
 		BF_ASSERT(err == 0, "node insertion failed, node(obj=%d)", i);
 	}
@@ -154,10 +166,15 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 	// remove nodes
 	int randNumSearch = 20;
 	while (randNumSearch--) {
+	//for (int i = 0; i < randNumSearch; i++) {
+	//for (int i = treesize - 1; i >= treesize - randNumSearch; i--) {
 		int index = abs(BFRand()) % treesize;
+		//int index = i;
 		int * object = objects[index];
 
-		if (BFTreeContains(tree, object)) {
+		//printf("can we remove %p\n", object);
+		if (object && BFTreeContains(tree, object)) {
+			//printf("removing %p\n", object);
 			int err = BFTreeRemove(tree, object);
 			BF_ASSERT(err == 0, "couldn't remove node for object=%d", *object);
 
@@ -170,6 +187,7 @@ BFTEST_UNIT_FUNC(test_InsertAndRemovingNodes, 2<<10, {
 		//BFTestTreePrint(tree->root);
 	}
 
+	//printf("freeing tree\n");
 	BFTreeRelease(tree);
 })
 

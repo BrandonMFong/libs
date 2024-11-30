@@ -3,8 +3,8 @@
  * date: 7/22/22
  */
 
-#ifndef CPPLIB_HPP
-#define CPPLIB_HPP
+#ifndef BFLIBCPP_HPP
+#define BFLIBCPP_HPP
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -19,10 +19,17 @@ extern "C" {
 #include "file.hpp"
 #include "time.hpp"
 #include "string.hpp"
-#include "bintree.hpp"
-#include "rbtree.hpp"
 #include "atomic.hpp"
 #include "data.hpp"
+#include "map.hpp"
+#include "hashmap.hpp"
+#include "directory.hpp"
+#include "exception.hpp"
+#include "file.hpp"
+#include "path.hpp"
+#include "queue.hpp"
+#include "stack.hpp"
+#include "time.hpp"
 
-#endif // CPPLIB_HPP
+#endif // BFLIBCPP_HPP
 
