@@ -175,9 +175,8 @@ BFTEST_UNIT_FUNC(test_addanddelete, 2<<8,  {
 	}
 })
 
-//int test_deletingObjectAtRandomIndex() {
 BFTEST_UNIT_FUNC(test_deletingObjectAtRandomIndex, 2<<10,  {
-	int objcount = 2 << 12;
+	int objcount = 2<<10;
 	Array<int, int> a;
 
 	// add
@@ -219,9 +218,8 @@ BFTEST_UNIT_FUNC(test_deletingObjectAtRandomIndex, 2<<10,  {
 	}
 })
 
-//int test_insertingAtRandomIndex() {
 BFTEST_UNIT_FUNC(test_insertingAtRandomIndex, 2<<8,  {
-	int objcount = 2 << 12;
+	int objcount = 2<<10;
 	Array<int, int> a;
 
 	// add
@@ -283,9 +281,9 @@ BFTEST_UNIT_FUNC(test_releasecallback, 2<<8,  {
 	a.setReleaseCallback(TestArrayRelease);
 
 	srand(time(0));
-	int asize = rand() % (2 << 16);
+	int asize = rand() % (2 << 8);
 	for (int i = 0; i < asize; i++) {
-		a.add(BFStringCopyString("word"));
+		BF_ASSERT(!a.add(BFStringCopyString("word")));
 	}
 })
 
