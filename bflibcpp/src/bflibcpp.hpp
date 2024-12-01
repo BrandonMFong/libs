@@ -6,10 +6,6 @@
 #ifndef BFLIBCPP_HPP
 #define BFLIBCPP_HPP
 
-extern "C" {
-#include <bflibc/bflibc.h>
-}
-
 #include "object.hpp"
 #include "release.hpp"
 #include "retain.hpp"
@@ -30,6 +26,7 @@ extern "C" {
 #include "queue.hpp"
 #include "stack.hpp"
 #include "time.hpp"
+#include "tree.hpp"
 
 #endif // BFLIBCPP_HPP
 
