@@ -52,8 +52,8 @@ public:
 		Node(const Node & node) : Node(node._node) { }
 		Node(BFTreeNode node) : _node(node), Object() { }
 		virtual ~Node() { }
-		const Node left() const { return BFTreeNodeGetLeft(this->_node); }
-		const Node right() const { return BFTreeNodeGetRight(this->_node); }
+		Node left() const { return BFTreeNodeGetLeft(this->_node); }
+		Node right() const { return BFTreeNodeGetRight(this->_node); }
 		T & object() const {
 			Container * cont = (Container *) BFTreeNodeGetObject(this->_node);
 			if (!cont) {
@@ -131,7 +131,7 @@ public:
 	/**
 	 * returns root node
 	 */
-	const Node root() const {
+	Node root() const {
 		return BFTreeGetRoot(this->_tree);
 	}
 
