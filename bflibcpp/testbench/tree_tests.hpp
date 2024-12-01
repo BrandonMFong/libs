@@ -17,7 +17,7 @@ extern "C" {
 
 using namespace BF;
 
-int BFTestTreeCompare(int & a, int & b) {
+int BFTestTreeCompare(const int & a, const int & b) {
 	return a - b;
 }
 
@@ -132,7 +132,7 @@ BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 	_BFTestTreeTraversePostorder<int>(root);
 })
 
-int BFTestTreeComparePointers(int * &ap, int * &bp) {
+int BFTestTreeComparePointers(int * const &ap, int * const &bp) {
 	if (!ap || !bp) return -1;
 	int a = *ap;
 	int b = *bp;

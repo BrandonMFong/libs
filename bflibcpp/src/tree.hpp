@@ -83,7 +83,7 @@ public:
 	 *
 	 * see _compare
 	 */
-	void setCompare(int (*compare)(T & a, T & b)) {
+	void setCompare(int (*compare)(const T & a, const T & b)) {
 		this->_compare = compare;
 	}
 
@@ -143,7 +143,7 @@ private:
 	 *	a > b -> result > 0
 	 *	a == b -> result == 0
 	 */
-	int (*_compare)(T & a, T & b);
+	int (*_compare)(const T & a, const T & b);
 	static int _BFTreeCompare(BFTreeObject a, BFTreeObject b) {
 		Container * acont = (Container *) a;
 		Container * bcont = (Container *) b;
