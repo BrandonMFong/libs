@@ -28,6 +28,9 @@ public:
 	 * increments retain count by 1
 	 */
 	static void retain(Object * obj);
+	static void retain(Object & obj);
+	static void retain(const Object * obj);
+	static void retain(const Object & obj);
 
 	/**
 	 * decrements retain count by 1
@@ -37,14 +40,27 @@ public:
 	 * incur undefined behavior
 	 */
 	static void release(Object * obj);
+	static void release(Object & obj);
+	static void release(const Object * obj);
+	static void release(const Object & obj);
 
 	static int retainCount(Object * obj);
+	static int retainCount(const Object * obj);
 	static int retainCount(Object & obj);
+	static int retainCount(const Object & obj);
 
 private:
 	int _retainCount;
 
+
+
 	BFLock _lock;
+
+public:
+	bool operator==(int num) { return false; }
+	bool operator!=(int num) { return *this == num; }
+	void operator=(int num) { }
+
 };
 
 }

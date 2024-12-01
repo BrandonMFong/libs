@@ -21,6 +21,9 @@ using namespace BF;
 BFTEST_UNIT_FUNC(test_objectinit, 2<<10,  {
 	Object o;
 	BF_ASSERT(Object::retainCount(o) == 1);
+	BFRetain(o);
+	BF_ASSERT(Object::retainCount(o) == 2);
+	BFRelease(o);
 })
 
 BFTEST_UNIT_FUNC(test_objectretainer, 2<<8,  {
@@ -30,6 +33,36 @@ BFTEST_UNIT_FUNC(test_objectretainer, 2<<8,  {
 	int retain = rand() % (2 << 16);
 
 	Object * o = new Object;
+
+	BF_ASSERT(o != NULL);
+	BF_ASSERT(Object::retainCount(o) == 1);
+
+	for (int i = 0; i < retain; i++) {
+		BFRetain(o);
+	}
+
+	BF_ASSERT(Object::retainCount(o) == (retain + 1));
+
+	for (int i = 0; i < retain; i++) {
+		BFRelease(o);
+	}
+
+	BF_ASSERT(Object::retainCount(o) == 1);
+
+	BFRelease(o);
+	
+	int i = Object::retainCount(o);
+	BF_ASSERT(i == 0);
+	BF_ASSERT(o == NULL);
+})
+
+BFTEST_UNIT_FUNC(test_constObjectretainer, 2<<8,  {
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		srand(time(0));
+	}
+	int retain = rand() % (2 << 16);
+
+	const Object * o = new Object;
 
 	BF_ASSERT(o != NULL);
 	BF_ASSERT(Object::retainCount(o) == 1);
@@ -70,6 +103,8 @@ BFTEST_COVERAGE_FUNC(object_tests, {
 	BFTEST_LAUNCH(test_objectinit);
 	BFTEST_LAUNCH(test_objectretainer);
 	BFTEST_LAUNCH(test_objectshallowcopy);
+	BFTEST_LAUNCH(test_constObjectretainer);
+
 })
 
 #endif // BF_OBJECT_TESTS_HPP

@@ -27,9 +27,9 @@ class Tree : public Collection<S> {
 	class Container : public Object {
 	public:
 		T _obj;
-		Tree * _treeRef;
+		const Tree * _treeRef;
 		void (*_release)(T obj);
-		Container(T obj, Tree * treeRef, void (*release)(T obj))
+		Container(T obj, const Tree * treeRef, void (*release)(T obj))
 		: _obj(obj), _treeRef(treeRef), _release(release), Object() {
 			BFRetain(this->_treeRef);
 		}
@@ -52,8 +52,8 @@ public:
 		Node(const Node & node) : Node(node._node) { }
 		Node(BFTreeNode node) : _node(node), Object() { }
 		virtual ~Node() { }
-		const Node left() const { return BFTreeNodeGetLeft(this->_node); }
-		const Node right() const { return BFTreeNodeGetRight(this->_node); }
+		Node left() const { return BFTreeNodeGetLeft(this->_node); }
+		Node right() const { return BFTreeNodeGetRight(this->_node); }
 		T & object() const {
 			Container * cont = (Container *) BFTreeNodeGetObject(this->_node);
 			if (!cont) {
@@ -83,7 +83,7 @@ public:
 	 *
 	 * see _compare
 	 */
-	void setCompare(int (*compare)(T & a, T & b)) {
+	void setCompare(int (*compare)(const T & a, const T & b)) {
 		this->_compare = compare;
 	}
 
@@ -122,7 +122,7 @@ public:
 	/**
 	 * true if tree contains object
 	 */
-	bool contains(T object) {
+	bool contains(T object) const {
 		if (!this->_tree) return -1;
 		Container c(object, this, NULL);
 		return BFTreeContains(this->_tree, &c);
@@ -131,7 +131,7 @@ public:
 	/**
 	 * returns root node
 	 */
-	const Node root() {
+	Node root() const {
 		return BFTreeGetRoot(this->_tree);
 	}
 
@@ -143,7 +143,7 @@ private:
 	 *	a > b -> result > 0
 	 *	a == b -> result == 0
 	 */
-	int (*_compare)(T & a, T & b);
+	int (*_compare)(const T & a, const T & b);
 	static int _BFTreeCompare(BFTreeObject a, BFTreeObject b) {
 		Container * acont = (Container *) a;
 		Container * bcont = (Container *) b;
