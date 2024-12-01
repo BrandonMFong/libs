@@ -181,40 +181,28 @@ BFTEST_UNIT_FUNC(test_deletingObjectAtRandomIndex, 2<<10,  {
 
 	// add
 	for (int i = 0; i < objcount; i++) {
-		result = a.add(i);
-		if (result) break;
+		BF_ASSERT(!a.add(i));
 	}
 
 	// compare
-	if (!result) {
-		for (int i = 0; i < objcount; i++) {
-			if (a[i] != i) {
-				result = 2;
-				break;
-			}
-		}
+	for (int i = 0; i < objcount; i++) {
+		BF_ASSERT(a[i] == i);
 	}
 
 	// delete at random index
 	unsigned int randindex = 0;
-	if (!result) {
-		srand(time(0));
-		randindex = ((unsigned int) rand() % objcount) - 1;
-		result = a.removeObjectAtIndex(randindex);
-	}
+	srand(time(0));
+	randindex = ((unsigned int) rand() % objcount) - 1;
+	BF_ASSERT(!a.removeObjectAtIndex(randindex));
 
-	if (!result) {
-		// scan objects
-		for (int i = 0; i < a.count(); i++) {
-			int off = 0;
-			if (i >= (int) randindex) {
-				off = 1;
-			}
-			if (a[i] != (i + off)) {
-				result = 3;
-				break;
-			}
+	// scan objects
+	for (int i = 0; i < a.count(); i++) {
+		int off = 0;
+		if (i >= (int) randindex) {
+			off = 1;
 		}
+		
+		BF_ASSERT(a[i] == (i + off));
 	}
 })
 
@@ -224,49 +212,33 @@ BFTEST_UNIT_FUNC(test_insertingAtRandomIndex, 2<<8,  {
 
 	// add
 	for (int i = 0; i < objcount; i++) {
-		result = a.add(i);
-		if (result) break;
+		BF_ASSERT(!a.add(i));
 	}
 
 	// compare
-	if (!result) {
-		for (int i = 0; i < objcount; i++) {
-			if (a[i] != i) {
-				result = 2;
-				break;
-			}
-		}
+	for (int i = 0; i < objcount; i++) {
+		BF_ASSERT(a[i] == i);
 	}
 
 	// delete at random index
 	unsigned int randindex = 0;
 	int randnum = 0;
-	if (!result) {
-		srand(time(0));
-		randindex = ((unsigned int) rand() % objcount) - 1;
-		randnum = rand();
-		result = a.insertObjectAtIndex(randnum, randindex);
-	}
+	srand(time(0));
+	randindex = ((unsigned int) rand() % objcount) - 1;
+	randnum = rand();
+	BF_ASSERT(!a.insertObjectAtIndex(randnum, randindex));
 
-	if (!result) {
-		// scan objects
-		for (int i = 0; i < a.count(); i++) {
-			if (i == (int) randindex) {
-				if (a[i] != (int) randnum) {
-					result = 4;
-					break;
-				}
-			} else {
-				int off = 0;
-				if (i > (int) randindex) {
-					off = 1;
-				}
-
-				if (a[i] != (i - off)) {
-					result = 3;
-					break;
-				}
+	// scan objects
+	for (int i = 0; i < a.count(); i++) {
+		if (i == (int) randindex) {
+			BF_ASSERT(a[i] == (int) randnum);
+		} else {
+			int off = 0;
+			if (i > (int) randindex) {
+				off = 1;
 			}
+
+			BF_ASSERT(a[i] == (i - off));
 		}
 	}
 })
