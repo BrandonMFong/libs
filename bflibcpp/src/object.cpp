@@ -25,12 +25,38 @@ Object::~Object() {
 	BFLockDestroy(&this->_lock);
 }
 
+void Object::retain(const Object & obj) {
+	Object::retain((Object &) obj);
+}
+
+void Object::retain(Object & obj) {
+	BFLockLock(&obj._lock);
+	obj._retainCount++;
+	BFLockUnlock(&obj._lock);
+}
+
+void Object::retain(const Object * obj) {
+	Object::retain((Object *) obj);
+}
+
 void Object::retain(Object * obj) {
 	if (obj) {
-		BFLockLock(&obj->_lock);
-		obj->_retainCount++;
-		BFLockUnlock(&obj->_lock);
+		Object::retain(*obj);
 	}
+}
+
+void Object::release(const Object & obj) {
+	Object::release((Object &) obj);
+}
+
+void Object::release(Object & obj) {
+	BFLockLock(&obj._lock);
+	obj._retainCount--;
+	BFLockUnlock(&obj._lock);
+}
+
+void Object::release(const Object * obj) {
+	Object::release((Object *) obj);
 }
 
 void Object::release(Object * obj) {
@@ -38,13 +64,17 @@ void Object::release(Object * obj) {
 		BFLockLock(&obj->_lock);
 		obj->_retainCount--;
 
-		if (obj->_retainCount == 0) {
+		if (obj->_retainCount <= 0) {
 			BFLockUnlock(&obj->_lock);
 			delete obj;
 		} else {
 			BFLockUnlock(&obj->_lock);
 		}
 	}
+}
+
+int Object::retainCount(const Object * obj) {
+	return Object::retainCount((Object *) obj);
 }
 
 int Object::retainCount(Object * obj) {
@@ -55,6 +85,10 @@ int Object::retainCount(Object * obj) {
 		return result;
 	}
 	return 0;
+}
+
+int Object::retainCount(const Object & obj) {
+	return Object::retainCount((Object &) obj);
 }
 
 int Object::retainCount(Object & obj) {

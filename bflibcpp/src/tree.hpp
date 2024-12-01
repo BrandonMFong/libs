@@ -27,9 +27,9 @@ class Tree : public Collection<S> {
 	class Container : public Object {
 	public:
 		T _obj;
-		Tree * _treeRef;
+		const Tree * _treeRef;
 		void (*_release)(T obj);
-		Container(T obj, Tree * treeRef, void (*release)(T obj))
+		Container(T obj, const Tree * treeRef, void (*release)(T obj))
 		: _obj(obj), _treeRef(treeRef), _release(release), Object() {
 			BFRetain(this->_treeRef);
 		}
@@ -122,7 +122,7 @@ public:
 	/**
 	 * true if tree contains object
 	 */
-	bool contains(T object) {
+	bool contains(T object) const {
 		if (!this->_tree) return -1;
 		Container c(object, this, NULL);
 		return BFTreeContains(this->_tree, &c);
@@ -131,7 +131,7 @@ public:
 	/**
 	 * returns root node
 	 */
-	const Node root() {
+	const Node root() const {
 		return BFTreeGetRoot(this->_tree);
 	}
 

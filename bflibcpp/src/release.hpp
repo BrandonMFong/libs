@@ -7,13 +7,19 @@
 #define RELEASE_HPP
 
 #include "object.hpp"
+#include <stdbool.h>
 
-#define BFRelease(x) if (x != 0) {\
-	BF::Object * obj = (BF::Object *) x;\
-	int rc = BF::Object::retainCount(obj);\
-	BF::Object::release(obj);\
-	if (rc == 1) x = 0;\
-}\
+static bool _BFReleaseObjectIsPointer(const BF::Object * object) { return true; }
+static bool _BFReleaseObjectIsPointer(const BF::Object & object) { return false; }
+
+#define BFRelease(obj) \
+	if (_BFReleaseObjectIsPointer(obj)) {\
+		if (obj != 0) {\
+			int rc = BF::Object::retainCount(obj);\
+			BF::Object::release(obj);\
+			if (rc == 1) obj = 0;\
+		}\
+	}\
 
 #endif // RELEASE_HPP
 
