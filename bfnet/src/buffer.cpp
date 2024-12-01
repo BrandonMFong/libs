@@ -6,6 +6,10 @@
 #include "buffer.hpp"
 #include <bflibcpp/bflibcpp.hpp>
 
+extern "C" {
+#include <bflibc/bflibc.h>
+}
+
 BF::Net::SocketBuffer::SocketBuffer(const void * data, size_t size) {
 	this->_data = malloc(size);
 
