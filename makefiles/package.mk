@@ -13,15 +13,15 @@ endif
 package: $(PACKAGE_MODE)
 
 package-linux: $(PACKAGE_NAME) $(PACKAGE_NAME)/$(BIN_NAME)
-	zip -r $(BIN_PATH)/$(PACKAGE_NAME).zip $(PACKAGE_NAME)
-	tar vczf $(BIN_PATH)/$(PACKAGE_NAME).tar.gz $(PACKAGE_NAME)
+	zip -r $(PACKAGE_BIN_PATH)/$(PACKAGE_NAME).zip $(PACKAGE_NAME)
+	tar vczf $(PACKAGE_BIN_PATH)/$(PACKAGE_NAME).tar.gz $(PACKAGE_NAME)
 
 package-macos: $(PACKAGE_NAME) $(PACKAGE_NAME)/$(BIN_NAME)
-	hdiutil create -fs HFS+ -volname $(PACKAGE_NAME) -srcfolder $(PACKAGE_NAME) $(BIN_PATH)/$(PACKAGE_NAME).dmg
+	hdiutil create -fs HFS+ -volname $(PACKAGE_NAME) -srcfolder $(PACKAGE_NAME) $(PACKAGE_BIN_PATH)/$(PACKAGE_NAME).dmg
 
 $(PACKAGE_NAME):
 	mkdir -p $@
 
-$(PACKAGE_NAME)/$(BIN_NAME): $(BIN_PATH)/$(BIN_NAME)
+$(PACKAGE_NAME)/$(BIN_NAME): $(PACKAGE_BIN_PATH)/$(BIN_NAME)
 	@cp -afv $< $(PACKAGE_NAME)
 

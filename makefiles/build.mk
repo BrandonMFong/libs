@@ -111,8 +111,8 @@ setup: $(SETUP_DIRS)
 $(SETUP_DIRS):
 	mkdir -p $@
 
-clean:
-	rm -rfv build bin $(PACKAGE_NAME)
+#clean:
+#	rm -rfv build bin $(PACKAGE_NAME)
 
 ### Main build
 
