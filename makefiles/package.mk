@@ -24,23 +24,23 @@ endif
 
 package: $(PACKAGE_MODE)
 
-package-linux: $(PACKAGE_NAME) $(PACKAGE_NAME)/$(BIN_NAME)
+package-linux: $(PACKAGE_NAME) $(PACKAGE_NAME)/$(PACKAGE_BIN_TARGET)
 	zip -r $(PACKAGE_BIN_PATH)/$(PACKAGE_NAME).zip $(PACKAGE_NAME)
 	tar vczf $(PACKAGE_BIN_PATH)/$(PACKAGE_NAME).tar.gz $(PACKAGE_NAME)
 
-package-macos: $(PACKAGE_NAME) $(PACKAGE_NAME)/$(BIN_NAME)
+package-macos: $(PACKAGE_NAME) $(PACKAGE_NAME)/$(PACKAGE_BIN_TARGET)
 	hdiutil create -fs HFS+ -volname $(PACKAGE_NAME) -srcfolder $(PACKAGE_NAME) $(PACKAGE_BIN_PATH)/$(PACKAGE_NAME).dmg
 
 $(PACKAGE_NAME):
 	mkdir -p $@
 
-$(PACKAGE_NAME)/$(BIN_NAME): $(PACKAGE_BIN_PATH)/$(BIN_NAME)
+$(PACKAGE_NAME)/$(PACKAGE_BIN_TARGET): $(PACKAGE_BIN_PATH)/$(PACKAGE_BIN_TARGET)
 	@cp -afv $< $(PACKAGE_NAME)
 
 ### codesigning
 
 codesign:
-	codesign -s "$(IDENTITY)" --options=runtime --timestamp $(PACKAGE_BIN_PATH)/$(BIN_NAME)
+	codesign -s "$(IDENTITY)" --options=runtime --timestamp $(PACKAGE_BIN_PATH)/$(PACKAGE_BIN_TARGET)
 
 ### notarize
 
