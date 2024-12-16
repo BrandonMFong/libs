@@ -27,8 +27,6 @@ rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(su
 UNAME_S := $(shell uname -s)
 
 CONFIG = release
-#BUILD_PATH = build/$(CONFIG)
-#BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 
 # BUILD_TYPE = archive || executable
 ifeq ($(BUILD_TYPE),)
@@ -113,8 +111,8 @@ setup: $(SETUP_DIRS)
 $(SETUP_DIRS):
 	mkdir -p $@
 
-clean:
-	rm -rfv build bin $(PACKAGE_NAME)
+#clean:
+#	rm -rfv build bin $(PACKAGE_NAME)
 
 ### Main build
 

@@ -55,3 +55,6 @@ include makefiles/lib.mk
 LIBS_MAKEFILES_PATH:=$(shell dirname $(CURDIR))/makefiles
 include ../makefiles/build.mk 
 
+clean:
+	rm -rfv build bin
+
