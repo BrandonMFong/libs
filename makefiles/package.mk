@@ -3,15 +3,15 @@
 #
 
 ifeq ($(PACKAGE_BIN_TARGET),)
-$(error ERROR: "please define `PACKAGE_BIN_TARGET` in your makefile. These are files that are going to be packaged")
+$(error ERROR: "required `PACKAGE_BIN_TARGET`: These are files that are going to be packaged")
 endif
 
 ifeq ($(PACKAGE_NAME),)
-$(error ERROR: "please define `PACKAGE_NAME` in your makefile. This will define the name of the compressed package")
+$(error ERROR: "required `PACKAGE_NAME`: This will define the name of the compressed package")
 endif
 
 ifeq ($(PACKAGE_BIN_PATH),)
-$(error ERROR: "please define `PACKAGE_BIN_PATH` in your makefile. This is where the package files will be outputed")
+$(error ERROR: "required `PACKAGE_BIN_PATH`: This is where the package files will be outputed")
 endif
 
 UNAME_S := $(shell uname -s)
