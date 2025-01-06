@@ -77,6 +77,11 @@ const char * String::c_str() const {
 	return this->cString();
 }
 
+bool String::starts_with(const char * sstr) const {
+	char * str = strstr(this->address(), sstr);
+	return str == this->address();
+}
+
 char * String::cStringCopy() const {
 	return BFStringCopyString((const char *) this->address());
 }

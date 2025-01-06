@@ -48,6 +48,8 @@ public:
 	const char * cString() const;
 	const char * c_str() const;
 
+	bool starts_with(const char * sstr) const;
+
 	// returns a copy of string
 	//
 	// caller must free()

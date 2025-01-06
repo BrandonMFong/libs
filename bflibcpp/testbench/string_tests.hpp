@@ -336,7 +336,6 @@ void TestStringRandomFileDelete() {
 	remove(TEST_STRING_RANDOM_FILE);
 }
 
-//int test_readingFromFile() {
 BFTEST_UNIT_FUNC(test_readingFromFile, 1,  {
 	TestStringRandomFileCreate();
 	
@@ -349,7 +348,6 @@ BFTEST_UNIT_FUNC(test_readingFromFile, 1,  {
 	TestStringRandomFileDelete();
 })
 
-//int test_data2string() {
 BFTEST_UNIT_FUNC(test_data2string, 2<<10,  {
 	const char * str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 	size_t size = strlen(str);
@@ -385,6 +383,16 @@ BFTEST_UNIT_FUNC(test_data2string, 2<<10,  {
 	BFFree(buf);
 })
 
+BFTEST_UNIT_FUNC(test_startsWith, 2<<8, {
+	String str = "hello world";
+	BF_ASSERT(str.starts_with("hello"));
+	BF_ASSERT(str.starts_with("he"));
+	BF_ASSERT(str.starts_with("h"));
+	BF_ASSERT(!str.starts_with("helo"));
+	BF_ASSERT(!str.starts_with("ello"));
+	BF_ASSERT(!str.starts_with("world"));
+})
+
 BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_StringInit);
 	BFTEST_LAUNCH(test_comparingString);
@@ -403,6 +411,8 @@ BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_creatingstringfromformat);
 	BFTEST_LAUNCH(test_readingFromFile);
 	BFTEST_LAUNCH(test_data2string);
+	BFTEST_LAUNCH(test_startsWith);
+
 })
 
 #endif // STRING_TESTS_HPP
