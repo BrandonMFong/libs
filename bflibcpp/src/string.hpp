@@ -23,7 +23,6 @@ public:
 	static String * createWithFormat(const char * format, ...);
 
 	String();
-	//String(const char * str);
 	String(char * str);
 	String(const String & str);
 	String(const char * format, ...);
