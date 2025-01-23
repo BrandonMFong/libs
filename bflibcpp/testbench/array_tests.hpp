@@ -261,6 +261,9 @@ BFTEST_UNIT_FUNC(test_releasecallback, 2<<8,  {
 
 BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 2<<8, {
 	Array<BF::String> a({"hello", "world"});
+	Array<BF::String> b;
+	b.add("hello");
+	b.add("world");
 })
 
 BFTEST_COVERAGE_FUNC(array_tests, {
