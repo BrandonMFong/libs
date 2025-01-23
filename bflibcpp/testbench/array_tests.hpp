@@ -264,7 +264,6 @@ BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 2<<8, {
 })
 
 BFTEST_COVERAGE_FUNC(array_tests, {
-	/*
 	BFTEST_LAUNCH(test_Initializer);
 	BFTEST_LAUNCH(test_Contains);
 	BFTEST_LAUNCH(test_ObjectAtIndex);
@@ -275,8 +274,7 @@ BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_insertingAtRandomIndex);
 	BFTEST_LAUNCH(test_releasecallback);
 	BFTEST_LAUNCH(test_addanddelete);
-	*/
-	BFTEST_LAUNCH(test_arrayOfBFStrings);
+	//BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
 
 })
 

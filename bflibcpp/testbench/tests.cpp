@@ -21,19 +21,14 @@
 #include "tree_tests.hpp"
 
 BFTEST_SUITE_FUNC({
-	/*
 	BFTEST_SUITE_LAUNCH(atomic_tests);
 	BFTEST_SUITE_LAUNCH(file_tests);
-	*/
-	//BFTEST_SUITE_LAUNCH(string_tests);
-	/*
+	BFTEST_SUITE_LAUNCH(string_tests);
 	BFTEST_SUITE_LAUNCH(stack_tests);
 	BFTEST_SUITE_LAUNCH(queue_tests);
 	BFTEST_SUITE_LAUNCH(time_tests);
 	BFTEST_SUITE_LAUNCH(data_tests);
-	*/
 	BFTEST_SUITE_LAUNCH(array_tests);
-	/*
 	BFTEST_SUITE_LAUNCH(vector_tests);
 	BFTEST_SUITE_LAUNCH(map_tests);
 	BFTEST_SUITE_LAUNCH(object_tests);
@@ -41,7 +36,5 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(hashmap_tests);
 	BFTEST_SUITE_LAUNCH(exception_tests);
 	BFTEST_SUITE_LAUNCH(tree_tests);
-	*/
-
 })
 
