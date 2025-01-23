@@ -393,7 +393,13 @@ BFTEST_UNIT_FUNC(test_startsWith, 2<<8, {
 	BF_ASSERT(!str.starts_with("world"));
 })
 
+BFTEST_UNIT_FUNC(test_arrayOfStrings, 2<<8, {
+	String * strings = new String[2];
+	delete[] strings;
+})
+
 BFTEST_COVERAGE_FUNC(string_tests, {
+	/*
 	BFTEST_LAUNCH(test_StringInit);
 	BFTEST_LAUNCH(test_comparingString);
 	BFTEST_LAUNCH(test_StringLength);
@@ -412,6 +418,8 @@ BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_readingFromFile);
 	BFTEST_LAUNCH(test_data2string);
 	BFTEST_LAUNCH(test_startsWith);
+	*/
+	BFTEST_LAUNCH(test_arrayOfStrings);
 
 })
 

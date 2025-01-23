@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "string.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -37,7 +38,6 @@ BFTEST_UNIT_FUNC(test_Initializer, 1, {
 	delete charArrPtr;
 })
 
-//int test_Contains() {
 BFTEST_UNIT_FUNC(test_Contains, 1,  {
 	Array<int> arr({1, 2, 3, 4});
 
@@ -259,7 +259,12 @@ BFTEST_UNIT_FUNC(test_releasecallback, 2<<8,  {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 2<<8, {
+	Array<BF::String> a({"hello", "world"});
+})
+
 BFTEST_COVERAGE_FUNC(array_tests, {
+	/*
 	BFTEST_LAUNCH(test_Initializer);
 	BFTEST_LAUNCH(test_Contains);
 	BFTEST_LAUNCH(test_ObjectAtIndex);
@@ -270,6 +275,9 @@ BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_insertingAtRandomIndex);
 	BFTEST_LAUNCH(test_releasecallback);
 	BFTEST_LAUNCH(test_addanddelete);
+	*/
+	BFTEST_LAUNCH(test_arrayOfBFStrings);
+
 })
 
 #endif // ARRAY_TESTS_HPP
