@@ -395,6 +395,8 @@ BFTEST_UNIT_FUNC(test_startsWith, 2<<8, {
 
 BFTEST_UNIT_FUNC(test_arrayOfStrings, 2<<8, {
 	String * strings = new String[2];
+	strings[0] = "hello";
+	strings[1] = "world!";
 	delete[] strings;
 })
 
