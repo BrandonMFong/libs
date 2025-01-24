@@ -1,6 +1,8 @@
 ```
 - [ ] BF::Array to use new/delete for memory allocation
 - [ ] improve List sorting
+- [ ] Vectors to sort strings
+- [ ] String append
 - [x] fix leaks in (RBTree specifically) - replaced with map
 - [x] map and hash map implementation
 - [x] tree implementaion
