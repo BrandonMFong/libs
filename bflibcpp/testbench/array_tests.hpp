@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "string.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -37,7 +38,6 @@ BFTEST_UNIT_FUNC(test_Initializer, 1, {
 	delete charArrPtr;
 })
 
-//int test_Contains() {
 BFTEST_UNIT_FUNC(test_Contains, 1,  {
 	Array<int> arr({1, 2, 3, 4});
 
@@ -259,6 +259,31 @@ BFTEST_UNIT_FUNC(test_releasecallback, 2<<8,  {
 	}
 })
 
+int TestArrayCompareCStrings(char * a, char * b) {
+	return strcmp(a, b);
+}
+
+BFTEST_UNIT_FUNC(test_arrayOfCStrings, 2<<8, {
+	Array<char *> b;
+	b.setComparator(TestArrayCompareCStrings);
+	b.setReleaseCallback(TestArrayRelease);
+	b.add(BFStringCopyString("hello"));
+	b.add(BFStringCopyString("world"));
+
+	char word[32];
+	strcpy(word, "hello");
+	BF_ASSERT(b.contains(word));
+	strcpy(word, "world");
+	BF_ASSERT(b.contains(word));
+})
+
+BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 2<<8, {
+	Array<BF::String> a({"hello", "world"});
+	Array<BF::String> b;
+	b.add("hello");
+	b.add("world");
+})
+
 BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_Initializer);
 	BFTEST_LAUNCH(test_Contains);
@@ -270,6 +295,8 @@ BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_insertingAtRandomIndex);
 	BFTEST_LAUNCH(test_releasecallback);
 	BFTEST_LAUNCH(test_addanddelete);
+	//BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
+	BFTEST_LAUNCH(test_arrayOfCStrings);
 })
 
 #endif // ARRAY_TESTS_HPP

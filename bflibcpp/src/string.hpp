@@ -23,7 +23,6 @@ public:
 	static String * createWithFormat(const char * format, ...);
 
 	String();
-	//String(const char * str);
 	String(char * str);
 	String(const String & str);
 	String(const char * format, ...);
@@ -47,6 +46,8 @@ public:
 	// Returns raw c string
 	const char * cString() const;
 	const char * c_str() const;
+
+	bool starts_with(const char * sstr) const;
 
 	// returns a copy of string
 	//

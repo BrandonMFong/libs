@@ -95,7 +95,7 @@ public:
 	 * This function uses the _callback comparison 
 	 * function to compare each function
 	 */
-	virtual bool contains(T object) {
+	virtual bool contains(T object) const {
 		for (S i = 0; i < this->_count; i++) {
 			if (	this->_callback((this->_address)[i], object) 
 				== 	0) 
