@@ -112,6 +112,7 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 	
 	BFNetLogDebug("> recvData");
 
+	int result = 0;
 	size_t bytesReceived = 0;
 	while (bytesReceived < this->_sktref->_bufferSize) {
 		size_t bytes = recv(
@@ -121,14 +122,17 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			0);
 		if ((int) bytes == -1) {
 			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
-			return errno;
+			result = -1;
+			break;
 		} else if (bytes == 0) {
 			// Datagram sockets in various domains (e.g., the UNIX and Internet domains) permit zero-size datagrams
+			/*
 			if (this->type() == SOCK_STREAM) {
 				BFNetLogDebug("%s - received an empty packet via a socket stream (tcp). This is not allowed.", __FUNCTION__, errno);
-				return -1;
+				result = -1;
 			}
-			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__);
+			*/
+			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
 			break;
 		}
 
@@ -142,6 +146,6 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 
 	BFNetLogDebug("< recvData");
 
-	return 0;
+	return result;
 }
 
