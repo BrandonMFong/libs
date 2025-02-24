@@ -53,6 +53,14 @@ public:
 	 */
 	void getuuid(uuid_t uuid);
 
+	/**
+	 * returns socket type [SOCK_STREAM, SOCK_DGRAM, ...]
+	 *
+	 * returns -1 if the type could not get sent. I don't 
+	 * know if -1 is used amongst the socket types
+	 */
+	int type() const;
+
 private:
 
 	/**

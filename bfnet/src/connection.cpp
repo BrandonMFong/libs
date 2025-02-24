@@ -55,6 +55,16 @@ void BF::Net::SocketConnection::getuuid(uuid_t uuid) {
 	memcpy(uuid, this->_uuid, sizeof(uuid_t));
 }
 
+int BF::Net::SocketConnection::type() const {
+    int type = 0;
+    socklen_t length = sizeof( int );
+    if (getsockopt(this->_sd, SOL_SOCKET, SO_TYPE, &type, &length) == -1) {
+		BFNetLogDebug("%s - couldn't get socket type errno=%d", __FUNCTION__, errno);
+		return -1;
+	}
+	return type;
+}
+
 int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
 	if (!data) return -2;
 
@@ -113,6 +123,11 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			return errno;
 		} else if (bytes == 0) {
+			// Datagram sockets in various domains (e.g., the UNIX and Internet domains) permit zero-size datagrams
+			if (this->type() == SOCK_STREAM) {
+				BFNetLogDebug("%s - received an empty packet via a socket stream (tcp). This is not allowed.", __FUNCTION__, errno);
+				return -1;
+			}
 			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__);
 			break;
 		}
