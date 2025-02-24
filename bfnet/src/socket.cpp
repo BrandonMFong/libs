@@ -139,7 +139,10 @@ void BF::Net::Socket::inStream(void * in) {
 		// BFThreadAsyncIsCanceled should be notified that this
 		// thread is canceled
         if (err || (envelope->_buf.size() == 0)) {
-					usleep(500); // sleep a bit
+
+			// TODO: check if the connection is still valid
+
+			usleep(500); // sleep a bit
 		} else {
 			if (skt->_cbinstream)
 				skt->_cbinstream(envelope);
