@@ -33,7 +33,12 @@ public:
 	 * if true, then we are now able to send data
 	 * to remote user
 	 */
-	bool isready();
+	bool isready() const;
+
+	/**
+	 * true if the connection is still valid
+	 */
+	bool isActive() const;
 	
 	/**
 	 * queues up data to be sent

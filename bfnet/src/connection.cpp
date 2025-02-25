@@ -43,8 +43,27 @@ void BF::Net::SocketConnection::closeConnection() {
 	}
 }
 
-bool BF::Net::SocketConnection::isready() {
+bool BF::Net::SocketConnection::isready() const {
 	return this->_isready.get();
+}
+
+bool BF::Net::SocketConnection::isActive() const {
+	int error = 0;
+	socklen_t len = sizeof(error);
+	int retval = getsockopt(this->_sd, SOL_SOCKET, SO_ERROR, &error, &len);
+
+	if (retval != 0) {
+		BFNetLogDebug("%s - error getting socket error code: %s\n", __FUNCTION__, strerror(retval));
+		return false;
+	}
+
+	if (error != 0) {
+		/* socket has a non zero error status */
+		BFNetLogDebug("%s - socket error: %s\n", __FUNCTION__, strerror(error));
+		return false;
+	}
+
+	return true;
 }
 
 const char BF::Net::SocketConnection::mode() {
