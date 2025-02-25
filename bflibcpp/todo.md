@@ -1,4 +1,4 @@
-```
+
 - [ ] BF::Array to use new/delete for memory allocation
 - [ ] improve List sorting
 - [ ] Vectors to sort strings
@@ -16,4 +16,4 @@
 - [x] collection sorting algorithm
 - [x] make sure there are no Delete() calls and must use BFRelease instead
 - [x] throw compiler warnings when using delete
-```
+- [ ] defer implementation
