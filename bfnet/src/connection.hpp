@@ -38,7 +38,7 @@ public:
 	/**
 	 * true if the connection is still valid
 	 */
-	bool isActive() const;
+	bool isactive() const;
 	
 	/**
 	 * queues up data to be sent

@@ -47,7 +47,7 @@ bool BF::Net::SocketConnection::isready() const {
 	return this->_isready.get();
 }
 
-bool BF::Net::SocketConnection::isActive() const {
+bool BF::Net::SocketConnection::isactive() const {
 	int error = 0;
 	socklen_t len = sizeof(error);
 	int retval = getsockopt(this->_sd, SOL_SOCKET, SO_ERROR, &error, &len);

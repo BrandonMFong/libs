@@ -195,7 +195,7 @@ int BF::Net::Socket::stop() {
 	this->_connections.lock();
 	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
 		SocketConnection * conn = this->_connections.unsafeget().objectAtIndex(i);
-		if (conn && conn->isActive()) {
+		if (conn && conn->isactive()) {
 			this->_connections.unsafeget().objectAtIndex(i)->closeConnection();
 		}
 	}
