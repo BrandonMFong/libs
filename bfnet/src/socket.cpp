@@ -194,7 +194,10 @@ int BF::Net::Socket::stop() {
 	// shutdown connections
 	this->_connections.lock();
 	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
-		this->_connections.unsafeget().objectAtIndex(i)->closeConnection();
+		SocketConnection * conn = this->_connections.unsafeget().objectAtIndex(i);
+		if (conn && conn->isActive()) {
+			this->_connections.unsafeget().objectAtIndex(i)->closeConnection();
+		}
 	}
 	this->_connections.unlock();
 
