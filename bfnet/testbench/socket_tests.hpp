@@ -163,7 +163,12 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 		if (!result) {
 			serverInReceived = false; // reset
 			serverIn.clear();
-			result = clientConn.get()->queueData(data.buffer(), data.size());
+
+			if (!clientConn.get()->isActive()) {
+				result = 1;
+			} else {
+				result = clientConn.get()->queueData(data.buffer(), data.size());
+			}
 		}
 		
 		while (!result && !serverInReceived)
@@ -181,7 +186,11 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 		if (!result) {
 			clientInReceived = false; // reset
 			clientIn.clear();
-			result = serverConn.get()->queueData(data.buffer(), data.size());
+			if (!serverConn.get()->isActive()) {
+				result = 1;
+			} else {
+				result = serverConn.get()->queueData(data.buffer(), data.size());
+			}
 		}
 
 		while (!result && !clientInReceived)
