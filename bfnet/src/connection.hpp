@@ -97,6 +97,11 @@ private:
 	BF::Atomic<bool> _isready;
 
 	/**
+	 * true if socket is still open
+	 */	
+	BF::Atomic<bool> _isactive;
+
+	/**
 	 * reference to socket
 	 */
 	Socket * _sktref;

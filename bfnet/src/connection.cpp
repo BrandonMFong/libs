@@ -27,6 +27,7 @@ BF::Net::SocketConnection::SocketConnection(int sd, Socket * sktref) : Object() 
 	this->_sktref = sktref;
 	BFRetain(this->_sktref);
 	uuid_generate_random(this->_uuid);
+	this->_isactive = true;
 }
 
 BF::Net::SocketConnection::~SocketConnection() {
@@ -53,17 +54,17 @@ bool BF::Net::SocketConnection::isactive() const {
 	int retval = getsockopt(this->_sd, SOL_SOCKET, SO_ERROR, &error, &len);
 
 	if (retval != 0) {
-		BFNetLogDebug("%s - error getting socket error code: %s\n", __FUNCTION__, strerror(retval));
-		return false;
+		BFNetLogDebug("%s - error getting socket error code: %s", __FUNCTION__, strerror(retval));
+		this->_isactive = false;
 	}
 
 	if (error != 0) {
 		/* socket has a non zero error status */
-		BFNetLogDebug("%s - socket error: %s\n", __FUNCTION__, strerror(error));
-		return false;
+		BFNetLogDebug("%s - socket error: %s", __FUNCTION__, strerror(error));
+		this->_isactive = false;
 	}
 
-	return true;
+	return this->_isactive.get();
 }
 
 const char BF::Net::SocketConnection::mode() {
@@ -145,12 +146,11 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			break;
 		} else if (bytes == 0) {
 			// Datagram sockets in various domains (e.g., the UNIX and Internet domains) permit zero-size datagrams
-			/*
 			if (this->type() == SOCK_STREAM) {
 				BFNetLogDebug("%s - received an empty packet via a socket stream (tcp). This is not allowed.", __FUNCTION__, errno);
 				result = -1;
+				this->_isactive = false;
 			}
-			*/
 			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
 			break;
 		}
