@@ -103,7 +103,7 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 	BFNetLogDebug("> sendData");
 
 	size_t bytesSent = 0;
-	while (bytesSent < this->_sktref->_bufferSize) {
+	while (this->isactive() && (bytesSent < this->_sktref->_bufferSize)) {
 		size_t bytes = send(
 			this->_sd,
 			((unsigned char *) buf->data()) + bytesSent,
@@ -133,7 +133,7 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 
 	int result = 0;
 	size_t bytesReceived = 0;
-	while (bytesReceived < this->_sktref->_bufferSize) {
+	while (this->isactive() && (bytesReceived < this->_sktref->_bufferSize)) {
 		size_t bytes = recv(
 			this->_sd,
 			((unsigned char *) buf->_data) + bytesReceived,
