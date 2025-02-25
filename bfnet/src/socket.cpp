@@ -123,7 +123,7 @@ void BF::Net::Socket::inStream(void * in) {
 	BFRetain(skt);
 
 	sc->_isready = true;	
-	while (!BFThreadAsyncIsCanceled(tid)) {
+	while (!BFThreadAsyncIsCanceled(tid) && sc->isactive()) {
 		SocketEnvelope * envelope = new SocketEnvelope(sc, skt->_bufferSize);
 
 		// receive data from connections using buffer
@@ -139,9 +139,6 @@ void BF::Net::Socket::inStream(void * in) {
 		// BFThreadAsyncIsCanceled should be notified that this
 		// thread is canceled
         if (err || (envelope->_buf.size() == 0)) {
-
-			// TODO: check if the connection is still valid
-
 			usleep(500); // sleep a bit
 		} else {
 			if (skt->_cbinstream)
@@ -150,6 +147,9 @@ void BF::Net::Socket::inStream(void * in) {
 
 		BFRelease(envelope);
 	}
+
+	// update the list
+	skt->updateConnections();
 
 	BFRelease(skt);
 	BFRelease(tools);
@@ -186,6 +186,36 @@ bool BF::Net::Socket::isReady() const {
 		return false;
 
 	return true;
+}
+
+void BF::Net::Socket::updateConnections() {
+	this->_connections.lock();
+	
+	const int maxsize = this->_connections.unsafeget().count();
+	int toDelete[maxsize];
+	int size = 0;
+	memset(toDelete, -1, sizeof(int) * size);
+
+	// find indices to delete
+	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
+		SocketConnection * conn = this->_connections.unsafeget().objectAtIndex(i);
+		if (conn && !conn->isactive()) {
+			toDelete[size++] = i;
+		}
+	}
+
+	// delete those connections at these indices
+	int offset = 0;
+	for (int i = 0; i < size; i++) {
+		int del = i - offset;
+		if (this->_connections.unsafeget().deleteObjectAtIndex(toDelete[del])) {
+			BFNetLogDebug("%s - Couldn't delete connection object at index %d", __FUNCTION__, del);
+		} else {
+			offset++;
+		}
+	}
+
+	this->_connections.unlock();
 }
 
 int BF::Net::Socket::stop() {

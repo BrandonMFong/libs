@@ -122,6 +122,11 @@ protected:
 private:
 
 	/**
+	 * updates the connections list, removing inactive connections
+	 */
+	void updateConnections();
+
+	/**
 	 * call back that gets called in `queueCallback` when it
 	 * pops data from in q
 	 *
