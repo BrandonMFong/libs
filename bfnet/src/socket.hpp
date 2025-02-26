@@ -32,6 +32,13 @@ class Socket : public BF::Object {
 public: 
 	static Socket * shared();
 
+	/**
+	 * creates a server/client socket
+	 *
+	 * ipaddr: ip address in string format.
+	 * 	"0.0.0.0" == INADDR_ANY
+	 * 	"127.0.0.1" == INADDR_LOOPBACK
+	 */
 	static Socket * create(
 		const char mode,
 		const char * ipaddr,
