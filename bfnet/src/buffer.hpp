@@ -12,10 +12,10 @@
 namespace BF {
 namespace Net {
 
-class SocketConnection;
+class Connection;
 
 class SocketBuffer : public BF::Object {
-	friend class SocketConnection;
+	friend class Connection;
 public:
 	SocketBuffer(const void * data, size_t size);
 	virtual ~SocketBuffer();

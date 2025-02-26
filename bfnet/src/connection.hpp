@@ -21,19 +21,24 @@ namespace Net {
 namespace BF {
 namespace Net {
 
-class SocketConnection : public BF::Object {
+class Connection : public BF::Object {
 	friend class Socket;
 	friend class Server;
 	friend class Client;
 
 public:
-	static void ReleaseConnection(SocketConnection * sc);
+	static void ReleaseConnection(Connection * sc);
 
 	/**
 	 * if true, then we are now able to send data
 	 * to remote user
 	 */
-	bool isready();
+	bool isready() const;
+
+	/**
+	 * true if the connection is still valid
+	 */
+	bool isactive() const;
 	
 	/**
 	 * queues up data to be sent
@@ -53,13 +58,21 @@ public:
 	 */
 	void getuuid(uuid_t uuid);
 
+	/**
+	 * returns socket type [SOCK_STREAM, SOCK_DGRAM, ...]
+	 *
+	 * returns -1 if the type could not get sent. I don't 
+	 * know if -1 is used amongst the socket types
+	 */
+	int type() const;
+
 private:
 
 	/**
 	 * sktref : reference to socket
 	 */
-	SocketConnection(int sd, Socket * sktref);
-	virtual ~SocketConnection();
+	Connection(int sd, Socket * sktref);
+	virtual ~Connection();
 
 	/**
 	 * closes socket descriptor
@@ -75,7 +88,7 @@ private:
 	uuid_t _uuid;
 	
 	/// socket descriptor
-	int _sd;
+	BF::Atomic<int> _sd;
 
 	/**
 	 * true if communication is ready to be made with

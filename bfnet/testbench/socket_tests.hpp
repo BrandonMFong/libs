@@ -24,7 +24,7 @@ using namespace BF::Net;
 
 void TestSocketPacketReceive(SocketEnvelope * envelope) { }
 
-void TestSocketNewConnection(SocketConnection * sc) { }
+void TestSocketNewConnection(Connection * sc) { }
 
 BFTEST_UNIT_FUNC(test_socketinitclient, 2<<10, {
 	Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
@@ -76,8 +76,8 @@ BFTEST_UNIT_FUNC(test_socketinitserver, 2<<10, {
 	BFRelease(skt);
 })
 
-Atomic<SocketConnection *> serverConn = NULL;
-Atomic<SocketConnection *> clientConn = NULL;
+Atomic<Connection *> serverConn = NULL;
+Atomic<Connection *> clientConn = NULL;
 Data serverIn;
 Atomic<bool> serverInReceived = false;
 Data clientIn;
@@ -86,7 +86,7 @@ Atomic<bool> clientInReceived = false;
 void test_sendingandreceiving_receive(
 	SocketEnvelope * envelope,
 	Data & in,
-	Atomic<SocketConnection *> & conn,
+	Atomic<Connection *> & conn,
 	Atomic<bool> & received
 ) {
 	uuid_t u0, u1;
@@ -102,7 +102,7 @@ void test_sendingandreceiving_server_receive(SocketEnvelope * envelope) {
 	test_sendingandreceiving_receive(envelope, serverIn, serverConn, serverInReceived);
 }
 
-void test_sendingandreceiving_server_new(SocketConnection * sc) {
+void test_sendingandreceiving_server_new(Connection * sc) {
 	serverConn = sc;
 }
 
@@ -110,7 +110,7 @@ void test_sendingandreceiving_client_receive(SocketEnvelope * envelope) {
 	test_sendingandreceiving_receive(envelope, clientIn, clientConn, clientInReceived);
 }
 
-void test_sendingandreceiving_client_new(SocketConnection * sc) {
+void test_sendingandreceiving_client_new(Connection * sc) {
 	clientConn = sc;
 }
 
@@ -163,7 +163,12 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 		if (!result) {
 			serverInReceived = false; // reset
 			serverIn.clear();
-			result = clientConn.get()->queueData(data.buffer(), data.size());
+
+			if (!clientConn.get()->isactive()) {
+				result = 1;
+			} else {
+				result = clientConn.get()->queueData(data.buffer(), data.size());
+			}
 		}
 		
 		while (!result && !serverInReceived)
@@ -181,7 +186,11 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 		if (!result) {
 			clientInReceived = false; // reset
 			clientIn.clear();
-			result = serverConn.get()->queueData(data.buffer(), data.size());
+			if (!serverConn.get()->isactive()) {
+				result = 1;
+			} else {
+				result = serverConn.get()->queueData(data.buffer(), data.size());
+			}
 		}
 
 		while (!result && !clientInReceived)

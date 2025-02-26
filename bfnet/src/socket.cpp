@@ -33,7 +33,7 @@ Socket::Socket() {
 
 	this->_bufferSize = 0;
 
-	this->_connections.get().setReleaseCallback(SocketConnection::ReleaseConnection);
+	this->_connections.get().setReleaseCallback(Connection::ReleaseConnection);
 
 	this->_portnum = 0;
 	memset(this->_ip4addr, 0, SOCKET_IP4_ADDR_STRLEN);
@@ -87,7 +87,7 @@ void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
-void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc)) {
+void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::Connection * sc)) {
 	this->_cbnewconn = cb;
 }
 
@@ -110,36 +110,37 @@ const char * BF::Net::Socket::ipaddr() const {
  */
 class InStreamTools : public Object {
 public:
-	BF::Net::SocketConnection * mainConnection;
+	BF::Net::Connection * mainConnection;
 	BF::Net::Socket * socket;
 };
 
 void BF::Net::Socket::inStream(void * in) {
 	InStreamTools * tools = (InStreamTools *) in; // we own memory
-	SocketConnection * sc = tools->mainConnection;
+	Connection * sc = tools->mainConnection;
 	Socket * skt = tools->socket;
 	BFThreadAsyncID tid = BFThreadAsyncGetID();
 
 	BFRetain(skt);
 
-	sc->_isready = true;	
-	while (!BFThreadAsyncIsCanceled(tid)) {
+	sc->_isready = true;
+	while (!BFThreadAsyncIsCanceled(tid) && sc->isactive()) {
 		SocketEnvelope * envelope = new SocketEnvelope(sc, skt->_bufferSize);
 
 		// receive data from connections using buffer
 		//
 		// this gets blocked until we receive something
 		int err = sc->recvData(&envelope->_buf);
-		
-		// when we are stopping, we may receive
-		// some errors as we are shutting down
-		//
-		// we also may get 0 bytes
-		//
-		// BFThreadAsyncIsCanceled should be notified that this
-		// thread is canceled
+
+		/*		
         if (err || (envelope->_buf.size() == 0)) {
-					usleep(500); // sleep a bit
+			usleep(500); // sleep a bit
+		*/
+		if (err) {
+			const uint8_t sl = 1;
+			BFNetLogDebug("%s - error returned from recvData: %d. Sleeping for %d seconds", err, sl);
+			sleep(sl);
+		} else if ((envelope->_buf.size() == 0) && (sc->type() == SOCK_STREAM)) {
+			sc->closeConnection(); // force the connection to close
 		} else {
 			if (skt->_cbinstream)
 				skt->_cbinstream(envelope);
@@ -148,12 +149,15 @@ void BF::Net::Socket::inStream(void * in) {
 		BFRelease(envelope);
 	}
 
+	// update the list
+	skt->updateConnections();
+
 	BFRelease(skt);
 	BFRelease(tools);
 }
 
 // called by subclasses whenever they get a new connection
-int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) {
+int BF::Net::Socket::startInStreamForConnection(BF::Net::Connection * sc) {
 	if (!sc) {
 		BFNetLogDebug("%s - null socket connection", __FUNCTION__);
 		return 1;
@@ -185,13 +189,46 @@ bool BF::Net::Socket::isReady() const {
 	return true;
 }
 
+void BF::Net::Socket::updateConnections() {
+	this->_connections.lock();
+	
+	const int maxsize = this->_connections.unsafeget().count();
+	int toDelete[maxsize];
+	int size = 0;
+	memset(toDelete, -1, sizeof(int) * size);
+
+	// find indices to delete
+	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
+		Connection * conn = this->_connections.unsafeget().objectAtIndex(i);
+		if (conn && !conn->isactive()) {
+			toDelete[size++] = i;
+		}
+	}
+
+	// delete those connections at these indices
+	int offset = 0;
+	for (int i = 0; i < size; i++) {
+		int del = i - offset;
+		if (this->_connections.unsafeget().deleteObjectAtIndex(toDelete[del])) {
+			BFNetLogDebug("%s - Couldn't delete connection object at index %d", __FUNCTION__, del);
+		} else {
+			offset++;
+		}
+	}
+
+	this->_connections.unlock();
+}
+
 int BF::Net::Socket::stop() {
 	int error = 0;
 
 	// shutdown connections
 	this->_connections.lock();
 	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
-		this->_connections.unsafeget().objectAtIndex(i)->closeConnection();
+		Connection * conn = this->_connections.unsafeget().objectAtIndex(i);
+		if (conn && conn->isactive()) {
+			this->_connections.unsafeget().objectAtIndex(i)->closeConnection();
+		}
 	}
 	this->_connections.unlock();
 

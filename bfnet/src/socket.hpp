@@ -24,11 +24,11 @@ extern "C" {
 namespace BF {
 namespace Net {
 
-class SocketConnection;
+class Connection;
 class SocketEnvelope;
 
 class Socket : public BF::Object {
-	friend class BF::Net::SocketConnection;
+	friend class BF::Net::Connection;
 public: 
 	static Socket * shared();
 
@@ -71,7 +71,7 @@ public:
 	/**
 	 * see _cbnewconn
 	 */
-	void setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc));
+	void setNewConnectionCallback(void (* cb)(BF::Net::Connection * sc));
 
 	/**
 	 * buffer length for incoming data
@@ -102,12 +102,12 @@ protected:
 	 *
 	 * 'sd' : socket descriptor
 	 */
-	int startInStreamForConnection(BF::Net::SocketConnection * sc);
+	int startInStreamForConnection(BF::Net::Connection * sc);
 
 	/**
 	 * array of devices we are connected to
 	 */
-	BF::Atomic<BF::List<BF::Net::SocketConnection *>> _connections;
+	BF::Atomic<BF::List<BF::Net::Connection *>> _connections;
 
 	/**
 	 * callback used, if given, when a new connection is made
@@ -115,11 +115,16 @@ protected:
 	 * sc : keep a record of this if you want to send data to the 
 	 * device on the other end.  You do not own memory
 	 */
-	void (* _cbnewconn)(BF::Net::SocketConnection * sc);
+	void (* _cbnewconn)(BF::Net::Connection * sc);
 
 	BF::Atomic<BF::List<BFThreadAsyncID>> _tidin;
 
 private:
+
+	/**
+	 * updates the connections list, removing inactive connections
+	 */
+	void updateConnections();
 
 	/**
 	 * call back that gets called in `queueCallback` when it
