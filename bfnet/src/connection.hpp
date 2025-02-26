@@ -88,18 +88,13 @@ private:
 	uuid_t _uuid;
 	
 	/// socket descriptor
-	int _sd;
+	BF::Atomic<int> _sd;
 
 	/**
 	 * true if communication is ready to be made with
 	 * our _sd
 	 */
 	BF::Atomic<bool> _isready;
-
-	/**
-	 * true if socket is still open
-	 */	
-	BF::Atomic<bool> _isactive;
 
 	/**
 	 * reference to socket

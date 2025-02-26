@@ -27,7 +27,6 @@ BF::Net::SocketConnection::SocketConnection(int sd, Socket * sktref) : Object() 
 	this->_sktref = sktref;
 	BFRetain(this->_sktref);
 	uuid_generate_random(this->_uuid);
-	this->_isactive = true;
 }
 
 BF::Net::SocketConnection::~SocketConnection() {
@@ -35,13 +34,17 @@ BF::Net::SocketConnection::~SocketConnection() {
 }
 
 void BF::Net::SocketConnection::closeConnection() {
-	if (shutdown(this->_sd, SHUT_RDWR) == -1) {
+	this->_sd.lock();
+	if (shutdown(this->_sd.unsafeget(), SHUT_RDWR) == -1) {
 		BFNetLogDebug("%s - shutdown returned %d", __FUNCTION__, errno);
 	}
 
-	if (close(this->_sd) == -1) {
+	if (close(this->_sd.unsafeget()) == -1) {
 		BFNetLogDebug("%s - close returned %d", __FUNCTION__, errno);
 	}
+
+	this->_sd.unsafeset(0);
+	this->_sd.unlock();
 }
 
 bool BF::Net::SocketConnection::isready() const {
@@ -49,22 +52,26 @@ bool BF::Net::SocketConnection::isready() const {
 }
 
 bool BF::Net::SocketConnection::isactive() const {
+	if (this->_sd.get() == 0) {
+		return false;
+	}
+
 	int error = 0;
 	socklen_t len = sizeof(error);
-	int retval = getsockopt(this->_sd, SOL_SOCKET, SO_ERROR, &error, &len);
+	int retval = getsockopt(this->_sd.get(), SOL_SOCKET, SO_ERROR, &error, &len);
 
 	if (retval != 0) {
 		BFNetLogDebug("%s - error getting socket error code: %s", __FUNCTION__, strerror(retval));
-		this->_isactive = false;
+		return false;
 	}
 
 	if (error != 0) {
 		/* socket has a non zero error status */
 		BFNetLogDebug("%s - socket error: %s", __FUNCTION__, strerror(error));
-		this->_isactive = false;
+		return false;
 	}
-
-	return this->_isactive.get();
+	
+	return true;
 }
 
 const char BF::Net::SocketConnection::mode() {
@@ -78,7 +85,7 @@ void BF::Net::SocketConnection::getuuid(uuid_t uuid) {
 int BF::Net::SocketConnection::type() const {
     int type = 0;
     socklen_t length = sizeof( int );
-    if (getsockopt(this->_sd, SOL_SOCKET, SO_TYPE, &type, &length) == -1) {
+    if (getsockopt(this->_sd.get(), SOL_SOCKET, SO_TYPE, &type, &length) == -1) {
 		BFNetLogDebug("%s - couldn't get socket type errno=%d", __FUNCTION__, errno);
 		return -1;
 	}
@@ -98,21 +105,26 @@ int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
 }
 
 int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
-	if (!buf)
+	if (this->_sd.get() == 0) {
 		return 1;
+	} else if (!buf) {
+		return 1;
+	}
 
 	BFNetLogDebug("> sendData");
 
+	int result = 0;
 	size_t bytesSent = 0;
-	while (this->isactive() && (bytesSent < this->_sktref->_bufferSize)) {
+	while (bytesSent < this->_sktref->_bufferSize) {
 		size_t bytes = send(
-			this->_sd,
+			this->_sd.get(),
 			((unsigned char *) buf->data()) + bytesSent,
 			buf->size() - bytesSent,
 			0);
 		if ((int) bytes == -1) {
 			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
-			return errno;
+			result = errno;
+			break;
 		}
 
 		bytesSent += bytes;
@@ -123,20 +135,23 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 
 	BFNetLogDebug("< sendData");
 
-	return 0;
+	return result;
 }
 
 int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
-	if (!buf)
+	if (this->_sd.get() == 0) {
 		return 1;
-	
+	} else if (!buf) {
+		return 1;
+	}
+
 	BFNetLogDebug("> recvData");
 
 	int result = 0;
 	size_t bytesReceived = 0;
-	while (this->isactive() && (bytesReceived < this->_sktref->_bufferSize)) {
+	while (bytesReceived < this->_sktref->_bufferSize) {
 		size_t bytes = recv(
-			this->_sd,
+			this->_sd.get(),
 			((unsigned char *) buf->_data) + bytesReceived,
 			this->_sktref->_bufferSize - bytesReceived,
 			0);
@@ -146,11 +161,13 @@ int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
 			break;
 		} else if (bytes == 0) {
 			// Datagram sockets in various domains (e.g., the UNIX and Internet domains) permit zero-size datagrams
+			/*
 			if (this->type() == SOCK_STREAM) {
 				BFNetLogDebug("%s - received an empty packet via a socket stream (tcp). This is not allowed.", __FUNCTION__, errno);
 				result = -1;
 				this->_isactive = false;
 			}
+			*/
 			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
 			break;
 		}

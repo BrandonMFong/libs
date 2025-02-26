@@ -122,7 +122,7 @@ void BF::Net::Socket::inStream(void * in) {
 
 	BFRetain(skt);
 
-	sc->_isready = true;	
+	sc->_isready = true;
 	while (!BFThreadAsyncIsCanceled(tid) && sc->isactive()) {
 		SocketEnvelope * envelope = new SocketEnvelope(sc, skt->_bufferSize);
 
@@ -130,16 +130,17 @@ void BF::Net::Socket::inStream(void * in) {
 		//
 		// this gets blocked until we receive something
 		int err = sc->recvData(&envelope->_buf);
-		
-		// when we are stopping, we may receive
-		// some errors as we are shutting down
-		//
-		// we also may get 0 bytes
-		//
-		// BFThreadAsyncIsCanceled should be notified that this
-		// thread is canceled
+
+		/*		
         if (err || (envelope->_buf.size() == 0)) {
 			usleep(500); // sleep a bit
+		*/
+		if (err) {
+			const uint8_t sl = 1;
+			BFNetLogDebug("%s - error returned from recvData: %d. Sleeping for %d seconds", err, sl);
+			sleep(sl);
+		} else if ((envelope->_buf.size() == 0) && (sc->type() == SOCK_STREAM)) {
+			sc->closeConnection(); // force the connection to close
 		} else {
 			if (skt->_cbinstream)
 				skt->_cbinstream(envelope);
