@@ -84,11 +84,11 @@ void BF::Net::Server::pollthread(void * in) {
 			err = 1;
 		}
 
-		SocketConnection * sc = NULL;
+		Connection * sc = NULL;
 		if (!err) {
-			sc = new SocketConnection(csock, s);
+			sc = new Connection(csock, s);
 			if (!sc) {
-				BFNetLogDebug("%s - could not create SocketConnection", __FILE__);
+				BFNetLogDebug("%s - could not create Connection", __FILE__);
 				err = 1;
 			}
 		}

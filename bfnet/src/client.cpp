@@ -50,9 +50,9 @@ void BF::Net::Client::init(void * in) {
 		err = errno;
 	}
 
-	SocketConnection * sc = NULL;
+	Connection * sc = NULL;
 	if (!err) {
-		sc = new SocketConnection(sock, c);
+		sc = new Connection(sock, c);
 	}
 
 	if (!err) {

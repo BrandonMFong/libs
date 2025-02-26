@@ -12,19 +12,19 @@
 namespace BF {
 namespace Net {
 
-class SocketConnection;
+class Connection;
 class Socket;
 
 class SocketEnvelope : public BF::Object {
 	friend class Socket;
 public:
-	SocketEnvelope(SocketConnection * sc, size_t bufsize);
+	SocketEnvelope(Connection * sc, size_t bufsize);
 	virtual ~SocketEnvelope();
 
 	SocketBuffer * buf();
-	SocketConnection * connection();
+	Connection * connection();
 private:
-	SocketConnection * _sc;
+	Connection * _sc;
 	SocketBuffer _buf;
 };
 

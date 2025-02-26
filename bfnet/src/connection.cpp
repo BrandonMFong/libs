@@ -18,22 +18,22 @@
 
 using namespace BF;
 
-void BF::Net::SocketConnection::ReleaseConnection(SocketConnection * sc) {
+void BF::Net::Connection::ReleaseConnection(Connection * sc) {
 	BFRelease(sc);
 }
 
-BF::Net::SocketConnection::SocketConnection(int sd, Socket * sktref) : Object() {
+BF::Net::Connection::Connection(int sd, Socket * sktref) : Object() {
 	this->_sd = sd;
 	this->_sktref = sktref;
 	BFRetain(this->_sktref);
 	uuid_generate_random(this->_uuid);
 }
 
-BF::Net::SocketConnection::~SocketConnection() {
+BF::Net::Connection::~Connection() {
 	BFRelease(this->_sktref);
 }
 
-void BF::Net::SocketConnection::closeConnection() {
+void BF::Net::Connection::closeConnection() {
 	this->_sd.lock();
 	if (shutdown(this->_sd.unsafeget(), SHUT_RDWR) == -1) {
 		BFNetLogDebug("%s - shutdown returned %d", __FUNCTION__, errno);
@@ -47,11 +47,11 @@ void BF::Net::SocketConnection::closeConnection() {
 	this->_sd.unlock();
 }
 
-bool BF::Net::SocketConnection::isready() const {
+bool BF::Net::Connection::isready() const {
 	return this->_isready.get();
 }
 
-bool BF::Net::SocketConnection::isactive() const {
+bool BF::Net::Connection::isactive() const {
 	if (this->_sd.get() == 0) {
 		return false;
 	}
@@ -74,15 +74,15 @@ bool BF::Net::SocketConnection::isactive() const {
 	return true;
 }
 
-const char BF::Net::SocketConnection::mode() {
+const char BF::Net::Connection::mode() {
 	return this->_sktref->mode();
 }
 
-void BF::Net::SocketConnection::getuuid(uuid_t uuid) {
+void BF::Net::Connection::getuuid(uuid_t uuid) {
 	memcpy(uuid, this->_uuid, sizeof(uuid_t));
 }
 
-int BF::Net::SocketConnection::type() const {
+int BF::Net::Connection::type() const {
     int type = 0;
     socklen_t length = sizeof( int );
     if (getsockopt(this->_sd.get(), SOL_SOCKET, SO_TYPE, &type, &length) == -1) {
@@ -92,7 +92,7 @@ int BF::Net::SocketConnection::type() const {
 	return type;
 }
 
-int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
+int BF::Net::Connection::queueData(const void * data, size_t size) {
 	if (!data) return -2;
 
 	// make envelope
@@ -104,7 +104,7 @@ int BF::Net::SocketConnection::queueData(const void * data, size_t size) {
 	return error;
 }
 
-int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
+int BF::Net::Connection::sendData(const SocketBuffer * buf) {
 	if (this->_sd.get() == 0) {
 		return 1;
 	} else if (!buf) {
@@ -138,7 +138,7 @@ int BF::Net::SocketConnection::sendData(const SocketBuffer * buf) {
 	return result;
 }
 
-int BF::Net::SocketConnection::recvData(SocketBuffer * buf) {
+int BF::Net::Connection::recvData(SocketBuffer * buf) {
 	if (this->_sd.get() == 0) {
 		return 1;
 	} else if (!buf) {

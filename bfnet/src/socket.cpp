@@ -33,7 +33,7 @@ Socket::Socket() {
 
 	this->_bufferSize = 0;
 
-	this->_connections.get().setReleaseCallback(SocketConnection::ReleaseConnection);
+	this->_connections.get().setReleaseCallback(Connection::ReleaseConnection);
 
 	this->_portnum = 0;
 	memset(this->_ip4addr, 0, SOCKET_IP4_ADDR_STRLEN);
@@ -87,7 +87,7 @@ void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
-void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::SocketConnection * sc)) {
+void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::Connection * sc)) {
 	this->_cbnewconn = cb;
 }
 
@@ -110,13 +110,13 @@ const char * BF::Net::Socket::ipaddr() const {
  */
 class InStreamTools : public Object {
 public:
-	BF::Net::SocketConnection * mainConnection;
+	BF::Net::Connection * mainConnection;
 	BF::Net::Socket * socket;
 };
 
 void BF::Net::Socket::inStream(void * in) {
 	InStreamTools * tools = (InStreamTools *) in; // we own memory
-	SocketConnection * sc = tools->mainConnection;
+	Connection * sc = tools->mainConnection;
 	Socket * skt = tools->socket;
 	BFThreadAsyncID tid = BFThreadAsyncGetID();
 
@@ -157,7 +157,7 @@ void BF::Net::Socket::inStream(void * in) {
 }
 
 // called by subclasses whenever they get a new connection
-int BF::Net::Socket::startInStreamForConnection(BF::Net::SocketConnection * sc) {
+int BF::Net::Socket::startInStreamForConnection(BF::Net::Connection * sc) {
 	if (!sc) {
 		BFNetLogDebug("%s - null socket connection", __FUNCTION__);
 		return 1;
@@ -199,7 +199,7 @@ void BF::Net::Socket::updateConnections() {
 
 	// find indices to delete
 	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
-		SocketConnection * conn = this->_connections.unsafeget().objectAtIndex(i);
+		Connection * conn = this->_connections.unsafeget().objectAtIndex(i);
 		if (conn && !conn->isactive()) {
 			toDelete[size++] = i;
 		}
@@ -225,7 +225,7 @@ int BF::Net::Socket::stop() {
 	// shutdown connections
 	this->_connections.lock();
 	for (int i = 0; i < this->_connections.unsafeget().count(); i++) {
-		SocketConnection * conn = this->_connections.unsafeget().objectAtIndex(i);
+		Connection * conn = this->_connections.unsafeget().objectAtIndex(i);
 		if (conn && conn->isactive()) {
 			this->_connections.unsafeget().objectAtIndex(i)->closeConnection();
 		}

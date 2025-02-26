@@ -21,13 +21,13 @@ namespace Net {
 namespace BF {
 namespace Net {
 
-class SocketConnection : public BF::Object {
+class Connection : public BF::Object {
 	friend class Socket;
 	friend class Server;
 	friend class Client;
 
 public:
-	static void ReleaseConnection(SocketConnection * sc);
+	static void ReleaseConnection(Connection * sc);
 
 	/**
 	 * if true, then we are now able to send data
@@ -71,8 +71,8 @@ private:
 	/**
 	 * sktref : reference to socket
 	 */
-	SocketConnection(int sd, Socket * sktref);
-	virtual ~SocketConnection();
+	Connection(int sd, Socket * sktref);
+	virtual ~Connection();
 
 	/**
 	 * closes socket descriptor
