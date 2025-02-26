@@ -53,6 +53,7 @@ bool BF::Net::Connection::isready() const {
 
 bool BF::Net::Connection::isactive() const {
 	if (this->_sd.get() == 0) {
+		BFNetLogDebug("%s - socket descriptor is 0", __FUNCTION__);
 		return false;
 	}
 
