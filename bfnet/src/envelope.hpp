@@ -21,11 +21,11 @@ public:
 	Envelope(Connection * sc, size_t bufsize);
 	virtual ~Envelope();
 
-	BF::Data * buf();
+	BF::Data * data();
 	Connection * connection();
 private:
 	Connection * _sc;
-	BF::Data _buf;
+	BF::Data _data;
 };
 
 }

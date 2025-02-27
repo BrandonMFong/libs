@@ -129,13 +129,13 @@ void BF::Net::Socket::inStream(void * in) {
 		// receive data from connections using buffer
 		//
 		// this gets blocked until we receive something
-		int err = sc->recvData(&envelope->_buf);
+		int err = sc->recvData(&envelope->_data);
 
 		if (err) {
 			const uint8_t sl = 1;
 			BFNetLogDebug("%s - error returned from recvData: %d. Sleeping for %d seconds", err, sl);
 			sleep(sl);
-		} else if ((envelope->_buf.size() == 0) && (sc->type() == SOCK_STREAM)) {
+		} else if ((envelope->data()->size() == 0) && (sc->type() == SOCK_STREAM)) {
 			sc->closeConnection(); // force the connection to close
 		} else {
 			if (skt->_cbinstream)

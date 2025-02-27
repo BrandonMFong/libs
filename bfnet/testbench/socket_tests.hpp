@@ -92,7 +92,7 @@ void test_sendingandreceiving_receive(
 	envelope->connection()->getuuid(u0);
 	conn.get()->getuuid(u1);
 	if ((conn.get() != NULL) && !uuid_compare(u0, u1)) {
-		in.alloc(envelope->buf()->size(), (unsigned char *) envelope->buf()->buffer());
+		in.alloc(envelope->data()->size(), (unsigned char *) envelope->data()->buffer());
 		received = true;
 	}
 }

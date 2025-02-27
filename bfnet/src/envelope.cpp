@@ -10,7 +10,7 @@
 using namespace BF;
 using namespace BF::Net;
 
-Envelope::Envelope(Connection * sc, size_t bufsize) : _buf(bufsize, 0) {
+Envelope::Envelope(Connection * sc, size_t bufsize) : _data(bufsize, 0) {
 	this->_sc = sc;
 	BFRetain(this->_sc);
 }
@@ -19,8 +19,8 @@ Envelope::~Envelope() {
 	BFRelease(this->_sc);
 }
 
-Data * Envelope::buf() {
-	return &this->_buf;
+Data * Envelope::data() {
+	return &this->_data;
 }
 
 Connection * Envelope::connection() {
