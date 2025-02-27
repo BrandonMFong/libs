@@ -91,7 +91,7 @@ void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::Connection *
 	this->_cbnewconn = cb;
 }
 
-void BF::Net::Socket::setInStreamCallback(void (* cb)(BF::Net::SocketEnvelope * envelope)) {
+void BF::Net::Socket::setInStreamCallback(void (* cb)(BF::Net::Envelope * envelope)) {
 	this->_cbinstream = cb;
 }
 
@@ -124,7 +124,7 @@ void BF::Net::Socket::inStream(void * in) {
 
 	sc->_isready = true;
 	while (!BFThreadAsyncIsCanceled(tid) && sc->isactive()) {
-		SocketEnvelope * envelope = new SocketEnvelope(sc, skt->_bufferSize);
+		Envelope * envelope = new Envelope(sc, skt->_bufferSize);
 
 		// receive data from connections using buffer
 		//

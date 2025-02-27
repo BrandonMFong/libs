@@ -15,11 +15,11 @@ namespace Net {
 class Connection;
 class Socket;
 
-class SocketEnvelope : public BF::Object {
+class Envelope : public BF::Object {
 	friend class Socket;
 public:
-	SocketEnvelope(Connection * sc, size_t bufsize);
-	virtual ~SocketEnvelope();
+	Envelope(Connection * sc, size_t bufsize);
+	virtual ~Envelope();
 
 	SocketBuffer * buf();
 	Connection * connection();

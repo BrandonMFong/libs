@@ -25,7 +25,7 @@ namespace BF {
 namespace Net {
 
 class Connection;
-class SocketEnvelope;
+class Envelope;
 
 class Socket : public BF::Object {
 	friend class BF::Net::Connection;
@@ -73,7 +73,7 @@ public:
 	 *
 	 * callback owner MUST copy buffer data because the data will be lost when it returns
 	 */
-	void setInStreamCallback(void (* cb)(BF::Net::SocketEnvelope * envelope));
+	void setInStreamCallback(void (* cb)(BF::Net::Envelope * envelope));
 
 	/**
 	 * see _cbnewconn
@@ -139,7 +139,7 @@ private:
 	 *
 	 * envelope : retain if you plan to use after callback returns
 	 */
-	void (* _cbinstream)(BF::Net::SocketEnvelope * envelope);
+	void (* _cbinstream)(BF::Net::Envelope * envelope);
 
 	/**
 	 * receives packets and puts them in a queue

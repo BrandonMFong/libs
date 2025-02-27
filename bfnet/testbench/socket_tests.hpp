@@ -22,7 +22,7 @@
 using namespace BF;
 using namespace BF::Net;
 
-void TestSocketPacketReceive(SocketEnvelope * envelope) { }
+void TestSocketPacketReceive(Envelope * envelope) { }
 
 void TestSocketNewConnection(Connection * sc) { }
 
@@ -84,7 +84,7 @@ Data clientIn;
 Atomic<bool> clientInReceived = false;
 
 void test_sendingandreceiving_receive(
-	SocketEnvelope * envelope,
+	Envelope * envelope,
 	Data & in,
 	Atomic<Connection *> & conn,
 	Atomic<bool> & received
@@ -98,7 +98,7 @@ void test_sendingandreceiving_receive(
 	}
 }
 
-void test_sendingandreceiving_server_receive(SocketEnvelope * envelope) {
+void test_sendingandreceiving_server_receive(Envelope * envelope) {
 	test_sendingandreceiving_receive(envelope, serverIn, serverConn, serverInReceived);
 }
 
@@ -106,7 +106,7 @@ void test_sendingandreceiving_server_new(Connection * sc) {
 	serverConn = sc;
 }
 
-void test_sendingandreceiving_client_receive(SocketEnvelope * envelope) {
+void test_sendingandreceiving_client_receive(Envelope * envelope) {
 	test_sendingandreceiving_receive(envelope, clientIn, clientConn, clientInReceived);
 }
 

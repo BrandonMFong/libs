@@ -11,20 +11,20 @@
 using namespace BF;
 using namespace BF::Net;
 
-SocketEnvelope::SocketEnvelope(Connection * sc, size_t bufsize) : _buf(0, bufsize) {
+Envelope::Envelope(Connection * sc, size_t bufsize) : _buf(0, bufsize) {
 	this->_sc = sc;
 	BFRetain(this->_sc);
 }
 
-SocketEnvelope::~SocketEnvelope() {
+Envelope::~Envelope() {
 	BFRelease(this->_sc);
 }
 
-SocketBuffer * SocketEnvelope::buf() {
+SocketBuffer * Envelope::buf() {
 	return &this->_buf;
 }
 
-Connection * SocketEnvelope::connection() {
+Connection * Envelope::connection() {
 	return this->_sc;
 }
 
