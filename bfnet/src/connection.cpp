@@ -138,10 +138,10 @@ int BF::Net::Connection::sendData(const Data * buf) {
 	return result;
 }
 
-int BF::Net::Connection::recvData(Data * buf) {
+int BF::Net::Connection::recvData(Data * data) {
 	if (this->_sd.get() == 0) {
 		return 1;
-	} else if (!buf) {
+	} else if (!data) {
 		return 1;
 	}
 
@@ -149,12 +149,16 @@ int BF::Net::Connection::recvData(Data * buf) {
 
 	int result = 0;
 	size_t bytesReceived = 0;
-	while (bytesReceived < this->_sktref->_bufferSize) {
+	unsigned char * buf = (unsigned char *) malloc(this->_sktref->_bufferSize);
+	do {
+		// read socket
 		size_t bytes = recv(
 			this->_sd.get(),
-			((unsigned char *) buf->buffer()) + bytesReceived,
-			this->_sktref->_bufferSize - bytesReceived,
+			buf,
+			this->_sktref->_bufferSize,
 			0);
+		
+		// handle error
 		if ((int) bytes == -1) {
 			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
 			result = -1;
@@ -164,13 +168,35 @@ int BF::Net::Connection::recvData(Data * buf) {
 			break;
 		}
 
-		bytesReceived += bytes;
-		BFNetLogDebug("received %ld/%ld bytes",
-			bytesReceived,
-			this->_sktref->_bufferSize);
-	}
+		// stretch the buffer if needed
+		if (data->size() < (bytesReceived + bytes)) {
+			data->resize(bytesReceived + bytes);
+		}
 
-	buf->resize(bytesReceived);
+		// copy to our buffer
+		memcpy(((unsigned char *) data->buffer()) + bytesReceived,
+				buf,
+				bytes);
+		bytesReceived += bytes;
+		BFNetLogDebug("received %ld bytes",
+			bytesReceived);
+
+		if (this->_sktref->_cbprogress == NULL) {
+			break;
+		} else {
+			/**
+			 * will only tell the receiver about the bytes we have so far
+			 *
+			 * the receiver should tell us if they want us to keep
+			 * trying to socket, if not then we will break
+			 */
+			if (this->_sktref->_cbprogress((const unsigned char *) data->buffer(), bytesReceived)) {
+				break;
+			}
+		}
+	} while (true);
+
+	data->resize(bytesReceived);
 
 	BFNetLogDebug("< recvData");
 

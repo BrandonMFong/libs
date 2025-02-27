@@ -80,6 +80,13 @@ private:
 	void closeConnection();
 
 	int sendData(const BF::Data * buf);
+
+	/**
+	 * Reads bytes from socket
+	 *
+	 * Uses Socket::_cbprogress to allow the implementer 
+	 * to control data flow
+	 */
 	int recvData(BF::Data * buf);
 
 	/**
