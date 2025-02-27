@@ -88,7 +88,7 @@ void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
-void BF::Net::Socket::setIncomingDataProgress(bool (* cb)(const unsigned char * buf, size_t size)) {
+void BF::Net::Socket::setIncomingDataProgress(int (* cb)(const unsigned char * buf, size_t size)) {
 	this->_cbprogress = cb;
 }
 
@@ -137,9 +137,14 @@ void BF::Net::Socket::inStream(void * in) {
 		int err = sc->recvData(&envelope->_data);
 
 		if (err) {
+			/*
 			const uint8_t sl = 1;
 			BFNetLogDebug("%s - error returned from recvData: %d. Sleeping for %d seconds", err, sl);
 			sleep(sl);
+			*/
+			BFNetLogDebug("%s - error returned from recvData: %d. Aborting reading socket...", __FUNCTION__, err);
+			//sc->closeConnection(); // force the connection to close
+			break;
 		} else if ((envelope->data()->size() == 0) && (sc->type() == SOCK_STREAM)) {
 			sc->closeConnection(); // force the connection to close
 		} else {

@@ -190,7 +190,15 @@ int BF::Net::Connection::recvData(Data * data) {
 			 * the receiver should tell us if they want us to keep
 			 * trying to socket, if not then we will break
 			 */
-			if (this->_sktref->_cbprogress((const unsigned char *) data->buffer(), bytesReceived)) {
+			int val = this->_sktref->_cbprogress(
+					(const unsigned char *) data->buffer(),
+					bytesReceived);
+			if (val == 1) {
+				break;
+			} else if (val == -1) {
+				result = -1;
+				BFNetLogDebug("%s - received %d from receiver for _cbprogress... aborting recv() on socket",
+						__FUNCTION__, val); // eof
 				break;
 			}
 		}

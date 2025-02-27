@@ -78,7 +78,7 @@ public:
 	/**
 	 * see _cbprogress
 	 */
-	void setIncomingDataProgress(bool (* cb)(const unsigned char * buf, size_t size));
+	void setIncomingDataProgress(int (* cb)(const unsigned char * buf, size_t size));
 
 	/**
 	 * see _cbnewconn
@@ -147,16 +147,19 @@ private:
 	void (* _cbinstream)(BF::Net::Envelope * envelope);
 
 	/**
+	 * asynchronous call per socket connection
+	 *
 	 * uses callback to show receiver the progress of an incoming packet
 	 *
 	 * The receiver has an option to return a boolean value for:
-	 * 	true: if data is could to be processed over
-	 * 	false: if data is not fully received. Therefore we will try again
+	 * 	1: if data is could to be processed over
+	 * 	0: if data is not fully received. Therefore we will try again
+	 * 	-1: if there is something wrong and advises us to abort
 	 *
 	 * if this callback is not set, we are going to assume that every
 	 * buffer we read is the entire message
 	 */
-	bool (* _cbprogress)(const unsigned char * buf, size_t size);
+	int (* _cbprogress)(const unsigned char * buf, size_t size);
 
 	/**
 	 * receives packets and puts them in a queue
