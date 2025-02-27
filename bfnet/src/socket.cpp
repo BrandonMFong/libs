@@ -30,6 +30,7 @@ Socket * BF::Net::Socket::shared() {
 Socket::Socket() { 
 	this->_cbinstream = NULL;
 	this->_cbnewconn = NULL;
+	this->_cbprogress = NULL;
 
 	this->_bufferSize = 0;
 
@@ -85,6 +86,10 @@ Socket * BF::Net::Socket::create(const char mode, const char * ipaddr, uint16_t 
 
 void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
+}
+
+void BF::Net::Socket::setIncomingDataProgress(bool (* cb)(const unsigned char * buf, size_t size)) {
+	this->_cbprogress = cb;
 }
 
 void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::Connection * sc)) {

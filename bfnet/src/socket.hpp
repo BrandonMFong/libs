@@ -76,6 +76,11 @@ public:
 	void setInStreamCallback(void (* cb)(BF::Net::Envelope * envelope));
 
 	/**
+	 * see _cbprogress
+	 */
+	void setIncomingDataProgress(bool (* cb)(const unsigned char * buf, size_t size));
+
+	/**
 	 * see _cbnewconn
 	 */
 	void setNewConnectionCallback(void (* cb)(BF::Net::Connection * sc));
@@ -140,6 +145,18 @@ private:
 	 * envelope : retain if you plan to use after callback returns
 	 */
 	void (* _cbinstream)(BF::Net::Envelope * envelope);
+
+	/**
+	 * uses callback to show receiver the progress of an incoming packet
+	 *
+	 * The receiver has an option to return a boolean value for:
+	 * 	true: if data is could to be processed over
+	 * 	false: if data is not fully received. Therefore we will try again
+	 *
+	 * if this callback is not set, we are going to assume that every
+	 * buffer we read is the entire message
+	 */
+	bool (* _cbprogress)(const unsigned char * buf, size_t size);
 
 	/**
 	 * receives packets and puts them in a queue
