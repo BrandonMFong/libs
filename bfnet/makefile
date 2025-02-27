@@ -23,7 +23,7 @@ BIN_PATH = bin/$(CONFIG)/$(LIB_NAME)
 BUILD_TYPE = archive
 SOURCE_EXT = cpp
 HEADER_EXT = hpp
-FILES = client server socket envelope connection buffer log
+FILES = client server socket envelope connection log
 
 ### Release settings
 ifeq ($(CONFIG),release) # release

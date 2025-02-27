@@ -6,7 +6,6 @@
 #include "connection.hpp"
 #include "socket.hpp"
 #include "envelope.hpp"
-#include "buffer.hpp"
 #include <bflibcpp/bflibcpp.hpp>
 #include <netinet/in.h> //structure for storing address information 
 #include <stdio.h> 
@@ -97,7 +96,7 @@ int BF::Net::Connection::queueData(const void * data, size_t size) {
 	if (!data) return -2;
 
 	// make envelope
-	SocketBuffer buf(data, size);
+	Data buf(size, (const unsigned char *) data);
 
 	// queue up envelope
 	int error = this->sendData(&buf);
@@ -105,7 +104,7 @@ int BF::Net::Connection::queueData(const void * data, size_t size) {
 	return error;
 }
 
-int BF::Net::Connection::sendData(const SocketBuffer * buf) {
+int BF::Net::Connection::sendData(const Data * buf) {
 	if (this->_sd.get() == 0) {
 		return 1;
 	} else if (!buf) {
@@ -119,7 +118,7 @@ int BF::Net::Connection::sendData(const SocketBuffer * buf) {
 	while (bytesSent < this->_sktref->_bufferSize) {
 		size_t bytes = send(
 			this->_sd.get(),
-			((unsigned char *) buf->data()) + bytesSent,
+			((unsigned char *) buf->buffer()) + bytesSent,
 			buf->size() - bytesSent,
 			0);
 		if ((int) bytes == -1) {
@@ -139,7 +138,7 @@ int BF::Net::Connection::sendData(const SocketBuffer * buf) {
 	return result;
 }
 
-int BF::Net::Connection::recvData(SocketBuffer * buf) {
+int BF::Net::Connection::recvData(Data * buf) {
 	if (this->_sd.get() == 0) {
 		return 1;
 	} else if (!buf) {
@@ -153,7 +152,7 @@ int BF::Net::Connection::recvData(SocketBuffer * buf) {
 	while (bytesReceived < this->_sktref->_bufferSize) {
 		size_t bytes = recv(
 			this->_sd.get(),
-			((unsigned char *) buf->_data) + bytesReceived,
+			((unsigned char *) buf->buffer()) + bytesReceived,
 			this->_sktref->_bufferSize - bytesReceived,
 			0);
 		if ((int) bytes == -1) {
@@ -171,7 +170,7 @@ int BF::Net::Connection::recvData(SocketBuffer * buf) {
 			this->_sktref->_bufferSize);
 	}
 
-	buf->_size = bytesReceived;
+	buf->resize(bytesReceived);
 
 	BFNetLogDebug("< recvData");
 

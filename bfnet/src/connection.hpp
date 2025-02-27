@@ -8,13 +8,13 @@
 
 #include <bflibcpp/object.hpp>
 #include <bflibcpp/atomic.hpp>
+#include <bflibcpp/data.hpp>
 #include <uuid/uuid.h>
 
 namespace BF {
 namespace Net {
 	class Socket;
 	class Client;
-	class SocketBuffer;
 }
 }
 
@@ -79,8 +79,8 @@ private:
 	 */
 	void closeConnection();
 
-	int sendData(const SocketBuffer * buf);
-	int recvData(SocketBuffer * buf);
+	int sendData(const BF::Data * buf);
+	int recvData(BF::Data * buf);
 
 	/**
 	 * uniquely ids the connection

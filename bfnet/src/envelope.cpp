@@ -5,13 +5,12 @@
 
 #include "envelope.hpp"
 #include "connection.hpp"
-#include "buffer.hpp"
 #include <bflibcpp/bflibcpp.hpp>
 
 using namespace BF;
 using namespace BF::Net;
 
-Envelope::Envelope(Connection * sc, size_t bufsize) : _buf(0, bufsize) {
+Envelope::Envelope(Connection * sc, size_t bufsize) : _buf(bufsize, 0) {
 	this->_sc = sc;
 	BFRetain(this->_sc);
 }
@@ -20,7 +19,7 @@ Envelope::~Envelope() {
 	BFRelease(this->_sc);
 }
 
-SocketBuffer * Envelope::buf() {
+Data * Envelope::buf() {
 	return &this->_buf;
 }
 
