@@ -161,14 +161,6 @@ int BF::Net::Connection::recvData(SocketBuffer * buf) {
 			result = -1;
 			break;
 		} else if (bytes == 0) {
-			// Datagram sockets in various domains (e.g., the UNIX and Internet domains) permit zero-size datagrams
-			/*
-			if (this->type() == SOCK_STREAM) {
-				BFNetLogDebug("%s - received an empty packet via a socket stream (tcp). This is not allowed.", __FUNCTION__, errno);
-				result = -1;
-				this->_isactive = false;
-			}
-			*/
 			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
 			break;
 		}

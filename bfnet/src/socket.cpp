@@ -131,10 +131,6 @@ void BF::Net::Socket::inStream(void * in) {
 		// this gets blocked until we receive something
 		int err = sc->recvData(&envelope->_buf);
 
-		/*		
-        if (err || (envelope->_buf.size() == 0)) {
-			usleep(500); // sleep a bit
-		*/
 		if (err) {
 			const uint8_t sl = 1;
 			BFNetLogDebug("%s - error returned from recvData: %d. Sleeping for %d seconds", err, sl);
