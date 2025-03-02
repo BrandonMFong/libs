@@ -121,3 +121,21 @@ long BFMathAbs(long num) {
 	return BFMathAbsDouble(num);
 }
 
+double BFMathPow(double num, long long exp) {
+	double res = 1.0;
+	if (exp < 0) {
+		exp = BFMathAbs(exp);
+		num = 1.0 / num;
+	}
+	while (exp) {
+		if (exp % 2 == 1) {
+			exp--;
+			res *= num;
+		}
+		exp /= 2;
+		num *= num;
+	}
+
+	return res;
+}
+
