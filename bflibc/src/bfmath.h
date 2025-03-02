@@ -74,5 +74,10 @@ double _BFMathMinMax(int op, int datatype, int numargs,...);
 long BFMathAbs(long);
 double BFMathAbsDouble(double);
 
+/**
+ * pow() using binary exponentiation
+ */
+double BFMathPow(double,long long);
+
 #endif // BF_MATH_H
 
