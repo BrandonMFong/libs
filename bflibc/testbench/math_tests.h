@@ -11,6 +11,7 @@
 #include "rand.h"
 #include <math.h>
 #include <time.h>
+#include <stdlib.h>
 
 BFTEST_UNIT_FUNC(test_sqrt, 2<<11, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
@@ -239,6 +240,16 @@ BFTEST_UNIT_FUNC(test_absoluteValueDouble, 2<<11, {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_pow, 2<<14, {
+	BFRandInit(time(NULL));
+	double num = BFRandDouble();
+	long exp = BFRandLong();
+	
+	double expected = pow(num, (double) exp);
+	double actual = BFMathPow(num, exp);
+	BF_ASSERT(expected == actual, "%f != %f", expected, actual);
+})
+
 BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_sqrt);
 	BFTEST_LAUNCH(test_ifZeroAndOneArePrimeNumbers);
@@ -254,6 +265,7 @@ BFTEST_COVERAGE_FUNC(math_tests, {
 	BFTEST_LAUNCH(test_gettingMaxFor10Longs);
 	BFTEST_LAUNCH(test_absoluteValue);
 	BFTEST_LAUNCH(test_absoluteValueDouble);
+	BFTEST_LAUNCH(test_pow);
 
 })
 
