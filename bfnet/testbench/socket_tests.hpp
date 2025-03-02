@@ -8,7 +8,7 @@
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 #define LOCALHOST "127.0.0.1"
-#define PORT 8080
+#define PORT 8888
 #define BUFFER_SIZE 1024
 
 #include <bflibcpp/bflibcpp.hpp>
@@ -235,12 +235,12 @@ BFTEST_UNIT_FUNC(test_forcedFailureFromReceiver, 1, {
 		s->setInStreamCallback(test_sendingandreceiving_server_receive);
 		s->setNewConnectionCallback(test_sendingandreceiving_server_new);
 		s->setIncomingDataProgress(test_sendingandreceiving_progress_forced_failure);
-		s->setBufferSize(BUFFER_SIZE);
+		s->setBufferSize(BUFFER_SIZE + 1);
 
 		c->setInStreamCallback(test_sendingandreceiving_client_receive);
 		c->setNewConnectionCallback(test_sendingandreceiving_client_new);
 		c->setIncomingDataProgress(test_sendingandreceiving_progress_forced_failure);
-		c->setBufferSize(BUFFER_SIZE);
+		c->setBufferSize(BUFFER_SIZE + 1);
 
 		if (!s->isReady() || !c->isReady()) {
 			result = 2;
@@ -261,58 +261,55 @@ BFTEST_UNIT_FUNC(test_forcedFailureFromReceiver, 1, {
 	
 	while (!result && !c->isRunning() && (clientConn.get() == NULL)) { usleep(50); }
 
-	int max = 2 << 12;
-	while (!result && max--) {
-		Data data(2 << 9); // test data
-		srand(time(0));
-		for (size_t i = 0; i < data.size(); i++) {
-			unsigned char * buf = (unsigned char *) data.buffer();
-			buf[i] = rand() % 256;
+	Data data(2 << 9); // test data
+	srand(time(0));
+	for (size_t i = 0; i < data.size(); i++) {
+		unsigned char * buf = (unsigned char *) data.buffer();
+		buf[i] = rand() % 256;
+	}
+
+	// send test data
+
+	// client -> server
+	if (!result) {
+		serverInReceived = false; // reset
+		serverIn.clear();
+
+		if (!clientConn.get()->isactive()) {
+			result = 1;
+		} else {
+			result = clientConn.get()->queueData(data.buffer(), data.size());
 		}
+	}
+	
+	while (!result && !serverInReceived && clientConn.get()->isactive() && serverConn.get()->isactive())
+	{ usleep(50); }
 
-		// send test data
-
-		// client -> server
-		if (!result) {
-			serverInReceived = false; // reset
-			serverIn.clear();
-
-			if (!clientConn.get()->isactive()) {
-				result = 1;
-			} else {
-				result = clientConn.get()->queueData(data.buffer(), data.size());
-			}
+	if (!result) {
+		if (data != serverIn) {
+			printf("\n%s != \n%s", data.hex().cString(), serverIn.hex().cString());
+			printf("\n%ld != \n%ld", data.size(), serverIn.size());
+			result = 3;
 		}
-		
-		while (!result && !serverInReceived && clientConn.get()->isactive() && serverConn.get()->isactive())
-		{ usleep(50); }
+	}
 
-		if (!result) {
-			if (data != serverIn) {
-				printf("\n%s != \n%s", data.hex().cString(), serverIn.hex().cString());
-				printf("\n%ld != \n%ld", data.size(), serverIn.size());
-				result = 3;
-			}
+	// server -> client
+	if (!result) {
+		clientInReceived = false; // reset
+		clientIn.clear();
+		if (!serverConn.get()->isactive()) {
+			result = 1;
+		} else {
+			result = serverConn.get()->queueData(data.buffer(), data.size());
 		}
+	}
 
-		// server -> client
-		if (!result) {
-			clientInReceived = false; // reset
-			clientIn.clear();
-			if (!serverConn.get()->isactive()) {
-				result = 1;
-			} else {
-				result = serverConn.get()->queueData(data.buffer(), data.size());
-			}
-		}
+	while (!result && !clientInReceived && clientConn.get()->isactive() && serverConn.get()->isactive())
+	{ usleep(50); }
 
-		while (!result && !clientInReceived && clientConn.get()->isactive() && serverConn.get()->isactive())
-		{ usleep(50); }
-
-		if (!result) {
-			if (data != clientIn) {
-				result = 4;
-			}
+	if (!result) {
+		if (data != clientIn) {
+			result = 4;
 		}
 	}
 
@@ -333,7 +330,7 @@ BFTEST_COVERAGE_FUNC(socket_tests, {
 	BFTEST_LAUNCH(test_socketinitclient);
 	BFTEST_LAUNCH(test_socketinitserver);
 	BFTEST_LAUNCH(test_sendingandreceiving);
-	//BFTEST_LAUNCH(test_forcedFailureFromReceiver);
+	BFTEST_LAUNCH(test_forcedFailureFromReceiver);
 
 })
 
