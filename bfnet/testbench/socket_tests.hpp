@@ -313,12 +313,12 @@ BFTEST_UNIT_FUNC(test_forcedFailureFromReceiver, 1, {
 		}
 	}
 
-	if (!result) {
-		result = c->stop();
+	if (c) {
+		c->stop();
 	}
 
-	if (!result) {
-		result = s->stop();
+	if (s) {
+		s->stop();
 	}
 
 	BFRelease(s);
