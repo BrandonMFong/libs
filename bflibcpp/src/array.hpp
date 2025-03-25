@@ -213,6 +213,18 @@ public:
 	}
 
 	/**
+	 * copies content of arr to the end of ours
+	 */
+	void append(const Array<T> & arr) {
+		this->_address = this->reallocate(this->_address, this->_count + arr._count);
+		//memcpy(&this->_address[this->_count], &arr._address[0], arr._count);
+		for (int i = this->_count; i < this->_count + arr._count; i++) {
+			this->_address[i] = arr._address[i - this->_count];
+		}
+		this->_count += arr._count;
+	}
+
+	/**
 	 * Adds object at the end of the array
 	 */
 	int add(T obj) {

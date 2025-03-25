@@ -17,3 +17,4 @@
 - [x] make sure there are no Delete() calls and must use BFRelease instead
 - [x] throw compiler warnings when using delete
 - [ ] defer implementation
+- [x] add to an array with an array

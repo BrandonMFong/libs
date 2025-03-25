@@ -284,6 +284,21 @@ BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 2<<8, {
 	b.add("world");
 })
 
+BFTEST_UNIT_FUNC(test_appendingArrays, 2 << 10, {
+	int max_size = 2 << 10;
+	Array<int> c;
+	Array<int> d;
+	for (int i = 0; i < max_size/2; i++) {
+		c.add(i);
+		d.add(i + max_size/2);
+	}
+	
+	c.append(d);
+	for (int j = 0; j < max_size; j++) {
+		BF_ASSERT(c[j] == j, "%d != %d", c[j], j);
+	}
+})
+
 BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_Initializer);
 	BFTEST_LAUNCH(test_Contains);
@@ -297,6 +312,8 @@ BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_addanddelete);
 	//BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
 	BFTEST_LAUNCH(test_arrayOfCStrings);
+	BFTEST_LAUNCH(test_appendingArrays);
+
 })
 
 #endif // ARRAY_TESTS_HPP
