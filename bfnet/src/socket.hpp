@@ -69,9 +69,7 @@ public:
 	virtual bool isRunning() const = 0;
 
 	/**
-	 * sets callback that gets invoked when incoming data is ready to be handled
-	 *
-	 * callback owner MUST copy buffer data because the data will be lost when it returns
+	 * see _cbinstream
 	 */
 	void setInStreamCallback(void (* cb)(BF::Net::Envelope * envelope));
 
