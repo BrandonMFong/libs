@@ -114,11 +114,12 @@ public:
 		return out << s.cString();
 	}
 
-	operator const char * () const; // casting overloader
 	bool operator==(const String & s);
+	bool operator==(const char * s);
 	bool operator<(const String & s);
 	bool operator>(const String & s);
 	bool operator!=(const String & s);
+	bool operator!=(const char * s);
 	String & operator=(const String & str);
 	const char operator[](size_t index);
 

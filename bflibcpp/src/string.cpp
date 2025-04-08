@@ -133,12 +133,16 @@ int String::clear() {
 	return 0;
 }
 
-String::operator const char * () const {
-	return this->cString();
-}
-
 bool String::operator==(const String & s) {
 	return this->compareString(s) == 0;
+}
+
+bool String::operator==(const char * s) {
+	return this->compareString(s) == 0;
+}
+
+bool String::operator!=(const char * s) {
+	return this->compareString(s) != 0;
 }
 
 bool String::operator!=(const String & s) {
@@ -171,6 +175,6 @@ const char String::operator[](size_t index) {
 }
 
 int String::toi(const String & s) {
-	return atoi(s);
+	return atoi(s.cString());
 }
 

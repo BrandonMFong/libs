@@ -36,21 +36,11 @@ BFTEST_UNIT_FUNC(test_comparingString, 1,  {
 
 	String str0 = tmp;
 	String str1;
+	BF_ASSERT(!strcmp(str0.cString(), tmp));
 
-	if (strcmp(str0, tmp)) {
-		std::cout << str0 << " != " << tmp << std::endl;
-		result = 1;
-	}
-
-	if (!result) {
-		str1 = "hello world";
-
-		result = (str0 == str1) ? 0 : 2;
-
-		if (result) {
-			std::cout << str0 << " != " << str1 << std::endl;
-		}
-	}
+	str1 = "hello world";
+	BF_ASSERT(str0 == str1);
+	BF_ASSERT(str0 == "hello world");
 })
 
 BFTEST_UNIT_FUNC(test_StringLength, 1,  {
@@ -83,7 +73,7 @@ BFTEST_UNIT_FUNC(test_StringCopy, 1,  {
 
 		if (str0 != str1) {
 			result = 2;
-			printf("%s != %s\n", (const char *) str0, (const char *) str1);
+			printf("%s != %s\n", str0.cString(), str1.cString());
 		}
 	}
 })
