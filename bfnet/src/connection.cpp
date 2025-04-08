@@ -92,14 +92,16 @@ int BF::Net::Connection::type() const {
 	return type;
 }
 
-int BF::Net::Connection::queueData(const void * data, size_t size) {
-	if (!data) return -2;
+int BF::Net::Connection::queueData(const Data * inbuf) {
+	if (!inbuf) return -2;
 
 	// make envelope
-	Data buf(size, (const unsigned char *) data);
+	Data * buf = new Data(*inbuf);
 
-	// queue up envelope
-	int error = this->sendData(&buf);
+	// queue up buffer 
+	int error = this->sendData(buf);
+
+	BFRelease(buf);
 
 	return error;
 }
@@ -115,7 +117,7 @@ int BF::Net::Connection::sendData(const Data * buf) {
 
 	int result = 0;
 	size_t bytesSent = 0;
-	while (bytesSent < this->_sktref->_bufferSize) {
+	while (bytesSent < buf->size()) {
 		size_t bytes = send(
 			this->_sd.get(),
 			((unsigned char *) buf->buffer()) + bytesSent,
@@ -130,7 +132,7 @@ int BF::Net::Connection::sendData(const Data * buf) {
 		bytesSent += bytes;
 		BFNetLogDebug("sent %ld/%ld bytes",
 			bytesSent,
-			this->_sktref->_bufferSize);
+			buf->size());
 	}
 
 	BFNetLogDebug("< sendData");

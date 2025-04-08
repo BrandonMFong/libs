@@ -13,7 +13,7 @@ namespace BF {
 
 class String;
 
-class Data : protected Array<unsigned char, size_t> {
+class Data : public Array<unsigned char, size_t> {
 public:
 	/**
 	 * empty buffer with size 0

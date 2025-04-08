@@ -16,45 +16,29 @@ extern "C" {
 
 using namespace BF;
 
-//int test_datainit() {
 BFTEST_UNIT_FUNC(test_datainit, 1,  {
 	Data buf0;
-	if (buf0.size() != 0) {
-		result = 1;
-	} else if (buf0.buffer() == NULL) {
-		result = 4;
-	}
+	BF_ASSERT(buf0.size() == 0);
+	BF_ASSERT(buf0.buffer() != NULL);
 
-	if (!result) {
-		unsigned char bytes[10];
-		Data buf1(sizeof(bytes), bytes);
+	unsigned char bytes[10];
+	Data buf1(sizeof(bytes), bytes);
+	BF_ASSERT(buf1.size() == sizeof(bytes));
 
-		if (buf1.size() != sizeof(bytes)) {
-			result = 2;
-		}
-	}
+	Data buf2(32);
+	BF_ASSERT(buf2.size() == 32);
 
-	if (!result) {
-		Data buf2(32);
-		if (buf2.size() != 32) {
-			result = 3;
-		}
-	}
+	Data buf3(sizeof(bytes), bytes);
+	Data buf4 = buf3;
+	BF_ASSERT(buf4.size() == sizeof(bytes));
+	BF_ASSERT(buf4.size() == buf3.size());
 
-	if (!result) {
-		unsigned char bytes[10];
-		Data buf3(sizeof(bytes), bytes);
-		Data buf4 = buf3;
-
-		if (buf4.size() != sizeof(bytes)) {
-			result = 4;
-		} else if (buf4.size() != buf3.size()) {
-			result = 5;
-		}
-	}
+	Data * buf5 = new Data;
+	BF_ASSERT(buf5->size() == 0);
+	BF_ASSERT(buf5->buffer() != NULL);
+	BFRelease(buf5);
 })
 
-//int test_clearData() {
 BFTEST_UNIT_FUNC(test_clearData, 2<<10,  {
 	const size_t maxbufsize = 2 << 16;
 
@@ -83,7 +67,6 @@ BFTEST_UNIT_FUNC(test_clearData, 2<<10,  {
 	BFFree(bytes);
 })
 
-//int test_decreasingSize() {
 BFTEST_UNIT_FUNC(test_decreasingSize, 2<<10,  {
 	srand(time(0));
 	size_t size = rand() % (2 << 16);
@@ -106,7 +89,6 @@ BFTEST_UNIT_FUNC(test_decreasingSize, 2<<10,  {
 	free(bytes);
 })
 
-//int test_increasingSize() {
 BFTEST_UNIT_FUNC(test_increasingSize, 2<<10,  {
 	srand(time(0));
 	size_t size = rand() % (2 << 16);
@@ -130,7 +112,6 @@ BFTEST_UNIT_FUNC(test_increasingSize, 2<<10,  {
 	free(bytes);
 })
 
-//int test_String2Data() {
 BFTEST_UNIT_FUNC(test_String2Data, 2<<10,  {
 	String str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 	Data buf = str;
@@ -143,7 +124,6 @@ BFTEST_UNIT_FUNC(test_String2Data, 2<<10,  {
 	}
 })
 
-//int test_HexString() {
 BFTEST_UNIT_FUNC(test_HexString, 2<<10,  {
 	srand(time(0));
 	size_t size = rand() % 1024;
@@ -209,7 +189,6 @@ BFTEST_UNIT_FUNC(test_dataCompare, 2<<10,  {
 	BFFree(b1);
 })
 
-//int test_emptyStringDataLength() {
 BFTEST_UNIT_FUNC(test_emptyStringDataLength, 1,  {
 	String str = "";
 	if (str.length() != 0) {
@@ -229,7 +208,6 @@ void test_dataByRefCallback(Data & d) {
 	d = test_dataByRefBuf;
 }
 
-//int test_dataByRef() {
 BFTEST_UNIT_FUNC(test_dataByRef, 2<<10,  {
 	unsigned char * tmp = (unsigned char *) test_dataByRefBuf.buffer();
 	srand(time(0));

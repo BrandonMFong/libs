@@ -19,7 +19,6 @@ extern "C" {
 
 using namespace BF;
 
-//int test_StringInit() {
 BFTEST_UNIT_FUNC(test_StringInit, 1,  {
 	char str[100] = "hello world";
 
@@ -29,7 +28,6 @@ BFTEST_UNIT_FUNC(test_StringInit, 1,  {
 	String s3(str);
 })
 
-//int test_comparingString() {
 BFTEST_UNIT_FUNC(test_comparingString, 1,  {
 	char tmp[20] = "hello world";
 
@@ -52,7 +50,6 @@ BFTEST_UNIT_FUNC(test_comparingString, 1,  {
 	}
 })
 
-//int test_StringLength() {
 BFTEST_UNIT_FUNC(test_StringLength, 1,  {
 	const char * tmp = "Hello, my name is brando";
 
@@ -64,7 +61,6 @@ BFTEST_UNIT_FUNC(test_StringLength, 1,  {
 	}
 })
 
-//int test_StringCopy() {
 BFTEST_UNIT_FUNC(test_StringCopy, 1,  {
 	String str0 = "Hello world";
 	String str1;
@@ -93,7 +89,6 @@ bool DoStringsMatch(String str, const char * expected) {
 	return !strcmp(str.cString(), expected);
 }
 
-//int test_PassingStringToFunction() {
 BFTEST_UNIT_FUNC(test_PassingStringToFunction, 1,  {
 	if (!DoStringsMatch("Hello", "Hello")) {
 		result = 1;
@@ -113,7 +108,6 @@ BFTEST_UNIT_FUNC(test_PassingStringToFunction, 1,  {
 	}
 })
 
-//int test_nullstring(void) {
 BFTEST_UNIT_FUNC(test_nullstring, 1,  {
 	String str0 = 0;
 	String str1 = 0;
@@ -130,7 +124,6 @@ BFTEST_UNIT_FUNC(test_nullstring, 1,  {
 	}
 })
 
-//int test_copyingString(void) {
 BFTEST_UNIT_FUNC(test_copyingString, 1,  {
 	String str = "hello world";
 	char * cstr = str.cStringCopy();
@@ -138,7 +131,6 @@ BFTEST_UNIT_FUNC(test_copyingString, 1,  {
 	BFFree(cstr);
 })
 
-//int test_removingCharacterFromString() {
 BFTEST_UNIT_FUNC(test_removingCharacterFromString, 2<<10,  {
 	const char * s = "hello world!";
 	const char * e = "hello world";
@@ -152,7 +144,6 @@ BFTEST_UNIT_FUNC(test_removingCharacterFromString, 2<<10,  {
 	}
 })
 
-//int test_addingCharacterToString() {
 BFTEST_UNIT_FUNC(test_addingCharacterToString, 2<<10,  {
 	const char * s = "hello world";
 	const char * e = "hello world!";
@@ -167,7 +158,6 @@ BFTEST_UNIT_FUNC(test_addingCharacterToString, 2<<10,  {
 	}
 })
 
-//int test_clearstring() {
 BFTEST_UNIT_FUNC(test_clearstring, 1,  {
 	int max = 2 << 10;
 	String str;
@@ -194,7 +184,6 @@ BFTEST_UNIT_FUNC(test_clearstring, 1,  {
 	}
 })
 
-//int test_indexingstring() {
 BFTEST_UNIT_FUNC(test_indexingstring, 1,  {
 	const char * s = "Honorificabilitudinitatibus";
 
@@ -212,7 +201,6 @@ BFTEST_UNIT_FUNC(test_indexingstring, 1,  {
 	}
 })
 
-//int test_removingcharatindex() {
 BFTEST_UNIT_FUNC(test_removingcharatindex, 1,  {
 	char s[128];
 	strncpy(s, "Honorificabilitudinitatibus", sizeof(s));
@@ -244,7 +232,6 @@ BFTEST_UNIT_FUNC(test_removingcharatindex, 1,  {
 	}
 })
 
-//int test_addandremove() {
 BFTEST_UNIT_FUNC(test_addandremove, 1,  {
 	const char * s = "Honorificabilitudinitatibus";
 
@@ -274,7 +261,6 @@ BFTEST_UNIT_FUNC(test_addandremove, 1,  {
 	}
 })
 
-//int test_stringtoint() {
 BFTEST_UNIT_FUNC(test_stringtoint, 1,  {
 	int max = 2 << 12;
 	while (!result && max--) {
@@ -298,7 +284,6 @@ BFTEST_UNIT_FUNC(test_stringtoint, 1,  {
 	}
 })
 
-//int test_creatingstringfromformat() {
 BFTEST_UNIT_FUNC(test_creatingstringfromformat, 1,  {
 	int max = 2 << 20;
 	while (!result && max--) {
