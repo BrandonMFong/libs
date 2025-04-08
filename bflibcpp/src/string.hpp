@@ -9,11 +9,13 @@
 #include "array.hpp"
 #include "access.hpp"
 
+#include <string>
+
 namespace BF {
 	
 class Data;
 
-class String : protected Array<char, size_t> {
+class String : public Array<char, size_t> {
 public:
 	virtual ~String();
 
@@ -24,6 +26,7 @@ public:
 
 	String();
 	String(char * str);
+	String(const std::string & str);
 	String(const String & str);
 	String(const char * format, ...);
 	String(const char * format, va_list valist);

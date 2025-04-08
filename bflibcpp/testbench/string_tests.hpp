@@ -26,6 +26,9 @@ BFTEST_UNIT_FUNC(test_StringInit, 1,  {
 	String s1 = "hello world";
 	String s2("hello world");
 	String s3(str);
+
+	std::string std_str = "hello std::world!";
+	String s4(std_str);
 })
 
 BFTEST_UNIT_FUNC(test_comparingString, 1,  {
@@ -386,7 +389,6 @@ BFTEST_UNIT_FUNC(test_arrayOfStrings, 2<<8, {
 })
 
 BFTEST_COVERAGE_FUNC(string_tests, {
-	/*
 	BFTEST_LAUNCH(test_StringInit);
 	BFTEST_LAUNCH(test_comparingString);
 	BFTEST_LAUNCH(test_StringLength);
@@ -405,7 +407,6 @@ BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_readingFromFile);
 	BFTEST_LAUNCH(test_data2string);
 	BFTEST_LAUNCH(test_startsWith);
-	*/
 	BFTEST_LAUNCH(test_arrayOfStrings);
 
 })
