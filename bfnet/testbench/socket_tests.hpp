@@ -173,7 +173,8 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 			if (!clientConn.get()->isactive()) {
 				result = 1;
 			} else {
-				result = clientConn.get()->queueData(data.buffer(), data.size());
+				//result = clientConn.get()->queueData(data.buffer(), data.size());
+				result = clientConn.get()->queueData(&data);
 			}
 		}
 		
@@ -195,7 +196,8 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 			if (!serverConn.get()->isactive()) {
 				result = 1;
 			} else {
-				result = serverConn.get()->queueData(data.buffer(), data.size());
+				//result = serverConn.get()->queueData(data.buffer(), data.size());
+				result = serverConn.get()->queueData(&data);
 			}
 		}
 
@@ -278,7 +280,8 @@ BFTEST_UNIT_FUNC(test_forcedFailureFromReceiver, 1, {
 		if (!clientConn.get()->isactive()) {
 			result = 1;
 		} else {
-			result = clientConn.get()->queueData(data.buffer(), data.size());
+			//result = clientConn.get()->queueData(data.buffer(), data.size());
+			result = clientConn.get()->queueData(&data);
 		}
 	}
 	
@@ -300,7 +303,8 @@ BFTEST_UNIT_FUNC(test_forcedFailureFromReceiver, 1, {
 		if (!serverConn.get()->isactive()) {
 			result = 1;
 		} else {
-			result = serverConn.get()->queueData(data.buffer(), data.size());
+			//result = serverConn.get()->queueData(data.buffer(), data.size());
+			result = serverConn.get()->queueData(&data);
 		}
 	}
 
@@ -313,12 +317,12 @@ BFTEST_UNIT_FUNC(test_forcedFailureFromReceiver, 1, {
 		}
 	}
 
-	if (!result) {
-		result = c->stop();
+	if (c) {
+		c->stop();
 	}
 
-	if (!result) {
-		result = s->stop();
+	if (s) {
+		s->stop();
 	}
 
 	BFRelease(s);

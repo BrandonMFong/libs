@@ -46,7 +46,8 @@ public:
 	 * data : data to be sent.  this data is copied. Caller still owns
 	 * size : size of data buffer
 	 */
-	int queueData(const void * data, size_t size);
+	//int queueData(const void * data, size_t size);
+	int queueData(const BF::Data * buf);
 
 	/**
 	 * see Socket::mode

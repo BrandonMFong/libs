@@ -9,11 +9,13 @@
 #include "array.hpp"
 #include "access.hpp"
 
+#include <string>
+
 namespace BF {
 	
 class Data;
 
-class String : protected Array<char, size_t> {
+class String : public Array<char, size_t> {
 public:
 	virtual ~String();
 
@@ -24,6 +26,7 @@ public:
 
 	String();
 	String(char * str);
+	String(const std::string & str);
 	String(const String & str);
 	String(const char * format, ...);
 	String(const char * format, va_list valist);
@@ -63,6 +66,11 @@ public:
 	 * Returns length of string
 	 */
 	size_t length() const;
+	
+	/**
+	 * length() == 0
+	 */	
+	bool empty() const;
 
 	/**
 	 * Creates a deep copy of object and outputs to s
@@ -111,11 +119,12 @@ public:
 		return out << s.cString();
 	}
 
-	operator const char * () const; // casting overloader
 	bool operator==(const String & s);
+	bool operator==(const char * s);
 	bool operator<(const String & s);
 	bool operator>(const String & s);
 	bool operator!=(const String & s);
+	bool operator!=(const char * s);
 	String & operator=(const String & str);
 	const char operator[](size_t index);
 

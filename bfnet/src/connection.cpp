@@ -92,14 +92,16 @@ int BF::Net::Connection::type() const {
 	return type;
 }
 
-int BF::Net::Connection::queueData(const void * data, size_t size) {
-	if (!data) return -2;
+int BF::Net::Connection::queueData(const Data * inbuf) {
+	if (!inbuf) return -2;
 
 	// make envelope
-	Data buf(size, (const unsigned char *) data);
+	Data * buf = new Data(*inbuf);
 
-	// queue up envelope
-	int error = this->sendData(&buf);
+	// queue up buffer 
+	int error = this->sendData(buf);
+
+	BFRelease(buf);
 
 	return error;
 }
@@ -115,7 +117,7 @@ int BF::Net::Connection::sendData(const Data * buf) {
 
 	int result = 0;
 	size_t bytesSent = 0;
-	while (bytesSent < this->_sktref->_bufferSize) {
+	while (bytesSent < buf->size()) {
 		size_t bytes = send(
 			this->_sd.get(),
 			((unsigned char *) buf->buffer()) + bytesSent,
@@ -130,7 +132,7 @@ int BF::Net::Connection::sendData(const Data * buf) {
 		bytesSent += bytes;
 		BFNetLogDebug("sent %ld/%ld bytes",
 			bytesSent,
-			this->_sktref->_bufferSize);
+			buf->size());
 	}
 
 	BFNetLogDebug("< sendData");
@@ -148,63 +150,27 @@ int BF::Net::Connection::recvData(Data * data) {
 	BFNetLogDebug("> recvData");
 
 	int result = 0;
-	size_t bytesReceived = 0;
-	unsigned char * buf = (unsigned char *) malloc(this->_sktref->_bufferSize);
-	do {
-		// read socket
-		size_t bytes = recv(
-			this->_sd.get(),
-			buf,
-			this->_sktref->_bufferSize,
-			0);
-		
-		// handle error
-		if ((int) bytes == -1) {
-			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
-			result = -1;
-			break;
-		} else if (bytes == 0) {
-			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
-			break;
+	
+	// read socket
+	size_t bytes = recv(
+		this->_sd.get(),
+		data->buffer(),
+		data->size(),
+		0);
+	
+	// handle error
+	if ((int) bytes == -1) {
+		BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
+		result = errno;
+	} else if (bytes == 0) {
+		BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
+	} else {
+		if (bytes < data->size()) {
+			data->resize(bytes);
 		}
-
-		// stretch the buffer if needed
-		if (data->size() < (bytesReceived + bytes)) {
-			data->resize(bytesReceived + bytes);
-		}
-
-		// copy to our buffer
-		memcpy(((unsigned char *) data->buffer()) + bytesReceived,
-				buf,
-				bytes);
-		bytesReceived += bytes;
 		BFNetLogDebug("received %ld bytes",
-			bytesReceived);
-
-		if (this->_sktref->_cbprogress == NULL) {
-			break;
-		} else {
-			/**
-			 * will only tell the receiver about the bytes we have so far
-			 *
-			 * the receiver should tell us if they want us to keep
-			 * trying to socket, if not then we will break
-			 */
-			int val = this->_sktref->_cbprogress(
-					(const unsigned char *) data->buffer(),
-					bytesReceived);
-			if (val == 1) {
-				break;
-			} else if (val == -1) {
-				result = -1;
-				BFNetLogDebug("%s - received %d from receiver for _cbprogress... aborting recv() on socket",
-						__FUNCTION__, val); // eof
-				break;
-			}
-		}
-	} while (true);
-
-	data->resize(bytesReceived);
+			bytes);
+	}
 
 	BFNetLogDebug("< recvData");
 

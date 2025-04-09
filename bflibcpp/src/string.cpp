@@ -18,6 +18,8 @@ String::String(const String & str) : String(str.cString()) {}
 
 String:: String() : String("") {}
 
+String::String(const std::string & str) : String(str.c_str()) { }
+
 String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
 }
@@ -131,12 +133,16 @@ int String::clear() {
 	return 0;
 }
 
-String::operator const char * () const {
-	return this->cString();
-}
-
 bool String::operator==(const String & s) {
 	return this->compareString(s) == 0;
+}
+
+bool String::operator==(const char * s) {
+	return this->compareString(s) == 0;
+}
+
+bool String::operator!=(const char * s) {
+	return this->compareString(s) != 0;
 }
 
 bool String::operator!=(const String & s) {
@@ -159,6 +165,10 @@ size_t String::length() const {
 	return this->count() - 1;
 }
 
+bool String::empty() const {
+	return this->length() == 0;
+}
+
 String & String::operator=(const String & str) {
 	str.copy(*this);
 	return *this;
@@ -169,6 +179,6 @@ const char String::operator[](size_t index) {
 }
 
 int String::toi(const String & s) {
-	return atoi(s);
+	return atoi(s.cString());
 }
 

@@ -1,1 +1,2 @@
 - [ ] improve the way incoming data is being received with recv() as it inherently blocks when no data is to be read
+	- [ ] add the capability for envelopes to be concatenated
