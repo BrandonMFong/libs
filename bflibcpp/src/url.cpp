@@ -39,15 +39,14 @@ const char * URL::abspath() const {
 
 const char * URL::leaf() const {
 	this->_reserved[0] = '\0';
-	BFFileSystemPathGetFullname(this->abspath(), this->_reserved);
+	BFFileSystemPathGetFullname(this->_path, this->_reserved);
 	return this->_reserved;
 }
 
 const char * URL::extension() const {
 	this->_reserved[0] = '\0';
-	const char * abspath = this->abspath();
-	if (strlen(abspath)) {
-		BFFileSystemPathGetExtension(abspath, this->_reserved);
+	if (strlen(this->_path)) {
+		BFFileSystemPathGetExtension(this->_path, this->_reserved);
 	}
 
 	return this->_reserved;
@@ -55,7 +54,7 @@ const char * URL::extension() const {
 
 const char * URL::name() const {
 	this->_reserved[0] = '\0';
-	BFFileSystemPathGetName(this->abspath(), this->_reserved);
+	BFFileSystemPathGetName(this->_path, this->_reserved);
 	return this->_reserved;
 }
 

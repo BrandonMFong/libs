@@ -22,11 +22,22 @@ public:
 	URL(const char * path);
 	virtual ~URL();
 
+	// returns: original path
 	const char * path() const;
+
+	// returns: absolute path from root
 	const char * abspath() const;
+
+	// returns: the last component of the path
 	const char * leaf() const;
+
+	// returns: file extension if exists
 	const char * extension() const;
+
+	// returns: basename without extension
 	const char * name() const;
+
+	// returns: path without current leaf
 	const char * directory() const;
 
 private:
