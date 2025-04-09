@@ -66,6 +66,11 @@ public:
 	 * Returns length of string
 	 */
 	size_t length() const;
+	
+	/**
+	 * length() == 0
+	 */	
+	bool empty() const;
 
 	/**
 	 * Creates a deep copy of object and outputs to s

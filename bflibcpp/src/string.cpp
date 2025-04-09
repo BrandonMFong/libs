@@ -165,6 +165,10 @@ size_t String::length() const {
 	return this->count() - 1;
 }
 
+bool String::empty() const {
+	return this->length() == 0;
+}
+
 String & String::operator=(const String & str) {
 	str.copy(*this);
 	return *this;
