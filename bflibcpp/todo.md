@@ -18,3 +18,5 @@
 - [x] throw compiler warnings when using delete
 - [ ] defer implementation
 - [x] add to an array with an array
+- [ ] improve Atomic class
+	- [ ] use a lambda function for `get()` so we can define an inline function to do something to the enclosing object while locked. Better than queue.get().pop()
