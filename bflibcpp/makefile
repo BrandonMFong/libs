@@ -25,7 +25,7 @@ SOURCE_EXT = cpp
 HEADER_EXT = hpp
 FILES = \
 data directory exception \
-file object \
+file object url\
 path string time
 
 ### Release settings

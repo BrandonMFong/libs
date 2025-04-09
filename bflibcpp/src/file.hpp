@@ -13,7 +13,7 @@
 
 namespace BF {
 
-class File : public Path {
+class [[deprecated("please use URL class instead")]] File : public Path {
 public:
 	/**
 	 * If path is null, an error will be returned
