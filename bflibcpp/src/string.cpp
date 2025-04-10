@@ -107,6 +107,10 @@ int String::addChar(char c) {
 	return this->insertObjectAtIndex(c, this->count() - 1);
 }
 
+void String::push_back(char c) {
+	this->addChar(c);
+}
+
 int String::addCharAtIndex(char c, size_t index) {
 	if (index <= (this->count() - 1)) {
 		return this->insertObjectAtIndex(c, index);
@@ -116,6 +120,10 @@ int String::addCharAtIndex(char c, size_t index) {
 
 int String::remChar() {
 	return this->removeObjectAtIndex(this->count() - 2);
+}
+
+void String::pop_back() {
+	this->remChar();
 }
 
 int String::remCharAtIndex(size_t index) {

@@ -90,6 +90,7 @@ public:
 	 * similar to std::string::push_back
 	 */
 	int addChar(char c);
+	void push_back(char c);
 
 	/**
 	 * removes char at the end of the string
@@ -97,6 +98,7 @@ public:
 	 * similar to std::string::pop_back
 	 */
 	int remChar();
+	void pop_back();
 
 	/**
 	 * adds a character at index

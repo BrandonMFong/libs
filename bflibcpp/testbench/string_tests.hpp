@@ -145,10 +145,10 @@ BFTEST_UNIT_FUNC(test_addingCharacterToString, 2<<10,  {
 
 	str.addChar('!');
 
-	if (str.compareString(e)) {
-		printf("\n%s != %s\n", str.cString(), e);
-		result = max;
-	}
+	BF_ASSERT(!str.compareString(e));
+	
+	str.push_back('!');
+	BF_ASSERT(!str.compareString("hello world!!"));
 })
 
 BFTEST_UNIT_FUNC(test_clearstring, 1,  {
