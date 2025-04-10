@@ -92,18 +92,11 @@ int BF::Net::Connection::type() const {
 	return type;
 }
 
-int BF::Net::Connection::queueData(const Data * inbuf) {
-	if (!inbuf) return -2;
-
-	// make envelope
-	Data * buf = new Data(*inbuf);
-
+int BF::Net::Connection::queueData(const Data * buf) {
+	if (!buf) return -1;
+	
 	// queue up buffer 
-	int error = this->sendData(buf);
-
-	BFRelease(buf);
-
-	return error;
+	return this->sendData(buf);
 }
 
 int BF::Net::Connection::sendData(const Data * buf) {
