@@ -16,6 +16,9 @@ BFTEST_UNIT_FUNC(test_urlinit, 2 << 10, {
 
 	URL * url1 = new URL(__FILE__);
 	BFRelease(url1);
+
+	String file = __FILE__;
+	URL url2(file);
 })
 
 BFTEST_UNIT_FUNC(test_urlextension, 2 << 10, {

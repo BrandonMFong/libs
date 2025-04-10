@@ -27,6 +27,7 @@
 #include "stack.hpp"
 #include "time.hpp"
 #include "tree.hpp"
+#include "url.hpp"
 
 #endif // BFLIBCPP_HPP
 

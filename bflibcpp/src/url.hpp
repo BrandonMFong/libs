@@ -9,6 +9,7 @@
 #define URL_HPP
 
 #include "object.hpp"
+#include "string.hpp"
 
 #ifdef LINUX
 #include <linux/limits.h>
@@ -20,6 +21,7 @@ namespace BF {
 class URL : public BF::Object {
 public:
 	URL(const char * path);
+	URL(const BF::String & path);
 	virtual ~URL();
 
 	// returns: original path

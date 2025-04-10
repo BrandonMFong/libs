@@ -14,6 +14,8 @@ extern "C" {
 
 using namespace BF;
 
+URL::URL(const String & path) : URL(path.c_str()) { }
+
 URL::URL(const char * path) : Object() {
 	memset(&this->_reserved[0], 0, PATH_MAX);
 	if (path) {
