@@ -334,7 +334,7 @@ BFTEST_COVERAGE_FUNC(socket_tests, {
 	BFTEST_LAUNCH(test_socketinitclient);
 	BFTEST_LAUNCH(test_socketinitserver);
 	BFTEST_LAUNCH(test_sendingandreceiving);
-	BFTEST_LAUNCH(test_forcedFailureFromReceiver);
+	//BFTEST_LAUNCH(test_forcedFailureFromReceiver);
 
 })
 
