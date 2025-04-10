@@ -107,7 +107,8 @@ int BF::Net::Connection::queueData(const Data * inbuf) {
 }
 
 int BF::Net::Connection::sendData(const Data * buf) {
-	if (this->_sd.get() == 0) {
+	this->_sd.lock();
+	if (this->_sd.unsafeget() == 0) {
 		return 1;
 	} else if (!buf) {
 		return 1;
@@ -119,7 +120,7 @@ int BF::Net::Connection::sendData(const Data * buf) {
 	size_t bytesSent = 0;
 	while (bytesSent < buf->size()) {
 		size_t bytes = send(
-			this->_sd.get(),
+			this->_sd.unsafeget(),
 			((unsigned char *) buf->buffer()) + bytesSent,
 			buf->size() - bytesSent,
 			0);
@@ -136,6 +137,8 @@ int BF::Net::Connection::sendData(const Data * buf) {
 	}
 
 	BFNetLogDebug("< sendData");
+
+	this->_sd.unlock();
 
 	return result;
 }
