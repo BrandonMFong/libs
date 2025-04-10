@@ -40,9 +40,15 @@ public:
 	// returns: path without current leaf
 	const char * directory() const;
 
+	void append(const char * suffix);
+
 private:
 	char _path[PATH_MAX];
 	mutable char _reserved[PATH_MAX];
+
+public:
+	bool operator==(const URL & other) const;
+	bool operator!=(const URL & other) const;
 };
 
 }

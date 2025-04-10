@@ -69,3 +69,26 @@ const char * URL::directory() const {
 	return this->_reserved;
 }
 
+void URL::append(const char * suffix) {
+	if (!suffix) return;
+	if (suffix[0] == '/') suffix++;
+
+	size_t len = strlen(this->_path);
+	if (len + 1 == PATH_MAX) return;
+
+	if (this->_path[len - 1] != '/') {
+		this->_path[len] = '/';
+		this->_path[len + 1] = '\0';
+	}
+
+	strcat(this->_path, suffix);
+}
+
+bool URL::operator==(const URL & other) const {
+	return strcmp(this->_path, other._path) == 0;
+}
+
+bool URL::operator!=(const URL & other) const {
+	return !(*this == other);
+}
+

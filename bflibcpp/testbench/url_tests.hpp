@@ -52,6 +52,15 @@ BFTEST_UNIT_FUNC(test_urlabspath, 2 << 10, {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_urlappend, 2 << 10, {
+	URL url0("hello/world");
+	URL url1("hello/world/name.txt");
+	URL url2("hello/world/names.txt");
+	url0.append("name.txt");
+	BF_ASSERT(url0 == url1);
+	BF_ASSERT(url0 != url2);
+})
+
 BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlinit);
 	BFTEST_LAUNCH(test_urlextension);
@@ -59,6 +68,7 @@ BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlleaf);
 	BFTEST_LAUNCH(test_urlname);
 	BFTEST_LAUNCH(test_urlabspath);
+	BFTEST_LAUNCH(test_urlappend);
 })
 
 #endif // URL_TESTS_HPP
