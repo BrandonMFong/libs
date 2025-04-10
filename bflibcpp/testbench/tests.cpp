@@ -29,7 +29,9 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(stack_tests);
 	BFTEST_SUITE_LAUNCH(queue_tests);
 	BFTEST_SUITE_LAUNCH(time_tests);
+	*/
 	BFTEST_SUITE_LAUNCH(data_tests);
+	/*
 	BFTEST_SUITE_LAUNCH(array_tests);
 	BFTEST_SUITE_LAUNCH(vector_tests);
 	BFTEST_SUITE_LAUNCH(map_tests);

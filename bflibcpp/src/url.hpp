@@ -9,7 +9,6 @@
 #define URL_HPP
 
 #include "object.hpp"
-#include "string.hpp"
 
 #ifdef LINUX
 #include <linux/limits.h>
@@ -18,10 +17,12 @@
 
 namespace BF {
 
+class String;
+
 class URL : public BF::Object {
 public:
 	URL(const char * path);
-	URL(const BF::String & path);
+	URL(const String & path);
 	virtual ~URL();
 
 	// returns: original path
@@ -43,6 +44,7 @@ public:
 	const char * directory() const;
 
 	void append(const char * suffix);
+	void append(const String & suffix);
 
 private:
 	char _path[PATH_MAX];

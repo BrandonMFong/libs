@@ -12,9 +12,13 @@
 namespace BF {
 
 class String;
+class URL;
 
 class Data : public Array<unsigned char, size_t> {
 public:
+	static Data * fromFile(const char * path);
+	static Data * fromFile(const URL & path);
+
 	/**
 	 * empty buffer with size 0
 	 */

@@ -71,6 +71,10 @@ const char * URL::directory() const {
 	return this->_reserved;
 }
 
+void URL::append(const String & suffix) {
+	this->append(suffix.c_str());
+}
+
 void URL::append(const char * suffix) {
 	if (!suffix) return;
 	if (suffix[0] == '/') suffix++;

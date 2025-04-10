@@ -5,6 +5,7 @@
 
 #include "data.hpp"
 #include "string.hpp"
+#include "url.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -12,6 +13,14 @@ extern "C" {
 }
 
 using namespace BF;
+
+Data * Data::fromFile(const URL & url) {
+	return Data::fromFile(url.abspath());
+}
+
+Data * Data::fromFile(const char * path) {
+	return NULL;
+}
 
 Data::Data() : Data(0, 0) { }
 
@@ -83,5 +92,4 @@ int Data::alloc(const size_t size, const unsigned char * data) {
 bool Data::operator==(const Data & d) {
 	return this->compare(d) == 0;
 }
-
 
