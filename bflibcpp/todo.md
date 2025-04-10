@@ -20,3 +20,4 @@
 - [x] add to an array with an array
 - [ ] improve Atomic class
 	- [ ] use a lambda function for `get()` so we can define an inline function to do something to the enclosing object while locked. Better than queue.get().pop()
+- [ ] Box object that handles heap memory. Box::take() releases memory to caller

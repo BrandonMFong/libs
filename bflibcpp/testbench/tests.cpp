@@ -6,7 +6,7 @@
 #include "cpplib_tests.hpp"
 #include "array_tests.hpp"
 #include "list_tests.hpp"
-#include "file_tests.hpp"
+//#include "file_tests.hpp"
 #include "string_tests.hpp"
 #include "stack_tests.hpp"
 #include "time_tests.hpp"

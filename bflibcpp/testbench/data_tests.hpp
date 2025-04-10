@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <data.hpp>
+#include <url.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -223,6 +224,14 @@ BFTEST_UNIT_FUNC(test_dataByRef, 2<<10,  {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_dataFromFile, 2<<10, {
+	URL url(__FILE__);
+	Data * data = Data::fromFile(url);
+	BF_ASSERT(data != NULL, "itr=%d", BFTEST_UNIT_FUNC_ITR);
+	BF_ASSERT(data->size() > 0 && data->buffer() != NULL);
+	BFRelease(data);
+})
+
 BFTEST_COVERAGE_FUNC(data_tests, {
 	BFTEST_LAUNCH(test_datainit);
 	BFTEST_LAUNCH(test_clearData);
@@ -233,6 +242,7 @@ BFTEST_COVERAGE_FUNC(data_tests, {
 	BFTEST_LAUNCH(test_dataCompare);
 	BFTEST_LAUNCH(test_emptyStringDataLength);
 	BFTEST_LAUNCH(test_dataByRef);
+	BFTEST_LAUNCH(test_dataFromFile);
 })
 
 #endif // DATA_TESTS_HPP
