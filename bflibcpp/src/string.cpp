@@ -134,6 +134,11 @@ int String::remCharAtIndex(size_t index) {
 	return 80;
 }
 
+void String::append(const String & suffix) {
+	this->removeObjectAtIndex(this->count() - 1);
+	this->Array::append(suffix);
+}
+
 int String::clear() {
 	char str[2];
 	strncpy(str, "", 2);

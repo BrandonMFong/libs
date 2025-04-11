@@ -111,6 +111,11 @@ public:
 	int remCharAtIndex(size_t index);
 
 	/**
+	 * concatenates string to the end of our string
+	 */
+	void append(const String & suffix);
+
+	/**
 	 * makes empty string
 	 */
 	int clear();

@@ -378,6 +378,13 @@ BFTEST_UNIT_FUNC(test_arrayOfStrings, 2<<8, {
 	delete[] strings;
 })
 
+BFTEST_UNIT_FUNC(test_appendString, 2<<8, {
+	String str = "hello";
+	str.append(" world!");
+	const char * expect = "hello world!";
+	BF_ASSERT(str == expect, "%s != %s", str.c_str(), expect);
+})
+
 BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_StringInit);
 	BFTEST_LAUNCH(test_comparingString);
@@ -398,6 +405,7 @@ BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_data2string);
 	BFTEST_LAUNCH(test_startsWith);
 	BFTEST_LAUNCH(test_arrayOfStrings);
+	BFTEST_LAUNCH(test_appendString);
 
 })
 
