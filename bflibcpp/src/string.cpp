@@ -139,6 +139,18 @@ void String::append(const String & suffix) {
 	this->Array::append(suffix);
 }
 
+void String::append(const char * format, ...) {
+	va_list va;
+	va_start(va, format);
+	this->append(format, va);
+	va_end(va);
+}
+
+void String::append(const char * format, va_list valist) {
+	String add(format, valist);
+	this->append(add);
+}
+
 int String::clear() {
 	char str[2];
 	strncpy(str, "", 2);

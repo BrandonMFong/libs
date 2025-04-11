@@ -383,6 +383,11 @@ BFTEST_UNIT_FUNC(test_appendString, 2<<8, {
 	str.append(" world!");
 	const char * expect = "hello world!";
 	BF_ASSERT(str == expect, "%s != %s", str.c_str(), expect);
+
+	str = "hello";
+	const char * add = "world";
+	str.append(" %s!", add);
+	BF_ASSERT(str == expect, "%s != %s", str.c_str(), expect);
 })
 
 BFTEST_COVERAGE_FUNC(string_tests, {

@@ -114,6 +114,8 @@ public:
 	 * concatenates string to the end of our string
 	 */
 	void append(const String & suffix);
+	void append(const char * format, ...);
+	void append(const char * format, va_list valist);
 
 	/**
 	 * makes empty string
