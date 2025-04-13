@@ -94,9 +94,15 @@ int BF::Net::Connection::type() const {
 
 int BF::Net::Connection::queueData(const Data * buf) {
 	if (!buf) return -1;
+
+	BFRetain(buf);
 	
 	// queue up buffer 
-	return this->sendData(buf);
+	int res = this->sendData(buf);
+	
+	BFRelease(buf);
+
+	return res;
 }
 
 int BF::Net::Connection::sendData(const Data * buf) {
