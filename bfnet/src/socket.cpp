@@ -142,8 +142,18 @@ void BF::Net::Socket::inStream(void * in) {
 		} else if ((envelope->data()->size() == 0) && (sc->type() == SOCK_STREAM)) {
 			sc->closeConnection(); // force the connection to close
 		} else {
-			if (skt->_cbinstream)
-				skt->_cbinstream(envelope);
+			if (envelope->data()->size() == 0) {
+				if (sc->type() == SOCK_STREAM) {
+					BFNetLogDebug("%s - closing connection. received 0 bytes for sock_stream", __FUNCTION__);
+					sc->closeConnection(); // force the connection to close
+				} else {
+					BFNetLogDebug("%s - received 0 bytes for socket type type = %d", __FUNCTION__, sc->type());
+				}
+			} else {
+				if (skt->_cbinstream) {
+					skt->_cbinstream(envelope);
+				}
+			}
 		}
 
 		BFRelease(envelope);
