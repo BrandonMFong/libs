@@ -145,6 +145,8 @@ int BF::Net::Connection::sendData(const Data * buf) {
 int BF::Net::Connection::recvData(Data * data) {
 	if (this->_sd.get() == 0) {
 		return 1;
+	} else if (this->isactive() == 0) {
+		return 1;
 	} else if (!data) {
 		return 1;
 	}
