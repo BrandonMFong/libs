@@ -106,6 +106,9 @@ int BF::Net::Connection::queueData(const Data * buf) {
 }
 
 int BF::Net::Connection::sendData(const Data * buf) {
+	if (!this->isactive()) {
+		return 1;
+	}
 	this->_sd.lock();
 	if (this->_sd.unsafeget() == 0) {
 		return 1;
@@ -145,7 +148,7 @@ int BF::Net::Connection::sendData(const Data * buf) {
 int BF::Net::Connection::recvData(Data * data) {
 	if (this->_sd.get() == 0) {
 		return 1;
-	} else if (this->isactive() == 0) {
+	} else if (!this->isactive()) {
 		return 1;
 	} else if (!data) {
 		return 1;
