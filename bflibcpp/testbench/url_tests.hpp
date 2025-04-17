@@ -66,6 +66,14 @@ BFTEST_UNIT_FUNC(test_urlappend, 2 << 10, {
 	BF_ASSERT(url0 != url2);
 })
 
+BFTEST_UNIT_FUNC(test_urlStandardPath, 1, {
+	URL url = "/home/test/Downloads/../hello_world.txt";
+	BF_ASSERT(strcmp(url.standardPath(), "/home/test/hello_world.txt") == 0, "'%s'->'%s'", url.path(), url.standardPath());
+	if (BFTEST_UNIT_FUNC_ITR == 0) {
+		BFTestPrint("'%s'->'%s'", url.path(), url.standardPath());
+	}
+})
+
 BFTEST_UNIT_FUNC(test_urlComponents, 1, {
 	const int testsize = 2;
 	const char * paths[testsize] = {
@@ -107,6 +115,7 @@ BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlname);
 	BFTEST_LAUNCH(test_urlabspath);
 	BFTEST_LAUNCH(test_urlappend);
+	BFTEST_LAUNCH(test_urlStandardPath);
 	BFTEST_LAUNCH(test_urlComponents);
 	BFTEST_LAUNCH(test_urlCheckPathIsSubPath);
 

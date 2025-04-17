@@ -122,7 +122,6 @@ const List<String> __URLPathGetComponents(const char * path) {
 
 const char * URL::standardPath() const {
 	const List<String> comps = __URLPathGetComponents(this->_path);
-	String stdpath;
 	Deque<String> deque;
 	for (const String & comp : comps) {
 		if (comp == ".") continue;
@@ -133,15 +132,27 @@ const char * URL::standardPath() const {
 		}
 	}
 
+	String stdpath;
+	if (this->_path[0] == '/') {
+		stdpath.push_back('/');
+	}
+	
 	while (!deque.empty()) {
 		const String & comp = deque.front();
 		stdpath.append(comp);
 
 		deque.pop_front();
+
+		if (!deque.empty()) {
+			stdpath.push_back('/');
+		}
+	}
+
+	if (this->_path[strlen(this->_path) - 1] == '/') {
+		stdpath.push_back('/');
 	}
 
 	strcpy(this->_reserved, stdpath.cString());
-
 	return this->_reserved;
 }
 
