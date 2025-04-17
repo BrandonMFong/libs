@@ -64,6 +64,15 @@ BFTEST_UNIT_FUNC(test_urlappend, 2 << 10, {
 	BF_ASSERT(url0 != url2);
 })
 
+BFTEST_UNIT_FUNC(test_urlCheckPathIsSubPath, 2 << 10, {
+	URL url0("hello/world");
+	URL url1("hello/world/name.txt");
+	BF_ASSERT(url1.isSubPath(url0));
+
+	url1 = "hello/world/../name.txt";
+	BF_ASSERT(!url1.isSubPath(url0));
+})
+
 BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlinit);
 	BFTEST_LAUNCH(test_urlextension);
@@ -72,6 +81,8 @@ BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlname);
 	BFTEST_LAUNCH(test_urlabspath);
 	BFTEST_LAUNCH(test_urlappend);
+	BFTEST_LAUNCH(test_urlCheckPathIsSubPath);
+
 })
 
 #endif // URL_TESTS_HPP

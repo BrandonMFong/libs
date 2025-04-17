@@ -102,3 +102,7 @@ bool URL::operator!=(const URL & other) const {
 	return !(*this == other);
 }
 
+bool URL::isSubPath(const URL & parent) const {
+	return false;
+}
+

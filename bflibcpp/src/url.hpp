@@ -45,8 +45,12 @@ public:
 	// returns: path without current leaf
 	const char * directory() const;
 
+	// adds to url
 	void append(const char * suffix);
 	void append(const String & suffix);
+
+	// checks if this url is a sub path to `parent`
+	bool isSubPath(const URL & parent) const;
 
 private:
 	char _path[PATH_MAX];
