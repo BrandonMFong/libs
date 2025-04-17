@@ -2,7 +2,7 @@
 - [ ] BF::Array to use new/delete for memory allocation
 - [ ] improve List sorting
 - [ ] Vectors to sort strings
-- [ ] String append
+- [x] String append
 - [x] fix leaks in (RBTree specifically) - replaced with map
 - [x] map and hash map implementation
 - [x] tree implementaion
@@ -21,3 +21,4 @@
 - [ ] improve Atomic class
 	- [ ] use a lambda function for `get()` so we can define an inline function to do something to the enclosing object while locked. Better than queue.get().pop()
 - [ ] Box object that handles heap memory. Box::take() releases memory to caller
+- [ ] Ability to key a HashMap<String, String> without defining a compare callback, at least for our standard objects

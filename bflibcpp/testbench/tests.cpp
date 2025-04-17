@@ -39,7 +39,9 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(map_tests);
 	BFTEST_SUITE_LAUNCH(object_tests);
 	BFTEST_SUITE_LAUNCH(list_tests);
+	*/
 	BFTEST_SUITE_LAUNCH(hashmap_tests);
+	/*
 	BFTEST_SUITE_LAUNCH(exception_tests);
 	BFTEST_SUITE_LAUNCH(tree_tests);
 	*/

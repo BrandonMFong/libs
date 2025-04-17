@@ -158,6 +158,8 @@ BFTEST_UNIT_FUNC(test_hashMapGetterWithSubscript, 2<<10,  {
 
 })
 
+BFTEST_UNIT_FUNC(test_getterWithDefaultCompare, 2<<10, {
+})
 BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
 	BFTEST_LAUNCH(test_hashMapInsert);
