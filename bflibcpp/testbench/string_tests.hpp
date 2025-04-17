@@ -390,6 +390,12 @@ BFTEST_UNIT_FUNC(test_appendString, 2<<8, {
 	BF_ASSERT(str == expect, "%s != %s", str.c_str(), expect);
 })
 
+BFTEST_UNIT_FUNC(test_emptyString, 2<<8, {
+	String str;
+	BF_ASSERT(str.empty());
+	BF_ASSERT(str == "");
+})
+
 BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_StringInit);
 	BFTEST_LAUNCH(test_comparingString);
@@ -411,6 +417,7 @@ BFTEST_COVERAGE_FUNC(string_tests, {
 	BFTEST_LAUNCH(test_startsWith);
 	BFTEST_LAUNCH(test_arrayOfStrings);
 	BFTEST_LAUNCH(test_appendString);
+	BFTEST_LAUNCH(test_emptyString);
 
 })
 
