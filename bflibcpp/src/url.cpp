@@ -122,7 +122,7 @@ bool URL::isSubPath(const URL & parent) const {
 
 	const List<String> compsChild = stdChild.components();
 	const List<String> compsParent = stdParent.components();
-	if (compsChild.size() >= compsParent.size()) {
+	if (compsChild.size() <= compsParent.size()) {
 		return false;
 	}
 
@@ -134,6 +134,8 @@ bool URL::isSubPath(const URL & parent) const {
 		if (nc->object() != np->object()) {
 			return false;
 		}
+		nc = nc->next();
+		np = np->next();
 	}
 	return true;
 }

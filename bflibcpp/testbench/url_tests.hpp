@@ -13,6 +13,13 @@
 
 using namespace BF;
 
+void __testing() {
+
+	URL url = "hello/world.v1.txt";
+	url = "hello/world.v2.txt";
+
+}
+
 BFTEST_UNIT_FUNC(test_urlinit, 2 << 10, {
 	URL url0(__FILE__);
 
@@ -21,6 +28,11 @@ BFTEST_UNIT_FUNC(test_urlinit, 2 << 10, {
 
 	String file = __FILE__;
 	URL url2(file);
+	//__testing();
+	/*
+	URL url = "hello/world.v1.txt";
+	url = "hello/world.v2.txt";
+	*/
 })
 
 BFTEST_UNIT_FUNC(test_urlextension, 2 << 10, {
@@ -103,8 +115,8 @@ BFTEST_UNIT_FUNC(test_urlCheckPathIsSubPath, 2 << 10, {
 	URL url1("hello/world/name.txt");
 	BF_ASSERT(url1.isSubPath(url0));
 
-	url1 = "hello/world/../name.txt";
-	BF_ASSERT(!url1.isSubPath(url0));
+	URL url2 = "hello/world/../name.txt";
+	BF_ASSERT(!url2.isSubPath(url0));
 })
 
 BFTEST_COVERAGE_FUNC(url_tests, {

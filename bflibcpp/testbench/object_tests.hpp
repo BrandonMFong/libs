@@ -21,9 +21,9 @@ using namespace BF;
 BFTEST_UNIT_FUNC(test_objectinit, 2<<10,  {
 	Object o;
 	BF_ASSERT(Object::retainCount(o) == 1);
-	BFRetain(o);
+	Object::retain(o);
 	BF_ASSERT(Object::retainCount(o) == 2);
-	BFRelease(o);
+	Object::release(o);
 })
 
 BFTEST_UNIT_FUNC(test_objectretainer, 2<<8,  {

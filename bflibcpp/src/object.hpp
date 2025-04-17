@@ -70,7 +70,7 @@ public:
 
 	bool operator==(int num) const;
 	bool operator!=(int num) const;
-	void operator=(int num) const;
+	//void operator=(int num) const;
 
 };
 
