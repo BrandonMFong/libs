@@ -56,7 +56,12 @@ public:
 	void append(const char * suffix);
 	void append(const String & suffix);
 
-	// checks if this url is a sub path to `parent`
+	/**
+	 * checks if this url is a sub path to `parent`
+	 *
+	 * will check with both's standardized path
+	 * via (standardPath) to determine the answer
+	 */
 	bool isSubPath(const URL & parent) const;
 
 	/**

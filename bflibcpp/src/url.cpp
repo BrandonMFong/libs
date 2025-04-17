@@ -102,10 +102,6 @@ bool URL::operator!=(const URL & other) const {
 	return !(*this == other);
 }
 
-bool URL::isSubPath(const URL & parent) const {
-	return false;
-}
-
 const List<String> __URLPathGetComponents(const char * path) {
 	List<String> res;
 	const char * del = "/";
@@ -118,6 +114,28 @@ const List<String> __URLPathGetComponents(const char * path) {
 	}
 
 	return res;
+}
+
+bool URL::isSubPath(const URL & parent) const {
+	URL stdChild(this->standardPath());
+	URL stdParent(parent.standardPath());
+
+	const List<String> compsChild = stdChild.components();
+	const List<String> compsParent = stdParent.components();
+	if (compsChild.size() >= compsParent.size()) {
+		return false;
+	}
+
+	const List<String>::Node * nc = compsChild.first();
+	const List<String>::Node * np = compsParent.first();
+	if (!nc || !np) return false;
+
+	while (nc && np) {
+		if (nc->object() != np->object()) {
+			return false;
+		}
+	}
+	return true;
 }
 
 const char * URL::standardPath() const {
