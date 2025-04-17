@@ -28,6 +28,7 @@
 #include "time.hpp"
 #include "tree.hpp"
 #include "url.hpp"
+#include "deque.hpp"
 
 #endif // BFLIBCPP_HPP
 

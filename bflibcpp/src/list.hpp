@@ -518,8 +518,8 @@ public:
 	};
 
 	/// required interfaces: begin() & end()
-	Iterator begin() { return this->first(); }
-	Iterator end() { return NULL; }
+	Iterator begin() const { return this->first(); }
+	Iterator end() const { return NULL; }
 };
 
 } // namespace BF

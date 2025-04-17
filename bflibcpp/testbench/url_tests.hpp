@@ -7,6 +7,8 @@
 #define URL_TESTS_HPP
 
 #include <url.hpp>
+#include <list.hpp>
+#include <string.hpp>
 #include "cpplib_tests.hpp"
 
 using namespace BF;
@@ -64,6 +66,30 @@ BFTEST_UNIT_FUNC(test_urlappend, 2 << 10, {
 	BF_ASSERT(url0 != url2);
 })
 
+BFTEST_UNIT_FUNC(test_urlComponents, 1, {
+	const int testsize = 2;
+	const char * paths[testsize] = {
+		"/home/test/Downloads/hello_world.txt",
+		"/home/test/Downloads/../hello_world.txt"
+	};
+
+	int componentCounts[testsize] = {4, 5};
+	for (int i = 0; i < testsize; i++) {
+		URL url = paths[i];
+		if (BFTEST_UNIT_FUNC_ITR == 0) {
+			BFTestPrint("absolute path = '%s'", url.abspath());
+		}
+
+		const List<String> comps = url.components();
+		BF_ASSERT(comps.size() == componentCounts[i]);
+		for (const String & comp : comps) {
+			if (BFTEST_UNIT_FUNC_ITR == 0) {
+				BFTestPrint("component = '%s'", comp.cString());
+			}
+		}
+	}
+})
+
 BFTEST_UNIT_FUNC(test_urlCheckPathIsSubPath, 2 << 10, {
 	URL url0("hello/world");
 	URL url1("hello/world/name.txt");
@@ -81,6 +107,7 @@ BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlname);
 	BFTEST_LAUNCH(test_urlabspath);
 	BFTEST_LAUNCH(test_urlappend);
+	BFTEST_LAUNCH(test_urlComponents);
 	BFTEST_LAUNCH(test_urlCheckPathIsSubPath);
 
 })

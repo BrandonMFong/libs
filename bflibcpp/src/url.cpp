@@ -106,3 +106,46 @@ bool URL::isSubPath(const URL & parent) const {
 	return false;
 }
 
+const List<String> __URLPathGetComponents(const char * path) {
+	List<String> res;
+	const char * del = "/";
+	char path_copy[PATH_MAX];
+	strcpy(path_copy, path);
+	char * comp = NULL;
+	int i = 0;
+	while ((comp = strtok(i++ == 0 ? path_copy : NULL, del))) {
+		res.add(comp);
+	}
+
+	return res;
+}
+
+const char * URL::standardPath() const {
+	const List<String> comps = __URLPathGetComponents(this->_path);
+	String stdpath;
+	Deque<String> deque;
+	for (const String & comp : comps) {
+		if (comp == ".") continue;
+		else if (comp == "..") {
+			deque.pop_back();
+		} else {
+			deque.push_back(comp);
+		}
+	}
+
+	while (!deque.empty()) {
+		const String & comp = deque.front();
+		stdpath.append(comp);
+
+		deque.pop_front();
+	}
+
+	strcpy(this->_reserved, stdpath.cString());
+
+	return this->_reserved;
+}
+
+const List<String> URL::components() const {
+	return __URLPathGetComponents(this->_path);
+}
+

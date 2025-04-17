@@ -162,27 +162,27 @@ int String::clear() {
 	return 0;
 }
 
-bool String::operator==(const String & s) {
+bool String::operator==(const String & s) const {
 	return this->compareString(s) == 0;
 }
 
-bool String::operator==(const char * s) {
+bool String::operator==(const char * s) const {
 	return this->compareString(s) == 0;
 }
 
-bool String::operator!=(const char * s) {
+bool String::operator!=(const char * s) const {
 	return this->compareString(s) != 0;
 }
 
-bool String::operator!=(const String & s) {
+bool String::operator!=(const String & s) const {
 	return this->compareString(s) != 0;
 }
 
-bool String::operator<(const String & s) {
+bool String::operator<(const String & s) const {
 	return this->compareString(s) < 0;
 }
 
-bool String::operator>(const String & s) {
+bool String::operator>(const String & s) const {
 	return this->compareString(s) >0;
 }
 
@@ -212,7 +212,7 @@ String & String::operator=(const String & str) {
 	return *this;
 }
 
-const char String::operator[](size_t index) {
+const char String::operator[](size_t index) const {
 	return this->objectAtIndex(index);
 }
 

@@ -9,6 +9,7 @@
 #define URL_HPP
 
 #include "object.hpp"
+#include "list.hpp"
 
 #ifdef LINUX
 #include <linux/limits.h>
@@ -19,6 +20,9 @@ namespace BF {
 
 class String;
 
+/**
+ * UNIX URL represenation
+ */
 class URL : public BF::Object {
 public:
 	URL(const char * path);
@@ -32,6 +36,9 @@ public:
 
 	// returns: absolute path from root
 	const char * abspath() const;
+
+	// returns: path() but removing '..' & '.', effectively resolving them
+	const char * standardPath() const;
 
 	// returns: the last component of the path
 	const char * leaf() const;
@@ -51,6 +58,12 @@ public:
 
 	// checks if this url is a sub path to `parent`
 	bool isSubPath(const URL & parent) const;
+
+	/**
+	 * returns list of components from the original
+	 * path provide (_path)
+	 */
+	const BF::List<String> components() const;
 
 private:
 	char _path[PATH_MAX];
