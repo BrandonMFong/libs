@@ -171,9 +171,9 @@ int BF::Net::Connection::recvData(Data * data) {
 		result = errno;
 	} else if (bytes == 0) {
 		BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
+		data->resize(bytes);
 	} else {
 		if (bytes < data->size()) {
-			bytes = ((bytes / 1024) * 1024) + 1024;
 			data->resize(bytes);
 		}
 		BFNetLogDebug("received %ld bytes",
