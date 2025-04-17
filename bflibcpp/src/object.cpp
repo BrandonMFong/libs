@@ -95,3 +95,11 @@ int Object::retainCount(Object & obj) {
 	return Object::retainCount(&obj);
 }
 
+bool Object::operator==(int num)  const { return false; }
+bool Object::operator!=(int num)  const { return *this == num; }
+void Object::operator=(int num)  const { }
+
+int Object::compare(Object & obj) const {
+	return 0;
+}
+

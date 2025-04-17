@@ -49,17 +49,26 @@ public:
 	static int retainCount(Object & obj);
 	static int retainCount(const Object & obj);
 
+	/**
+	 * acts like memcmp, same return values
+	 *
+	 * this is optional for subclasses
+	 *
+	 * this class will not have any implmentation and will always
+	 * return 0
+	 */
+	int compare(Object & obj) const;
+
 private:
 	int _retainCount;
-
-
 
 	BFLock _lock;
 
 public:
-	bool operator==(int num) { return false; }
-	bool operator!=(int num) { return *this == num; }
-	void operator=(int num) { }
+
+	bool operator==(int num) const;
+	bool operator!=(int num) const;
+	void operator=(int num) const;
 
 };
 

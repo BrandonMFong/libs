@@ -120,7 +120,7 @@ public:
 		if (value) {
 			return value->_obj;
 		} else {
-			throw Exception("could not get value for key");
+			throw Exception("could not get value for key"); // TODO: display key in message
 		}
 	}
 
@@ -178,9 +178,13 @@ protected:
 	static int _BFMapCompare(void * a, void * b) {
 		Key<K> * akey = (Key<K> *) a;
 		Key<K> * bkey = (Key<K> *) b;
-		if (!akey || !bkey || !akey->_mapRef->_compare) {
+		if (!akey || !bkey) {
 			return -1;
 		}
+		
+		if (!akey->_mapRef->_compare) {
+		}
+
 		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
 	}
 
