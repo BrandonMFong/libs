@@ -8,6 +8,7 @@
 
 #include "collection.hpp"
 #include "release.hpp"
+#include "retain.hpp"
 #include "exception.hpp"
 
 extern "C" {

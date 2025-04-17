@@ -8,6 +8,7 @@
 
 #include "basicmap.hpp"
 #include "release.hpp"
+#include "retain.hpp"
 
 extern "C" {
 #include <bflibc/hashmap.h>
