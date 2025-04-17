@@ -16,6 +16,8 @@ class URL;
 
 class Data : public Array<unsigned char, size_t> {
 public:
+	virtual const char * className() const;
+
 	/**
 	 * read file from path and store into our buffers
 	 *

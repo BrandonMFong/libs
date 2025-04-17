@@ -14,6 +14,10 @@ extern "C" {
 
 using namespace BF;
 
+const char * URL::className() const {
+	return "BF::URL";
+}
+
 URL::URL(const String & path) : URL(path.c_str()) { }
 
 URL::URL(const char * path) : Object() {

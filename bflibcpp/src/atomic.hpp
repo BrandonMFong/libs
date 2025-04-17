@@ -19,6 +19,10 @@ namespace BF {
 template <typename T>
 class Atomic : public Object {
 public:
+	virtual const char * className() const {
+		return "BF::Atomic";
+	}
+
 	Atomic() : Object() {
 		BFLockCreate(&this->_objlock);
 	}

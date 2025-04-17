@@ -17,6 +17,9 @@ class Data;
 
 class String : public Array<char, size_t> {
 public:
+
+	const char * className() const;
+
 	virtual ~String();
 
 	/**
@@ -61,6 +64,7 @@ public:
 	 * Struns strcmp() on this and s
 	 */
 	int compareString(const String & s) const;
+	virtual int compare(const Object & obj) const;
 
 	/**
 	 * Returns length of string

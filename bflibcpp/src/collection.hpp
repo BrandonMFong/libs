@@ -13,6 +13,10 @@ namespace BF {
 template <typename S = size_t>
 class Collection : public Object {
 public:
+	virtual const char * className() const {
+		return "BF::Collection";
+	}
+
 	virtual ~Collection() { }
 	
 	virtual S size() const = 0;

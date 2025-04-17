@@ -14,6 +14,10 @@ extern "C" {
 
 using namespace BF;
 
+const char * String::className() const {
+	return "BF::String";
+}
+
 String::String(const String & str) : String(str.cString()) {}
 
 String:: String() : String("") {}
@@ -184,6 +188,15 @@ bool String::operator>(const String & s) {
 
 int String::compareString(const String & s) const {
 	return strcmp(this->cString(), s.cString());
+}
+
+int String::compare(const Object & s) const {
+	if (strcmp(s.className(), this->className())) {
+		return this->Object::compare(s);
+	}
+
+	const String * str = (const String *) &s;
+	return this->compareString(*str);
 }
 
 size_t String::length() const {

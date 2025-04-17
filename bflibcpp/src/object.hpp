@@ -24,6 +24,8 @@ public:
 	Object(Object & obj);
 	virtual ~Object();
 
+	virtual const char * className() const;
+
 	/**
 	 * increments retain count by 1
 	 */
@@ -57,7 +59,7 @@ public:
 	 * this class will not have any implmentation and will always
 	 * return 0
 	 */
-	int compare(Object & obj) const;
+	virtual int compare(const Object & obj) const;
 
 private:
 	int _retainCount;

@@ -17,6 +17,10 @@ extern "C" {
 
 using namespace BF;
 
+const char * Data::className() const {
+	return "BF::Data";
+}
+
 Data * Data::fromFile(const URL & url) {
 	return Data::fromFile(url.abspath());
 }

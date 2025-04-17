@@ -25,6 +25,8 @@ public:
 	URL(const String & path);
 	virtual ~URL();
 
+	const char * className() const;
+
 	// returns: original path
 	const char * path() const;
 

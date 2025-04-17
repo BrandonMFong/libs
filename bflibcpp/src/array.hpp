@@ -29,6 +29,10 @@ namespace BF {
 template <typename T, typename S = size_t>
 class Array : public Vector<T,S> {
 public:
+	virtual const char * className() const {
+		return "BF::Array";
+	}
+
 	Array() : Vector<T,S>() {
 		this->_address = 0;
 		this->_count = 0;
