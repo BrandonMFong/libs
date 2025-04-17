@@ -9,12 +9,17 @@
 #include "array.hpp"
 #include "access.hpp"
 
+#include <string>
+
 namespace BF {
 	
 class Data;
 
-class String : protected Array<char, size_t> {
+class String : public Array<char, size_t> {
 public:
+
+	const char * className() const;
+
 	virtual ~String();
 
 	/**
@@ -24,6 +29,7 @@ public:
 
 	String();
 	String(char * str);
+	String(const std::string & str);
 	String(const String & str);
 	String(const char * format, ...);
 	String(const char * format, va_list valist);
@@ -58,11 +64,17 @@ public:
 	 * Struns strcmp() on this and s
 	 */
 	int compareString(const String & s) const;
+	virtual int compare(const Object & obj) const;
 
 	/**
 	 * Returns length of string
 	 */
 	size_t length() const;
+	
+	/**
+	 * length() == 0
+	 */	
+	bool empty() const;
 
 	/**
 	 * Creates a deep copy of object and outputs to s
@@ -82,6 +94,7 @@ public:
 	 * similar to std::string::push_back
 	 */
 	int addChar(char c);
+	void push_back(char c);
 
 	/**
 	 * removes char at the end of the string
@@ -89,6 +102,7 @@ public:
 	 * similar to std::string::pop_back
 	 */
 	int remChar();
+	void pop_back();
 
 	/**
 	 * adds a character at index
@@ -101,6 +115,13 @@ public:
 	int remCharAtIndex(size_t index);
 
 	/**
+	 * concatenates string to the end of our string
+	 */
+	void append(const String & suffix);
+	void append(const char * format, ...);
+	void append(const char * format, va_list valist);
+
+	/**
 	 * makes empty string
 	 */
 	int clear();
@@ -111,11 +132,12 @@ public:
 		return out << s.cString();
 	}
 
-	operator const char * () const; // casting overloader
 	bool operator==(const String & s);
+	bool operator==(const char * s);
 	bool operator<(const String & s);
 	bool operator>(const String & s);
 	bool operator!=(const String & s);
+	bool operator!=(const char * s);
 	String & operator=(const String & str);
 	const char operator[](size_t index);
 

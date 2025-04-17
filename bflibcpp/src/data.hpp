@@ -12,9 +12,23 @@
 namespace BF {
 
 class String;
+class URL;
 
-class Data : protected Array<unsigned char, size_t> {
+class Data : public Array<unsigned char, size_t> {
 public:
+	virtual const char * className() const;
+
+	/**
+	 * read file from path and store into our buffers
+	 *
+	 * caller owns Data and must release
+	 *
+	 * returns:
+	 * 	NULL - if path doesn't exist and must be a file
+	 */
+	static Data * fromFile(const char * path);
+	static Data * fromFile(const URL & path);
+
 	/**
 	 * empty buffer with size 0
 	 */

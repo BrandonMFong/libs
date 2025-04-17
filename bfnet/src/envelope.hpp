@@ -7,7 +7,7 @@
 #define ENVELOPE_HPP
 
 #include <bflibcpp/object.hpp>
-#include "buffer.hpp"
+#include <bflibcpp/data.hpp>
 
 namespace BF {
 namespace Net {
@@ -15,17 +15,17 @@ namespace Net {
 class Connection;
 class Socket;
 
-class SocketEnvelope : public BF::Object {
+class Envelope : public BF::Object {
 	friend class Socket;
 public:
-	SocketEnvelope(Connection * sc, size_t bufsize);
-	virtual ~SocketEnvelope();
+	Envelope(Connection * sc, size_t bufsize);
+	virtual ~Envelope();
 
-	SocketBuffer * buf();
+	BF::Data * data();
 	Connection * connection();
 private:
 	Connection * _sc;
-	SocketBuffer _buf;
+	BF::Data _data;
 };
 
 }

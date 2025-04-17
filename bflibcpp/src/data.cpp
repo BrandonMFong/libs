@@ -5,6 +5,10 @@
 
 #include "data.hpp"
 #include "string.hpp"
+#include "release.hpp"
+#include "url.hpp"
+#include <unistd.h>
+#include <fcntl.h>
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -12,6 +16,47 @@ extern "C" {
 }
 
 using namespace BF;
+
+const char * Data::className() const {
+	return "BF::Data";
+}
+
+Data * Data::fromFile(const URL & url) {
+	return Data::fromFile(url.abspath());
+}
+
+Data * Data::fromFile(const char * path) {
+	if (!path) return NULL;
+	if (!BFFileSystemPathIsFile(path)) return NULL;
+	
+	int err = 0;
+	unsigned long long fileSize = BFFileSystemFileGetSizeUsed(path, 0, &err);
+	if (err) {
+		return NULL;
+	}
+
+	int fd = open(path, O_RDONLY);
+	if (fd == -1) return NULL;
+
+	Data * res = new Data(fileSize);
+	if (!res) return NULL;
+
+	const size_t bufsize = 1024;
+	char buf[bufsize];
+	size_t bytesRead = 0, offset = 0;
+	while ((bytesRead = read(fd, buf, bufsize)) > 0) {
+		if (!memcpy(((unsigned char *) res->buffer()) + offset, buf, bytesRead)) {
+			close(fd);
+			BFRelease(res);
+			return NULL;
+		}
+
+		offset += bytesRead;
+	}
+
+	close(fd);
+	return res;
+}
 
 Data::Data() : Data(0, 0) { }
 
@@ -83,5 +128,4 @@ int Data::alloc(const size_t size, const unsigned char * data) {
 bool Data::operator==(const Data & d) {
 	return this->compare(d) == 0;
 }
-
 

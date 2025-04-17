@@ -5,26 +5,25 @@
 
 #include "envelope.hpp"
 #include "connection.hpp"
-#include "buffer.hpp"
 #include <bflibcpp/bflibcpp.hpp>
 
 using namespace BF;
 using namespace BF::Net;
 
-SocketEnvelope::SocketEnvelope(Connection * sc, size_t bufsize) : _buf(0, bufsize) {
+Envelope::Envelope(Connection * sc, size_t bufsize) : _data(bufsize, 0) {
 	this->_sc = sc;
 	BFRetain(this->_sc);
 }
 
-SocketEnvelope::~SocketEnvelope() {
+Envelope::~Envelope() {
 	BFRelease(this->_sc);
 }
 
-SocketBuffer * SocketEnvelope::buf() {
-	return &this->_buf;
+Data * Envelope::data() {
+	return &this->_data;
 }
 
-Connection * SocketEnvelope::connection() {
+Connection * Envelope::connection() {
 	return this->_sc;
 }
 

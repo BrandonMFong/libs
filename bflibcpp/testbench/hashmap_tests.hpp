@@ -158,6 +158,16 @@ BFTEST_UNIT_FUNC(test_hashMapGetterWithSubscript, 2<<10,  {
 
 })
 
+BFTEST_UNIT_FUNC(test_getterWithDefaultCompare, 2<<10, {
+	HashMap<String, String> map;
+	map.insert("one", "1");
+	map.insert("two", "2");
+	map.insert("three", "3");
+	BF_ASSERT(map["one"] == "1");
+	BF_ASSERT(map["two"] == "2");
+	BF_ASSERT(map["three"] == "3");
+})
+
 BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapInit);
 	BFTEST_LAUNCH(test_hashMapInsert);
@@ -165,7 +175,7 @@ BFTEST_COVERAGE_FUNC(hashmap_tests, {
 	BFTEST_LAUNCH(test_hashMapRemove);
 	BFTEST_LAUNCH(test_hashMapWithAllocMem);
 	BFTEST_LAUNCH(test_hashMapGetterWithSubscript);
-
+	BFTEST_LAUNCH(test_getterWithDefaultCompare);
 })
 
 #endif // MAP_TESTS_HPP

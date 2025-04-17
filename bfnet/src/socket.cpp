@@ -30,6 +30,7 @@ Socket * BF::Net::Socket::shared() {
 Socket::Socket() { 
 	this->_cbinstream = NULL;
 	this->_cbnewconn = NULL;
+	this->_cbprogress = NULL;
 
 	this->_bufferSize = 0;
 
@@ -87,11 +88,15 @@ void BF::Net::Socket::setBufferSize(size_t size) {
 	this->_bufferSize = size;
 }
 
+void BF::Net::Socket::setIncomingDataProgress(int (* cb)(const unsigned char * buf, size_t size)) {
+	this->_cbprogress = cb;
+}
+
 void BF::Net::Socket::setNewConnectionCallback(void (* cb)(BF::Net::Connection * sc)) {
 	this->_cbnewconn = cb;
 }
 
-void BF::Net::Socket::setInStreamCallback(void (* cb)(BF::Net::SocketEnvelope * envelope)) {
+void BF::Net::Socket::setInStreamCallback(void (* cb)(BF::Net::Envelope * envelope)) {
 	this->_cbinstream = cb;
 }
 
@@ -124,26 +129,31 @@ void BF::Net::Socket::inStream(void * in) {
 
 	sc->_isready = true;
 	while (!BFThreadAsyncIsCanceled(tid) && sc->isactive()) {
-		SocketEnvelope * envelope = new SocketEnvelope(sc, skt->_bufferSize);
+		Envelope * envelope = new Envelope(sc, skt->_bufferSize);
 
 		// receive data from connections using buffer
 		//
 		// this gets blocked until we receive something
-		int err = sc->recvData(&envelope->_buf);
+		int err = sc->recvData(&envelope->_data);
 
-		/*		
-        if (err || (envelope->_buf.size() == 0)) {
-			usleep(500); // sleep a bit
-		*/
 		if (err) {
-			const uint8_t sl = 1;
-			BFNetLogDebug("%s - error returned from recvData: %d. Sleeping for %d seconds", err, sl);
-			sleep(sl);
-		} else if ((envelope->_buf.size() == 0) && (sc->type() == SOCK_STREAM)) {
+			BFNetLogDebug("%s - error returned from recvData: %d. Aborting reading socket...", __FUNCTION__, err);
+			break;
+		} else if ((envelope->data()->size() == 0) && (sc->type() == SOCK_STREAM)) {
 			sc->closeConnection(); // force the connection to close
 		} else {
-			if (skt->_cbinstream)
-				skt->_cbinstream(envelope);
+			if (envelope->data()->size() == 0) {
+				if (sc->type() == SOCK_STREAM) {
+					BFNetLogDebug("%s - closing connection. received 0 bytes for sock_stream", __FUNCTION__);
+					sc->closeConnection(); // force the connection to close
+				} else {
+					BFNetLogDebug("%s - received 0 bytes for socket type type = %d", __FUNCTION__, sc->type());
+				}
+			} else {
+				if (skt->_cbinstream) {
+					skt->_cbinstream(envelope);
+				}
+			}
 		}
 
 		BFRelease(envelope);

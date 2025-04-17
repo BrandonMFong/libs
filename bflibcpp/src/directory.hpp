@@ -10,7 +10,7 @@
 
 namespace BF {
 
-class Directory : public Path {
+class [[deprecated("please use URL class instead")]] Directory : public Path {
 	Directory(const char * path);
 	virtual ~Directory();
 };

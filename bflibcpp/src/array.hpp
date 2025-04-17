@@ -29,6 +29,10 @@ namespace BF {
 template <typename T, typename S = size_t>
 class Array : public Vector<T,S> {
 public:
+	virtual const char * className() const {
+		return "BF::Array";
+	}
+
 	Array() : Vector<T,S>() {
 		this->_address = 0;
 		this->_count = 0;
@@ -210,6 +214,18 @@ public:
 		this->_address = (T *) this->allocate(arr->count());
 		this->_count = arr->count();
 		memcpy(this->_address, arr->address(), this->_count);
+	}
+
+	/**
+	 * copies content of arr to the end of ours
+	 */
+	void append(const Array<T> & arr) {
+		this->_address = this->reallocate(this->_address, this->_count + arr._count);
+		//memcpy(&this->_address[this->_count], &arr._address[0], arr._count);
+		for (int i = this->_count; i < this->_count + arr._count; i++) {
+			this->_address[i] = arr._address[i - this->_count];
+		}
+		this->_count += arr._count;
 	}
 
 	/**

@@ -15,7 +15,7 @@
 
 namespace BF {
 
-class Path : public Object {
+class [[deprecated("please use URL class instead")]] Path : public Object {
 protected:
 	Path(const char * path);
 	virtual ~Path();

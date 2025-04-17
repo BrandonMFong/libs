@@ -8,7 +8,10 @@
 
 #include "collection.hpp"
 #include "release.hpp"
+#include "retain.hpp"
 #include "exception.hpp"
+
+#include <type_traits>
 
 extern "C" {
 #include <bflibc/map.h>
@@ -24,6 +27,11 @@ namespace BF {
  */
 template <typename K, typename V, typename S = size_t>
 class BasicMap : public Collection<S> {
+public:
+	virtual const char * className() const {
+		return "BF::BasicMap";
+	}
+
 protected:
 
 	/**
@@ -44,6 +52,10 @@ protected:
 		}
 		virtual ~Container() {
 			BFRelease(this->_mapRef);
+		}
+
+		bool isBFObject() const {
+			return std::is_base_of_v<BF::Object, T>;
 		}
 	};
 
@@ -119,7 +131,7 @@ public:
 		if (value) {
 			return value->_obj;
 		} else {
-			throw Exception("could not get value for key");
+			throw Exception("could not get value for key"); // TODO: display key in message
 		}
 	}
 
@@ -177,9 +189,17 @@ protected:
 	static int _BFMapCompare(void * a, void * b) {
 		Key<K> * akey = (Key<K> *) a;
 		Key<K> * bkey = (Key<K> *) b;
-		if (!akey || !bkey || !akey->_mapRef->_compare) {
+		if (!akey || !bkey) {
 			return -1;
 		}
+		
+		if (!akey->_mapRef->_compare && akey->isBFObject() && bkey->isBFObject()) {
+			BF::Object * obja = (BF::Object *) &akey->_obj;
+			BF::Object * objb = (BF::Object *) &bkey->_obj;
+			if (!obja || !objb) return -1;
+			return obja->compare(*objb);
+		}
+
 		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
 	}
 

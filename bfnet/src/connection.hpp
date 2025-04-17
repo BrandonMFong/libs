@@ -8,13 +8,13 @@
 
 #include <bflibcpp/object.hpp>
 #include <bflibcpp/atomic.hpp>
+#include <bflibcpp/data.hpp>
 #include <uuid/uuid.h>
 
 namespace BF {
 namespace Net {
 	class Socket;
 	class Client;
-	class SocketBuffer;
 }
 }
 
@@ -46,7 +46,8 @@ public:
 	 * data : data to be sent.  this data is copied. Caller still owns
 	 * size : size of data buffer
 	 */
-	int queueData(const void * data, size_t size);
+	//int queueData(const void * data, size_t size);
+	int queueData(const BF::Data * buf);
 
 	/**
 	 * see Socket::mode
@@ -79,8 +80,15 @@ private:
 	 */
 	void closeConnection();
 
-	int sendData(const SocketBuffer * buf);
-	int recvData(SocketBuffer * buf);
+	int sendData(const BF::Data * buf);
+
+	/**
+	 * Reads bytes from socket
+	 *
+	 * Uses Socket::_cbprogress to allow the implementer 
+	 * to control data flow
+	 */
+	int recvData(BF::Data * buf);
 
 	/**
 	 * uniquely ids the connection

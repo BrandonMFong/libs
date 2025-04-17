@@ -25,6 +25,10 @@ namespace BF {
 template <typename T, typename S = int>
 class BinTree : public Collection<S> {
 public:
+	virtual const char * className() const {
+		return "BF::BinTree";
+	}
+	
 	// TODO: rename BinNode to Node
 	class BinNode : public Object {
 		friend class BinTree<T,S>;

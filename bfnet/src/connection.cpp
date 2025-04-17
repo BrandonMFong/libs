@@ -6,7 +6,6 @@
 #include "connection.hpp"
 #include "socket.hpp"
 #include "envelope.hpp"
-#include "buffer.hpp"
 #include <bflibcpp/bflibcpp.hpp>
 #include <netinet/in.h> //structure for storing address information 
 #include <stdio.h> 
@@ -53,6 +52,7 @@ bool BF::Net::Connection::isready() const {
 
 bool BF::Net::Connection::isactive() const {
 	if (this->_sd.get() == 0) {
+		BFNetLogDebug("%s - socket descriptor is 0", __FUNCTION__);
 		return false;
 	}
 
@@ -92,20 +92,25 @@ int BF::Net::Connection::type() const {
 	return type;
 }
 
-int BF::Net::Connection::queueData(const void * data, size_t size) {
-	if (!data) return -2;
+int BF::Net::Connection::queueData(const Data * buf) {
+	if (!buf) return -1;
 
-	// make envelope
-	SocketBuffer buf(data, size);
+	BFRetain(buf);
+	
+	// queue up buffer 
+	int res = this->sendData(buf);
+	
+	BFRelease(buf);
 
-	// queue up envelope
-	int error = this->sendData(&buf);
-
-	return error;
+	return res;
 }
 
-int BF::Net::Connection::sendData(const SocketBuffer * buf) {
-	if (this->_sd.get() == 0) {
+int BF::Net::Connection::sendData(const Data * buf) {
+	if (!this->isactive()) {
+		return 1;
+	}
+	this->_sd.lock();
+	if (this->_sd.unsafeget() == 0) {
 		return 1;
 	} else if (!buf) {
 		return 1;
@@ -115,10 +120,10 @@ int BF::Net::Connection::sendData(const SocketBuffer * buf) {
 
 	int result = 0;
 	size_t bytesSent = 0;
-	while (bytesSent < this->_sktref->_bufferSize) {
+	while (bytesSent < buf->size()) {
 		size_t bytes = send(
-			this->_sd.get(),
-			((unsigned char *) buf->data()) + bytesSent,
+			this->_sd.unsafeget(),
+			((unsigned char *) buf->buffer()) + bytesSent,
 			buf->size() - bytesSent,
 			0);
 		if ((int) bytes == -1) {
@@ -130,55 +135,50 @@ int BF::Net::Connection::sendData(const SocketBuffer * buf) {
 		bytesSent += bytes;
 		BFNetLogDebug("sent %ld/%ld bytes",
 			bytesSent,
-			this->_sktref->_bufferSize);
+			buf->size());
 	}
 
 	BFNetLogDebug("< sendData");
 
+	this->_sd.unlock();
+
 	return result;
 }
 
-int BF::Net::Connection::recvData(SocketBuffer * buf) {
+int BF::Net::Connection::recvData(Data * data) {
 	if (this->_sd.get() == 0) {
 		return 1;
-	} else if (!buf) {
+	} else if (!this->isactive()) {
+		return 1;
+	} else if (!data) {
 		return 1;
 	}
 
 	BFNetLogDebug("> recvData");
 
 	int result = 0;
-	size_t bytesReceived = 0;
-	while (bytesReceived < this->_sktref->_bufferSize) {
-		size_t bytes = recv(
-			this->_sd.get(),
-			((unsigned char *) buf->_data) + bytesReceived,
-			this->_sktref->_bufferSize - bytesReceived,
-			0);
-		if ((int) bytes == -1) {
-			BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
-			result = -1;
-			break;
-		} else if (bytes == 0) {
-			// Datagram sockets in various domains (e.g., the UNIX and Internet domains) permit zero-size datagrams
-			/*
-			if (this->type() == SOCK_STREAM) {
-				BFNetLogDebug("%s - received an empty packet via a socket stream (tcp). This is not allowed.", __FUNCTION__, errno);
-				result = -1;
-				this->_isactive = false;
-			}
-			*/
-			BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
-			break;
+	
+	// read socket
+	size_t bytes = recv(
+		this->_sd.get(),
+		data->buffer(),
+		data->size(),
+		0);
+	
+	// handle error
+	if ((int) bytes == -1) {
+		BFNetLogDebug("%s - errno=%d", __FUNCTION__, errno);
+		result = errno;
+	} else if (bytes == 0) {
+		BFNetLogDebug("%s - received 0 bytes", __FUNCTION__); // eof
+		data->resize(bytes);
+	} else {
+		if (bytes < data->size()) {
+			data->resize(bytes);
 		}
-
-		bytesReceived += bytes;
-		BFNetLogDebug("received %ld/%ld bytes",
-			bytesReceived,
-			this->_sktref->_bufferSize);
+		BFNetLogDebug("received %ld bytes",
+			bytes);
 	}
-
-	buf->_size = bytesReceived;
 
 	BFNetLogDebug("< recvData");
 

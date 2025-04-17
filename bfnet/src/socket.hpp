@@ -25,13 +25,20 @@ namespace BF {
 namespace Net {
 
 class Connection;
-class SocketEnvelope;
+class Envelope;
 
 class Socket : public BF::Object {
 	friend class BF::Net::Connection;
 public: 
 	static Socket * shared();
 
+	/**
+	 * creates a server/client socket
+	 *
+	 * ipaddr: ip address in string format.
+	 * 	"0.0.0.0" == INADDR_ANY
+	 * 	"127.0.0.1" == INADDR_LOOPBACK
+	 */
 	static Socket * create(
 		const char mode,
 		const char * ipaddr,
@@ -62,11 +69,14 @@ public:
 	virtual bool isRunning() const = 0;
 
 	/**
-	 * sets callback that gets invoked when incoming data is ready to be handled
-	 *
-	 * callback owner MUST copy buffer data because the data will be lost when it returns
+	 * see _cbinstream
 	 */
-	void setInStreamCallback(void (* cb)(BF::Net::SocketEnvelope * envelope));
+	void setInStreamCallback(void (* cb)(BF::Net::Envelope * envelope));
+
+	/**
+	 * see _cbprogress
+	 */
+	void setIncomingDataProgress(int (* cb)(const unsigned char * buf, size_t size));
 
 	/**
 	 * see _cbnewconn
@@ -132,7 +142,22 @@ private:
 	 *
 	 * envelope : retain if you plan to use after callback returns
 	 */
-	void (* _cbinstream)(BF::Net::SocketEnvelope * envelope);
+	void (* _cbinstream)(BF::Net::Envelope * envelope);
+
+	/**
+	 * asynchronous call per socket connection
+	 *
+	 * uses callback to show receiver the progress of an incoming packet
+	 *
+	 * The receiver has an option to return a boolean value for:
+	 * 	1: if data is could to be processed over
+	 * 	0: if data is not fully received. Therefore we will try again
+	 * 	-1: if there is something wrong and advises us to abort
+	 *
+	 * if this callback is not set, we are going to assume that every
+	 * buffer we read is the entire message
+	 */
+	int (* _cbprogress)(const unsigned char * buf, size_t size);
 
 	/**
 	 * receives packets and puts them in a queue

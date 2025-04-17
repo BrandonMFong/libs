@@ -7,6 +7,10 @@
 
 using namespace BF;
 
+const char * Object::className() const {
+	return "BF::Object";
+}
+
 Object::Object() {
 	this->_retainCount = 1;
 	BFLockCreate(&this->_lock);
@@ -93,5 +97,13 @@ int Object::retainCount(const Object & obj) {
 
 int Object::retainCount(Object & obj) {
 	return Object::retainCount(&obj);
+}
+
+bool Object::operator==(int num)  const { return false; }
+bool Object::operator!=(int num)  const { return *this == num; }
+void Object::operator=(int num)  const { }
+
+int Object::compare(const Object & obj) const {
+	return 0;
 }
 

@@ -13,6 +13,10 @@ extern "C" {
 
 using namespace BF;
 
+const char * Time::className() const {
+	return "BF::Time";
+}
+
 Time * Time::createCurrent() {
 	return new Time(BFTimeGetCurrentTime());
 }

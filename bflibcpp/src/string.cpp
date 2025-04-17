@@ -14,9 +14,15 @@ extern "C" {
 
 using namespace BF;
 
+const char * String::className() const {
+	return "BF::String";
+}
+
 String::String(const String & str) : String(str.cString()) {}
 
 String:: String() : String("") {}
+
+String::String(const std::string & str) : String(str.c_str()) { }
 
 String::String(char * str) : Array<char, size_t>() {
 	this->set(str, strlen(str) + 1);
@@ -105,6 +111,10 @@ int String::addChar(char c) {
 	return this->insertObjectAtIndex(c, this->count() - 1);
 }
 
+void String::push_back(char c) {
+	this->addChar(c);
+}
+
 int String::addCharAtIndex(char c, size_t index) {
 	if (index <= (this->count() - 1)) {
 		return this->insertObjectAtIndex(c, index);
@@ -116,12 +126,33 @@ int String::remChar() {
 	return this->removeObjectAtIndex(this->count() - 2);
 }
 
+void String::pop_back() {
+	this->remChar();
+}
+
 int String::remCharAtIndex(size_t index) {
 	if (index <= (this->count() - 2)) {
 		return this->removeObjectAtIndex(index);
 	}
 
 	return 80;
+}
+
+void String::append(const String & suffix) {
+	this->removeObjectAtIndex(this->count() - 1);
+	this->Array::append(suffix);
+}
+
+void String::append(const char * format, ...) {
+	va_list va;
+	va_start(va, format);
+	this->append(format, va);
+	va_end(va);
+}
+
+void String::append(const char * format, va_list valist) {
+	String add(format, valist);
+	this->append(add);
 }
 
 int String::clear() {
@@ -131,12 +162,16 @@ int String::clear() {
 	return 0;
 }
 
-String::operator const char * () const {
-	return this->cString();
-}
-
 bool String::operator==(const String & s) {
 	return this->compareString(s) == 0;
+}
+
+bool String::operator==(const char * s) {
+	return this->compareString(s) == 0;
+}
+
+bool String::operator!=(const char * s) {
+	return this->compareString(s) != 0;
 }
 
 bool String::operator!=(const String & s) {
@@ -155,8 +190,21 @@ int String::compareString(const String & s) const {
 	return strcmp(this->cString(), s.cString());
 }
 
+int String::compare(const Object & s) const {
+	if (strcmp(s.className(), this->className())) {
+		return this->Object::compare(s);
+	}
+
+	const String * str = (const String *) &s;
+	return this->compareString(*str);
+}
+
 size_t String::length() const {
 	return this->count() - 1;
+}
+
+bool String::empty() const {
+	return this->length() == 0;
 }
 
 String & String::operator=(const String & str) {
@@ -169,6 +217,6 @@ const char String::operator[](size_t index) {
 }
 
 int String::toi(const String & s) {
-	return atoi(s);
+	return atoi(s.cString());
 }
 

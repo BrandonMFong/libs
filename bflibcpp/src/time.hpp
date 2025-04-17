@@ -17,6 +17,7 @@ namespace BF {
 
 class Time : public Object {
 public:
+	const char * className() const;
 	static Time * createCurrent();
 	Time(BFTime t);
 	Time();
