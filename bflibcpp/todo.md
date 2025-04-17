@@ -21,4 +21,4 @@
 - [ ] improve Atomic class
 	- [ ] use a lambda function for `get()` so we can define an inline function to do something to the enclosing object while locked. Better than queue.get().pop()
 - [ ] Box object that handles heap memory. Box::take() releases memory to caller
-- [ ] Ability to key a HashMap<String, String> without defining a compare callback, at least for our standard objects
+- [x] Ability to key a HashMap<String, String> without defining a compare callback, at least for our standard objects
