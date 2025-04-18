@@ -54,7 +54,7 @@ public:
 	// returns: path without current leaf
 	const char * directory() const;
 
-	// adds to url
+	// adds suffix to url. will be treated as a component
 	void append(const char * suffix);
 	void append(const String & suffix);
 
