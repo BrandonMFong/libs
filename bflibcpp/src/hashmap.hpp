@@ -22,7 +22,7 @@ namespace BF {
 template <typename K, typename V, typename S = size_t>
 class HashMap : public BasicMap<K,V,S> {
 public:
-	HashMap() : _map(NULL), BasicMap<K,V,S>() {
+	HashMap() : _map(NULL), _hash(NULL), BasicMap<K,V,S>() {
 		this->_map = BFHashMapCreate();
 		if (!this->_map) return;
 		BFHashMapSetCompare(this->_map, this->_BFMapCompare);

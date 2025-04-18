@@ -23,3 +23,4 @@
 - [ ] Box object that handles heap memory. Box::take() releases memory to caller
 - [x] Ability to key a HashMap<String, String> without defining a compare callback, at least for our standard objects
 - [ ] URL url = "this"; url = "this"; crashes
+- [ ] Atomically figure out hash function without manually defining one for HashMap
