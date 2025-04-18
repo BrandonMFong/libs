@@ -45,6 +45,11 @@ void BF::Net::Server::init(void * in) {
     // define server address
     struct sockaddr_in servAddr;
 	if (!err) {
+		int reuse = 1;
+		if (setsockopt(s->_mainSocket.get(), SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0) {
+			BFNetLogDebug("%s - could not force reuse the socket", __FILE__, errno);
+		}
+
 		servAddr.sin_family = AF_INET;
 		servAddr.sin_port = htons(s->port());
 		servAddr.sin_addr.s_addr = inet_addr(s->ipaddr());
