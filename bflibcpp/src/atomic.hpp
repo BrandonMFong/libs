@@ -57,6 +57,9 @@ public:
 	// returns a reference to object
 	//
 	// caller does NOT own
+	//
+	// i think i might deprecate this? after
+	// reviewing and using this alot, seems unsafe
 	T & get() const {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
