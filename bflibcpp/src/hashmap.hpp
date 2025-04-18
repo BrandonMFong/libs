@@ -9,6 +9,7 @@
 #include "basicmap.hpp"
 #include "release.hpp"
 #include "retain.hpp"
+#include "hash.hpp"
 
 extern "C" {
 #include <bflibc/hashmap.h>
@@ -19,10 +20,10 @@ namespace BF {
 /**
  * Map implemented using self-balancing tree. See bflibc/map.h
  */
-template <typename K, typename V, typename S = size_t>
+template <typename K, typename V, typename S = size_t, typename H = BF::Hash<K>>
 class HashMap : public BasicMap<K,V,S> {
 public:
-	HashMap() : _map(NULL), _hash(NULL), BasicMap<K,V,S>() {
+	HashMap() : _map(NULL), BasicMap<K,V,S>() {
 		this->_map = BFHashMapCreate();
 		if (!this->_map) return;
 		BFHashMapSetCompare(this->_map, this->_BFMapCompare);
@@ -35,7 +36,7 @@ public:
 	}
 
 	void setHash(unsigned long (*hash)(K & key)) {
-		this->_hash = hash;
+		//this->_hash = hash;
 	}
 
 private:
@@ -74,15 +75,20 @@ private:
 		if (!key) {
 			return 0;
 		}
+		
 		HashMap * map = (HashMap *) key->_mapRef;
+		/*
 		if (!map->_hash) {
 			return -1;
 		}
+		*/
+
 		K obj = key->_obj;
 		return map->_hash(obj);
 	}
 
-	unsigned long (*_hash)(K & key);
+	//unsigned long (*_hash)(K & key);
+	H _hash;
 
 	BFHashMap _map;
 };

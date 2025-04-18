@@ -29,6 +29,7 @@
 #include "tree.hpp"
 #include "url.hpp"
 #include "deque.hpp"
+#include "hash.hpp"
 
 #endif // BFLIBCPP_HPP
 
