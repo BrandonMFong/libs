@@ -188,6 +188,15 @@ BFTEST_UNIT_FUNC(test_atomicLambdaGet, 2 << 10, {
 	size_t expected = (size_t) str.unsafeget().size();
 	str.unlock();
 	BF_ASSERT(size == expected);
+
+	str.get([] (String & obj) {
+		obj.pop_back();
+	});
+
+	const char * exp = "Hello world";
+	BF_ASSERT(str.get<bool>([=] (String & obj) {
+		return obj.compareString(exp) == 0;
+	}));
 })
 
 BFTEST_COVERAGE_FUNC(atomic_tests, {

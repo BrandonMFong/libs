@@ -59,7 +59,10 @@ public:
 	// caller does NOT own
 	//
 	// i think i might deprecate this? after
-	// reviewing and using this alot, seems unsafe
+	// reviewing and using this alot, seems unsafe.
+	//
+	// could be safe for trivial data types like int and
+	// bool
 	T & get() const {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
@@ -80,6 +83,18 @@ public:
 		R res = cb(this->_obj);
 		BFLockUnlock(&this->_objlock);
 		return res;
+	}
+
+	/**
+	 * runs callback function while guaranteeing
+	 * the object is locked
+	 *
+	 * callback does not need to have a return value
+	 */
+	void get(std::function<void(T&)> cb) const {
+		BFLockLock(&this->_objlock);
+		cb(this->_obj);
+		BFLockUnlock(&this->_objlock);
 	}
 
 	/**
