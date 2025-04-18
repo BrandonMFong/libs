@@ -25,14 +25,9 @@ int BFTestHashMapCompareString(String & a, String & b) {
 	return a.compareString(b);
 }
 
-unsigned long BFTestHashMapHashFunctionString(String & key) {
-	return BFHashDjb2((unsigned char *) key.c_str());
-}
-
 BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10,  {
 	HashMap<String, int> map;
 	map.setCompare(BFTestHashMapCompareString);
-	map.setHash(BFTestHashMapHashFunctionString);
 	
 	int mapsize = 2<<7;
 	for (int i = 0; i < mapsize; i++) {
@@ -45,7 +40,6 @@ BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10,  {
 BFTEST_UNIT_FUNC(test_hashMapGet, 2<<10,  {
 	HashMap<String, int> map;
 	map.setCompare(BFTestHashMapCompareString);
-	map.setHash(BFTestHashMapHashFunctionString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -73,7 +67,6 @@ BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10,  {
 	}
 	HashMap<String, int> map;
 	map.setCompare(BFTestHashMapCompareString);
-	map.setHash(BFTestHashMapHashFunctionString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -107,17 +100,12 @@ void BFTestHashMapReleaseValueInteger(int * obj) {
 	BFFree(obj);
 }
 
-unsigned long BFTestHashMapHashFunctionCString(char * &key) {
-	return BFHashDjb2((unsigned char *) key);
-}
-
 BFTEST_UNIT_FUNC(test_hashMapWithAllocMem, 2<<10,  {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
 	HashMap<char *, int *> map;
 	map.setCompare(BFTestHashMapCompareCString);
-	map.setHash(BFTestHashMapHashFunctionCString);
 	map.setRelease(BFTestHashMapReleaseKeyCString, BFTestHashMapReleaseValueInteger);
 
 	// insert	
@@ -135,7 +123,6 @@ BFTEST_UNIT_FUNC(test_hashMapWithAllocMem, 2<<10,  {
 BFTEST_UNIT_FUNC(test_hashMapGetterWithSubscript, 2<<10,  {
 	HashMap<String, int> map;
 	map.setCompare(BFTestHashMapCompareString);
-	map.setHash(BFTestHashMapHashFunctionString);
 
 	// insert	
 	int mapsize = 2<<7;
