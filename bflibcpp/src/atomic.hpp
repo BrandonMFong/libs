@@ -9,6 +9,7 @@
 #include "access.hpp"
 #include "object.hpp"
 #include <stdbool.h>
+#include <functional>
 
 extern "C" {
 #include <bflibc/lock.h>
@@ -59,6 +60,21 @@ public:
 	T & get() const {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
+		BFLockUnlock(&this->_objlock);
+		return res;
+	}
+
+	/**
+	 * runs a callback function while guaranteeing
+	 * the object is locked
+	 *
+	 * anything returned from callback is copied, I 
+	 * would advise against return internal object
+	 */
+	template<typename R>
+	R get(std::function<R(T&)> cb) const {
+		BFLockLock(&this->_objlock);
+		R res = cb(this->_obj);
 		BFLockUnlock(&this->_objlock);
 		return res;
 	}
