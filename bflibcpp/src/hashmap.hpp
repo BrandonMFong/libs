@@ -78,7 +78,8 @@ private:
 		if (!map->_hash) {
 			return -1;
 		}
-		return map->_hash(key->_obj);
+		K obj = key->_obj;
+		return map->_hash(obj);
 	}
 
 	unsigned long (*_hash)(K & key);

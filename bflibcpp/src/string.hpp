@@ -138,7 +138,7 @@ public:
 	bool operator>(const String & s) const;
 	bool operator!=(const String & s) const;
 	bool operator!=(const char * s) const;
-	String & operator=(const String & str);
+	virtual String & operator=(const String & str);
 	const char operator[](size_t index) const;
 
 // Conversions
