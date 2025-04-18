@@ -126,6 +126,18 @@ BFTEST_UNIT_FUNC(test_urlCheckPathIsSubPath, 2 << 10, {
 	BF_ASSERT(!url0.isSubPath(url3));
 })
 
+BFTEST_UNIT_FUNC(test_urlAbsoluteURL, 2 << 10, {
+	URL url = __FILE__;
+	URL absurl = url.absURL();
+	BF_ASSERT(!strcmp(url.abspath(), absurl.path()));
+})
+
+BFTEST_UNIT_FUNC(test_urlStandardURL, 2 << 10, {
+	URL url = __FILE__;
+	URL stdurl = url.standardURL();
+	BF_ASSERT(!strcmp(url.standardPath(), stdurl.path()));
+})
+
 BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlinit);
 	BFTEST_LAUNCH(test_urlextension);
@@ -137,6 +149,8 @@ BFTEST_COVERAGE_FUNC(url_tests, {
 	BFTEST_LAUNCH(test_urlStandardPath);
 	BFTEST_LAUNCH(test_urlComponents);
 	BFTEST_LAUNCH(test_urlCheckPathIsSubPath);
+	BFTEST_LAUNCH(test_urlAbsoluteURL);
+	BFTEST_LAUNCH(test_urlStandardURL);
 
 })
 

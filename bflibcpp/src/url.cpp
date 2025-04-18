@@ -35,6 +35,10 @@ const char * URL::path() const {
 	return this->_path;
 }
 
+URL URL::absURL() const {
+	return URL(this->abspath());
+}
+
 const char * URL::abspath() const {
 	if (realpath(this->_path, this->_reserved) == NULL) {
 		// if above fails, we will just use the path as is
@@ -138,6 +142,10 @@ bool URL::isSubPath(const URL & parent) const {
 		np = np->next();
 	}
 	return true;
+}
+
+URL URL::standardURL() const {
+	return URL(this->standardPath());
 }
 
 const char * URL::standardPath() const {

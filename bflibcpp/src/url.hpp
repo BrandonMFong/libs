@@ -36,9 +36,11 @@ public:
 
 	// returns: absolute path from root
 	const char * abspath() const;
+	URL absURL() const;
 
 	// returns: path() but removing '..' & '.', effectively resolving them
 	const char * standardPath() const;
+	URL standardURL() const;
 
 	// returns: the last component of the path
 	const char * leaf() const;
