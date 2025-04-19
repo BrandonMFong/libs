@@ -34,10 +34,9 @@ public:
 	virtual ~HashMap() {
 		BFHashMapRelease(this->_map);
 	}
-
-	void setHash(unsigned long (*hash)(K & key)) {
-		//this->_hash = hash;
-	}
+	
+	[[deprecated("Use BF::Hash to define hashing for your object")]]
+	void setHash(unsigned long (*hash)(K & key)) { }
 
 private:
 	size_t size() const {
@@ -77,11 +76,9 @@ private:
 		}
 		
 		HashMap * map = (HashMap *) key->_mapRef;
-		/*
-		if (!map->_hash) {
-			return -1;
+		if (!map) {
+			return 0;
 		}
-		*/
 
 		K obj = key->_obj;
 		return map->_hash(obj);
