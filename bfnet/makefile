@@ -37,7 +37,7 @@ FLAGS = $(CPPFLAGS) -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bi
 ### Test settings
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfnet-test
-#ADDR_SANITIZER = -fsanitize=address
+ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CPPFLAGS) -DDEBUG -DTESTING -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug -I../bflibcpp/bin/debug -I../bftest/bin/debug
 LIBRARIES = ../bflibcpp/bin/debug/bflibcpp/libbfcpp-debug.a ../bflibc/bin/debug/bflibc/libbfc-debug.a ../bftest/bin/debug/bftest/libbftest-debug.a
 LINKS = $(BF_LIB_C_FLAGS) -lpthread

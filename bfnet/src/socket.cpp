@@ -126,6 +126,7 @@ void BF::Net::Socket::inStream(void * in) {
 	BFThreadAsyncID tid = BFThreadAsyncGetID();
 
 	BFRetain(skt);
+	BFRetain(sc);
 
 	sc->_isready = true;
 	while (!BFThreadAsyncIsCanceled(tid) && sc->isactive()) {
@@ -162,6 +163,7 @@ void BF::Net::Socket::inStream(void * in) {
 	// update the list
 	skt->updateConnections();
 
+	BFRelease(sc);
 	BFRelease(skt);
 	BFRelease(tools);
 }
