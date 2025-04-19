@@ -132,14 +132,14 @@ public:
 		return out << s.cString();
 	}
 
-	bool operator==(const String & s);
-	bool operator==(const char * s);
-	bool operator<(const String & s);
-	bool operator>(const String & s);
-	bool operator!=(const String & s);
-	bool operator!=(const char * s);
-	String & operator=(const String & str);
-	const char operator[](size_t index);
+	bool operator==(const String & s) const;
+	bool operator==(const char * s) const;
+	bool operator<(const String & s) const;
+	bool operator>(const String & s) const;
+	bool operator!=(const String & s) const;
+	bool operator!=(const char * s) const;
+	virtual String & operator=(const String & str);
+	const char operator[](size_t index) const;
 
 // Conversions
 public:

@@ -209,7 +209,7 @@ public:
 	/**
 	 * Copies content from arr to us
 	 */
-	void copyFromArray(const Array<T> * arr) {
+	void copyFromArray(const Array<T,S> * arr) {
 		this->removeAll();
 		this->_address = (T *) this->allocate(arr->count());
 		this->_count = arr->count();
@@ -219,7 +219,7 @@ public:
 	/**
 	 * copies content of arr to the end of ours
 	 */
-	void append(const Array<T> & arr) {
+	void append(const Array<T,S> & arr) {
 		this->_address = this->reallocate(this->_address, this->_count + arr._count);
 		//memcpy(&this->_address[this->_count], &arr._address[0], arr._count);
 		for (int i = this->_count; i < this->_count + arr._count; i++) {
@@ -395,7 +395,7 @@ public:
 	/**
 	 * Copies the string content from arr to us
 	 */
-	Array<T> & operator=(const Array<T> & arr) {
+	virtual Array<T,S> & operator=(const Array<T,S> & arr) {
 		this->copyFromArray(&arr);
 		return *this;
 	}

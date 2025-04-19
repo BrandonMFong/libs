@@ -42,7 +42,7 @@ private:
 		return BFMapInsert(this->_map, key, value);
 	}
 
-	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key) {
+	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key) const {
 		if (!this->_map) {
 			return NULL;
 		}
@@ -58,7 +58,7 @@ private:
 		return BFMapRemove(this->_map, key);
 	}
 
-	virtual bool _contains(void * key) {
+	virtual bool _contains(void * key) const {
 		if (!this->_map) return false;
 		return BFMapContains(this->_map, key);
 	}

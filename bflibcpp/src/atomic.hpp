@@ -9,6 +9,7 @@
 #include "access.hpp"
 #include "object.hpp"
 #include <stdbool.h>
+#include <functional>
 
 extern "C" {
 #include <bflibc/lock.h>
@@ -56,11 +57,44 @@ public:
 	// returns a reference to object
 	//
 	// caller does NOT own
+	//
+	// i think i might deprecate this? after
+	// reviewing and using this alot, seems unsafe.
+	//
+	// could be safe for trivial data types like int and
+	// bool
 	T & get() const {
 		BFLockLock(&this->_objlock);
 		T & res = this->unsafeget();
 		BFLockUnlock(&this->_objlock);
 		return res;
+	}
+
+	/**
+	 * runs a callback function while guaranteeing
+	 * the object is locked
+	 *
+	 * anything returned from callback is copied, I 
+	 * would advise against return internal object
+	 */
+	template<typename R>
+	R get(std::function<R(T&)> cb) const {
+		BFLockLock(&this->_objlock);
+		R res = cb(this->_obj);
+		BFLockUnlock(&this->_objlock);
+		return res;
+	}
+
+	/**
+	 * runs callback function while guaranteeing
+	 * the object is locked
+	 *
+	 * callback does not need to have a return value
+	 */
+	void get(std::function<void(T&)> cb) const {
+		BFLockLock(&this->_objlock);
+		cb(this->_obj);
+		BFLockUnlock(&this->_objlock);
 	}
 
 	/**

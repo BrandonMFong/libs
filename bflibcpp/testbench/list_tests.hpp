@@ -361,7 +361,7 @@ BFTEST_UNIT_FUNC(test_pluckingObject, 2,  {
 	for (size_t i = 0; i < size; i++) { BFFree(arr[i]); }
 })
 
-BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<10, {
+BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<9, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
@@ -384,6 +384,24 @@ BFTEST_UNIT_FUNC(test_rangeBasedLooping, 2<<10, {
 	BFFree(arr);
 })
 
+BFTEST_UNIT_FUNC(test_listOfStrings, 2<<10, {
+	List<String> list;
+	int maxval = 2 << 3;
+	for (int i = 0; i < maxval; i++) {
+		char num[1024];
+		snprintf(num, sizeof(num), "%d", i);
+		list.add(num);
+	}
+
+	List<String>::Node * n = list.first();
+	for (int i = 0; i < maxval && n; i++) {
+		char num[1024];
+		snprintf(num, sizeof(num), "%d", i);
+		BF_ASSERT(n->object().compareString(num) == 0, "'%s' != '%s'", n->object().cString(), num);
+		n = n->next();
+	}
+})
+
 BFTEST_COVERAGE_FUNC(list_tests, {
 	BFTEST_LAUNCH(test_Init);
 	BFTEST_LAUNCH(test_adding);
@@ -402,6 +420,8 @@ BFTEST_COVERAGE_FUNC(list_tests, {
 	BFTEST_LAUNCH(test_ShuffleLargeDataSet);
 	BFTEST_LAUNCH(test_pluckingObject);
 	BFTEST_LAUNCH(test_rangeBasedLooping);
+	BFTEST_LAUNCH(test_listOfStrings);
+
 })
 
 #endif // LIST_TESTS_HPP

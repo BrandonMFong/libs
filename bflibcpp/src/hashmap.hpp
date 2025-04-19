@@ -9,6 +9,7 @@
 #include "basicmap.hpp"
 #include "release.hpp"
 #include "retain.hpp"
+#include "hash.hpp"
 
 extern "C" {
 #include <bflibc/hashmap.h>
@@ -19,7 +20,7 @@ namespace BF {
 /**
  * Map implemented using self-balancing tree. See bflibc/map.h
  */
-template <typename K, typename V, typename S = size_t>
+template <typename K, typename V, typename S = size_t, typename H = BF::Hash<K>>
 class HashMap : public BasicMap<K,V,S> {
 public:
 	HashMap() : _map(NULL), BasicMap<K,V,S>() {
@@ -33,10 +34,9 @@ public:
 	virtual ~HashMap() {
 		BFHashMapRelease(this->_map);
 	}
-
-	void setHash(unsigned long (*hash)(K & key)) {
-		this->_hash = hash;
-	}
+	
+	[[deprecated("Use BF::Hash to define hashing for your object")]]
+	void setHash(unsigned long (*hash)(K & key)) { }
 
 private:
 	size_t size() const {
@@ -48,7 +48,7 @@ private:
 		return BFHashMapInsert(this->_map, key, value);
 	}
 
-	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key) {
+	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key) const {
 		if (!this->_map) {
 			return NULL;
 		}
@@ -64,7 +64,7 @@ private:
 		return BFHashMapRemove(this->_map, key);
 	}
 
-	virtual bool _contains(void * key) {
+	virtual bool _contains(void * key) const {
 		if (!this->_map) return false;
 		return BFHashMapContains(this->_map, key);
 	}
@@ -74,14 +74,18 @@ private:
 		if (!key) {
 			return 0;
 		}
+		
 		HashMap * map = (HashMap *) key->_mapRef;
-		if (!map->_hash) {
-			return -1;
+		if (!map) {
+			return 0;
 		}
-		return map->_hash(key->_obj);
+
+		K obj = key->_obj;
+		return map->_hash(obj);
 	}
 
-	unsigned long (*_hash)(K & key);
+	//unsigned long (*_hash)(K & key);
+	H _hash;
 
 	BFHashMap _map;
 };

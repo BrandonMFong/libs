@@ -45,8 +45,8 @@ protected:
 	class Container : public Object {
 	public:
 		T _obj;
-		BasicMap<K,V,S> * _mapRef;
-		Container(T obj, BasicMap<K,V,S> * mapRef)
+		const BasicMap<K,V,S> * _mapRef;
+		Container(T obj, const BasicMap<K,V,S> * mapRef)
 		: _obj(obj), _mapRef(mapRef), Object() {
 			BFRetain(this->_mapRef);
 		}
@@ -62,7 +62,7 @@ protected:
 	template<typename T>
 	class Key : public Container<T> {
 	public:
-		Key(T obj, BasicMap<K,V,S> * mapRef)
+		Key(T obj, const BasicMap<K,V,S> * mapRef)
 		: Container<T>(obj, mapRef) { }
 		virtual ~Key() {
 			if (this->_mapRef->_releaseKey) {
@@ -74,7 +74,7 @@ protected:
 	template<typename T>
 	class Value : public Container<T> {
 	public:
-		Value(T obj, BasicMap<K,V,S> * mapRef)
+		Value(T obj, const BasicMap<K,V,S> * mapRef)
 		: Container<T>(obj, mapRef) { }
 		virtual ~Value() {
 			if (this->_mapRef->_releaseValue) {
@@ -124,7 +124,7 @@ public:
 	 *
 	 * throws an exception if no value could be found for key
 	 */
-	V & getValueForKey(K k) {
+	V & getValueForKey(K k) const {
 		Key<K> key(k, this);
 
 		Value<V> * value = this->_getValueForKey(&key);
@@ -140,11 +140,11 @@ public:
 	 *
 	 * if no value is found, an exception is thrown
 	 */
-	V & at(K k) {
+	V & at(K k) const {
 		return this->getValueForKey(k);
 	}
 
-	V & operator[](K k) {
+	V & operator[](K k) const {
 		return this->at(k);
 	}
 
@@ -159,7 +159,7 @@ public:
 	/**
 	 * true if there is an entry with key=k
 	 */
-	bool contains(K k) {
+	bool contains(K k) const {
 		Key<K> key(k, this);
 		return this->_contains(&key);
 	}
@@ -167,12 +167,12 @@ public:
 private:
 	virtual int _insert(void * key, void * value) = 0;
 	virtual int _remove(void * key) = 0;
-	virtual bool _contains(void * key) = 0;
+	virtual bool _contains(void * key) const = 0;
 
 	/**
 	 * returns NULL if there is no value for key
 	 */
-	virtual Value<V> * _getValueForKey(void * key) = 0;
+	virtual Value<V> * _getValueForKey(void * key) const = 0;
 
 	int (*_compare)(K & a, K & b);
 	void (*_releaseKey)(K obj);

@@ -35,6 +35,10 @@ const char * URL::path() const {
 	return this->_path;
 }
 
+URL URL::absURL() const {
+	return URL(this->abspath());
+}
+
 const char * URL::abspath() const {
 	if (realpath(this->_path, this->_reserved) == NULL) {
 		// if above fails, we will just use the path as is
@@ -100,5 +104,87 @@ bool URL::operator==(const URL & other) const {
 
 bool URL::operator!=(const URL & other) const {
 	return !(*this == other);
+}
+
+const List<String> __URLPathGetComponents(const char * path) {
+	List<String> res;
+	const char * del = "/";
+	char path_copy[PATH_MAX];
+	strcpy(path_copy, path);
+	char * comp = NULL;
+	int i = 0;
+	while ((comp = strtok(i++ == 0 ? path_copy : NULL, del))) {
+		res.add(comp);
+	}
+
+	return res;
+}
+
+bool URL::isSubPath(const URL & parent) const {
+	URL stdChild(this->standardPath());
+	URL stdParent(parent.standardPath());
+
+	const List<String> compsChild = stdChild.components();
+	const List<String> compsParent = stdParent.components();
+	if (compsChild.size() <= compsParent.size()) {
+		return false;
+	}
+
+	const List<String>::Node * nc = compsChild.first();
+	const List<String>::Node * np = compsParent.first();
+	if (!nc || !np) return false;
+
+	while (nc && np) {
+		if (nc->object() != np->object()) {
+			return false;
+		}
+		nc = nc->next();
+		np = np->next();
+	}
+	return true;
+}
+
+URL URL::standardURL() const {
+	return URL(this->standardPath());
+}
+
+const char * URL::standardPath() const {
+	const List<String> comps = __URLPathGetComponents(this->_path);
+	Deque<String> deque;
+	for (const String & comp : comps) {
+		if (comp == ".") continue;
+		else if (comp == "..") {
+			deque.pop_back();
+		} else {
+			deque.push_back(comp);
+		}
+	}
+
+	String stdpath;
+	if (this->_path[0] == '/') {
+		stdpath.push_back('/');
+	}
+	
+	while (!deque.empty()) {
+		const String & comp = deque.front();
+		stdpath.append(comp);
+
+		deque.pop_front();
+
+		if (!deque.empty()) {
+			stdpath.push_back('/');
+		}
+	}
+
+	if (this->_path[strlen(this->_path) - 1] == '/') {
+		stdpath.push_back('/');
+	}
+
+	strcpy(this->_reserved, stdpath.cString());
+	return this->_reserved;
+}
+
+const List<String> URL::components() const {
+	return __URLPathGetComponents(this->_path);
 }
 

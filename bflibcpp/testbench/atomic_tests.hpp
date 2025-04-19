@@ -8,9 +8,10 @@
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
-#include <atomic.hpp>
+#include "atomic.hpp"
 #include <unistd.h>
-#include <queue.hpp>
+#include "queue.hpp"
+#include "string.hpp"
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -176,6 +177,28 @@ BFTEST_UNIT_FUNC(test_comparingObjectWithAnother, 2<<10, {
 	BF_ASSERT((val == i) && (i == val));
 })
 
+BFTEST_UNIT_FUNC(test_atomicLambdaGet, 2 << 10, {
+	Atomic<String> str("Hello world!");
+
+	size_t size = str.get<size_t>([] (String & obj) {
+		return (size_t) obj.size();
+	});
+
+	str.lock();
+	size_t expected = (size_t) str.unsafeget().size();
+	str.unlock();
+	BF_ASSERT(size == expected);
+
+	str.get([] (String & obj) {
+		obj.pop_back();
+	});
+
+	const char * exp = "Hello world";
+	BF_ASSERT(str.get<bool>([=] (String & obj) {
+		return obj.compareString(exp) == 0;
+	}));
+})
+
 BFTEST_COVERAGE_FUNC(atomic_tests, {
 	BFTEST_LAUNCH(test_atomicinit);
 	BFTEST_LAUNCH(test_atomisetandget);
@@ -186,6 +209,8 @@ BFTEST_COVERAGE_FUNC(atomic_tests, {
 	BFTEST_LAUNCH(test_castingoperator);
 	BFTEST_LAUNCH(test_changingvaluebyreference);
 	BFTEST_LAUNCH(test_comparingObjectWithAnother);
+	BFTEST_LAUNCH(test_atomicLambdaGet);
+
 })
 
 #endif // ATOMIC_TESTS_HPP
