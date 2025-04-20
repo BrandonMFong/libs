@@ -139,9 +139,8 @@ void BF::Net::Socket::inStream(void * in) {
 
 		if (err) {
 			BFNetLogDebug("%s - error returned from recvData: %d. Aborting reading socket...", __FUNCTION__, err);
+			BFRelease(envelope);
 			break;
-		} else if ((envelope->data()->size() == 0) && (sc->type() == SOCK_STREAM)) {
-			sc->closeConnection(); // force the connection to close
 		} else {
 			if (envelope->data()->size() == 0) {
 				if (sc->type() == SOCK_STREAM) {
