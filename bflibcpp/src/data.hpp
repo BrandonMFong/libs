@@ -112,7 +112,8 @@ public:
 
 private:
 public:
-	bool operator==(const Data & s);
+	bool operator==(const Data & s) const;
+	bool operator!=(const Data & s) const;
 };
 
 }

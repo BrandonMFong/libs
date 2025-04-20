@@ -125,7 +125,11 @@ int Data::alloc(const size_t size, const unsigned char * data) {
 	return 0;
 }
 
-bool Data::operator==(const Data & d) {
+bool Data::operator==(const Data & d) const {
 	return this->compare(d) == 0;
+}
+
+bool Data::operator!=(const Data & d) const {
+	return this->compare(d) != 0;
 }
 
