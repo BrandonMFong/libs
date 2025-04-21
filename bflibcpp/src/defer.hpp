@@ -8,6 +8,14 @@
 
 #include <functional>
 
+/**
+ * body is expected to be a lamda of the form:
+ * ```
+ * [] () {
+ * 	<code>
+ * }
+ * ```
+ */
 #define BFDefer(...) \
 	BF::__Defer__ __bf_defer_##__COUNTER__##__(__VA_ARGS__);
 
