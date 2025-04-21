@@ -30,6 +30,7 @@
 #include "url.hpp"
 #include "deque.hpp"
 #include "hash.hpp"
+#include "defer.hpp"
 
 #endif // BFLIBCPP_HPP
 

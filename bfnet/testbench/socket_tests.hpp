@@ -27,6 +27,9 @@ void TestSocketNewConnection(Connection * sc) { }
 
 BFTEST_UNIT_FUNC(test_socketinitclient, 2<<10, {
 	Socket * skt = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
+	BFDefer([&] () {
+		BFRelease(skt);
+	});
 
 	if (!skt) {
 		result = 1;
@@ -44,12 +47,13 @@ BFTEST_UNIT_FUNC(test_socketinitclient, 2<<10, {
 			result = 4;
 		}
 	}
-
-	BFRelease(skt);
 })
 
 BFTEST_UNIT_FUNC(test_socketinitserver, 2<<10, {
 	Socket * skt = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
+	BFDefer([&] () {
+		BFRelease(skt);
+	});
 
 	if (!skt) {
 		result = 1;
@@ -71,8 +75,6 @@ BFTEST_UNIT_FUNC(test_socketinitserver, 2<<10, {
 			result = 4;
 		}
 	}
-
-	BFRelease(skt);
 })
 
 Atomic<Connection *> serverConn = NULL;
@@ -121,6 +123,10 @@ int test_sendingandreceiving_progress(const unsigned char * buf, size_t size) {
 BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 	Socket * s = Socket::create(SOCKET_MODE_SERVER, LOCALHOST, PORT, &result);
 	Socket * c = Socket::create(SOCKET_MODE_CLIENT, LOCALHOST, PORT, &result);
+	BFDefer([&] () {
+		BFRelease(s);
+		BFRelease(c);
+	});
 
 	if (!s || !c) {
 		result = 1;
@@ -218,9 +224,6 @@ BFTEST_UNIT_FUNC(test_sendingandreceiving, 1, {
 	if (!result) {
 		result = s->stop();
 	}
-
-	BFRelease(s);
-	BFRelease(c);
 })
 
 int test_sendingandreceiving_progress_forced_failure(const unsigned char * buf, size_t size) {
