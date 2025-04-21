@@ -8,13 +8,15 @@
 
 #include <functional>
 
-#define BFDefer(...)
+#define BFDefer(...) \
+	BF::__Defer__ __bf_defer_##__COUNTER__##__(__VA_ARGS__);
 
 namespace BF {
 class __Defer__ {
 public:
 	__Defer__(std::function<void(void)> cb);
 	virtual ~__Defer__();
+
 private:
 	std::function<void(void)> _cb;
 };
