@@ -484,6 +484,14 @@ public:
 		this->set(list);
 	}
 
+	virtual L operator[](S index) const {
+		return this->objectAtIndex(index);
+	}
+
+	virtual L & operator[](S index) {
+		return this->refObjectAtIndex(index);
+	}
+
 public:
 
 	/**
@@ -520,6 +528,83 @@ public:
 	/// required interfaces: begin() & end()
 	Iterator begin() const { return this->first(); }
 	Iterator end() const { return NULL; }
+
+public:
+
+	/**
+	 * sorts the vector in ascending order
+	 *
+	 * default algorithm is merge sort
+	 */
+	virtual int sort(VectorSort type = kVectorSortMerge) {
+		switch (type) {
+			case kVectorSortBubble:
+				return List::sortBubble(*this);
+			case kVectorSortInsertion:
+				return List::sortInsertion(*this);
+			case kVectorSortSelection:
+				return List::sortSelection(*this);
+			case kVectorSortQuick:
+				return List::sortQuick(*this);
+			case kVectorSortMerge:
+			default:
+				return List::sortMerge(*this);
+		}
+	}
+
+private:
+	
+	/** BUBBLE SORT - START **/
+
+	static int sortBubble(List & c) {
+		return 0;
+	}
+
+	/** BUBBLE SORT - END **/
+	/** INSERTION SORT - START **/
+
+	static int sortInsertion(List & c) {
+		return 0;
+	}
+
+	/** INSERTION SORT - END **/
+	/** SELECTION SORT - START **/
+
+	static int sortSelection(List & c) {
+		return 0;
+	}
+
+	/** SELECTION SORT - END **/
+	/** QUICK SORT - START **/
+
+	static int sortQuick(List & c) {
+		return sortQuick(c, 0, c.size() - 1);
+	}
+
+	static int sortQuick(List & c, int low, int high) {
+		return 0;
+	}
+
+	static int sortQuickPartition(List & c, int low, int high) {
+		return 0;
+	}
+
+	/** QUICK SORT - END **/
+	/** MERGE SORT - START **/
+
+	static int sortMerge(List & c) {
+		return sortMerge(c, 0, c.size() - 1);
+	}
+
+	static int sortMerge(List & c, S left, S right) {
+		return 0;
+	}
+
+	static int sortMerge(List & c, S left, S mid, S right) {
+		return 0;
+	}
+	
+	/** MERGE SORT - END **/
 };
 
 } // namespace BF

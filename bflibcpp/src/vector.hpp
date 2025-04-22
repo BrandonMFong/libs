@@ -37,11 +37,11 @@ public:
 	virtual T & refObjectAtIndex(S index) = 0;
 	virtual T max() const = 0;
 
-	T operator[](S index) const {
+	virtual T operator[](S index) const {
 		return this->objectAtIndex(index);
 	}
 
-	T & operator[](S index) {
+	virtual T & operator[](S index) {
 		return this->refObjectAtIndex(index);
 	}
 
@@ -50,21 +50,7 @@ public:
 	 *
 	 * default algorithm is merge sort
 	 */
-	int sort(VectorSort type = kVectorSortMerge) {
-		switch (type) {
-			case kVectorSortBubble:
-				return Vector::sortBubble(*this);
-			case kVectorSortInsertion:
-				return Vector::sortInsertion(*this);
-			case kVectorSortSelection:
-				return Vector::sortSelection(*this);
-			case kVectorSortQuick:
-				return Vector::sortQuick(*this);
-			case kVectorSortMerge:
-			default:
-				return Vector::sortMerge(*this);
-		}
-	}
+	virtual int sort(VectorSort type = kVectorSortMerge) = 0;
 
 protected:
 	Vector() : Collection<S>() { }

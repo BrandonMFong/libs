@@ -212,10 +212,6 @@ String & String::operator=(const String & str) {
 	return *this;
 }
 
-const char String::operator[](size_t index) const {
-	return this->objectAtIndex(index);
-}
-
 int String::toi(const String & s) {
 	return atoi(s.cString());
 }
