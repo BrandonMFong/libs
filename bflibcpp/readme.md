@@ -7,6 +7,9 @@
 - Arrays
 - Linked Lists
 - Data Buffer
-- Memory Management
+- Memory Management (BFRelease & BFRetain)
 - Stack
 - Queue
+- Deque
+- URL
+- Defer
