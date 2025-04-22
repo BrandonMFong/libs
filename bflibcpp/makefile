@@ -25,8 +25,9 @@ SOURCE_EXT = cpp
 HEADER_EXT = hpp
 FILES = \
 data directory exception \
-file object url\
-path string time
+file object url \
+path string time \
+defer
 
 ### Release settings
 ifeq ($(CONFIG),release) # release

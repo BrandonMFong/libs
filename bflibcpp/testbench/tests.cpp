@@ -19,6 +19,7 @@
 #include "exception_tests.hpp"
 #include "tree_tests.hpp"
 #include "url_tests.hpp"
+#include "defer_tests.hpp"
 
 BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(atomic_tests);
@@ -36,5 +37,6 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(exception_tests);
 	BFTEST_SUITE_LAUNCH(tree_tests);
 	BFTEST_SUITE_LAUNCH(url_tests);
+	BFTEST_SUITE_LAUNCH(defer_tests);
 })
 
