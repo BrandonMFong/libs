@@ -633,6 +633,225 @@ private:
 	/** MERGE SORT - END **/
 };
 
+template <> struct Sort<Array> {
+	template <typename T, typename S = size_t> 
+	int operator()(Array<T,S> & array) {
+		SortStrategy type = kSortStrategyMerge;
+		switch (type) {
+			case kSortStrategyBubble:
+				return Sort::sortBubble<T,S>(array);
+			case kSortStrategyInsertion:
+				return Sort::sortInsertion<T,S>(array);
+			case kSortStrategySelection:
+				return Sort::sortSelection<T,S>(array);
+			case kSortStrategyQuick:
+				return Sort::sortQuick<T,S>(array);
+			case kSortStrategyMerge:
+			default:
+				return Sort::sortMerge<T,S>(array);
+		}
+	}
+
+	/** BUBBLE SORT - START **/
+
+	template <typename T, typename S = size_t> 
+	static int sortBubble(Array<T,S> & c) {
+		S n = c.size();
+		bool swapped = false;
+
+		for (S i = 0; i < n - 1; i++) {
+			swapped = false;
+			for (S j = 0; j < n - i - 1; j++) {
+				if (c[j] > c[j + 1]) {
+					swap(c[j], c[j + 1]);
+					swapped = true;
+				}
+			}
+
+			// If no two elements were swapped, then break
+			if (!swapped)
+				break;
+		}
+		return 0;
+	}
+
+	/** BUBBLE SORT - END **/
+	/** INSERTION SORT - START **/
+
+	template <typename T, typename S = size_t> 
+	static int sortInsertion(Array<T,S> & c) {
+		S i, j;
+		T key;
+		S n = c.size();
+		for (i = 1; i < n; i++) {
+			key = c[i];
+			j = i - 1;
+	 
+			// Move elements of arr[0..i-1],
+			// that are greater than key, to one
+			// position ahead of their
+			// current position
+			while (j >= 0 && c[j] > key) {
+				c[j + 1] = c[j];
+				j = j - 1;
+			}
+			c[j + 1] = key;
+		}
+		return 0;
+	}
+
+	/** INSERTION SORT - END **/
+	/** SELECTION SORT - START **/
+
+	template <typename T, typename S = size_t> 
+	static int sortSelection(Array<T,S> & c) {
+		S i, j, min_idx;
+		S n = c.size();
+
+		// One by one move boundary of
+		// unsorted subarray
+		for (i = 0; i < n-1; i++) {
+			// Find the minimum element in
+			// unsorted array
+			min_idx = i;
+			for (j = i+1; j < n; j++)
+				if (c[j] < c[min_idx])
+					min_idx = j;
+
+			// Swap the found minimum element
+			// with the first element
+			if (c[min_idx] != c[i]) {
+				swap(c[min_idx], c[i]);
+			}
+		}
+		return 0;
+	}
+
+	/** SELECTION SORT - END **/
+	/** QUICK SORT - START **/
+
+	template <typename T, typename S = size_t> 
+	static int sortQuick(Array<T,S> & c) {
+		return sortQuick<T,S>(c, 0, c.size() - 1);
+	}
+
+	template <typename T, typename S = size_t> 
+	static int sortQuick(Array<T,S> & c, S low, S high) {
+		if (low < high) {
+			// pi is the partition return index of pivot
+			S pi = sortQuickPartition<T,S>(c, low, high);
+
+			// Recursion calls for smaller elements
+			// and greater or equals elements
+			sortQuick<T,S>(c, low, pi - 1);
+			sortQuick<T,S>(c, pi + 1, high);
+		}
+
+		return 0;
+	}
+
+	template <typename T, typename S = size_t> 
+	static int sortQuickPartition(Array<T,S> & c, S low, S high) {
+		// Choose the pivot
+		T pivot = c[high];
+	  
+		// Index of smaller element and indicates 
+		// the right position of pivot found so far
+		S i = low - 1;
+
+		// Traverse arr[;ow..high] and move all smaller
+		// elements on left side. Elements from low to 
+		// i are smaller after every iteration
+		for (S j = low; j <= high - 1; j++) {
+			if (c[j] < pivot) {
+				i++;
+				if (c[i] != c[j]) {
+					swap(c[i], c[j]);
+				}
+			}
+		}
+		
+		// Move pivot after smaller elements and
+		// return its position
+		if (c[i + 1] != c[high]) {
+			swap(c[i + 1], c[high]);
+		}
+		return i + 1;
+	}
+
+	/** QUICK SORT - END **/
+	/** MERGE SORT - START **/
+
+	template <typename T, typename S = size_t> 
+	static int sortMerge(Array<T,S> & c) {
+		return sortMerge<T,S>(c, 0, c.size() - 1);
+	}
+
+	template <typename T, typename S = size_t> 
+	static int sortMerge(Array<T,S> & c, S left, S right) {
+		if (left >= right)
+			return 0;
+
+		S mid = left + (right - left) / 2;
+		sortMerge<T,S>(c, left, mid);
+		sortMerge<T,S>(c, mid + 1, right);
+		sortMerge<T,S>(c, left, mid, right);
+		return 0;
+	}
+
+	template <typename T, typename S = size_t> 
+	static int sortMerge(Array<T,S> & c, S left, S mid, S right) {
+		S n1 = mid - left + 1;
+		S n2 = right - mid;
+
+		// Create temp vectors
+		T L[n1], R[n2];
+
+		// Copy data to temp vectors L[] and R[]
+		for (S i = 0; i < n1; i++)
+			L[i] = c[left + i];
+		for (S j = 0; j < n2; j++)
+			R[j] = c[mid + 1 + j];
+
+		S i = 0, j = 0;
+		S k = left;
+
+		// Merge the temp vectors back
+		// into arr[left..right]
+		while (i < n1 && j < n2) {
+			if (L[i] <= R[j]) {
+				c[k] = L[i];
+				i++;
+			}
+			else {
+				c[k] = R[j];
+				j++;
+			}
+			k++;
+		}
+
+		// Copy the remaining elements of L[],
+		// if there are any
+		while (i < n1) {
+			c[k] = L[i];
+			i++;
+			k++;
+		}
+
+		// Copy the remaining elements of R[],
+		// if there are any
+		while (j < n2) {
+			c[k] = R[j];
+			j++;
+			k++;
+		}
+		return 0;
+	}
+	
+	/** MERGE SORT - END **/
+};
+
+
 } // namespace BF
 
 #endif // ARRAY_HPP

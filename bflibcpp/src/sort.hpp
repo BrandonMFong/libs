@@ -6,8 +6,6 @@
 #ifndef SORT_HPP
 #define SORT_HPP
 
-#include "list.hpp"
-
 namespace BF {
 
 typedef enum {
@@ -22,7 +20,7 @@ template<template <typename...> class T> struct Sort;
 
 // Generic sort function
 template <template <typename...> class ContainerTemplate, typename... Args>
-int sort(ContainerTemplate<Args...>& v) {
+int sort(ContainerTemplate<Args...>& v, SortStrategy strategy = kSortStrategyMerge) {
     Sort<ContainerTemplate> sorter; // Instantiate Sort with the container template
     return sorter(v);
 }

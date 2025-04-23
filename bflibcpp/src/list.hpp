@@ -10,7 +10,6 @@
 #include "vector.hpp"
 #include "exception.hpp"
 #include "swap.hpp"
-#include "sort.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -938,7 +937,7 @@ template <> struct Sort<List> {
 		head = sortMerge<L,S>(head);
 		second = sortMerge<L,S>(second);
 
-		return sortMerge(head, second);
+		return sortMerge<L,S>(head, second);
 	}
 	
 	template <typename L, typename S = size_t> 

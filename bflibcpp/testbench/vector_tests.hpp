@@ -9,6 +9,7 @@
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
 #include <list.hpp>
+#include <array.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>
@@ -17,7 +18,7 @@ extern "C" {
 using namespace BF;
 
 template <typename T>
-int run_vectorSort(VectorSort type, size_t listsize, int reps) {
+int run_vectorSort(SortStrategy type, size_t listsize, int reps) {
 	int result = 0;
 	int max = reps;
 	while (!result && max--) {
@@ -33,7 +34,8 @@ int run_vectorSort(VectorSort type, size_t listsize, int reps) {
 			l.add(val);
 		}
 
-		result = l.sort(type);
+		//result = l.sort(type);
+		result = sort(l);
 
 		if (!result) {
 			if (l.size() != maxsize) {
@@ -62,52 +64,52 @@ int run_vectorSort(VectorSort type, size_t listsize, int reps) {
 }
 
 BFTEST_UNIT_FUNC(test_vectorListSortBubble, 1,  {
-	int err = run_vectorSort<List<int>>(kVectorSortBubble, 2 << 9, 1);
+	int err = run_vectorSort<List<int>>(kSortStrategyBubble, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorListSortInsertion, 1,  {
-	int err = run_vectorSort<List<int>>(kVectorSortInsertion, 2 << 9, 1);
+	int err = run_vectorSort<List<int>>(kSortStrategyInsertion, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorListSortSelection, 1,  {
-	int err = run_vectorSort<List<int>>(kVectorSortSelection, 2 << 9, 1);
+	int err = run_vectorSort<List<int>>(kSortStrategySelection, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorListSortQuick, 1,  {
-	int err = run_vectorSort<List<int>>(kVectorSortQuick, 2 << 9, 1);
+	int err = run_vectorSort<List<int>>(kSortStrategyQuick, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorListSortMerge, 1, {
-	int err = run_vectorSort<List<int>>(kVectorSortMerge, 2 << 9, 1);
+	int err = run_vectorSort<List<int>>(kSortStrategyMerge, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortBubble, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortBubble, 2 << 9, 4);
+	int err = run_vectorSort<Array<int>>(kSortStrategyBubble, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortInsertion, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortInsertion, 2 << 9, 4);
+	int err = run_vectorSort<Array<int>>(kSortStrategyInsertion, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortSelection, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortSelection, 2 << 9, 4);
+	int err = run_vectorSort<Array<int>>(kSortStrategySelection, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortQuick, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortQuick, 2 << 9, 4);
+	int err = run_vectorSort<Array<int>>(kSortStrategyQuick, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortMerge, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 9, 4);
+	int err = run_vectorSort<Array<int>>(kSortStrategyMerge, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
