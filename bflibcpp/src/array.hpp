@@ -635,9 +635,8 @@ private:
 
 template <> struct Sort<Array> {
 	template <typename T, typename S = size_t> 
-	int operator()(Array<T,S> & array) {
-		SortStrategy type = kSortStrategyMerge;
-		switch (type) {
+	int operator()(Array<T,S> & array, SortStrategy strategy = kSortStrategyMerge) {
+		switch (strategy) {
 			case kSortStrategyBubble:
 				return Sort::sortBubble<T,S>(array);
 			case kSortStrategyInsertion:
