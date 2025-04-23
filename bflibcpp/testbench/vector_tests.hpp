@@ -10,6 +10,7 @@
 
 #include <list.hpp>
 #include <array.hpp>
+#include <sort.hpp>
 
 extern "C" {
 #include <bflibc/bflibc.h>

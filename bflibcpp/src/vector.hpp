@@ -7,11 +7,6 @@
 #define VECTOR_HPP
 
 #include "collection.hpp"
-#include "sort.hpp"
-
-extern "C" {
-#include <bflibc/swap.h>
-}
 
 namespace BF {
 
