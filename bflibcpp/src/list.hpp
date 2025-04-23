@@ -603,7 +603,36 @@ private:
 	/** BUBBLE SORT - END **/
 	/** INSERTION SORT - START **/
 
+	static Node * sortInsertion(Node * newNode, Node * sorted) {
+		if (!sorted || sorted->object() >= newNode->object()) {
+			newNode->right = sorted;
+			sorted = newNode;
+		} else {
+			Node * curr = sorted;
+			while (curr->right && curr->right->object() < newNode->object()) {
+				curr = curr->next();
+			}
+
+			newNode->right = curr->right;
+			curr->right = newNode;
+		}
+
+		return sorted;
+	}
+
 	static int sortInsertion(List & c) {
+		Node * head = c.first();
+		Node * sorted = NULL;
+		Node * curr = head;
+
+		while (curr) {
+			Node * next = curr->next();
+			sorted = sortInsertion(curr, sorted);
+			curr = next;
+		}
+
+		c._head = sorted;
+
 		return 0;
 	}
 
