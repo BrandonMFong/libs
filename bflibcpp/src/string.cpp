@@ -182,8 +182,16 @@ bool String::operator<(const String & s) const {
 	return this->compareString(s) < 0;
 }
 
+bool String::operator<=(const String & s) const {
+	return this->compareString(s) <= 0;
+}
+
 bool String::operator>(const String & s) const {
-	return this->compareString(s) >0;
+	return this->compareString(s) > 0;
+}
+
+bool String::operator>=(const String & s) const {
+	return this->compareString(s) >= 0;
 }
 
 int String::compareString(const String & s) const {

@@ -135,7 +135,9 @@ public:
 	virtual bool operator==(const String & s) const;
 	virtual bool operator==(const char * s) const;
 	virtual bool operator<(const String & s) const;
+	virtual bool operator<=(const String & s) const;
 	virtual bool operator>(const String & s) const;
+	virtual bool operator>=(const String & s) const;
 	virtual bool operator!=(const String & s) const;
 	virtual bool operator!=(const char * s) const;
 	virtual String & operator=(const String & str);

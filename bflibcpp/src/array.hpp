@@ -14,6 +14,7 @@
 #include "vector.hpp"
 #include <string.h>
 #include "exception.hpp"
+#include "swap.hpp"
 
 namespace BF {
 
@@ -452,7 +453,7 @@ private:
 			swapped = false;
 			for (int j = 0; j < n - i - 1; j++) {
 				if (c[j] > c[j + 1]) {
-					BFSwap(c[j], c[j + 1]);
+					swap(c[j], c[j + 1]);
 					swapped = true;
 				}
 			}
@@ -508,7 +509,7 @@ private:
 			// Swap the found minimum element
 			// with the first element
 			if (c[min_idx] != c[i]) {
-				BFSwap(c[min_idx], c[i]);
+				swap(c[min_idx], c[i]);
 			}
 		}
 		return 0;
@@ -550,7 +551,7 @@ private:
 			if (c[j] < pivot) {
 				i++;
 				if (c[i] != c[j]) {
-					BFSwap(c[i], c[j]);
+					swap(c[i], c[j]);
 				}
 			}
 		}
@@ -558,7 +559,7 @@ private:
 		// Move pivot after smaller elements and
 		// return its position
 		if (c[i + 1] != c[high]) {
-			BFSwap(c[i + 1], c[high]);
+			swap(c[i + 1], c[high]);
 		}
 		return i + 1;
 	}
@@ -582,20 +583,20 @@ private:
 	}
 
 	static int sortMerge(Array & c, S left, S mid, S right) {
-		int n1 = mid - left + 1;
-		int n2 = right - mid;
+		S n1 = mid - left + 1;
+		S n2 = right - mid;
 
 		// Create temp vectors
-		int L[n1], R[n2];
+		T L[n1], R[n2];
 
 		// Copy data to temp vectors L[] and R[]
-		for (int i = 0; i < n1; i++)
+		for (S i = 0; i < n1; i++)
 			L[i] = c[left + i];
-		for (int j = 0; j < n2; j++)
+		for (S j = 0; j < n2; j++)
 			R[j] = c[mid + 1 + j];
 
-		int i = 0, j = 0;
-		int k = left;
+		S i = 0, j = 0;
+		S k = left;
 
 		// Merge the temp vectors back
 		// into arr[left..right]
