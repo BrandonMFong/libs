@@ -10,6 +10,7 @@
 #include "vector.hpp"
 #include "exception.hpp"
 #include "swap.hpp"
+#include "sort.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -740,6 +741,13 @@ private:
 	}
 	
 	/** MERGE SORT - END **/
+};
+
+template <> struct Sort<List> {
+	template <typename L, typename S = size_t> 
+	int operator()(List<L, S> & list) {
+		return 0;
+	}
 };
 
 } // namespace BF

@@ -7,11 +7,19 @@
 #define SORT_HPP
 
 #include "list.hpp"
-#include "list.hpp"
 
 namespace BF {
 
-template<typename  > struct Sort;
+typedef enum {
+	kSortStrategyBubble = 1,
+	kSortStrategyInsertion = 2,
+	kSortStrategySelection = 3,
+	kSortStrategyMerge = 4,
+	kSortStrategyQuick = 5,
+} SortStrategy;
+
+template<template <typename...> class T> struct Sort;
+
 }
 
 #endif // SORT_HPP
