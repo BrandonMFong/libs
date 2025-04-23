@@ -640,6 +640,23 @@ private:
 	/** SELECTION SORT - START **/
 
 	static int sortSelection(List & c) {
+		Node * head = c.first();
+		for (Node * start = head; start; start = start->next()) {
+			Node * min = start;
+			for (Node * curr = start->next(); curr; curr = curr->next()) {
+				if (curr->object() < min->object()) {
+					min = curr;
+				}
+			}
+
+			if (min != start) {
+				L val = start->object();
+				start->obj = min->object();
+				min->obj = val;
+			}
+		}
+
+		c._head = head;
 		return 0;
 	}
 
