@@ -557,6 +557,46 @@ private:
 	/** BUBBLE SORT - START **/
 
 	static int sortBubble(List & c) {
+		Node * head = c.first();
+		S len = c.size();
+		int itr = 0;
+		bool swapped = false;
+
+		while (itr < len) {
+			Node * trav = head;
+			Node * prev = head;
+			swapped = false;
+			
+			while (trav->next()) {
+				Node * ptr = trav->next();
+				if (trav->object() > ptr->object()) {
+					swapped = true;
+					if (trav == head) {
+						trav->right = ptr->right;
+						ptr->right = trav;
+						prev = ptr;
+						head = prev;
+					} else {
+						trav->right = ptr->right;
+						ptr->right = trav;
+						prev->right = ptr;
+						prev = ptr;
+					}
+
+					continue;
+				}
+				prev = trav;
+				trav = trav->next();
+			}
+
+			if (!swapped) {
+				break;
+			}
+			++itr;
+		}
+
+		c._head = head;
+
 		return 0;
 	}
 
