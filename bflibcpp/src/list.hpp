@@ -745,9 +745,234 @@ private:
 
 template <> struct Sort<List> {
 	template <typename L, typename S = size_t> 
-	int operator()(List<L, S> & list) {
+	int operator()(List<L,S> & list) {
+		SortStrategy type = kSortStrategyMerge;
+		switch (type) {
+			case kSortStrategyBubble:
+				return Sort::sortBubble<L,S>(list);
+			case kSortStrategyInsertion:
+				return Sort::sortInsertion<L,S>(list);
+			case kSortStrategySelection:
+				return Sort::sortSelection<L,S>(list);
+			case kSortStrategyQuick:
+				return Sort::sortQuick<L,S>(list);
+			case kSortStrategyMerge:
+			default:
+				return Sort::sortMerge<L,S>(list);
+		}
+	}
+
+	/** BUBBLE SORT - START **/
+
+	template <typename L, typename S = size_t> 
+	static int sortBubble(List<L,S> & c) {
+		typename List<L,S>::Node * head = c.first();
+		S len = c.size();
+		int itr = 0;
+		bool swapped = false;
+
+		while (itr < len) {
+			typename List<L,S>::Node * trav = head;
+			typename List<L,S>::Node * prev = head;
+			swapped = false;
+			
+			while (trav->next()) {
+				typename List<L,S>::Node * ptr = trav->next();
+				if (trav->object() > ptr->object()) {
+					swapped = true;
+					if (trav == head) {
+						trav->right = ptr->right;
+						ptr->right = trav;
+						prev = ptr;
+						head = prev;
+					} else {
+						trav->right = ptr->right;
+						ptr->right = trav;
+						prev->right = ptr;
+						prev = ptr;
+					}
+
+					continue;
+				}
+				prev = trav;
+				trav = trav->next();
+			}
+
+			if (!swapped) {
+				break;
+			}
+			++itr;
+		}
+
+		c._head = head;
+
 		return 0;
 	}
+
+	/** BUBBLE SORT - END **/
+	/** INSERTION SORT - START **/
+
+	template <typename L, typename S = size_t> 
+	static List<L,S>::Node * sortInsertion(typename List<L,S>::Node * newNode, typename List<L,S>::Node * sorted) {
+		if (!sorted || sorted->object() >= newNode->object()) {
+			newNode->right = sorted;
+			sorted = newNode;
+		} else {
+			typename List<L,S>::Node * curr = sorted;
+			while (curr->right && curr->right->object() < newNode->object()) {
+				curr = curr->next();
+			}
+
+			newNode->right = curr->right;
+			curr->right = newNode;
+		}
+
+		return sorted;
+	}
+
+	template <typename L, typename S = size_t> 
+	static int sortInsertion(List<L,S> & c) {
+		typename List<L,S>::Node * head = c.first();
+		typename List<L,S>::Node * sorted = NULL;
+		typename List<L,S>::Node * curr = head;
+
+		while (curr) {
+			typename List<L,S>::Node * next = curr->next();
+			sorted = sortInsertion<L,S>(curr, sorted);
+			curr = next;
+		}
+
+		c._head = sorted;
+
+		return 0;
+	}
+
+	/** INSERTION SORT - END **/
+	/** SELECTION SORT - START **/
+
+	template <typename L, typename S = size_t> 
+	static int sortSelection(List<L,S> & c) {
+		typename List<L,S>::Node * head = c.first();
+		for (typename List<L,S>::Node * start = head; start; start = start->next()) {
+			typename List<L,S>::Node * min = start;
+			for (typename List<L,S>::Node * curr = start->next(); curr; curr = curr->next()) {
+				if (curr->object() < min->object()) {
+					min = curr;
+				}
+			}
+
+			if (min != start) {
+				L val = start->object();
+				start->obj = min->object();
+				min->obj = val;
+			}
+		}
+
+		c._head = head;
+		return 0;
+	}
+
+	/** SELECTION SORT - END **/
+	/** QUICK SORT - START **/
+
+	template <typename L, typename S = size_t> 
+	static int sortQuick(List<L,S> & c) {
+		typename List<L,S>::Node * head = c.first();
+		typename List<L,S>::Node * tail = c.last();
+
+		sortQuick<L,S>(head, tail);
+
+		c._head = head;
+		return 0;
+	}
+	
+	template <typename L, typename S = size_t> 
+	static void sortQuick(typename List<L,S>::Node * head, typename List<L,S>::Node * tail) {
+		if (!head || head == tail) {
+			return;
+		}
+
+		typename List<L,S>::Node * pivot = sortQuickGetPivot<L,S>(head, tail);
+
+		sortQuick<L,S>(head, pivot);
+		sortQuick<L,S>(pivot->next(), tail);
+	}
+	
+	template <typename L, typename S = size_t> 
+	static List<L,S>::Node * sortQuickGetPivot(typename List<L,S>::Node * head, typename List<L,S>::Node * tail) {
+		typename List<L,S>::Node * pivot = head;
+
+		typename List<L,S>::Node * pre = head;
+		typename List<L,S>::Node * curr = head;
+
+		while (curr != tail->next()) {
+			if (curr->object() < pivot->object()) {
+				BF::swap<L>(curr->obj, pre->right->obj);
+				pre = pre->next();
+			}
+
+			curr = curr->next();
+		}
+
+		BF::swap<L>(pivot->obj, pre->obj);
+
+		return pre;
+	}
+
+	/** QUICK SORT - END **/
+	/** MERGE SORT - START **/
+
+	template <typename L, typename S = size_t> 
+	static int sortMerge(List<L,S> & c) {
+		c._head = sortMerge<L,S>(c._head);
+		return 0;
+	}
+
+	template <typename L, typename S = size_t> 
+	static List<L,S>::Node * sortMerge(typename List<L,S>::Node * head) {
+		if (!head || !head->next()) {
+			return head;
+		}
+
+		typename List<L,S>::Node * second = sortMergeSplit<L,S>(head);
+		head = sortMerge<L,S>(head);
+		second = sortMerge<L,S>(second);
+
+		return sortMerge(head, second);
+	}
+	
+	template <typename L, typename S = size_t> 
+	static List<L,S>::Node * sortMerge(typename List<L,S>::Node * first, typename List<L,S>::Node * second) {
+		if (!first) return second;
+		if (!second) return first;
+
+		if (first->object() < second->object()) {
+			first->right = sortMerge<L,S>(first->next(), second);
+			return first;
+		} else {
+			second->right = sortMerge<L,S>(first, second->next());
+			return second;
+		}
+	}
+
+	template <typename L, typename S = size_t> 
+	static List<L,S>::Node * sortMergeSplit(typename List<L,S>::Node * head) {
+		typename List<L,S>::Node * fast = head;
+		typename List<L,S>::Node * slow = head;
+
+		while (fast && fast->next()) {
+			fast = fast->right->right;
+			if (fast) {
+				slow = slow->right;
+			}
+		}
+
+		typename List<L,S>::Node * tmp = slow->right;
+		slow->right = NULL;
+		return tmp;
+	}
+	
+	/** MERGE SORT - END **/
 };
 
 } // namespace BF
