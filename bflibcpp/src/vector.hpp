@@ -51,7 +51,7 @@ public:
 	 *
 	 * default algorithm is merge sort
 	 */
-	virtual int sort(VectorSort type = kVectorSortMerge) = 0;
+	//virtual int sort(VectorSort type = kVectorSortMerge) = 0;
 
 protected:
 	Vector() : Collection<S>() { }
