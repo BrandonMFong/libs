@@ -709,15 +709,49 @@ private:
 	/** MERGE SORT - START **/
 
 	static int sortMerge(List & c) {
-		return sortMerge(c, 0, c.size() - 1);
-	}
-
-	static int sortMerge(List & c, S left, S right) {
+		c._head = sortMerge(c._head);
 		return 0;
 	}
 
-	static int sortMerge(List & c, S left, S mid, S right) {
-		return 0;
+	static Node * sortMerge(Node * head) {
+		if (!head || !head->next()) {
+			return head;
+		}
+
+		Node * second = sortMergeSplit(head);
+		head = sortMerge(head);
+		second = sortMerge(second);
+
+		return sortMerge(head, second);
+	}
+	
+	static Node * sortMerge(Node * first, Node * second) {
+		if (!first) return second;
+		if (!second) return first;
+
+		if (first->object() < second->object()) {
+			first->right = sortMerge(first->next(), second);
+			return first;
+		} else {
+			second->right = sortMerge(first, second->next());
+			return second;
+		}
+	}
+
+	static Node * sortMergeSplit(Node * head) {
+		Node * fast = head;
+		Node * slow = head;
+
+		while (fast && fast->next()) {
+			fast = fast->right->right;
+			if (fast) {
+				slow = slow->right;
+			}
+		}
+
+		Node * tmp = slow->right;
+		slow->right = NULL;
+		return tmp;
 	}
 	
 	/** MERGE SORT - END **/

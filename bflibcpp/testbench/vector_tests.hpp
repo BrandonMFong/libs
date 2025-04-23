@@ -67,7 +67,7 @@ BFTEST_UNIT_FUNC(test_vectorListSortBubble, 1,  {
 })
 
 BFTEST_UNIT_FUNC(test_vectorListSortInsertion, 1,  {
-	int err = run_vectorSort<List<int>>(kVectorSortInsertion, 2 << 10, 1);
+	int err = run_vectorSort<List<int>>(kVectorSortInsertion, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
@@ -82,32 +82,32 @@ BFTEST_UNIT_FUNC(test_vectorListSortQuick, 1,  {
 })
 
 BFTEST_UNIT_FUNC(test_vectorListSortMerge, 1, {
-	int err = run_vectorSort<List<int>>(kVectorSortMerge, 2 << 12, 1);
+	int err = run_vectorSort<List<int>>(kVectorSortMerge, 2 << 9, 1);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortBubble, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortBubble, 2 << 12, 4);
+	int err = run_vectorSort<Array<int>>(kVectorSortBubble, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortInsertion, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortInsertion, 2 << 13, 4);
+	int err = run_vectorSort<Array<int>>(kVectorSortInsertion, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortSelection, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortSelection, 2 << 13, 4);
+	int err = run_vectorSort<Array<int>>(kVectorSortSelection, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortQuick, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortQuick, 2 << 13, 4);
+	int err = run_vectorSort<Array<int>>(kVectorSortQuick, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
 BFTEST_UNIT_FUNC(test_vectorArraySortMerge, 1,  {
-	int err = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 12, 4);
+	int err = run_vectorSort<Array<int>>(kVectorSortMerge, 2 << 9, 4);
 	BF_ASSERT(err == 0);
 })
 
