@@ -15,14 +15,6 @@ extern "C" {
 
 namespace BF {
 
-typedef enum {
-	kVectorSortBubble = 1,
-	kVectorSortInsertion = 2,
-	kVectorSortSelection = 3,
-	kVectorSortMerge = 4,
-	kVectorSortQuick = 5,
-} VectorSort;
-
 /**
  * This class serves as a base class to all array type
  * implementations. Purpose is to abstract each class such
@@ -45,13 +37,6 @@ public:
 	virtual T & operator[](S index) {
 		return this->refObjectAtIndex(index);
 	}
-
-	/**
-	 * sorts the vector in ascending order
-	 *
-	 * default algorithm is merge sort
-	 */
-	//virtual int sort(VectorSort type = kVectorSortMerge) = 0;
 
 protected:
 	Vector() : Collection<S>() { }
