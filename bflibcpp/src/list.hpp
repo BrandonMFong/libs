@@ -9,6 +9,7 @@
 #include "access.hpp"
 #include "vector.hpp"
 #include "exception.hpp"
+#include "swap.hpp"
 #include <iostream>
 #include <initializer_list>
 
@@ -664,15 +665,44 @@ private:
 	/** QUICK SORT - START **/
 
 	static int sortQuick(List & c) {
-		return sortQuick(c, 0, c.size() - 1);
-	}
+		Node * head = c.first();
+		Node * tail = c.last();
 
-	static int sortQuick(List & c, int low, int high) {
+		sortQuick(head, tail);
+
+		c._head = head;
 		return 0;
 	}
+	
+	static void sortQuick(Node * head, Node * tail) {
+		if (!head || head == tail) {
+			return;
+		}
 
-	static int sortQuickPartition(List & c, int low, int high) {
-		return 0;
+		Node * pivot = sortQuickGetPivot(head, tail);
+
+		sortQuick(head, pivot);
+		sortQuick(pivot->next(), tail);
+	}
+	
+	static Node * sortQuickGetPivot(Node * head, Node * tail) {
+		Node * pivot = head;
+
+		Node * pre = head;
+		Node * curr = head;
+
+		while (curr != tail->next()) {
+			if (curr->object() < pivot->object()) {
+				BF::swap<L>(curr->obj, pre->right->obj);
+				pre = pre->next();
+			}
+
+			curr = curr->next();
+		}
+
+		BF::swap<L>(pivot->obj, pre->obj);
+
+		return pre;
 	}
 
 	/** QUICK SORT - END **/
