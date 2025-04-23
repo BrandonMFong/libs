@@ -8,7 +8,7 @@
 
 #define ASSERT_PUBLIC_MEMBER_ACCESS
 
-#include <list.hpp>
+#include "list.hpp"
 #include "release.hpp"
 
 extern "C" {
@@ -191,65 +191,6 @@ BFTEST_UNIT_FUNC(test_InitializingFromRawArray, 2<<10, {
 	}
 })
 
-BFTEST_UNIT_FUNC(test_ListNullSwap, 2<<10,  {
-	List<int>::Node a, b;
-	a.obj = 0;
-	b.obj = 1;
-	BF_ASSERT(List<int>::swap(&a, 0) != 0);
-	BF_ASSERT(List<int>::swap(0, &b) != 0);
-	BF_ASSERT(List<int>::swap(0, 0) != 0);
-})
-
-BFTEST_UNIT_FUNC(test_ListSwap, 2<<10, {
-	List<int>::Node * a = new List<int>::Node;
-	a->obj = 1;
-	List<int>::Node * al = new List<int>::Node;
-	List<int>::Node * ar = new List<int>::Node;
-	a->left = al;
-	a->right = ar;
-	al->right = a;
-	ar->left = a;
-
-	List<int>::Node * b = new List<int>::Node;
-	b->obj = 2;
-	List<int>::Node * bl = new List<int>::Node;
-	List<int>::Node * br = new List<int>::Node;
-	b->left = bl;
-	b->right = br;
-	bl->right = b;
-	br->left = b;
-
-	BF_ASSERT(a->obj == 1);
-	BF_ASSERT(a->prev() == al);
-	BF_ASSERT(a->next() == ar);
-	BF_ASSERT(al->next() == a);
-	BF_ASSERT(ar->prev() == a);
-	BF_ASSERT(b->obj == 2);
-	BF_ASSERT(b->prev() == bl);
-	BF_ASSERT(b->next() == br);
-	BF_ASSERT(bl->next() == b);
-	BF_ASSERT(br->prev() == b);
-
-	BF_ASSERT(!List<int>::swap(a, b));
-	BF_ASSERT(a->obj == 2);
-	BF_ASSERT(a->prev() == al);
-	BF_ASSERT(a->next() == ar);
-	BF_ASSERT(al->next() == a);
-	BF_ASSERT(ar->prev() == a);
-	BF_ASSERT(b->obj == 1);
-	BF_ASSERT(b->prev() == bl);
-	BF_ASSERT(b->next() == br);
-	BF_ASSERT(bl->next() == b);
-	BF_ASSERT(br->prev() == b);
-	
-	BFRelease(a);
-	BFRelease(al);
-	BFRelease(ar);
-	BFRelease(b);
-	BFRelease(bl);
-	BFRelease(br);
-})
-
 BFTEST_UNIT_FUNC(test_shuffle, 1,  {
 	const int size = 2 << 14;
 	int array[size];
@@ -414,9 +355,7 @@ BFTEST_COVERAGE_FUNC(list_tests, {
 	BFTEST_LAUNCH(test_ListContains);
 	BFTEST_LAUNCH(test_InitializingWithInitList);
 	BFTEST_LAUNCH(test_InitializingFromRawArray);
-	BFTEST_LAUNCH(test_ListSwap);
 	BFTEST_LAUNCH(test_shuffle);
-	BFTEST_LAUNCH(test_ListNullSwap);
 	BFTEST_LAUNCH(test_ShuffleLargeDataSet);
 	BFTEST_LAUNCH(test_pluckingObject);
 	BFTEST_LAUNCH(test_rangeBasedLooping);

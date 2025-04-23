@@ -278,8 +278,7 @@ public:
 			// Get random node
 			int r = rand() % (i + 1);
 			Node * tmp = this->nodeAtIndex(r, this->_head, 0);
-			int err = this->swap(n, tmp); // swap nodes
-			if (err) return err; // leave if there was an error in swapping
+			BF::swap<L>(n->obj, tmp->obj); // swap nodes
 			i--;
 		}
 
@@ -316,20 +315,6 @@ protected:
 	}
 
 private:
-
-	/**
-	 * Swaps a and b objects
-	 */
-	static int swap(Node * a, Node * b) {
-		// Don't continue with this if a or b are null
-		if (!a || !b) return -1;
-		else {
-			L obj = a->obj;
-			a->obj = b->obj;
-			b->obj = obj;
-			return 0;
-		}
-	}
 
 	/**
 	 * Allows us to set list with {...} notation
