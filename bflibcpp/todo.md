@@ -4,7 +4,7 @@
 	- [x] move sort logic to array and list
 	- [x] reevaluate logic location, moved to sort.hpp
 	- [ ] test if BF::Sort can access elements in list and array
-	- [ ] can I easily add to sort outside of Sort<T> declaration?
+	- [x] can I easily add to sort outside of Sort<T> declaration?
 - [ ] Vectors to sort strings
 - [x] String append
 - [x] fix leaks in (RBTree specifically) - replaced with map
