@@ -81,9 +81,9 @@ int run_vectorSort(SortStrategy type, size_t listsize, int reps) {
 		}
 
 		//result = l.sort(type);
-		result = sort(l);
-		//Sort<T> sorter;
-		//result = sorter(l, type);
+		//result = sort(l);
+		Sort<ContainerTemplate> sorter;
+		result = sorter(l, type);
 
 		if (!result) {
 			if (l.size() != maxsize) {
