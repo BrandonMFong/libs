@@ -17,7 +17,7 @@ namespace BF {
  * that I can have a set of mutable functions like sorting
  * to be used across different classes
  */
-template <typename T, typename S = size_t>
+template <typename T, typename S = long>
 class Vector : public Collection<S> {
 public:
 	virtual ~Vector() { }

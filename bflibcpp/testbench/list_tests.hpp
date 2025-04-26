@@ -40,8 +40,8 @@ BFTEST_UNIT_FUNC(test_indexing, 2<<10, {
 	BF_ASSERT(l->add(1.0) == 0);
 	BF_ASSERT(l->add(1.2) == 0);
 	BF_ASSERT(l->add(1.3) == 0);
-	BF_ASSERT(l->objectAtIndex(0) == 1.0);
-	BF_ASSERT(l->objectAtIndex(1) == 1.2);
+	BF_ASSERT(l->objectAtIndex(0) == 1.0, "%f != 1.0", l->objectAtIndex(0));
+	BF_ASSERT(l->objectAtIndex(1) == 1.2, "%f != 1.2", l->objectAtIndex(1));
 
 	BFRelease(l);
 })
@@ -117,9 +117,9 @@ BFTEST_UNIT_FUNC(test_listMemoryHandling, 2<<10, {
 	BF_ASSERT(!l->deleteObjectAtIndex(0));
 	BF_ASSERT(l->count() == (listsize - 1), "count: %ld\n", l->count());
 
-	int index = BFRand() % l->count();
+	int index = BFMathAbs(BFRand() % l->count());
 	int * num = l->objectAtIndex(index);
-	BF_ASSERT(num != NULL, "num is null");
+	BF_ASSERT(num != NULL, "num is null at index=%d", index);
 	BF_ASSERT(*num == index+1, "list[%d]=%d", index, *num);
 
 	l->deleteAll();

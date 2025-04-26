@@ -27,7 +27,7 @@ namespace BF {
  * Objects stored in array are assumed to be owned by owner of array 
  * object
  */
-template <typename T, typename S = size_t>
+template <typename T, typename S = long>
 class Array : public Vector<T,S> {
 public:
 	virtual const char * className() const {

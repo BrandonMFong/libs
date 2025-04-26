@@ -30,7 +30,7 @@ namespace BF {
  * Unless a callback is specified, by default the node
  * object memory will not be deallocated.
  */
-template <typename L, typename S = size_t>
+template <typename L, typename S = long>
 class List : public Vector<L,S> {
 public:
 	
@@ -208,13 +208,13 @@ public:
 	// returns object at index
 	// returns 0 if an error ocurred
 	virtual L objectAtIndex(S index) const {
-		Node * n = this->nodeAtIndex(index, this->_head, 0);
+		Node * n = this->nodeAtIndex(index, this->_head);
 		if (n) return n->object();
 		else return 0;
 	}
 
 	virtual L & refObjectAtIndex(S index) {
-		Node * n = this->nodeAtIndex(index, this->_head, 0);
+		Node * n = this->nodeAtIndex(index, this->_head);
 		if (n) return n->refobject();
 		throw Exception("no object found at %d", (int) index);
 	}
@@ -277,7 +277,7 @@ public:
 		for (; n; n = n->prev()) {
 			// Get random node
 			int r = rand() % (i + 1);
-			Node * tmp = this->nodeAtIndex(r, this->_head, 0);
+			Node * tmp = this->nodeAtIndex(r, this->_head);
 			BF::swap<L>(n->obj, tmp->obj); // swap nodes
 			i--;
 		}
@@ -341,16 +341,20 @@ private:
 	}
 
 	/**
-	 * Recursively traverses through linked list until we read the reqIndex'th node
+	 * iteratively traverses through linked list until we read the reqIndex'th node
+	 *
+	 * we start with the search from the `node` param
+	 * 
+	 * if reqIndex < 0, returns NULL
 	 */
-	Node * nodeAtIndex(S reqIndex, Node * node, S currIndex) const {
-		if (node) {
-			if (currIndex == reqIndex) {
-				return node;
-			} else {
-				return this->nodeAtIndex(reqIndex, node->right, ++currIndex);
-			}
-		} else return 0;
+	Node * nodeAtIndex(S reqIndex, Node * node) const {
+		if (reqIndex < 0) return NULL;
+
+		while (--reqIndex >= 0 && node) {
+			node = node->right;
+		}
+
+		return node;
 	}
 
 	/**
