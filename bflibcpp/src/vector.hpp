@@ -7,6 +7,7 @@
 #define VECTOR_HPP
 
 #include "collection.hpp"
+#include "typesortstrategy.hpp"
 
 namespace BF {
 
@@ -35,7 +36,9 @@ public:
 
 protected:
 	Vector() : Collection<S>() { }
+
 };
+
 }
 
 #endif // VECTOR_HPP

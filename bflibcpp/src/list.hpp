@@ -38,7 +38,7 @@ public:
 	 * Bi-directional node
 	 */
 	class Node : public Object {
-		friend List<L, S>;
+		friend List<L,S>;
 	public:
 		Node * next() const {
 			return this->right;
