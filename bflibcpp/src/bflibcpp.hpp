@@ -31,6 +31,7 @@
 #include "deque.hpp"
 #include "hash.hpp"
 #include "defer.hpp"
+#include "sort.hpp"
 
 #endif // BFLIBCPP_HPP
 
