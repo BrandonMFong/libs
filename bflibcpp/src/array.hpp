@@ -14,6 +14,7 @@
 #include "vector.hpp"
 #include <string.h>
 #include "exception.hpp"
+#include "swap.hpp"
 
 namespace BF {
 
@@ -26,7 +27,7 @@ namespace BF {
  * Objects stored in array are assumed to be owned by owner of array 
  * object
  */
-template <typename T, typename S = size_t>
+template <typename T, typename S = long>
 class Array : public Vector<T,S> {
 public:
 	virtual const char * className() const {
@@ -382,12 +383,6 @@ private:
 
 public:
 
-	/*
-	T operator[](S index) const {
-		return this->objectAtIndex(index);
-	}
-	*/
-
 	void operator=(const std::initializer_list<T> & list) {
 		this->saveArray(list);
 	}
@@ -398,6 +393,14 @@ public:
 	virtual Array<T,S> & operator=(const Array<T,S> & arr) {
 		this->copyFromArray(&arr);
 		return *this;
+	}
+
+	virtual T operator[](S index) const {
+		return this->objectAtIndex(index);
+	}
+
+	virtual T & operator[](S index) {
+		return this->refObjectAtIndex(index);
 	}
 
 // Comparators

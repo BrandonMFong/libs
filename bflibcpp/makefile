@@ -33,11 +33,13 @@ defer
 ifeq ($(CONFIG),release) # release
 BIN_NAME = $(LIB_FILE_NAME_RELEASE)
 FLAGS = $(CPPFLAGS) -Isrc/ $(CPPSTD) -I../bflibc/bin/release
+
 ### Debug settings
 else ifeq ($(CONFIG),debug) # debug
 BIN_NAME = $(LIB_FILE_NAME_DEBUG)
 #ADDR_SANITIZER = -fsanitize=address
 FLAGS = $(CPPFLAGS) -DDEBUG -g -Isrc/ $(ADDR_SANITIZER) $(CPPSTD) -I../bflibc/bin/debug
+
 ### Test settings
 else ifeq ($(CONFIG),test) # test
 BIN_NAME = libbfcpp-test

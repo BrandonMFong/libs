@@ -182,8 +182,16 @@ bool String::operator<(const String & s) const {
 	return this->compareString(s) < 0;
 }
 
+bool String::operator<=(const String & s) const {
+	return this->compareString(s) <= 0;
+}
+
 bool String::operator>(const String & s) const {
-	return this->compareString(s) >0;
+	return this->compareString(s) > 0;
+}
+
+bool String::operator>=(const String & s) const {
+	return this->compareString(s) >= 0;
 }
 
 int String::compareString(const String & s) const {
@@ -210,10 +218,6 @@ bool String::empty() const {
 String & String::operator=(const String & str) {
 	str.copy(*this);
 	return *this;
-}
-
-const char String::operator[](size_t index) const {
-	return this->objectAtIndex(index);
 }
 
 int String::toi(const String & s) {
