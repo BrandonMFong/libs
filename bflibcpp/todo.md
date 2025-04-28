@@ -1,9 +1,9 @@
 
 - [ ] BF::Array to use new/delete for memory allocation
-- [ ] improve List sorting
+- [x] improve List sorting
 	- [x] move sort logic to array and list
 	- [x] reevaluate logic location, moved to sort.hpp
-	- [ ] test if BF::Sort can access elements in list and array
+	- [x] test if BF::Sort can access elements in list and array
 	- [x] can I easily add to sort outside of Sort<T> declaration?
 - [ ] Vectors to sort strings
 - [x] String append
