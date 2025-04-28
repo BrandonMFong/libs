@@ -15,6 +15,8 @@
 
 namespace BF {
 
+template<template <typename...> class T> struct Sort;
+
 /**
  * Linked List implementation
  *
@@ -33,12 +35,15 @@ namespace BF {
 template <typename L, typename S = long>
 class List : public Vector<L,S> {
 public:
+	friend struct Sort<List>;
 	
 	/**
 	 * Bi-directional node
 	 */
 	class Node : public Object {
 		friend List<L,S>;
+	
+		friend struct Sort<List>;
 	public:
 		Node * next() const {
 			return this->right;

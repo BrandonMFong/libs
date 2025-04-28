@@ -90,7 +90,7 @@ template <> struct Sort<List> {
 	/** INSERTION SORT - START **/
 
 	template <typename L, typename S = size_t> 
-	static List<L,S>::Node * sortInsertion(typename List<L,S>::Node * newNode, typename List<L,S>::Node * sorted) {
+	static typename List<L,S>::Node * sortInsertion(typename List<L,S>::Node * newNode, typename List<L,S>::Node * sorted) {
 		if (!sorted || sorted->object() >= newNode->object()) {
 			newNode->right = sorted;
 			sorted = newNode;
@@ -176,7 +176,7 @@ template <> struct Sort<List> {
 	}
 	
 	template <typename L, typename S = size_t> 
-	static List<L,S>::Node * sortQuickGetPivot(typename List<L,S>::Node * head, typename List<L,S>::Node * tail) {
+	static typename List<L,S>::Node * sortQuickGetPivot(typename List<L,S>::Node * head, typename List<L,S>::Node * tail) {
 		typename List<L,S>::Node * pivot = head;
 
 		typename List<L,S>::Node * pre = head;
@@ -206,7 +206,7 @@ template <> struct Sort<List> {
 	}
 
 	template <typename L, typename S = size_t> 
-	static List<L,S>::Node * sortMerge(typename List<L,S>::Node * head) {
+	static typename List<L,S>::Node * sortMerge(typename List<L,S>::Node * head) {
 		if (!head || !head->next()) {
 			return head;
 		}
@@ -219,7 +219,7 @@ template <> struct Sort<List> {
 	}
 	
 	template <typename L, typename S = size_t> 
-	static List<L,S>::Node * sortMerge(typename List<L,S>::Node * first, typename List<L,S>::Node * second) {
+	static typename List<L,S>::Node * sortMerge(typename List<L,S>::Node * first, typename List<L,S>::Node * second) {
 		if (!first) return second;
 		if (!second) return first;
 
@@ -233,7 +233,7 @@ template <> struct Sort<List> {
 	}
 
 	template <typename L, typename S = size_t> 
-	static List<L,S>::Node * sortMergeSplit(typename List<L,S>::Node * head) {
+	static typename List<L,S>::Node * sortMergeSplit(typename List<L,S>::Node * head) {
 		typename List<L,S>::Node * fast = head;
 		typename List<L,S>::Node * slow = head;
 
