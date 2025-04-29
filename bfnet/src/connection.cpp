@@ -74,11 +74,11 @@ bool BF::Net::Connection::isactive() const {
 	return true;
 }
 
-const char BF::Net::Connection::mode() {
+const char BF::Net::Connection::mode() const {
 	return this->_sktref->mode();
 }
 
-void BF::Net::Connection::getuuid(uuid_t uuid) {
+void BF::Net::Connection::getuuid(uuid_t uuid) const {
 	memcpy(uuid, this->_uuid, sizeof(uuid_t));
 }
 
