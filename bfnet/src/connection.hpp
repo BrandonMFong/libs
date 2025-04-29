@@ -46,18 +46,17 @@ public:
 	 * data : data to be sent.  this data is copied. Caller still owns
 	 * size : size of data buffer
 	 */
-	//int queueData(const void * data, size_t size);
 	int queueData(const BF::Data * buf);
 
 	/**
 	 * see Socket::mode
 	 */
-	const char mode();
+	const char mode() const;
 
 	/**
 	 * returns uuid
 	 */
-	void getuuid(uuid_t uuid);
+	void getuuid(uuid_t uuid) const;
 
 	/**
 	 * returns socket type [SOCK_STREAM, SOCK_DGRAM, ...]
@@ -67,6 +66,11 @@ public:
 	 */
 	int type() const;
 
+	/**
+	 * closes socket descriptor
+	 */
+	void closeConnection();
+
 private:
 
 	/**
@@ -74,11 +78,6 @@ private:
 	 */
 	Connection(int sd, Socket * sktref);
 	virtual ~Connection();
-
-	/**
-	 * closes socket descriptor
-	 */
-	void closeConnection();
 
 	int sendData(const BF::Data * buf);
 

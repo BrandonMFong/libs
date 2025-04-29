@@ -138,7 +138,7 @@ void BF::Net::Socket::inStream(void * in) {
 		int err = sc->recvData(&envelope->_data);
 
 		if (err) {
-			BFNetLogDebug("%s - error returned from recvData: %d. Aborting reading socket...", __FUNCTION__, err);
+			BFNetLogDebug("%s - exiting recv loop %d", __FUNCTION__, err);
 			BFRelease(envelope);
 			break;
 		} else {
