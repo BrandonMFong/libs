@@ -41,10 +41,26 @@ BFTEST_UNIT_FUNC(test_deferOrder, 2<<10, {
 	val = 1024;
 })
 
+BFTEST_UNIT_FUNC(test_deferManyDeclarations, 2<<10, {
+	int * a = new int;
+	BFDefer([&](){
+		delete a;
+	});
+	int * b = new int;
+	BFDefer([&](){
+		delete b;
+	});
+	int * c = new int;
+	BFDefer([&](){
+		delete c;
+	});
+})
+
 BFTEST_COVERAGE_FUNC(defer_tests, {
 	BFTEST_LAUNCH(test_deferInit);
 	BFTEST_LAUNCH(test_deferMacro);
 	BFTEST_LAUNCH(test_deferOrder);
+	BFTEST_LAUNCH(test_deferManyDeclarations);
 })
 
 #endif // DEFER_TESTS_HPP

@@ -15,6 +15,8 @@
 #define DEFER_HPP
 
 #include <functional>
+#define __BF_DEFER_CONCAT_IMPL__( x, y ) x##y
+#define __BF_DEFER_MACRO_CONCAT__( x, y ) __BF_DEFER_CONCAT_IMPL__( x, y )
 
 /**
  * body is expected to be a lamda of the form:
@@ -25,7 +27,7 @@
  * ```
  */
 #define BFDefer(...) \
-	BF::__Defer__ __bf_defer_##__COUNTER__##__(__VA_ARGS__);
+	BF::__Defer__ __BF_DEFER_MACRO_CONCAT__(__bf_defer_helper__, __COUNTER__)(__VA_ARGS__);
 
 namespace BF {
 class __Defer__ {
