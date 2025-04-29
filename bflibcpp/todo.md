@@ -1,5 +1,3 @@
-
-- [ ] BF::Array to use new/delete for memory allocation
 - [x] improve List sorting
 	- [x] move sort logic to array and list
 	- [x] reevaluate logic location, moved to sort.hpp
@@ -15,10 +13,12 @@
 - [ ] json to map
 - [ ] standard pair
 - [ ] tuple
-- [ ] address compiler warning regarding ambiguous operations
+- [x] address compiler warning regarding ambiguous operations
 - [ ] String to integer 
-- [ ] optimize String
-	- [ ] when appending to string, grab more memory so we don't have keep calling realloc all the time
+- [ ] array memory optimization, improving virtual memory usage
+	- [ ] BF::Array to use new/delete for memory allocation
+	- [ ] optimize String
+		- [ ] when appending to string, grab more memory so we don't have keep calling realloc all the time
 - [x] collection sorting algorithm
 - [x] make sure there are no Delete() calls and must use BFRelease instead
 - [x] throw compiler warnings when using delete
