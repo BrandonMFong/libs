@@ -221,8 +221,7 @@ public:
 	 * copies content of arr to the end of ours
 	 */
 	void append(const Array<T,S> & arr) {
-		this->_address = this->reallocate(this->_address, this->_count + arr._count);
-		//memcpy(&this->_address[this->_count], &arr._address[0], arr._count);
+		this->_address = this->reallocate(this->_address, this->_count, this->_count + arr._count);
 		for (int i = this->_count; i < this->_count + arr._count; i++) {
 			this->_address[i] = arr._address[i - this->_count];
 		}
@@ -233,7 +232,7 @@ public:
 	 * Adds object at the end of the array
 	 */
 	int add(T obj) {
-		this->_address = this->reallocate(this->_address, this->_count + 1);
+		this->_address = this->reallocate(this->_address, this->_count, this->_count + 1);
 		if (this->_address == NULL) {
 			this->_count = 0;
 			return -3;
@@ -290,8 +289,8 @@ protected:
 	 * adjusts address memory to size
 	 */
 	void adjustMemorySize(S size) {
+		this->_address = this->reallocate(this->_address, this->_count, size);
 		this->_count = size;
-		this->_address = this->reallocate(this->_address, this->_count);
 	}
 
 	/**
@@ -305,14 +304,24 @@ private:
 	 * uses malloc to allocate mem
 	 */
 	static T * allocate(S size) {
-		return (T *) malloc(sizeof(T) * size);
+		//return (T *) malloc(sizeof(T) * size);
+		return (T *) new T[size];
 	}
 
 	/**
 	 * returns modified `addr` with `newsize`
 	 */
-	static T * reallocate(T * addr, S newsize) {
-		return (T *) realloc(addr, sizeof(T) * newsize);
+	static T * reallocate(T * addr, S oldsize, S newsize) {
+		//return (T *) realloc(addr, sizeof(T) * newsize);
+		T * res = new T[newsize];
+		for (S i = 0; i < oldsize && i < newsize; i++) {
+			res[i] = addr[i];
+			addr[i] = NULL;
+		}
+
+		delete addr;
+
+		return res;
 	}
 
 	/**
@@ -320,7 +329,8 @@ private:
 	 * by allocate()
 	 */
 	static void deallocate(T * value) {
-		free((void *) value);
+		//free((void *) value);
+		delete value;
 	}
 
 	/**
