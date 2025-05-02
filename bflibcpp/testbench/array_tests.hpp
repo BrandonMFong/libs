@@ -310,10 +310,9 @@ BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_insertingAtRandomIndex);
 	BFTEST_LAUNCH(test_releasecallback);
 	BFTEST_LAUNCH(test_addanddelete);
-	//BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
 	BFTEST_LAUNCH(test_arrayOfCStrings);
 	BFTEST_LAUNCH(test_appendingArrays);
-
+	//BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
 })
 
 #endif // ARRAY_TESTS_HPP
