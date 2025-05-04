@@ -16,9 +16,10 @@
 - [x] address compiler warning regarding ambiguous operations
 - [ ] String to integer 
 - [ ] array memory optimization, improving virtual memory usage
-	- [ ] BF::Array to use new/delete for memory allocation
+	- [x] BF::Array to use new/delete for memory allocation
 	- [ ] optimize String
 		- [ ] when appending to string, grab more memory so we don't have keep calling realloc all the time
+    - [ ] benchmark test run
 - [x] collection sorting algorithm
 - [x] make sure there are no Delete() calls and must use BFRelease instead
 - [x] throw compiler warnings when using delete
