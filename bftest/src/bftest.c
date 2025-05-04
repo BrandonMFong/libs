@@ -168,3 +168,9 @@ long long __BFTestGetCurrentTimeNS__() {
 	return (long long) ts.tv_sec * 1000000000LL + ts.tv_nsec;
 }
 
+void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t bufsize) {
+	if (!buf) return;
+
+	snprintf(buf, bufsize, "%lld ns", elapsedTimeNS);
+}
+

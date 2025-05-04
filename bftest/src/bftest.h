@@ -58,6 +58,7 @@
 /** UNIT TEST **/
 
 long long __BFTestGetCurrentTimeNS__();
+void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t bufsize);
 
 #define BFTEST_UNIT_FUNC(name, repeat, ...) \
 	int name (void) {\
@@ -94,7 +95,9 @@ long long __BFTestGetCurrentTimeNS__();
 	time_t endTime = __BFTestGetCurrentTimeNS__();\
 	if (result == 0) { printf("PASS"); }\
 	else { printf("FAIL"); }\
-	printf(" ... %ldns\n", (endTime - startTime) / __repeat__);\
+	char buf[64];\
+	__BFTestFormatElapsedTime__((endTime - startTime) / __repeat__, buf, 64);\
+	printf(" (%s)\n", buf);\
 	fflush(stdout);\
 	_BFTestLogFlush();\
 	return result;
