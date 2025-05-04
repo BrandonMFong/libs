@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <time.h>
 
 /** TEST SUITE **/
 // a test suite is the high level function that will call
@@ -56,6 +57,8 @@
 
 /** UNIT TEST **/
 
+long long __BFTestGetCurrentTimeNS__();
+
 #define BFTEST_UNIT_FUNC(name, repeat, ...) \
 	int name (void) {\
 		BFTEST_UNIT_START;\
@@ -84,13 +87,15 @@
 #define BFTEST_UNIT_START \
 	printf("%s - ", __func__);fflush(stdout);\
 	fflush(stdout);\
-	int result = 0;
+	int result = 0;\
+	time_t startTime = __BFTestGetCurrentTimeNS__();
 
 #define BFTEST_UNIT_END \
-	if (result == 0) { printf("PASS\n");fflush(stdout); }\
-	else {\
-		printf("FAIL\n");fflush(stdout);\
-	}\
+	time_t endTime = __BFTestGetCurrentTimeNS__();\
+	if (result == 0) { printf("PASS"); }\
+	else { printf("FAIL"); }\
+	printf(" ... %ldns\n", (endTime - startTime) / __repeat__);\
+	fflush(stdout);\
 	_BFTestLogFlush();\
 	return result;
 

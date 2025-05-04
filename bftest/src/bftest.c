@@ -159,3 +159,12 @@ void _BFTestLogFlush() {
 	}
 }
 
+long long __BFTestGetCurrentTimeNS__() {
+	struct timespec ts;
+    if (clock_gettime(CLOCK_REALTIME, &ts) == -1) {
+        return 0;
+    }
+
+	return (long long) ts.tv_sec * 1000000000LL + ts.tv_nsec;
+}
+
