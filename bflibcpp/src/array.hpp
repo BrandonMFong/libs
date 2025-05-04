@@ -319,7 +319,7 @@ private:
 			addr[i] = NULL;
 		}
 
-		delete addr;
+		delete[] addr;
 
 		return res;
 	}
@@ -330,7 +330,7 @@ private:
 	 */
 	static void deallocate(T * value) {
 		//free((void *) value);
-		delete value;
+		delete[] value;
 	}
 
 	/**
