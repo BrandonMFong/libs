@@ -171,6 +171,33 @@ long long __BFTestGetCurrentTimeNS__() {
 void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t bufsize) {
 	if (!buf) return;
 
-	snprintf(buf, bufsize, "%lld ns", elapsedTimeNS);
+	// 0: nano, 1: micro, 2: milli, 3: seconds
+	int level = 0;
+	const int maxLevel = 3;
+	float ns = elapsedTimeNS;
+
+	while (ns > 1000 && level <= maxLevel) {
+		ns /= 1000;
+		level++;
+	}
+
+	char * unit = NULL;
+	switch (level) {
+	case 0:
+		unit = "ns";
+		break;
+	case 1:
+		unit = "us";
+		break;
+	case 2:
+		unit = "ms";
+		break;
+	case 3:
+	default:
+		unit = "s";
+		break;
+	}
+
+	snprintf(buf, bufsize, "%.2f %s", ns, unit);
 }
 
