@@ -304,7 +304,6 @@ private:
 	 * uses malloc to allocate mem
 	 */
 	static T * allocate(S size) {
-		//return (T *) malloc(sizeof(T) * size);
 		return (T *) new T[size];
 	}
 
@@ -312,7 +311,6 @@ private:
 	 * returns modified `addr` with `newsize`
 	 */
 	static T * reallocate(T * addr, S oldsize, S newsize) {
-		//return (T *) realloc(addr, sizeof(T) * newsize);
 		T * res = new T[newsize];
 		for (S i = 0; i < oldsize && i < newsize; i++) {
 			res[i] = addr[i];
@@ -329,7 +327,6 @@ private:
 	 * by allocate()
 	 */
 	static void deallocate(T * value) {
-		//free((void *) value);
 		delete[] value;
 	}
 
