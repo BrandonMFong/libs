@@ -41,7 +41,6 @@ BFTEST_UNIT_FUNC(test_Initializer, 1, {
 BFTEST_UNIT_FUNC(test_Contains, 1,  {
 	Array<int> arr({1, 2, 3, 4});
 
-	/*
 	if (!arr.contains(2)) {
 		result = 1;
 		printf("arr should contain 2\n");
@@ -68,10 +67,8 @@ BFTEST_UNIT_FUNC(test_Contains, 1,  {
 		result = 1;
 		printf("ch should contain 'world'\n");
 	}
-	*/
 })
 
-//int test_ObjectAtIndex() {
 BFTEST_UNIT_FUNC(test_ObjectAtIndex, 1,  {
 	Array<double> d({1.1, 2.2, 3.3, 4.4, 5.5});
 
@@ -90,7 +87,6 @@ BFTEST_UNIT_FUNC(test_ObjectAtIndex, 1,  {
 	}
 })
 
-//int test_indexForObject() {
 BFTEST_UNIT_FUNC(test_indexForObject, 2<<10,  {
 	Array<int> arr({1, 2, 3, 4});
 
@@ -122,7 +118,6 @@ BFTEST_UNIT_FUNC(test_indexForObject, 2<<10,  {
 	}
 })
 
-//int test_Count() {
 BFTEST_UNIT_FUNC(test_Count, 1,  {
 	Array<int> a({1, 2, 3, 4, 5});
 
@@ -132,7 +127,6 @@ BFTEST_UNIT_FUNC(test_Count, 1,  {
 	}
 })
 
-//int test_Setter() {
 BFTEST_UNIT_FUNC(test_Setter, 1,  {
 	Array<int> a;
 
