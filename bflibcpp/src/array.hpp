@@ -17,6 +17,10 @@
 #include "exception.hpp"
 #include "swap.hpp"
 
+extern "C" {
+#include <bflibc/bfmath.h>
+}
+
 namespace BF {
 
 /**
@@ -329,10 +333,14 @@ private:
 		S adjustNewSize = (((newsize / array._blockSize) + 1) * array._blockSize);
 		array._capacity = adjustNewSize;
 		T * res = new T[adjustNewSize];
+		memcpy(res, array._address, sizeof(T) * oldsize);
+		memset(array._address, 0, sizeof(T) * oldsize);
+		/*
 		for (S i = 0; i < oldsize && i < adjustNewSize; i++) {
 			res[i] = std::move(array._address[i]);
 			array._address[i] = 0;
 		}
+		*/
 
 		delete[] array._address;
 		array._address = res;
