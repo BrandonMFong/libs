@@ -171,7 +171,7 @@ long long __BFTestGetCurrentTimeNS__() {
 void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t bufsize) {
 	if (!buf) return;
 
-	// 0: nano, 1: micro, 2: milli, 3: seconds
+	// 0: nano, 1: micro, 2: milli, 3: seconds, 4: minutes
 	int level = 0;
 	const int maxLevel = 3;
 	float ns = elapsedTimeNS;
@@ -198,6 +198,12 @@ void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t buf
 		break;
 	}
 
-	snprintf(buf, bufsize, "%.2f %s", ns, unit);
+	if (ns >= 60 && level == 3) {
+		int min = ns / 60;
+		int sec = (int) ns % 60;
+		snprintf(buf, bufsize, "%d min %d s", min, sec);
+	} else {
+		snprintf(buf, bufsize, "%.2f %s", ns, unit);
+	}
 }
 
