@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <initializer_list>
+#include <utility>
 #include <iostream>
 #include "access.hpp"
 #include "vector.hpp"
@@ -27,7 +28,7 @@ namespace BF {
  * Objects stored in array are assumed to be owned by owner of array 
  * object
  */
-template <typename T, typename S = long>
+template <typename T, typename S = long, S blocksize = 16>
 class Array : public Vector<T,S> {
 public:
 	virtual const char * className() const {
@@ -39,6 +40,7 @@ public:
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
 		this->_releasecb = NULL;
+		this->_capacity = 0;
 	}
 
 	/**
@@ -180,7 +182,6 @@ public:
 		return res;
 	}
 
-
 	/**
 	 * Prints the array from the first element to the last
 	 */
@@ -313,7 +314,7 @@ private:
 	static T * reallocate(T * addr, S oldsize, S newsize) {
 		T * res = new T[newsize];
 		for (S i = 0; i < oldsize && i < newsize; i++) {
-			res[i] = addr[i];
+			res[i] = std::move(addr[i]);
 			addr[i] = NULL;
 		}
 
@@ -374,6 +375,12 @@ private:
 
 	/// Holds size of _address
 	S _count;
+
+	/**
+	 * will hold a certain amount of reserved space for the
+	 * array elements. we will ask for more memory when _count > _capacity
+	 */
+	S _capacity;
 
 	/**
 	 * How we compare each item in the array
