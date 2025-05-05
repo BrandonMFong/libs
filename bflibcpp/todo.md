@@ -17,9 +17,9 @@
 - [ ] String to integer 
 - [ ] array memory optimization, improving virtual memory usage
 	- [x] BF::Array to use new/delete for memory allocation
-	- [ ] optimize String
-		- [ ] when appending to string, grab more memory so we don't have keep calling realloc all the time
-    - [ ] benchmark test run
+	- [x] optimize String
+		- [x] when appending to string, grab more memory so we don't have keep calling realloc all the time
+    - [x] benchmark test run
 - [x] collection sorting algorithm
 - [x] make sure there are no Delete() calls and must use BFRelease instead
 - [x] throw compiler warnings when using delete

@@ -306,15 +306,13 @@ protected:
 	 * Returns address of array
 	 */
 	T * address() const {
+		// capacity may be > 0 and _address may be allocated
 		if (this->_count == 0) return NULL;
 		return this->_address;
 	}
 	
 private:
 
-	/**
-	 * uses malloc to allocate mem
-	 */
 	static void allocate(Array<T,S> & array, S size) {
 		if (size > array._capacity) {
 			array._capacity = size;
@@ -322,25 +320,16 @@ private:
 		}
 	}
 
-	/**
-	 * returns modified `addr` with `newsize`
-	 */
 	static void reallocate(Array<T,S> & array, S oldsize, S newsize) {
 		if (newsize < array._capacity) {
 			return;
 		}
 
-		S adjustNewSize = (((newsize / array._blockSize) + 1) * array._blockSize);
-		array._capacity = adjustNewSize;
-		T * res = new T[adjustNewSize];
+		S adjustedNewSize = (((newsize / array._blockSize) + 1) * array._blockSize);
+		array._capacity = adjustedNewSize;
+		T * res = new T[adjustedNewSize];
 		memcpy(res, array._address, sizeof(T) * oldsize);
 		memset(array._address, 0, sizeof(T) * oldsize);
-		/*
-		for (S i = 0; i < oldsize && i < adjustNewSize; i++) {
-			res[i] = std::move(array._address[i]);
-			array._address[i] = 0;
-		}
-		*/
 
 		delete[] array._address;
 		array._address = res;
@@ -352,11 +341,9 @@ private:
 	 * Derived must make sure this follows the standard established
 	 * by allocate()
 	 */
-	//static void deallocate(T * value) {
 	static void deallocate(Array<T,S> & array) {
 		delete[] array._address;
 		array._capacity = 0;
-		//delete[] value;
 	}
 
 	/**
