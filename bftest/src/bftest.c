@@ -159,3 +159,51 @@ void _BFTestLogFlush() {
 	}
 }
 
+long long __BFTestGetCurrentTimeNS__() {
+	struct timespec ts;
+    if (clock_gettime(CLOCK_REALTIME, &ts) == -1) {
+        return 0;
+    }
+
+	return (long long) ts.tv_sec * 1000000000LL + ts.tv_nsec;
+}
+
+void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t bufsize) {
+	if (!buf) return;
+
+	// 0: nano, 1: micro, 2: milli, 3: seconds, 4: minutes
+	int level = 0;
+	const int maxLevel = 3;
+	float ns = elapsedTimeNS;
+
+	while (ns > 1000 && level <= maxLevel) {
+		ns /= 1000;
+		level++;
+	}
+
+	char * unit = NULL;
+	switch (level) {
+	case 0:
+		unit = "ns";
+		break;
+	case 1:
+		unit = "us";
+		break;
+	case 2:
+		unit = "ms";
+		break;
+	case 3:
+	default:
+		unit = "s";
+		break;
+	}
+
+	if (ns >= 60 && level == 3) {
+		int min = ns / 60;
+		int sec = (int) ns % 60;
+		snprintf(buf, bufsize, "%d min %d s", min, sec);
+	} else {
+		snprintf(buf, bufsize, "%.2f %s", ns, unit);
+	}
+}
+

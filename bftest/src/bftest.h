@@ -11,6 +11,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <time.h>
+
+long long __BFTestGetCurrentTimeNS__();
+void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t bufsize);
 
 /** TEST SUITE **/
 // a test suite is the high level function that will call
@@ -20,8 +24,12 @@
 	int main () {\
 		int pass = 0, fail = 0;\
 		float tp = 0, tf = 0;\
+		time_t startTime = __BFTestGetCurrentTimeNS__();\
 		__VA_ARGS__ \
-		printf("Grade - %.2f%% (%d/%d)\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf));\
+		time_t endTime = __BFTestGetCurrentTimeNS__();\
+		char buf[64];\
+		__BFTestFormatElapsedTime__(endTime - startTime, buf, 64);\
+		printf("Grade - %.2f%% (%d/%d) %s\n", (float) ((tp/(tp+tf)) * 100), (int) tp, (int) (tp+tf), buf);\
 		return 0;\
 	}
 
@@ -84,13 +92,17 @@
 #define BFTEST_UNIT_START \
 	printf("%s - ", __func__);fflush(stdout);\
 	fflush(stdout);\
-	int result = 0;
+	int result = 0;\
+	time_t startTime = __BFTestGetCurrentTimeNS__();
 
 #define BFTEST_UNIT_END \
-	if (result == 0) { printf("PASS\n");fflush(stdout); }\
-	else {\
-		printf("FAIL\n");fflush(stdout);\
-	}\
+	time_t endTime = __BFTestGetCurrentTimeNS__();\
+	if (result == 0) { printf("PASS"); }\
+	else { printf("FAIL"); }\
+	char buf[64];\
+	__BFTestFormatElapsedTime__(endTime - startTime, buf, 64);\
+	printf(" (%s)\n", buf);\
+	fflush(stdout);\
 	_BFTestLogFlush();\
 	return result;
 
