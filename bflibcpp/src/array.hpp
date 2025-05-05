@@ -28,7 +28,7 @@ namespace BF {
  * Objects stored in array are assumed to be owned by owner of array 
  * object
  */
-template <typename T, typename S = long, S blocksize = 16>
+template <typename T, typename S = long>
 class Array : public Vector<T,S> {
 public:
 	virtual const char * className() const {
@@ -40,7 +40,10 @@ public:
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
 		this->_releasecb = NULL;
+		
 		this->_capacity = 0;
+	   	this->_blockSize = 2 << 3;
+		this->_address = this->allocate(*this, this->_blockSize);
 	}
 
 	/**
@@ -77,7 +80,8 @@ public:
 			}
 		}
 		
-		this->deallocate(this->_address);
+		//this->deallocate(this->_address);
+		this->deallocate(*this);
 		this->_address = 0;
 		this->_count = 0;
 	}
@@ -213,7 +217,7 @@ public:
 	 */
 	void copyFromArray(const Array<T,S> * arr) {
 		this->removeAll();
-		this->_address = (T *) this->allocate(arr->count());
+		this->_address = (T *) this->allocate(*this, arr->count());
 		this->_count = arr->count();
 		memcpy(this->_address, arr->address(), this->_count);
 	}
@@ -222,7 +226,7 @@ public:
 	 * copies content of arr to the end of ours
 	 */
 	void append(const Array<T,S> & arr) {
-		this->_address = this->reallocate(this->_address, this->_count, this->_count + arr._count);
+		this->_address = this->reallocate(*this, this->_count, this->_count + arr._count);
 		for (int i = this->_count; i < this->_count + arr._count; i++) {
 			this->_address[i] = arr._address[i - this->_count];
 		}
@@ -233,7 +237,7 @@ public:
 	 * Adds object at the end of the array
 	 */
 	int add(T obj) {
-		this->_address = this->reallocate(this->_address, this->_count, this->_count + 1);
+		this->_address = this->reallocate(*this, this->_count, this->_count + 1);
 		if (this->_address == NULL) {
 			this->_count = 0;
 			return -3;
@@ -290,7 +294,7 @@ protected:
 	 * adjusts address memory to size
 	 */
 	void adjustMemorySize(S size) {
-		this->_address = this->reallocate(this->_address, this->_count, size);
+		this->_address = this->reallocate(*this, this->_count, size);
 		this->_count = size;
 	}
 
@@ -304,21 +308,33 @@ private:
 	/**
 	 * uses malloc to allocate mem
 	 */
-	static T * allocate(S size) {
-		return (T *) new T[size];
+	static T * allocate(Array<T,S> & array, S size) {
+		if (size < array._capacity) {
+			return array._address;
+		} else {
+			array._capacity = size;
+			return (T *) new T[size];
+		}
 	}
 
 	/**
 	 * returns modified `addr` with `newsize`
 	 */
-	static T * reallocate(T * addr, S oldsize, S newsize) {
-		T * res = new T[newsize];
-		for (S i = 0; i < oldsize && i < newsize; i++) {
-			res[i] = std::move(addr[i]);
-			addr[i] = NULL;
+	//static T * reallocate(T * addr, S oldsize, S newsize) {
+	static T * reallocate(Array<T,S> & array, S oldsize, S newsize) {
+		if (newsize < array._capacity) {
+			return array._address;
 		}
 
-		delete[] addr;
+		S adjustNewSize = (((newsize / array._blockSize) + 1) * array._blockSize);
+		array._capacity = adjustNewSize;
+		T * res = new T[adjustNewSize];
+		for (S i = 0; i < oldsize && i < adjustNewSize; i++) {
+			res[i] = std::move(array._address[i]);
+			array._address[i] = 0;
+		}
+
+		delete[] array._address;
 
 		return res;
 	}
@@ -327,8 +343,10 @@ private:
 	 * Derived must make sure this follows the standard established
 	 * by allocate()
 	 */
-	static void deallocate(T * value) {
-		delete[] value;
+	//static void deallocate(T * value) {
+	static void deallocate(Array<T,S> & array) {
+		delete[] array._address;
+		//delete[] value;
 	}
 
 	/**
@@ -336,7 +354,7 @@ private:
 	 */
 	void saveArray(const T * array, S size) {
 		this->removeAll();
-		this->_address = (T *) this->allocate(size);
+		this->_address = (T *) this->allocate(*this, size);
 		this->_count = size;
 
 		if (this->_address) {
@@ -355,7 +373,7 @@ private:
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
-		this->_address = (T *) this->allocate(this->_count);
+		this->_address = (T *) this->allocate(*this, this->_count);
 
 		if (this->_address) {
 			S i = 0;
@@ -381,6 +399,14 @@ private:
 	 * array elements. we will ask for more memory when _count > _capacity
 	 */
 	S _capacity;
+
+	/**
+	 * block size of memory allocation
+	 *
+	 * each reallocation where count > capacity, will always
+	 * allocate memory in blocks of blockSize
+	 */
+	S _blockSize;
 
 	/**
 	 * How we compare each item in the array
