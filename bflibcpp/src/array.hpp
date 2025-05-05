@@ -43,7 +43,7 @@ public:
 		
 		this->_capacity = 0;
 	   	this->_blockSize = 2 << 3;
-		this->_address = this->allocate(*this, this->_blockSize);
+		this->allocate(*this, this->_blockSize);
 	}
 
 	/**
@@ -217,7 +217,7 @@ public:
 	 */
 	void copyFromArray(const Array<T,S> * arr) {
 		this->removeAll();
-		this->_address = (T *) this->allocate(*this, arr->count());
+		this->allocate(*this, arr->count());
 		this->_count = arr->count();
 		memcpy(this->_address, arr->address(), this->_count);
 	}
@@ -226,7 +226,7 @@ public:
 	 * copies content of arr to the end of ours
 	 */
 	void append(const Array<T,S> & arr) {
-		this->_address = this->reallocate(*this, this->_count, this->_count + arr._count);
+		this->reallocate(*this, this->_count, this->_count + arr._count);
 		for (int i = this->_count; i < this->_count + arr._count; i++) {
 			this->_address[i] = arr._address[i - this->_count];
 		}
@@ -237,7 +237,7 @@ public:
 	 * Adds object at the end of the array
 	 */
 	int add(T obj) {
-		this->_address = this->reallocate(*this, this->_count, this->_count + 1);
+		this->reallocate(*this, this->_count, this->_count + 1);
 		if (this->_address == NULL) {
 			this->_count = 0;
 			return -3;
@@ -294,36 +294,36 @@ protected:
 	 * adjusts address memory to size
 	 */
 	void adjustMemorySize(S size) {
-		this->_address = this->reallocate(*this, this->_count, size);
+		this->reallocate(*this, this->_count, size);
 		this->_count = size;
 	}
 
 	/**
 	 * Returns address of array
 	 */
-	T * address() const { return this->_address; }
+	T * address() const {
+		if (this->_count == 0) return NULL;
+		return this->_address;
+	}
 	
 private:
 
 	/**
 	 * uses malloc to allocate mem
 	 */
-	static T * allocate(Array<T,S> & array, S size) {
-		if (size < array._capacity) {
-			return array._address;
-		} else {
+	static void allocate(Array<T,S> & array, S size) {
+		if (size > array._capacity) {
 			array._capacity = size;
-			return (T *) new T[size];
+			array._address = (T *) new T[size];
 		}
 	}
 
 	/**
 	 * returns modified `addr` with `newsize`
 	 */
-	//static T * reallocate(T * addr, S oldsize, S newsize) {
-	static T * reallocate(Array<T,S> & array, S oldsize, S newsize) {
+	static void reallocate(Array<T,S> & array, S oldsize, S newsize) {
 		if (newsize < array._capacity) {
-			return array._address;
+			return;
 		}
 
 		S adjustNewSize = (((newsize / array._blockSize) + 1) * array._blockSize);
@@ -335,8 +335,9 @@ private:
 		}
 
 		delete[] array._address;
+		array._address = res;
 
-		return res;
+		return;
 	}
 
 	/**
@@ -346,6 +347,7 @@ private:
 	//static void deallocate(T * value) {
 	static void deallocate(Array<T,S> & array) {
 		delete[] array._address;
+		array._capacity = 0;
 		//delete[] value;
 	}
 
@@ -354,7 +356,7 @@ private:
 	 */
 	void saveArray(const T * array, S size) {
 		this->removeAll();
-		this->_address = (T *) this->allocate(*this, size);
+		this->allocate(*this, size);
 		this->_count = size;
 
 		if (this->_address) {
@@ -373,7 +375,7 @@ private:
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
-		this->_address = (T *) this->allocate(*this, this->_count);
+		this->allocate(*this, this->_count);
 
 		if (this->_address) {
 			S i = 0;

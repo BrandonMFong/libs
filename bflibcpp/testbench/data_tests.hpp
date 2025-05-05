@@ -20,7 +20,7 @@ using namespace BF;
 BFTEST_UNIT_FUNC(test_datainit, 1,  {
 	Data buf0;
 	BF_ASSERT(buf0.size() == 0);
-	BF_ASSERT(buf0.buffer() != NULL);
+	BF_ASSERT(buf0.buffer() == NULL);
 
 	unsigned char bytes[10];
 	Data buf1(sizeof(bytes), bytes);
@@ -36,7 +36,7 @@ BFTEST_UNIT_FUNC(test_datainit, 1,  {
 
 	Data * buf5 = new Data;
 	BF_ASSERT(buf5->size() == 0);
-	BF_ASSERT(buf5->buffer() != NULL);
+	BF_ASSERT(buf5->buffer() == NULL);
 	BFRelease(buf5);
 })
 
