@@ -8,7 +8,6 @@
 
 #include "array.hpp"
 #include "list.hpp"
-//#include "typesortstrategy.hpp"
 
 namespace BF {
 
