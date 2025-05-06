@@ -11,12 +11,11 @@
 
 namespace BF {
 
-template<typename T> struct Sort;
+template <typename T> struct Sort;
 
-// Generic sort function
-template <template <typename...> class ContainerTemplate, typename... Args>
-int sort(ContainerTemplate<Args...>& v) {
-    Sort<ContainerTemplate<Args...>> sorter; // Instantiate Sort with the container template
+template <typename T>
+int sort(T & v) {
+    Sort<T> sorter;
     return sorter(v);
 }
 
@@ -240,9 +239,9 @@ struct Sort<List<L,S>> {
 	/** MERGE SORT - END **/
 };
 
-template <typename T, typename S>
-struct Sort<Array<T,S>> {
-	int operator()(Array<T,S> & array, SortStrategy strategy = kSortStrategyMerge) {
+template <typename T, typename S, S B>
+struct Sort<Array<T,S,B>> {
+	int operator()(Array<T,S,B> & array, SortStrategy strategy = kSortStrategyMerge) {
 		switch (strategy) {
 			case kSortStrategyBubble:
 				return Sort::sortBubble(array);
@@ -260,7 +259,7 @@ struct Sort<Array<T,S>> {
 
 	/** BUBBLE SORT - START **/
 
-	static int sortBubble(Array<T,S> & c) {
+	static int sortBubble(Array<T,S,B> & c) {
 		S n = c.size();
 		bool swapped = false;
 
@@ -283,7 +282,7 @@ struct Sort<Array<T,S>> {
 	/** BUBBLE SORT - END **/
 	/** INSERTION SORT - START **/
 
-	static int sortInsertion(Array<T,S> & c) {
+	static int sortInsertion(Array<T,S,B> & c) {
 		S i, j;
 		T key;
 		S n = c.size();
@@ -307,7 +306,7 @@ struct Sort<Array<T,S>> {
 	/** INSERTION SORT - END **/
 	/** SELECTION SORT - START **/
 
-	static int sortSelection(Array<T,S> & c) {
+	static int sortSelection(Array<T,S,B> & c) {
 		S i, j, min_idx;
 		S n = c.size();
 
@@ -333,11 +332,11 @@ struct Sort<Array<T,S>> {
 	/** SELECTION SORT - END **/
 	/** QUICK SORT - START **/
 
-	static int sortQuick(Array<T,S> & c) {
+	static int sortQuick(Array<T,S,B> & c) {
 		return sortQuick(c, 0, c.size() - 1);
 	}
 
-	static int sortQuick(Array<T,S> & c, S low, S high) {
+	static int sortQuick(Array<T,S,B> & c, S low, S high) {
 		if (low < high) {
 			// pi is the partition return index of pivot
 			S pi = sortQuickPartition(c, low, high);
@@ -351,7 +350,7 @@ struct Sort<Array<T,S>> {
 		return 0;
 	}
 
-	static int sortQuickPartition(Array<T,S> & c, S low, S high) {
+	static int sortQuickPartition(Array<T,S,B> & c, S low, S high) {
 		// Choose the pivot
 		T pivot = c[high];
 	  
@@ -382,11 +381,11 @@ struct Sort<Array<T,S>> {
 	/** QUICK SORT - END **/
 	/** MERGE SORT - START **/
 
-	static int sortMerge(Array<T,S> & c) {
+	static int sortMerge(Array<T,S,B> & c) {
 		return sortMerge(c, 0, c.size() - 1);
 	}
 
-	static int sortMerge(Array<T,S> & c, S left, S right) {
+	static int sortMerge(Array<T,S,B> & c, S left, S right) {
 		if (left >= right)
 			return 0;
 
@@ -397,7 +396,7 @@ struct Sort<Array<T,S>> {
 		return 0;
 	}
 
-	static int sortMerge(Array<T,S> & c, S left, S mid, S right) {
+	static int sortMerge(Array<T,S,B> & c, S left, S mid, S right) {
 		S n1 = mid - left + 1;
 		S n2 = right - mid;
 
