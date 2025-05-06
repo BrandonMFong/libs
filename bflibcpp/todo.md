@@ -15,7 +15,7 @@
 - [ ] tuple
 - [x] address compiler warning regarding ambiguous operations
 - [ ] String to integer 
-- [ ] array memory optimization, improving virtual memory usage
+- [x] array memory optimization, improving virtual memory usage
 	- [x] BF::Array to use new/delete for memory allocation
 	- [x] optimize String
 		- [x] when appending to string, grab more memory so we don't have keep calling realloc all the time
