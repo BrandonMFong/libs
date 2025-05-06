@@ -80,7 +80,7 @@ int run_vectorSort(SortStrategy type, size_t listsize, int reps) {
 			l.add(val);
 		}
 
-		Sort<ContainerTemplate> sorter;
+		Sort<ContainerTemplate<Args...>> sorter;
 		result = sorter(l, type);
 
 		if (!result) {

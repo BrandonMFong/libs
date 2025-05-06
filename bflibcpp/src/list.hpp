@@ -15,7 +15,7 @@
 
 namespace BF {
 
-template<template <typename...> class T> struct Sort;
+template<typename T> struct Sort;
 
 /**
  * Linked List implementation

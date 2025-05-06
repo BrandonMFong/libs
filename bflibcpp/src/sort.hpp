@@ -11,36 +11,42 @@
 
 namespace BF {
 
-template<template <typename...> class T> struct Sort;
+template<typename T> struct Sort;
 
 // Generic sort function
 template <template <typename...> class ContainerTemplate, typename... Args>
 int sort(ContainerTemplate<Args...>& v) {
-    Sort<ContainerTemplate> sorter; // Instantiate Sort with the container template
+    Sort<ContainerTemplate<Args...>> sorter; // Instantiate Sort with the container template
     return sorter(v);
 }
 
-template <> struct Sort<List> {
-	template <typename L, typename S = size_t> 
+template <typename L, typename S> 
+struct Sort<List<L,S>> {
+	//template <typename L, typename S> 
 	int operator()(List<L,S> & list, SortStrategy strategy = kSortStrategyMerge) {
 		switch (strategy) {
 			case kSortStrategyBubble:
-				return Sort::sortBubble<L,S>(list);
+				//return Sort::sortBubble<L,S>(list);
+				return Sort::sortBubble(list);
 			case kSortStrategyInsertion:
-				return Sort::sortInsertion<L,S>(list);
+				//return Sort::sortInsertion<L,S>(list);
+				return Sort::sortInsertion(list);
 			case kSortStrategySelection:
-				return Sort::sortSelection<L,S>(list);
+				//return Sort::sortSelection<L,S>(list);
+				return Sort::sortSelection(list);
 			case kSortStrategyQuick:
-				return Sort::sortQuick<L,S>(list);
+				//return Sort::sortQuick<L,S>(list);
+				return Sort::sortQuick(list);
 			case kSortStrategyMerge:
 			default:
-				return Sort::sortMerge<L,S>(list);
+				//return Sort::sortMerge<L,S>(list);
+				return Sort::sortMerge(list);
 		}
 	}
 
 	/** BUBBLE SORT - START **/
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static int sortBubble(List<L,S> & c) {
 		typename List<L,S>::Node * head = c.first();
 		S len = c.size();
@@ -88,7 +94,7 @@ template <> struct Sort<List> {
 	/** BUBBLE SORT - END **/
 	/** INSERTION SORT - START **/
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static typename List<L,S>::Node * sortInsertion(typename List<L,S>::Node * newNode, typename List<L,S>::Node * sorted) {
 		if (!sorted || sorted->object() >= newNode->object()) {
 			newNode->right = sorted;
@@ -106,7 +112,7 @@ template <> struct Sort<List> {
 		return sorted;
 	}
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static int sortInsertion(List<L,S> & c) {
 		typename List<L,S>::Node * head = c.first();
 		typename List<L,S>::Node * sorted = NULL;
@@ -114,7 +120,7 @@ template <> struct Sort<List> {
 
 		while (curr) {
 			typename List<L,S>::Node * next = curr->next();
-			sorted = sortInsertion<L,S>(curr, sorted);
+			sorted = sortInsertion(curr, sorted);
 			curr = next;
 		}
 
@@ -126,7 +132,7 @@ template <> struct Sort<List> {
 	/** INSERTION SORT - END **/
 	/** SELECTION SORT - START **/
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static int sortSelection(List<L,S> & c) {
 		typename List<L,S>::Node * head = c.first();
 		for (typename List<L,S>::Node * start = head; start; start = start->next()) {
@@ -151,30 +157,30 @@ template <> struct Sort<List> {
 	/** SELECTION SORT - END **/
 	/** QUICK SORT - START **/
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static int sortQuick(List<L,S> & c) {
 		typename List<L,S>::Node * head = c.first();
 		typename List<L,S>::Node * tail = c.last();
 
-		sortQuick<L,S>(head, tail);
+		sortQuick(head, tail);
 
 		c._head = head;
 		return 0;
 	}
 	
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static void sortQuick(typename List<L,S>::Node * head, typename List<L,S>::Node * tail) {
 		if (!head || head == tail) {
 			return;
 		}
 
-		typename List<L,S>::Node * pivot = sortQuickGetPivot<L,S>(head, tail);
+		typename List<L,S>::Node * pivot = sortQuickGetPivot(head, tail);
 
-		sortQuick<L,S>(head, pivot);
-		sortQuick<L,S>(pivot->next(), tail);
+		sortQuick(head, pivot);
+		sortQuick(pivot->next(), tail);
 	}
 	
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static typename List<L,S>::Node * sortQuickGetPivot(typename List<L,S>::Node * head, typename List<L,S>::Node * tail) {
 		typename List<L,S>::Node * pivot = head;
 
@@ -198,40 +204,40 @@ template <> struct Sort<List> {
 	/** QUICK SORT - END **/
 	/** MERGE SORT - START **/
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static int sortMerge(List<L,S> & c) {
-		c._head = sortMerge<L,S>(c._head);
+		c._head = sortMerge(c._head);
 		return 0;
 	}
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static typename List<L,S>::Node * sortMerge(typename List<L,S>::Node * head) {
 		if (!head || !head->next()) {
 			return head;
 		}
 
-		typename List<L,S>::Node * second = sortMergeSplit<L,S>(head);
-		head = sortMerge<L,S>(head);
-		second = sortMerge<L,S>(second);
+		typename List<L,S>::Node * second = sortMergeSplit(head);
+		head = sortMerge(head);
+		second = sortMerge(second);
 
-		return sortMerge<L,S>(head, second);
+		return sortMerge(head, second);
 	}
 	
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static typename List<L,S>::Node * sortMerge(typename List<L,S>::Node * first, typename List<L,S>::Node * second) {
 		if (!first) return second;
 		if (!second) return first;
 
 		if (first->object() < second->object()) {
-			first->right = sortMerge<L,S>(first->next(), second);
+			first->right = sortMerge(first->next(), second);
 			return first;
 		} else {
-			second->right = sortMerge<L,S>(first, second->next());
+			second->right = sortMerge(first, second->next());
 			return second;
 		}
 	}
 
-	template <typename L, typename S = size_t> 
+	//template <typename L, typename S> 
 	static typename List<L,S>::Node * sortMergeSplit(typename List<L,S>::Node * head) {
 		typename List<L,S>::Node * fast = head;
 		typename List<L,S>::Node * slow = head;
@@ -251,27 +257,33 @@ template <> struct Sort<List> {
 	/** MERGE SORT - END **/
 };
 
-template <> struct Sort<Array> {
-	template <typename T, typename S = size_t> 
+template <typename T, typename S>
+struct Sort<Array<T,S>> {
+	//template <typename T, typename S> 
 	int operator()(Array<T,S> & array, SortStrategy strategy = kSortStrategyMerge) {
 		switch (strategy) {
 			case kSortStrategyBubble:
-				return Sort::sortBubble<T,S>(array);
+				//return Sort::sortBubble<T,S>(array);
+				return Sort::sortBubble(array);
 			case kSortStrategyInsertion:
-				return Sort::sortInsertion<T,S>(array);
+				//return Sort::sortInsertion<T,S>(array);
+				return Sort::sortInsertion(array);
 			case kSortStrategySelection:
-				return Sort::sortSelection<T,S>(array);
+				//return Sort::sortSelection<T,S>(array);
+				return Sort::sortSelection(array);
 			case kSortStrategyQuick:
-				return Sort::sortQuick<T,S>(array);
+				//return Sort::sortQuick<T,S>(array);
+				return Sort::sortQuick(array);
 			case kSortStrategyMerge:
 			default:
-				return Sort::sortMerge<T,S>(array);
+				//return Sort::sortMerge<T,S>(array);
+				return Sort::sortMerge(array);
 		}
 	}
 
 	/** BUBBLE SORT - START **/
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortBubble(Array<T,S> & c) {
 		S n = c.size();
 		bool swapped = false;
@@ -295,7 +307,7 @@ template <> struct Sort<Array> {
 	/** BUBBLE SORT - END **/
 	/** INSERTION SORT - START **/
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortInsertion(Array<T,S> & c) {
 		S i, j;
 		T key;
@@ -320,7 +332,7 @@ template <> struct Sort<Array> {
 	/** INSERTION SORT - END **/
 	/** SELECTION SORT - START **/
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortSelection(Array<T,S> & c) {
 		S i, j, min_idx;
 		S n = c.size();
@@ -347,27 +359,27 @@ template <> struct Sort<Array> {
 	/** SELECTION SORT - END **/
 	/** QUICK SORT - START **/
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortQuick(Array<T,S> & c) {
-		return sortQuick<T,S>(c, 0, c.size() - 1);
+		return sortQuick(c, 0, c.size() - 1);
 	}
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortQuick(Array<T,S> & c, S low, S high) {
 		if (low < high) {
 			// pi is the partition return index of pivot
-			S pi = sortQuickPartition<T,S>(c, low, high);
+			S pi = sortQuickPartition(c, low, high);
 
 			// Recursion calls for smaller elements
 			// and greater or equals elements
-			sortQuick<T,S>(c, low, pi - 1);
-			sortQuick<T,S>(c, pi + 1, high);
+			sortQuick(c, low, pi - 1);
+			sortQuick(c, pi + 1, high);
 		}
 
 		return 0;
 	}
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortQuickPartition(Array<T,S> & c, S low, S high) {
 		// Choose the pivot
 		T pivot = c[high];
@@ -399,24 +411,24 @@ template <> struct Sort<Array> {
 	/** QUICK SORT - END **/
 	/** MERGE SORT - START **/
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortMerge(Array<T,S> & c) {
-		return sortMerge<T,S>(c, 0, c.size() - 1);
+		return sortMerge(c, 0, c.size() - 1);
 	}
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortMerge(Array<T,S> & c, S left, S right) {
 		if (left >= right)
 			return 0;
 
 		S mid = left + (right - left) / 2;
-		sortMerge<T,S>(c, left, mid);
-		sortMerge<T,S>(c, mid + 1, right);
-		sortMerge<T,S>(c, left, mid, right);
+		sortMerge(c, left, mid);
+		sortMerge(c, mid + 1, right);
+		sortMerge(c, left, mid, right);
 		return 0;
 	}
 
-	template <typename T, typename S = size_t> 
+	//template <typename T, typename S> 
 	static int sortMerge(Array<T,S> & c, S left, S mid, S right) {
 		S n1 = mid - left + 1;
 		S n2 = right - mid;
