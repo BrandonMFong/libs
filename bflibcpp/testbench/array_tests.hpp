@@ -69,7 +69,6 @@ BFTEST_UNIT_FUNC(test_Contains, 1,  {
 	}
 })
 
-//int test_ObjectAtIndex() {
 BFTEST_UNIT_FUNC(test_ObjectAtIndex, 1,  {
 	Array<double> d({1.1, 2.2, 3.3, 4.4, 5.5});
 
@@ -88,7 +87,6 @@ BFTEST_UNIT_FUNC(test_ObjectAtIndex, 1,  {
 	}
 })
 
-//int test_indexForObject() {
 BFTEST_UNIT_FUNC(test_indexForObject, 2<<10,  {
 	Array<int> arr({1, 2, 3, 4});
 
@@ -120,7 +118,6 @@ BFTEST_UNIT_FUNC(test_indexForObject, 2<<10,  {
 	}
 })
 
-//int test_Count() {
 BFTEST_UNIT_FUNC(test_Count, 1,  {
 	Array<int> a({1, 2, 3, 4, 5});
 
@@ -130,7 +127,6 @@ BFTEST_UNIT_FUNC(test_Count, 1,  {
 	}
 })
 
-//int test_Setter() {
 BFTEST_UNIT_FUNC(test_Setter, 1,  {
 	Array<int> a;
 
@@ -277,13 +273,6 @@ BFTEST_UNIT_FUNC(test_arrayOfCStrings, 2<<8, {
 	BF_ASSERT(b.contains(word));
 })
 
-BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 2<<8, {
-	Array<BF::String> a({"hello", "world"});
-	Array<BF::String> b;
-	b.add("hello");
-	b.add("world");
-})
-
 BFTEST_UNIT_FUNC(test_appendingArrays, 2 << 10, {
 	int max_size = 2 << 10;
 	Array<int> c;
@@ -299,6 +288,13 @@ BFTEST_UNIT_FUNC(test_appendingArrays, 2 << 10, {
 	}
 })
 
+BFTEST_UNIT_FUNC(test_arrayOfBFStrings, 1, {
+	Array<BF::String> a({"hello", "world"});
+	Array<BF::String> b;
+	b.add("hello");
+	b.add("world");
+})
+
 BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_Initializer);
 	BFTEST_LAUNCH(test_Contains);
@@ -310,10 +306,9 @@ BFTEST_COVERAGE_FUNC(array_tests, {
 	BFTEST_LAUNCH(test_insertingAtRandomIndex);
 	BFTEST_LAUNCH(test_releasecallback);
 	BFTEST_LAUNCH(test_addanddelete);
-	//BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
 	BFTEST_LAUNCH(test_arrayOfCStrings);
 	BFTEST_LAUNCH(test_appendingArrays);
-
+	BFTEST_LAUNCH(test_arrayOfBFStrings); // FIXME: this should work if we change how array's allocate memory
 })
 
 #endif // ARRAY_TESTS_HPP

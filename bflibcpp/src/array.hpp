@@ -9,12 +9,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <initializer_list>
+#include <utility>
 #include <iostream>
 #include "access.hpp"
 #include "vector.hpp"
 #include <string.h>
 #include "exception.hpp"
 #include "swap.hpp"
+
+extern "C" {
+#include <bflibc/bfmath.h>
+}
 
 namespace BF {
 
@@ -26,8 +31,14 @@ namespace BF {
  *
  * Objects stored in array are assumed to be owned by owner of array 
  * object
+ *
+ * blockSize:
+ * block size of memory allocation
+ *
+ * each reallocation where count > capacity, will always
+ * allocate memory in blocks of blockSize
  */
-template <typename T, typename S = long>
+template <typename T, typename S = long, S blockSize = 2 << 3>
 class Array : public Vector<T,S> {
 public:
 	virtual const char * className() const {
@@ -39,6 +50,9 @@ public:
 		this->_count = 0;
 		this->_callback = Array::comparisonDefault;
 		this->_releasecb = NULL;
+		
+		this->_capacity = 0;
+		this->allocate(*this, blockSize);
 	}
 
 	/**
@@ -75,7 +89,8 @@ public:
 			}
 		}
 		
-		this->deallocate(this->_address);
+		//this->deallocate(this->_address);
+		this->deallocate(*this);
 		this->_address = 0;
 		this->_count = 0;
 	}
@@ -180,7 +195,6 @@ public:
 		return res;
 	}
 
-
 	/**
 	 * Prints the array from the first element to the last
 	 */
@@ -210,9 +224,9 @@ public:
 	/**
 	 * Copies content from arr to us
 	 */
-	void copyFromArray(const Array<T,S> * arr) {
+	void copyFromArray(const Array<T,S,blockSize> * arr) {
 		this->removeAll();
-		this->_address = (T *) this->allocate(arr->count());
+		this->allocate(*this, arr->count());
 		this->_count = arr->count();
 		memcpy(this->_address, arr->address(), this->_count);
 	}
@@ -220,9 +234,8 @@ public:
 	/**
 	 * copies content of arr to the end of ours
 	 */
-	void append(const Array<T,S> & arr) {
-		this->_address = this->reallocate(this->_address, this->_count + arr._count);
-		//memcpy(&this->_address[this->_count], &arr._address[0], arr._count);
+	void append(const Array<T,S,blockSize> & arr) {
+		this->reallocate(*this, this->_count, this->_count + arr._count);
 		for (int i = this->_count; i < this->_count + arr._count; i++) {
 			this->_address[i] = arr._address[i - this->_count];
 		}
@@ -233,7 +246,7 @@ public:
 	 * Adds object at the end of the array
 	 */
 	int add(T obj) {
-		this->_address = this->reallocate(this->_address, this->_count + 1);
+		this->reallocate(*this, this->_count, this->_count + 1);
 		if (this->_address == NULL) {
 			this->_count = 0;
 			return -3;
@@ -290,37 +303,52 @@ protected:
 	 * adjusts address memory to size
 	 */
 	void adjustMemorySize(S size) {
+		this->reallocate(*this, this->_count, size);
 		this->_count = size;
-		this->_address = this->reallocate(this->_address, this->_count);
 	}
 
 	/**
 	 * Returns address of array
 	 */
-	T * address() const { return this->_address; }
+	T * address() const {
+		// capacity may be > 0 and _address may be allocated
+		if (this->_count == 0) return NULL;
+		return this->_address;
+	}
 	
 private:
 
-	/**
-	 * uses malloc to allocate mem
-	 */
-	static T * allocate(S size) {
-		return (T *) malloc(sizeof(T) * size);
+	static void allocate(Array<T,S,blockSize> & array, S size) {
+		if (size > array._capacity) {
+			array._capacity = size;
+			array._address = (T *) new T[size];
+		}
 	}
 
-	/**
-	 * returns modified `addr` with `newsize`
-	 */
-	static T * reallocate(T * addr, S newsize) {
-		return (T *) realloc(addr, sizeof(T) * newsize);
+	static void reallocate(Array<T,S,blockSize> & array, S oldsize, S newsize) {
+		if (newsize < array._capacity) {
+			return;
+		}
+
+		S adjustedNewSize = (((newsize / blockSize) + 1) * blockSize);
+		array._capacity = adjustedNewSize;
+		T * res = new T[adjustedNewSize];
+		memcpy(res, array._address, sizeof(T) * oldsize);
+		memset(array._address, 0, sizeof(T) * oldsize);
+
+		delete[] array._address;
+		array._address = res;
+
+		return;
 	}
 
 	/**
 	 * Derived must make sure this follows the standard established
 	 * by allocate()
 	 */
-	static void deallocate(T * value) {
-		free((void *) value);
+	static void deallocate(Array<T,S,blockSize> & array) {
+		delete[] array._address;
+		array._capacity = 0;
 	}
 
 	/**
@@ -328,7 +356,7 @@ private:
 	 */
 	void saveArray(const T * array, S size) {
 		this->removeAll();
-		this->_address = (T *) this->allocate(size);
+		this->allocate(*this, size);
 		this->_count = size;
 
 		if (this->_address) {
@@ -347,7 +375,7 @@ private:
 		typename std::initializer_list<T>::iterator itr;
 
 		this->_count = list.size();
-		this->_address = (T *) this->allocate(this->_count);
+		this->allocate(*this, this->_count);
 
 		if (this->_address) {
 			S i = 0;
@@ -367,6 +395,12 @@ private:
 
 	/// Holds size of _address
 	S _count;
+
+	/**
+	 * will hold a certain amount of reserved space for the
+	 * array elements. we will ask for more memory when _count > _capacity
+	 */
+	S _capacity;
 
 	/**
 	 * How we compare each item in the array
@@ -390,7 +424,7 @@ public:
 	/**
 	 * Copies the string content from arr to us
 	 */
-	virtual Array<T,S> & operator=(const Array<T,S> & arr) {
+	virtual Array<T,S,blockSize> & operator=(const Array<T,S,blockSize> & arr) {
 		this->copyFromArray(&arr);
 		return *this;
 	}

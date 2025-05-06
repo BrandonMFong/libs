@@ -15,7 +15,7 @@ namespace BF {
 	
 class Data;
 
-class String : public Array<char, size_t> {
+class String : public Array<char, size_t, 2<<4> {
 public:
 
 	const char * className() const;

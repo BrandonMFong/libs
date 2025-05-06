@@ -24,7 +24,7 @@ String:: String() : String("") {}
 
 String::String(const std::string & str) : String(str.c_str()) { }
 
-String::String(char * str) : Array<char, size_t>() {
+String::String(char * str) : Array<char, size_t, 2<<4>() {
 	this->set(str, strlen(str) + 1);
 }
 
@@ -36,7 +36,7 @@ String::String(int nullstr) {
 	this->set((char *) "", 1);
 }
 
-String::String(const Data & data) : Array<char, size_t>() {
+String::String(const Data & data) : Array<char, size_t, 2<<4>() {
 	this->set((const char *) data.buffer(), data.size());
 
 	/**
@@ -50,13 +50,13 @@ String::String(const Data & data) : Array<char, size_t>() {
 	}
 }
 
-String::String(const char * format, va_list valist) : Array<char, size_t>() {
+String::String(const char * format, va_list valist) : Array<char, size_t, 2<<4>() {
 	char * str = BFStringCreateFormatArgListString(format, valist);
 	this->set(str, strlen(str) + 1);
 	BFFree(str);
 }
 
-String::String(const char * format, ...) : Array<char, size_t>() {
+String::String(const char * format, ...) : Array<char, size_t, 2<<4>() {
 	va_list valist;
 	va_start(valist, format);
 	char * str = BFStringCreateFormatArgListString(format, valist);
