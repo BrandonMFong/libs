@@ -14,7 +14,7 @@ namespace BF {
 class String;
 class URL;
 
-class Data : public Array<unsigned char, size_t, 2 << 4> {
+class Data : public Array<unsigned char, size_t, 2<<5> {
 public:
 	virtual const char * className() const;
 
