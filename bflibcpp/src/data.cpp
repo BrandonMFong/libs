@@ -64,7 +64,7 @@ Data::Data(const Data & in) : Data(in.size(), (unsigned char *) in.buffer()) { }
 
 Data::~Data() { }
 
-Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char, size_t>() {
+Data::Data(const size_t size, const unsigned char * data) : Array<unsigned char, size_t, 2 << 4>() {
 	this->alloc(size, data);
 }
 

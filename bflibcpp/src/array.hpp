@@ -31,6 +31,12 @@ namespace BF {
  *
  * Objects stored in array are assumed to be owned by owner of array 
  * object
+ *
+ * blockSize:
+ * block size of memory allocation
+ *
+ * each reallocation where count > capacity, will always
+ * allocate memory in blocks of blockSize
  */
 template <typename T, typename S = long, S blockSize = 2 << 3>
 class Array : public Vector<T,S> {
@@ -46,8 +52,7 @@ public:
 		this->_releasecb = NULL;
 		
 		this->_capacity = 0;
-	   	this->_blockSize = 2 << 3;
-		this->allocate(*this, this->_blockSize);
+		this->allocate(*this, blockSize);
 	}
 
 	/**
@@ -219,7 +224,7 @@ public:
 	/**
 	 * Copies content from arr to us
 	 */
-	void copyFromArray(const Array<T,S> * arr) {
+	void copyFromArray(const Array<T,S,blockSize> * arr) {
 		this->removeAll();
 		this->allocate(*this, arr->count());
 		this->_count = arr->count();
@@ -229,7 +234,7 @@ public:
 	/**
 	 * copies content of arr to the end of ours
 	 */
-	void append(const Array<T,S> & arr) {
+	void append(const Array<T,S,blockSize> & arr) {
 		this->reallocate(*this, this->_count, this->_count + arr._count);
 		for (int i = this->_count; i < this->_count + arr._count; i++) {
 			this->_address[i] = arr._address[i - this->_count];
@@ -313,19 +318,19 @@ protected:
 	
 private:
 
-	static void allocate(Array<T,S> & array, S size) {
+	static void allocate(Array<T,S,blockSize> & array, S size) {
 		if (size > array._capacity) {
 			array._capacity = size;
 			array._address = (T *) new T[size];
 		}
 	}
 
-	static void reallocate(Array<T,S> & array, S oldsize, S newsize) {
+	static void reallocate(Array<T,S,blockSize> & array, S oldsize, S newsize) {
 		if (newsize < array._capacity) {
 			return;
 		}
 
-		S adjustedNewSize = (((newsize / array._blockSize) + 1) * array._blockSize);
+		S adjustedNewSize = (((newsize / blockSize) + 1) * blockSize);
 		array._capacity = adjustedNewSize;
 		T * res = new T[adjustedNewSize];
 		memcpy(res, array._address, sizeof(T) * oldsize);
@@ -341,7 +346,7 @@ private:
 	 * Derived must make sure this follows the standard established
 	 * by allocate()
 	 */
-	static void deallocate(Array<T,S> & array) {
+	static void deallocate(Array<T,S,blockSize> & array) {
 		delete[] array._address;
 		array._capacity = 0;
 	}
@@ -398,14 +403,6 @@ private:
 	S _capacity;
 
 	/**
-	 * block size of memory allocation
-	 *
-	 * each reallocation where count > capacity, will always
-	 * allocate memory in blocks of blockSize
-	 */
-	S _blockSize;
-
-	/**
 	 * How we compare each item in the array
 	 */
 	int (* _callback) (T a, T b);
@@ -427,7 +424,7 @@ public:
 	/**
 	 * Copies the string content from arr to us
 	 */
-	virtual Array<T,S> & operator=(const Array<T,S> & arr) {
+	virtual Array<T,S,blockSize> & operator=(const Array<T,S,blockSize> & arr) {
 		this->copyFromArray(&arr);
 		return *this;
 	}
