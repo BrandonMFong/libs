@@ -19,6 +19,20 @@ BFSet BFSetCreate() {
 	return (BFSet) res;
 }
 
+void BFSetSetCompare(BFSet _set, int (*compare)(BFSetValue a, BFSetValue b)) {
+	_BFSet * set = (_BFSet *) _set;
+	if (!set) return;
+
+	BFTreeSetCompare(set->tree, compare);
+}
+
+void BFSetSetRelease(BFSet _set, void (*release)(BFSetValue value)) {
+	_BFSet * set = (_BFSet *) _set;
+	if (!set) return;
+
+	BFTreeSetRelease(set->tree, release);
+}
+
 void BFSetRelease(BFSet _set) {
 	_BFSet * set = (_BFSet *) _set;
 	if (!set) return;
@@ -27,3 +41,23 @@ void BFSetRelease(BFSet _set) {
 	BFFree(set);
 }
 
+int BFSetInsert(BFSet _set, BFSetValue value) {
+	_BFSet * set = (_BFSet *) _set;
+	if (!set) return -1;
+
+	return BFTreeInsert(set->tree, value);
+}
+
+int BFSetRemove(BFSet _set, BFSetValue value) {
+	_BFSet * set = (_BFSet *) _set;
+	if (!set) return -1;
+
+	return BFTreeRemove(set->tree, value);
+}
+
+bool BFSetContains(BFSet _set, BFSetValue value) {
+	_BFSet * set = (_BFSet *) _set;
+	if (!set) return -1;
+
+	return BFTreeContains(set->tree, value);
+}
