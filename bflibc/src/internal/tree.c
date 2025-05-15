@@ -96,11 +96,12 @@ _BFTreeNode * _BFTreeNodeInsert(
 		return node;
 	}
 
-	if (compare(object, node->object) < 0) {
+	int cmpval = compare(object, node->object);
+	if (cmpval < 0) {
 		node->left = _BFTreeNodeInsert(
 			node->left, object, compare, error
 		);
-	} else if (compare(object, node->object) > 0) {
+	} else if (cmpval > 0) {
 		node->right = _BFTreeNodeInsert(
 			node->right, object, compare, error
 		);
