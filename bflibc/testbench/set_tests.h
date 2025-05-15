@@ -40,9 +40,26 @@ BFTEST_UNIT_FUNC(test_setcontains, 2<<10, {
 	BFSetRelease(set);
 })
 
+BFTEST_UNIT_FUNC(test_setsize, 2<<10, {
+	BFSet set = BFSetCreate();
+	BF_ASSERT(set, "null set");
+
+	BFSetSetCompare(set, BFTestSetCompareInteger);
+
+	srand(time(0));
+	int max = rand() % 2<<9;
+	for (int i = 0; i < max; i++) {
+		BF_ASSERT(BFSetInsert(set, (BFSetValue) (intptr_t) i) == 0, "could not insert %d", i);
+	}
+
+	BF_ASSERT(BFSetGetSize(set) == max, "size(%ld) != %ld", BFSetGetSize(set), max);
+	BFSetRelease(set);
+})
+
 BFTEST_COVERAGE_FUNC(set_tests, {
 	BFTEST_LAUNCH(test_setinit);
 	BFTEST_LAUNCH(test_setcontains);
+	BFTEST_LAUNCH(test_setsize);
 })
 
 #endif // SET_TESTS_H

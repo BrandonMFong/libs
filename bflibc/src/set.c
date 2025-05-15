@@ -57,7 +57,15 @@ int BFSetRemove(BFSet _set, BFSetValue value) {
 
 bool BFSetContains(BFSet _set, BFSetValue value) {
 	_BFSet * set = (_BFSet *) _set;
-	if (!set) return -1;
+	if (!set) return false;
 
 	return BFTreeContains(set->tree, value);
 }
+
+size_t BFSetGetSize(BFSet _set) {
+	_BFSet * set = (_BFSet *) _set;
+	if (!set) return 0;
+
+	return BFTreeSize(set->tree);
+}
+

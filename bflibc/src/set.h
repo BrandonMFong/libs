@@ -7,6 +7,7 @@
 #define SET_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 typedef void * BFSet;
 typedef void * BFSetValue;
@@ -18,6 +19,7 @@ void BFSetRelease(BFSet set);
 int BFSetInsert(BFSet set, BFSetValue value);
 int BFSetRemove(BFSet set, BFSetValue value);
 bool BFSetContains(BFSet set, BFSetValue value);
+size_t BFSetGetSize(BFSet set);
 
 #endif // SET_H
 
