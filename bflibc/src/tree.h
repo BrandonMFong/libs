@@ -1,6 +1,8 @@
 /**
  * author: brando
  * date: 11/22/24
+ *
+ * binary search tree (avl implementation)
  */
 
 #ifndef TREE_H
@@ -31,6 +33,13 @@ void BFTreeSetCompare(BFTree tree, int (*compare)(BFTreeObject a, BFTreeObject b
  * deleted
  */
 void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object));
+
+/**
+ * allow == true to permit the use of duplicates in this binary tree
+ *
+ * by default, this binary tree does NOT allow duplicates.
+ */
+void BFTreeSetAllowDuplicates(BFTree tree, bool allow);
 
 /**
  * frees tree

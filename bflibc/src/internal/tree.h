@@ -35,11 +35,22 @@ typedef struct _BFTree {
 	 * BFTreeRelease() is called
 	 */
 	void (*release)(BFTreeObject object);
+
+	/**
+	 * |x|x|x|x|x|x|x|<allow duplicates>|
+	 *
+	 * <allow duplicates>: default value == 0. 0: not allow. 1: allow
+	 */
+	unsigned char flags;
 } _BFTree;
+
+#define _BFTREE_FLAG_ALLOW_DUPLICATES 0
 
 /**
  * error: will nonzero if object couldn't be inserted.
  * 	one reason is there may be a duplicate
+ *
+ * flags: _BFTree::flags
  *
  * returns node
  */
@@ -47,6 +58,7 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	unsigned char flags,
 	int * error
 );
 

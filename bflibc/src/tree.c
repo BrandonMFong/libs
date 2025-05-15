@@ -27,6 +27,13 @@ void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object)) {
 	((_BFTree *) tree)->release = release;
 }
 
+void BFTreeSetAllowDuplicates(BFTree _tree, bool allow) {
+	_BFTree * tree = (_BFTree *) _tree;
+	if (!tree) return;
+
+	tree->flags = tree->flags ^ (0x01 << _BFTREE_FLAG_ALLOW_DUPLICATES);
+}
+
 // left->right->node
 void BFTreeReleaseNode(_BFTree * tree, _BFTreeNode * node) {
 	if (!node) return;
@@ -64,6 +71,7 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 		tree->root,
 		object,
 		tree->compare,
+		tree->flags,
 		&err
 	);
 

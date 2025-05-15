@@ -87,6 +87,7 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	unsigned char flags,
 	int * error
 ) {
 	// 1.  Perform the normal BST insertion
@@ -99,13 +100,15 @@ _BFTreeNode * _BFTreeNodeInsert(
 	int cmpval = compare(object, node->object);
 	if (cmpval < 0) {
 		node->left = _BFTreeNodeInsert(
-			node->left, object, compare, error
+			node->left, object, compare, flags, error
 		);
 	} else if (cmpval > 0) {
 		node->right = _BFTreeNodeInsert(
-			node->right, object, compare, error
+			node->right, object, compare, flags, error
 		);
 	} else { // Equal keys are not allowed in BST
+		bool allowDuplicates = flags & (0x01 << _BFTREE_FLAG_ALLOW_DUPLICATES);
+		
 		if (error) *error = -1;
 		return node;
 	}
