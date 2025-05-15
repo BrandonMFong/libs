@@ -275,8 +275,8 @@ bool _BFTreeNodeSearch(
 ) {
 	if (!node) {
 		return false;
-	} else if (!obj) {
-		return false;
+	//} else if (!obj) {
+	//	return false;
 	}
 
 	int comp = compare(obj, node->object);

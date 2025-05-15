@@ -30,12 +30,12 @@ BFTEST_UNIT_FUNC(test_setcontains, 2<<10, {
 	int max = 2 << 9;
 	for (int i = 0; i < max; i++) {
 		if (i % 2 == 0) {
-			BF_ASSERT(BFSetInsert(set, (BFSetValue) (intptr_t) i), "could not insert %d", i);
+			BF_ASSERT(BFSetInsert(set, (BFSetValue) (intptr_t) i) == 0, "could not insert %d", i);
 		}
 	}
 
 	for (int i = 0; i < max; i++) {
-		BF_ASSERT(BFSetContains(set, (BFSetValue) (intptr_t) i) == (i % 2 == 0 ? true : false), "contains(%d) != %s", (i % 2 == 0 ? "true" : "false"));
+		BF_ASSERT(BFSetContains(set, (BFSetValue) (intptr_t) i) == (i % 2 == 0 ? true : false), "contains(%d) != %s", i, (i % 2 == 0 ? "true" : "false"));
 	}
 	BFSetRelease(set);
 })
