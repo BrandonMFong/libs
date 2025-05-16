@@ -26,4 +26,4 @@
 	- [x] getter
 - [x] consider allowing duplicate values into tree - no
 - [ ] Set object
-    - [ ] allow tree to permit duplicates
+    - [x] allow tree to permit duplicates

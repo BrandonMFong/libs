@@ -40,6 +40,10 @@ void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object));
  * by default, this binary tree does NOT allow duplicates.
  */
 void BFTreeSetAllowDuplicates(BFTree tree, bool allow);
+
+/**
+ * returns true if duplicates are allowed
+ */
 bool BFTreeGetAllowDuplicates(BFTree tree);
 
 /**

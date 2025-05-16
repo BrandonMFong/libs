@@ -221,6 +221,31 @@ BFTEST_UNIT_FUNC(test_InsertDuplicatesAllowed, 2<<10, {
 	BFTreeRelease(tree);
 })
 
+int BFTestTreeCompareInteger(BFTreeObject aobj, BFTreeObject bobj) {
+	int a = (intptr_t) aobj;
+	int b = (intptr_t) bobj;
+	return a - b;
+}
+
+BFTEST_UNIT_FUNC(test_InsertDuplicatesAllowedEvenMore, 2<<10, {
+	// create trees
+	BFTree tree = BFTreeCreate();
+	BF_ASSERT(tree, "a null tree was returned");
+	BFTreeSetCompare(tree, BFTestTreeCompareInteger); 
+	BFTreeSetAllowDuplicates(tree, true);
+
+	BF_ASSERT(BFTreeGetAllowDuplicates(tree));
+
+	int max = 2 << 9;
+	for (int i = 0; i < max; i++) {
+		BFTreeInsert(tree, (BFTreeObject) (intptr_t) 0xFF);
+	}
+
+	BF_ASSERT(BFTreeSize(tree) == max);
+	
+	BFTreeRelease(tree);
+})
+
 BFTEST_UNIT_FUNC(test_InsertDuplicatesNotAllowed, 2<<10, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
@@ -404,6 +429,7 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_InsertNodesAndSearch);
 	BFTEST_LAUNCH(test_InsertAndRemovingNodes);
 	BFTEST_LAUNCH(test_InsertDuplicatesAllowed);
+	BFTEST_LAUNCH(test_InsertDuplicatesAllowedEvenMore);
 	BFTEST_LAUNCH(test_InsertDuplicatesNotAllowed);
 	BFTEST_LAUNCH(test_InsertAndRemovingNoPointers);
 	BFTEST_LAUNCH(test_treeGettingNonexistentValues);
