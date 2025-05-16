@@ -30,6 +30,11 @@ void BFHashSetSetCompare(BFHashSet set, int (*compare)(BFHashSetValue a, BFHashS
 void BFHashSetSetRelease(BFHashSet set, void (*release)(BFHashSetValue value));
 
 /**
+ * sets the hash function
+ */
+void BFHashSetSetHashFunction(BFHashSet set, unsigned long (*hash)(BFHashSetValue key));
+
+/**
  * releases set from memory
  */
 void BFHashSetRelease(BFHashSet set);

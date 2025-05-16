@@ -51,6 +51,13 @@ void BFHashSetSetCompare(BFHashSet _set, int (*compare)(BFHashSetValue a, BFHash
 	BFHashMapSetCompare(set->map, compare);
 }
 
+void BFHashSetSetHashFunction(BFHashSet _set, unsigned long (*hash)(BFHashSetValue value)) {
+	_BFHashSet * set = (_BFHashSet *) _set;
+	if (!set) return;
+
+	BFHashMapSetHashFunction(set->map, hash);
+}
+
 void BFHashSetSetRelease(BFHashSet _set, void (*release)(BFHashSetValue value)) {
 	_BFHashSet * set = (_BFHashSet *) _set;
 	if (!set) return;
