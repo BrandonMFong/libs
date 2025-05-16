@@ -27,3 +27,6 @@
 - [x] consider allowing duplicate values into tree - no
 - [ ] Set object
     - [x] allow tree to permit duplicates
+    - [x] tree set
+    - [ ] hash set
+
