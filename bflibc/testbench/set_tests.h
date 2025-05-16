@@ -37,6 +37,7 @@ BFTEST_UNIT_FUNC(test_setcontains, 2<<10, {
 	for (int i = 0; i < max; i++) {
 		BF_ASSERT(BFSetContains(set, (BFSetValue) (intptr_t) i) == (i % 2 == 0 ? true : false), "contains(%d) != %s", i, (i % 2 == 0 ? "true" : "false"));
 	}
+	
 	BFSetRelease(set);
 })
 

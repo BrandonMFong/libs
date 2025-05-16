@@ -95,6 +95,8 @@ void __BFTestFormatElapsedTime__(long long elapsedTimeNS, char * buf, size_t buf
 	int result = 0;\
 	time_t startTime = __BFTestGetCurrentTimeNS__();
 
+// the total time executed might be innaccurate considering
+// i am running usleep(50) in the loop
 #define BFTEST_UNIT_END \
 	time_t endTime = __BFTestGetCurrentTimeNS__();\
 	if (result == 0) { printf("PASS"); }\
