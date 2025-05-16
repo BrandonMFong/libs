@@ -36,9 +36,9 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(rand_tests);
 	BFTEST_SUITE_LAUNCH(hash_tests);
 	BFTEST_SUITE_LAUNCH(math_tests);
-	*/
 	BFTEST_SUITE_LAUNCH(hashmap_tests);
 	BFTEST_SUITE_LAUNCH(map_tests);
+	*/
 	BFTEST_SUITE_LAUNCH(tree_tests);
 	BFTEST_SUITE_LAUNCH(set_tests);
 

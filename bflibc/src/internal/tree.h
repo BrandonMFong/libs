@@ -13,6 +13,12 @@ typedef struct _BFTreeNode {
 	struct _BFTreeNode * right;
 	size_t height;
 	BFTreeObject object;
+
+	/**
+	 * IIF duplicates are allowed this will hold the count of
+	 * instances of object in the tree
+	 */
+	size_t count;
 } _BFTreeNode;
 
 _BFTreeNode * _BFTreeNodeCreate();
@@ -63,13 +69,16 @@ _BFTreeNode * _BFTreeNodeInsert(
 );
 
 /**
+ * flags: _BFTree::flags
+ *
  * returns node
  */
 _BFTreeNode * _BFTreeNodeRemove(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
-	void (*release)(BFTreeObject object)
+	void (*release)(BFTreeObject object),
+	unsigned char flags
 );
 
 /**
