@@ -31,3 +31,8 @@
 - [x] Ability to key a HashMap<String, String> without defining a compare callback, at least for our standard objects
 - [ ] URL url = "this"; url = "this"; crashes
 - [x] Atomically figure out hash function without manually defining one for HashMap
+- [ ] Set
+    - [ ] basic map
+        - [ ] fix compare callback to functor
+        - [ ] fix release callback to functor
+
