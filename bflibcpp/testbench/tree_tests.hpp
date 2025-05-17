@@ -25,13 +25,11 @@ void BFTestTreeRelease(int object) { }
 
 BFTEST_UNIT_FUNC(test_treeInit, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
 	tree.setRelease(BFTestTreeRelease);
 })
 
 BFTEST_UNIT_FUNC(test_treeInsert, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
 	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
@@ -47,7 +45,6 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 		BFRandInit(time(0));
 	}
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
 	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
@@ -67,7 +64,6 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 
 BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
 	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
@@ -118,7 +114,6 @@ void _BFTestTreeTraversePostorder(const typename Tree<T>::Node node) {
 
 BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
 	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
@@ -149,7 +144,6 @@ BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 		BFRandInit(time(0));
 	}
 	Tree<int*> tree;
-	tree.setCompare(BFTestTreeComparePointers);
 	tree.setRelease(BFTestTreeReleasePointer);
 
 	int treesize = 2<<8;

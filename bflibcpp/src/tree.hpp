@@ -70,7 +70,7 @@ public:
 	Tree() : Collection<S>() {
 		this->_tree = BFTreeCreate();
 		if (!this->_tree) return;
-		BFTreeSetCompare(this->_tree, this->_BFTreeCompare);
+		BFTreeSetCompare(this->_tree, this->_compare);
 		BFTreeSetRelease(this->_tree, this->_BFTreeRelease);
 	}
 
@@ -85,9 +85,7 @@ public:
 	 * see _compare
 	 */
 	[[deprecated("Please use BF::Compare functor")]]
-	void setCompare(int (*compare)(const T & a, const T & b)) {
-		this->_compare = compare;
-	}
+	void setCompare(int (*compare)(const T & a, const T & b)) { }
 
 	/**
 	 * defines how objects are released
@@ -145,14 +143,9 @@ private:
 	 *	a > b -> result > 0
 	 *	a == b -> result == 0
 	 */
-	int (*_compare)(const T & a, const T & b);
-	static int _BFTreeCompare(BFTreeObject a, BFTreeObject b) {
-		/*
-		Container * acont = (Container *) a;
-		Container * bcont = (Container *) b;
-		return acont->_treeRef->_compare(acont->_obj, bcont->_obj);
-		*/
-		//if (!a || !b) return 0;
+	//int (*_compare)(const T & a, const T & b);
+	static int _compare(BFTreeObject a, BFTreeObject b) {
+		if (!a || !b) return 0;
 		Container * acont = (Container *) a;
 		Container * bcont = (Container *) b;
 
