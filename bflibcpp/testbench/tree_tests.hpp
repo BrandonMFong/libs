@@ -163,6 +163,37 @@ BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 	}
 })
 
+String _BFTreeTestsCreateRandomWord() {
+	const char charset[] = "abcdefghijklmnopqrstuvwxyz";
+	size_t charset_size = strlen(charset);
+
+	srand(time(0));
+
+	size_t reslen = 2 << 3;
+	char word[reslen + 1];
+	for (int i = 0; i < reslen; i++) {
+		word[i] = charset[rand() % charset_size];
+	}
+
+	word[reslen] = '\0';
+
+	return word;
+}
+
+BFTEST_UNIT_FUNC(test_treeWithStrings, 1, {
+	Tree<String> tree(true);
+
+	BF_ASSERT(tree.allowDuplicates());
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i++) {
+		String word = _BFTreeTestsCreateRandomWord();
+		int err = tree.insert(word);
+		BF_ASSERT(err == 0, "itr=%d, couldn't insert '%s', err=%d", BFTEST_UNIT_FUNC_ITR, word.cString(), err);
+	}
+	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
+})
+
 BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
@@ -170,7 +201,7 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeContains);
 	BFTEST_LAUNCH(test_treeTraversing);
 	BFTEST_LAUNCH(test_treeWithMallocObjects);
-
+	BFTEST_LAUNCH(test_treeWithStrings);
 })
 
 #endif // TREE_TESTS_HPP

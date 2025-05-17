@@ -74,6 +74,10 @@ public:
 		BFTreeSetRelease(this->_tree, this->_BFTreeRelease);
 	}
 
+	Tree(bool allowDuplicates) : Tree() {
+		BFTreeSetAllowDuplicates(this->_tree, allowDuplicates);
+	}
+
 	virtual ~Tree() {
 		BFTreeRelease(this->_tree);
 	}
@@ -92,6 +96,13 @@ public:
 	 */
 	void setRelease(void (*release)(T obj)) {
 		this->_release = release;
+	}
+
+	/**
+	 * true if tree can allow duplicates
+	 */
+	bool allowDuplicates() const {
+		return BFTreeGetAllowDuplicates(this->_tree);
 	}
 
 	/**
@@ -143,7 +154,6 @@ private:
 	 *	a > b -> result > 0
 	 *	a == b -> result == 0
 	 */
-	//int (*_compare)(const T & a, const T & b);
 	static int _compare(BFTreeObject a, BFTreeObject b) {
 		if (!a || !b) return 0;
 		Container * acont = (Container *) a;
