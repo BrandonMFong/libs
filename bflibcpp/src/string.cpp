@@ -220,6 +220,10 @@ String & String::operator=(const String & str) {
 	return *this;
 }
 
+int String::operator-(const String & str) const {
+	return strcmp(this->cString(), str.cString());
+}
+
 int String::toi(const String & s) {
 	return atoi(s.cString());
 }
