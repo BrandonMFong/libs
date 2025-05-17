@@ -32,6 +32,7 @@
 - [ ] URL url = "this"; url = "this"; crashes
 - [x] Atomically figure out hash function without manually defining one for HashMap
 - [ ] Set
+    - [ ] tree compare functor
     - [ ] basic map
         - [ ] fix compare callback to functor
         - [ ] fix release callback to functor

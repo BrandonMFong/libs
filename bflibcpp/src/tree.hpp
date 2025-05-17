@@ -9,6 +9,7 @@
 #include "collection.hpp"
 #include "release.hpp"
 #include "exception.hpp"
+#include "compare.hpp"
 
 extern "C" {
 #include <bflibc/tree.h>
@@ -19,7 +20,7 @@ namespace BF {
 /**
  * AVL Tree
  */
-template<typename T, typename S = size_t>
+template<typename T, typename S = size_t, class C = Compare<T>>
 class Tree : public Collection<S> {
 	/**
 	 * holds container of type T
@@ -83,6 +84,7 @@ public:
 	 *
 	 * see _compare
 	 */
+	[[deprecated("Please use BF::Compare functor")]]
 	void setCompare(int (*compare)(const T & a, const T & b)) {
 		this->_compare = compare;
 	}
@@ -145,9 +147,17 @@ private:
 	 */
 	int (*_compare)(const T & a, const T & b);
 	static int _BFTreeCompare(BFTreeObject a, BFTreeObject b) {
+		/*
 		Container * acont = (Container *) a;
 		Container * bcont = (Container *) b;
 		return acont->_treeRef->_compare(acont->_obj, bcont->_obj);
+		*/
+		//if (!a || !b) return 0;
+		Container * acont = (Container *) a;
+		Container * bcont = (Container *) b;
+
+		C cmp;
+		return cmp(acont->_obj, bcont->_obj);
 	}
 
 	void (*_release)(T obj);

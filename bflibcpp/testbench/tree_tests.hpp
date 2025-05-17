@@ -36,7 +36,8 @@ BFTEST_UNIT_FUNC(test_treeInsert, 2<<10,  {
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
-		BF_ASSERT(!tree.insert(i));
+		int err = tree.insert(i);
+		BF_ASSERT(err == 0, "itr=%d, couldn't insert %d, err=%d", BFTEST_UNIT_FUNC_ITR, i, err);
 	}
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 })
@@ -51,7 +52,7 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
-		BF_ASSERT(!tree.insert(i));
+		BF_ASSERT(!tree.insert(i), "couldn't insert %d", i);
 	}
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 
@@ -71,7 +72,7 @@ BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i += 2) {
-		BF_ASSERT(!tree.insert(i));
+		BF_ASSERT(!tree.insert(i), "couldn't insert %d", i);
 	}
 	BF_ASSERT(tree.size() == treesize/2, "%ld != %ld", tree.size(), treesize);
 
@@ -122,7 +123,7 @@ BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i += 2) {
-		BF_ASSERT(!tree.insert(i));
+		BF_ASSERT(!tree.insert(i), "couldn't insert %d", i);
 	}
 	BF_ASSERT(tree.size() == treesize/2, "%ld != %ld", tree.size(), treesize);
 
