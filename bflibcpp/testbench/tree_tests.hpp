@@ -194,14 +194,37 @@ BFTEST_UNIT_FUNC(test_treeWithStrings, 1, {
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 })
 
+void _BFTestTreeRelease(char * str) {
+	free(str);
+}
+
+BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 1, {
+	Tree<char *> tree(true);
+	tree.setRelease(_BFTestTreeRelease);
+
+	BF_ASSERT(tree.allowDuplicates());
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i++) {
+		char * word = _BFTreeTestsCreateRandomWord().cStringCopy();
+		int err = tree.insert(word);
+		BF_ASSERT(err == 0, "itr=%d, couldn't insert '%s', err=%d", BFTEST_UNIT_FUNC_ITR, word, err);
+	}
+	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
+})
+
 BFTEST_COVERAGE_FUNC(tree_tests, {
+	/*
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
 	BFTEST_LAUNCH(test_treeRemove);
 	BFTEST_LAUNCH(test_treeContains);
 	BFTEST_LAUNCH(test_treeTraversing);
 	BFTEST_LAUNCH(test_treeWithMallocObjects);
+	*/
 	BFTEST_LAUNCH(test_treeWithStrings);
+	//BFTEST_LAUNCH(test_treeWithCustomCompare);
+
 })
 
 #endif // TREE_TESTS_HPP

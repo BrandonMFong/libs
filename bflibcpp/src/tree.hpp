@@ -10,6 +10,7 @@
 #include "release.hpp"
 #include "exception.hpp"
 #include "compare.hpp"
+#include "allocator.hpp"
 
 extern "C" {
 #include <bflibc/tree.h>
@@ -20,7 +21,7 @@ namespace BF {
 /**
  * AVL Tree
  */
-template<typename T, typename S = size_t, class C = Compare<T>>
+template<typename T, typename S = size_t, class C = Compare<T>, class A = Allocator<T>>
 class Tree : public Collection<S> {
 	/**
 	 * holds container of type T
