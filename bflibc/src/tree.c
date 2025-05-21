@@ -75,6 +75,7 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 		tree->root,
 		object,
 		tree->compare,
+		tree->release,
 		tree->flags,
 		&err
 	);

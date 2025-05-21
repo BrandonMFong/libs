@@ -63,7 +63,9 @@ size_t BFTreeSize(BFTree tree);
 /**
  * no duplicates allowed 
  *
- * object: pointer or integer value. value=0 is allowed
+ * object: pointer or integer value. value=0 is allowed. If this tree
+ * is allowed to have duplicates, any duplicates found will be counted
+ * and released using its release callback
  *
  * returns: -1 if object couldn't be inserted. Object may be a duplicate
  */

@@ -88,6 +88,7 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	void (*release)(BFTreeObject object),
 	unsigned char flags,
 	int * error
 ) {
@@ -101,15 +102,18 @@ _BFTreeNode * _BFTreeNodeInsert(
 	int cmpval = compare(object, node->object);
 	if (cmpval < 0) {
 		node->left = _BFTreeNodeInsert(
-			node->left, object, compare, flags, error
+			node->left, object, compare, release, flags, error
 		);
 	} else if (cmpval > 0) {
 		node->right = _BFTreeNodeInsert(
-			node->right, object, compare, flags, error
+			node->right, object, compare, release, flags, error
 		);
 	} else { // Equal keys are not allowed in BST
 		if ((flags & (0x01 << _BFTREE_FLAG_ALLOW_DUPLICATES)) != 0) {
 			node->count++;
+			if (release) {
+				release(object);
+			}
 		} else {
 			if (error) *error = -11;
 		}

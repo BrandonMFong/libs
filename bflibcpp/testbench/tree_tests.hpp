@@ -180,15 +180,14 @@ String _BFTreeTestsCreateRandomWord() {
 	return word;
 }
 
-BFTEST_UNIT_FUNC(test_treeWithStrings, 1, {
+BFTEST_UNIT_FUNC(test_treeWithStrings, 2<<8, {
 	Tree<String> tree(true);
 
 	BF_ASSERT(tree.allowDuplicates());
 
-	int treesize = 2;
+	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
 		String word = _BFTreeTestsCreateRandomWord();
-		BFTestPrint("inserting %s", word.cString());
 		int err = tree.insert(word);
 		BF_ASSERT(err == 0, "itr=%d, couldn't insert '%s', err=%d", BFTEST_UNIT_FUNC_ITR, word.cString(), err);
 	}
@@ -215,14 +214,12 @@ BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 1, {
 })
 
 BFTEST_COVERAGE_FUNC(tree_tests, {
-	/*
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
 	BFTEST_LAUNCH(test_treeRemove);
 	BFTEST_LAUNCH(test_treeContains);
 	BFTEST_LAUNCH(test_treeTraversing);
 	BFTEST_LAUNCH(test_treeWithMallocObjects);
-	*/
 	BFTEST_LAUNCH(test_treeWithStrings);
 	//BFTEST_LAUNCH(test_treeWithCustomCompare);
 

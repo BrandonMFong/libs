@@ -25,7 +25,6 @@
 BFTEST_SUITE_FUNC({
 	//BFTEST_SUITE_LAUNCH(checksum_tests);
 
-	/*
 	BFTEST_SUITE_LAUNCH(coreutils_tests);
 	BFTEST_SUITE_LAUNCH(lock_tests);
 	BFTEST_SUITE_LAUNCH(filesystem_tests);
@@ -40,7 +39,6 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(hashmap_tests);
 	BFTEST_SUITE_LAUNCH(map_tests);
 	BFTEST_SUITE_LAUNCH(tree_tests);
-	*/
 	BFTEST_SUITE_LAUNCH(set_tests);
 	BFTEST_SUITE_LAUNCH(hashset_tests);
 })

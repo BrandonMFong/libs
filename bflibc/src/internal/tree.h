@@ -56,6 +56,10 @@ typedef struct _BFTree {
  * error: will nonzero if object couldn't be inserted.
  * 	one reason is there may be a duplicate
  *
+ * object: pointer or integer value. value=0 is allowed. If this tree
+ * is allowed to have duplicates, any duplicates found will be counted
+ * and released using its release callback
+ 
  * flags: _BFTree::flags
  *
  * returns node
@@ -64,6 +68,7 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	void (*release)(BFTreeObject object),
 	unsigned char flags,
 	int * error
 );
