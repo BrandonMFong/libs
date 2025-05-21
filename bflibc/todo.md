@@ -25,6 +25,8 @@
 	- [x] removal
 	- [x] getter
 - [x] consider allowing duplicate values into tree - no
+- [ ] reconsider duplicates
+    - [ ] handle how memory is freed if duplicates are found
 - [ ] Set object
     - [x] allow tree to permit duplicates
     - [x] tree set

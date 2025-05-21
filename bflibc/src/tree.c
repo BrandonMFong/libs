@@ -50,12 +50,6 @@ void BFTreeReleaseNode(_BFTree * tree, _BFTreeNode * node) {
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
 
-	/*
-	if (tree->release) {
-		tree->release(node->object);
-	}
-	*/
-
 	_BFTreeNodeRelease(node, tree->release);
 	tree->size--;
 }

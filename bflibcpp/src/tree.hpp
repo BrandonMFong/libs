@@ -68,7 +68,7 @@ public:
 		bool isNull() const { return this->_node == NULL; }
 	};
 
-	Tree() : Collection<S>() {
+	Tree() : _tree(NULL), _release(NULL), Collection<S>() {
 		this->_tree = BFTreeCreate();
 		if (!this->_tree) return;
 		BFTreeSetCompare(this->_tree, this->_compare);
