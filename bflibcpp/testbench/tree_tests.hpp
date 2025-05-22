@@ -21,16 +21,12 @@ int BFTestTreeCompare(const int & a, const int & b) {
 	return a - b;
 }
 
-void BFTestTreeRelease(int object) { }
-
 BFTEST_UNIT_FUNC(test_treeInit, 2<<10,  {
 	Tree<int> tree;
-	tree.setRelease(BFTestTreeRelease);
 })
 
 BFTEST_UNIT_FUNC(test_treeInsert, 2<<10,  {
 	Tree<int> tree;
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
@@ -45,7 +41,6 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 		BFRandInit(time(0));
 	}
 	Tree<int> tree;
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
@@ -64,7 +59,6 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 
 BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
 	Tree<int> tree;
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i += 2) {
@@ -114,7 +108,6 @@ void _BFTestTreeTraversePostorder(const typename Tree<T>::Node node) {
 
 BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 	Tree<int> tree;
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i += 2) {
