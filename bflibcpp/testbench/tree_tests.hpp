@@ -133,16 +133,8 @@ void BFTestTreeReleasePointer(int * object) {
 }
 
 template<> struct BF::Allocator<int *> {
-	bool canCreate() const {
-		return false;
-	}
-
 	int * create() const {
 		return 0;
-	}
-
-	bool canRelease() const {
-		return true;
 	}
 
 	void release(int * obj) const {

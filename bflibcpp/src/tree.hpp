@@ -39,7 +39,7 @@ class Tree : public Collection<S> {
 		}
 		virtual ~Container() {
 			A allocator;
-			if (allocator.canRelease() && this->_release) {
+			if (this->_release) {
 				allocator.release(this->_obj);
 			}
 			/*
