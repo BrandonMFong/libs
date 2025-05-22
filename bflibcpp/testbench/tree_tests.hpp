@@ -132,12 +132,30 @@ void BFTestTreeReleasePointer(int * object) {
 	BFFree(object);
 }
 
+template<> struct BF::Allocator<int *> {
+	bool canCreate() const {
+		return false;
+	}
+
+	int * create() const {
+		return 0;
+	}
+
+	bool canRelease() const {
+		return true;
+	}
+
+	void release(int * obj) const {
+		BFFree(obj);
+	}
+};
+
 BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
 	Tree<int*> tree;
-	tree.setRelease(BFTestTreeReleasePointer);
+	//tree.setRelease(BFTestTreeReleasePointer);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {

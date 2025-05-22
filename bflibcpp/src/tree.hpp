@@ -30,15 +30,23 @@ class Tree : public Collection<S> {
 	public:
 		T _obj;
 		const Tree * _treeRef;
-		void (*_release)(T obj);
-		Container(T obj, const Tree * treeRef, void (*release)(T obj))
+		//void (*_release)(T obj);
+		bool _release;
+		//Container(T obj, const Tree * treeRef, void (*release)(T obj))
+		Container(T obj, const Tree * treeRef, bool release)
 		: _obj(obj), _treeRef(treeRef), _release(release), Object() {
 			BFRetain(this->_treeRef);
 		}
 		virtual ~Container() {
+			A allocator;
+			if (allocator.canRelease() && this->_release) {
+				allocator.release(this->_obj);
+			}
+			/*
 			if (this->_release) {
 				this->_release(this->_obj);
 			}
+			*/
 			BFRelease(this->_treeRef);
 		}
 	};
@@ -118,7 +126,7 @@ public:
 	 */
 	int insert(T object) {
 		if (!this->_tree) return -1;
-		Container * c = new Container(object, this, this->_release);
+		Container * c = new Container(object, this, true);
 		return BFTreeInsert(this->_tree, c);
 	}
 
@@ -127,7 +135,7 @@ public:
 	 */
 	int remove(T object) {
 		if (!this->_tree) return -1;
-		Container c(object, this, NULL);
+		Container c(object, this, false);
 		return BFTreeRemove(this->_tree, &c);
 	}
 
@@ -136,7 +144,7 @@ public:
 	 */
 	bool contains(T object) const {
 		if (!this->_tree) return -1;
-		Container c(object, this, NULL);
+		Container c(object, this, false);
 		return BFTreeContains(this->_tree, &c);
 	}
 
