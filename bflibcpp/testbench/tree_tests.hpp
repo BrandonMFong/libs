@@ -213,7 +213,7 @@ template<> struct BF::Allocator<char *> {
 	}
 };
 
-BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 1, {
+BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 2<<10, {
 	Tree<char *> tree(true);
 
 	BF_ASSERT(tree.allowDuplicates());
