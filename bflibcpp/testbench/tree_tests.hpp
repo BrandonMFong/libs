@@ -128,10 +128,6 @@ int BFTestTreeComparePointers(int * const &ap, int * const &bp) {
 	return a - b;
 }
 
-void BFTestTreeReleasePointer(int * object) {
-	BFFree(object);
-}
-
 template<> struct BF::Allocator<int *> {
 	int * create() const {
 		return 0;
@@ -147,7 +143,6 @@ BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 		BFRandInit(time(0));
 	}
 	Tree<int*> tree;
-	//tree.setRelease(BFTestTreeReleasePointer);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
@@ -201,9 +196,25 @@ void _BFTestTreeRelease(char * str) {
 	free(str);
 }
 
+template <>
+struct BF::Compare<char *> {
+	int operator()(const char * const & a, const char * const & b) {
+		return strcmp(a, b);
+	}
+};
+
+template<> struct BF::Allocator<char *> {
+	char * create() const {
+		return 0;
+	}
+
+	void release(char * obj) const {
+		BFFree(obj);
+	}
+};
+
 BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 1, {
 	Tree<char *> tree(true);
-	tree.setRelease(_BFTestTreeRelease);
 
 	BF_ASSERT(tree.allowDuplicates());
 
@@ -224,8 +235,7 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeTraversing);
 	BFTEST_LAUNCH(test_treeWithMallocObjects);
 	BFTEST_LAUNCH(test_treeWithStrings);
-	//BFTEST_LAUNCH(test_treeWithCustomCompare);
-
+	BFTEST_LAUNCH(test_treeWithCustomCompare);
 })
 
 #endif // TREE_TESTS_HPP
