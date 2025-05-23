@@ -76,11 +76,11 @@ public:
 		bool isNull() const { return this->_node == NULL; }
 	};
 
-	Tree() : _tree(NULL), _release(NULL), Collection<S>() {
+	Tree() : _tree(NULL), Collection<S>() {
 		this->_tree = BFTreeCreate();
 		if (!this->_tree) return;
 		BFTreeSetCompare(this->_tree, this->_compare);
-		BFTreeSetRelease(this->_tree, this->_BFTreeRelease);
+		BFTreeSetRelease(this->_tree, this->_release);
 	}
 
 	Tree(bool allowDuplicates) : Tree() {
@@ -103,9 +103,8 @@ public:
 	/**
 	 * defines how objects are released
 	 */
-	void setRelease(void (*release)(T obj)) {
-		this->_release = release;
-	}
+	[[deprecated("Please use BF::Allocator functor")]]
+	void setRelease(void (*release)(T obj)) { }
 
 	/**
 	 * true if tree can allow duplicates
@@ -172,8 +171,8 @@ private:
 		return cmp(acont->_obj, bcont->_obj);
 	}
 
-	void (*_release)(T obj);
-	static void _BFTreeRelease(BFTreeObject object) {
+	//void (*_release)(T obj);
+	static void _release(BFTreeObject object) {
 		Container * cont = (Container *) object;
 		BFRelease(cont);
 	}
