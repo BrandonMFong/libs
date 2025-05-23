@@ -196,13 +196,6 @@ void _BFTestTreeRelease(char * str) {
 	free(str);
 }
 
-template <>
-struct BF::Compare<char *> {
-	int operator()(const char * const & a, const char * const & b) {
-		return strcmp(a, b);
-	}
-};
-
 template<> struct BF::Allocator<char *> {
 	char * create() const {
 		return 0;

@@ -30,9 +30,7 @@ class Tree : public Collection<S> {
 	public:
 		T _obj;
 		const Tree * _treeRef;
-		//void (*_release)(T obj);
 		bool _release;
-		//Container(T obj, const Tree * treeRef, void (*release)(T obj))
 		Container(T obj, const Tree * treeRef, bool release)
 		: _obj(obj), _treeRef(treeRef), _release(release), Object() {
 			BFRetain(this->_treeRef);
@@ -42,11 +40,6 @@ class Tree : public Collection<S> {
 			if (this->_release) {
 				allocator.release(this->_obj);
 			}
-			/*
-			if (this->_release) {
-				this->_release(this->_obj);
-			}
-			*/
 			BFRelease(this->_treeRef);
 		}
 	};
@@ -171,7 +164,6 @@ private:
 		return cmp(acont->_obj, bcont->_obj);
 	}
 
-	//void (*_release)(T obj);
 	static void _release(BFTreeObject object) {
 		Container * cont = (Container *) object;
 		BFRelease(cont);

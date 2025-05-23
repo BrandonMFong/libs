@@ -10,6 +10,8 @@
 #include "release.hpp"
 #include "retain.hpp"
 #include "exception.hpp"
+#include "compare.hpp"
+#include "allocator.hpp"
 
 #include <type_traits>
 
@@ -25,7 +27,14 @@ namespace BF {
  * This is formatted to fit the bflibc implementation of
  * HashMap and Map
  */
-template <typename K, typename V, typename S = size_t>
+template <
+	typename K,
+	typename V,
+	typename S = size_t,
+	class C = Compare<K>,
+	class AK = Allocator<K>,
+	class AV = Allocator<V>
+>
 class BasicMap : public Collection<S> {
 public:
 	virtual const char * className() const {
@@ -98,6 +107,7 @@ public:
 	 *
 	 * similar behavior to strcmp and memcmp
 	 */
+	[[deprecated("Please use BF::Compare functor")]]
 	void setCompare(int (*compare)(K & a, K & b)) {
 		this->_compare = compare;
 	}
@@ -190,9 +200,10 @@ protected:
 		Key<K> * akey = (Key<K> *) a;
 		Key<K> * bkey = (Key<K> *) b;
 		if (!akey || !bkey) {
-			return -1;
+			return 0;
 		}
-		
+	
+		/*
 		if (!akey->_mapRef->_compare && akey->isBFObject() && bkey->isBFObject()) {
 			BF::Object * obja = (BF::Object *) &akey->_obj;
 			BF::Object * objb = (BF::Object *) &bkey->_obj;
@@ -201,6 +212,10 @@ protected:
 		}
 
 		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
+		*/
+
+		C cmp;
+		return cmp(akey->_obj, bkey->_obj);
 	}
 
 	/**

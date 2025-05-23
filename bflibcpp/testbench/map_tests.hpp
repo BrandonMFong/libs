@@ -26,7 +26,7 @@ int BFTestMapCompareString(String & a, String & b) {
 
 BFTEST_UNIT_FUNC(test_mapInsert, 2<<10,  {
 	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+	//map.setCompare(BFTestMapCompareString);
 	
 	int mapsize = 2<<7;
 	for (int i = 0; i < mapsize; i++) {
@@ -38,7 +38,7 @@ BFTEST_UNIT_FUNC(test_mapInsert, 2<<10,  {
 
 BFTEST_UNIT_FUNC(test_mapGet, 2<<10,  {
 	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+	//map.setCompare(BFTestMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -65,7 +65,7 @@ BFTEST_UNIT_FUNC(test_mapRemove, 2<<10,  {
 		BFRandInit(time(0));
 	}
 	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+	//map.setCompare(BFTestMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -104,7 +104,7 @@ BFTEST_UNIT_FUNC(test_mapWithAllocMem, 2<<10,  {
 		BFRandInit(time(0));
 	}
 	Map<char *, int *> map;
-	map.setCompare(BFTestMapCompareCString);
+	//map.setCompare(BFTestMapCompareCString);
 	map.setRelease(BFTestMapReleaseKeyCString, BFTestMapReleaseValueInteger);
 
 	// insert	
@@ -121,7 +121,7 @@ BFTEST_UNIT_FUNC(test_mapWithAllocMem, 2<<10,  {
 
 BFTEST_UNIT_FUNC(test_mapGetWithSubscript, 2<<10,  {
 	Map<String, int> map;
-	map.setCompare(BFTestMapCompareString);
+	//map.setCompare(BFTestMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;

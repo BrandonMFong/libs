@@ -15,6 +15,13 @@ struct Compare {
 	}
 };
 
+template <>
+struct Compare<char *> {
+	int operator()(const char * const & a, const char * const & b) {
+		return strcmp(a, b);
+	}
+};
+
 }
 
 #endif // COMPARE_HPP
