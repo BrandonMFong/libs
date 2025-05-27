@@ -55,30 +55,15 @@ protected:
 	public:
 		T _obj;
 		const BasicMap<K,V,S> * _mapRef;
-		Container(T obj, const BasicMap<K,V,S> * mapRef)
-		: _obj(obj), _mapRef(mapRef), Object() {
-			BFRetain(this->_mapRef);
-		}
-		virtual ~Container() {
-			BFRelease(this->_mapRef);
-		}
-
-		bool isBFObject() const {
-			return std::is_base_of_v<BF::Object, T>;
-		}
+		Container(T obj, const BasicMap<K,V,S> * mapRef) : _obj(obj), _mapRef(mapRef), Object() { }
+		virtual ~Container() { }
 	};
 
 	template<typename T>
 	class Key : public Container<T> {
 	public:
-		Key(T obj, const BasicMap<K,V,S> * mapRef)
-		: Container<T>(obj, mapRef) { }
+		Key(T obj, const BasicMap<K,V,S> * mapRef) : Container<T>(obj, mapRef) { }
 		virtual ~Key() {
-			/*
-			if (this->_mapRef->_releaseKey) {
-				this->_mapRef->_releaseKey(this->_obj);
-			}
-			*/
 			AK allocator;
 			allocator.release(this->_obj);
 		}
@@ -87,14 +72,8 @@ protected:
 	template<typename T>
 	class Value : public Container<T> {
 	public:
-		Value(T obj, const BasicMap<K,V,S> * mapRef)
-		: Container<T>(obj, mapRef) { }
+		Value(T obj, const BasicMap<K,V,S> * mapRef) : Container<T>(obj, mapRef) { }
 		virtual ~Value() {
-			/*
-			if (this->_mapRef->_releaseValue) {
-				this->_mapRef->_releaseValue(this->_obj);
-			}
-			*/
 			AV allocator;
 			allocator.release(this->_obj);
 		}
@@ -104,9 +83,7 @@ protected:
 	friend class Value<V>;
 
 public:
-	BasicMap()
-	: _compare(NULL), _releaseKey(NULL),
-	_releaseValue(NULL), Collection<S>() { }
+	BasicMap() : Collection<S>() { }
 
 	virtual ~BasicMap() { }
 
@@ -188,10 +165,6 @@ private:
 	 */
 	virtual Value<V> * _getValueForKey(void * key) const = 0;
 
-	int (*_compare)(K & a, K & b);
-	void (*_releaseKey)(K obj);
-	void (*_releaseValue)(V obj);
-
 protected:
 	/**
 	 * compares a with b
@@ -206,17 +179,6 @@ protected:
 		if (!akey || !bkey) {
 			return 0;
 		}
-	
-		/*
-		if (!akey->_mapRef->_compare && akey->isBFObject() && bkey->isBFObject()) {
-			BF::Object * obja = (BF::Object *) &akey->_obj;
-			BF::Object * objb = (BF::Object *) &bkey->_obj;
-			if (!obja || !objb) return -1;
-			return obja->compare(*objb);
-		}
-
-		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
-		*/
 
 		C cmp;
 		return cmp(akey->_obj, bkey->_obj);
