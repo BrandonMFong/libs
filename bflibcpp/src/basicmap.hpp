@@ -31,9 +31,7 @@ template <
 	typename K,
 	typename V,
 	typename S = size_t,
-	class C = Compare<K>,
-	class AK = Allocator<K>,
-	class AV = Allocator<V>
+	class C = Compare<K>
 >
 class BasicMap : public Collection<S> {
 public:
@@ -50,37 +48,18 @@ protected:
 	 * this object will get injected into the
 	 * map implementations
 	 */
-	template<typename T>
+	template<typename T, class A = Allocator<T>>
 	class Container : public Object {
 	public:
 		T _obj;
 		const BasicMap<K,V,S> * _mapRef;
-		Container(T obj, const BasicMap<K,V,S> * mapRef) : _obj(obj), _mapRef(mapRef), Object() { }
-		virtual ~Container() { }
-	};
-
-	template<typename T>
-	class Key : public Container<T> {
-	public:
-		Key(T obj, const BasicMap<K,V,S> * mapRef) : Container<T>(obj, mapRef) { }
-		virtual ~Key() {
-			AK allocator;
+		Container(T obj, const BasicMap<K,V,S> * mapRef)
+		: _obj(obj), _mapRef(mapRef), Object() { }
+		virtual ~Container() {
+			A allocator;
 			allocator.release(this->_obj);
 		}
 	};
-
-	template<typename T>
-	class Value : public Container<T> {
-	public:
-		Value(T obj, const BasicMap<K,V,S> * mapRef) : Container<T>(obj, mapRef) { }
-		virtual ~Value() {
-			AV allocator;
-			allocator.release(this->_obj);
-		}
-	};
-
-	friend class Key<K>;
-	friend class Value<V>;
 
 public:
 	BasicMap() : Collection<S>() { }
@@ -105,8 +84,8 @@ public:
 	 * adds key and value into map
 	 */
 	int insert(K k, V v) {
-		Key<K> * key = new Key<K>(k, this);
-		Value<V> * value = new Value<V>(v, this);
+		Container<K> * key = new Container<K>(k, this);
+		Container<V> * value = new Container<V>(v, this);
 		return this->_insert(key, value);
 	}
 
@@ -116,9 +95,9 @@ public:
 	 * throws an exception if no value could be found for key
 	 */
 	V & getValueForKey(K k) const {
-		Key<K> key(k, this);
+		Container<K> key(k, this);
 
-		Value<V> * value = this->_getValueForKey(&key);
+		Container<V> * value = this->_getValueForKey(&key);
 		if (value) {
 			return value->_obj;
 		} else {
@@ -143,7 +122,7 @@ public:
 	 * removes key/value pair with key
 	 */
 	int remove(K k) {
-		Key<K> key(k, this);
+		Container<K> key(k, this);
 		return this->_remove(&key);
 	}
 
@@ -151,7 +130,7 @@ public:
 	 * true if there is an entry with key=k
 	 */
 	bool contains(K k) const {
-		Key<K> key(k, this);
+		Container<K> key(k, this);
 		return this->_contains(&key);
 	}
 
@@ -163,7 +142,7 @@ private:
 	/**
 	 * returns NULL if there is no value for key
 	 */
-	virtual Value<V> * _getValueForKey(void * key) const = 0;
+	virtual Container<V> * _getValueForKey(void * key) const = 0;
 
 protected:
 	/**
@@ -174,8 +153,8 @@ protected:
 	 * default return(-1)
 	 */
 	static int _BFMapCompare(void * a, void * b) {
-		Key<K> * akey = (Key<K> *) a;
-		Key<K> * bkey = (Key<K> *) b;
+		Container<K> * akey = (Container<K> *) a;
+		Container<K> * bkey = (Container<K> *) b;
 		if (!akey || !bkey) {
 			return 0;
 		}
@@ -188,8 +167,8 @@ protected:
 	 * Releases the Key & Value objects
 	 */
  	static void _BFMapRelease(void * k, void * v) {
-		Key<K> * key = (Key<K> *) k;
-		Value<V> * value = (Value<V> *) v;
+		Container<K> * key = (Container<K> *) k;
+		Container<V> * value = (Container<V> *) v;
 		BFRelease(key);
 		BFRelease(value);
 	}

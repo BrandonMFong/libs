@@ -48,13 +48,13 @@ private:
 		return BFHashMapInsert(this->_map, key, value);
 	}
 
-	virtual typename BasicMap<K,V,S>::template Value<V> * _getValueForKey(void * key) const {
+	virtual typename BasicMap<K,V,S>::template Container<V> * _getValueForKey(void * key) const {
 		if (!this->_map) {
 			return NULL;
 		}
 		
-		typename BasicMap<K,V,S>::template Value<V> * value = 
-			(typename BasicMap<K,V,S>::template Value<V> *) BFHashMapGetValue(this->_map, key, NULL);
+		typename BasicMap<K,V,S>::template Container<V> * value = 
+			(typename BasicMap<K,V,S>::template Container<V> *) BFHashMapGetValue(this->_map, key, NULL);
 
 		return value;
 	}
@@ -70,7 +70,7 @@ private:
 	}
 	
 	static unsigned long _BFHashMapHashFunction(void * k) {
-		typename BasicMap<K,V,S>::template Key<K> * key = (typename BasicMap<K,V,S>::template Key<K> *) k;
+		typename BasicMap<K,V,S>::template Container<K> * key = (typename BasicMap<K,V,S>::template Container<K> *) k;
 		if (!key) {
 			return 0;
 		}
