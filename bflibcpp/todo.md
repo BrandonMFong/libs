@@ -32,6 +32,8 @@
 - [ ] URL url = "this"; url = "this"; crashes
 - [x] Atomically figure out hash function without manually defining one for HashMap
 - [ ] Set
+    - [x] implementation
+    - [ ] tests
     - [x] release & compare functor work
         - [x] tree 
         - [x] basic map
