@@ -74,9 +74,13 @@ protected:
 		Key(T obj, const BasicMap<K,V,S> * mapRef)
 		: Container<T>(obj, mapRef) { }
 		virtual ~Key() {
+			/*
 			if (this->_mapRef->_releaseKey) {
 				this->_mapRef->_releaseKey(this->_obj);
 			}
+			*/
+			AK allocator;
+			allocator.release(this->_obj);
 		}
 	};
 
@@ -86,9 +90,13 @@ protected:
 		Value(T obj, const BasicMap<K,V,S> * mapRef)
 		: Container<T>(obj, mapRef) { }
 		virtual ~Value() {
+			/*
 			if (this->_mapRef->_releaseValue) {
 				this->_mapRef->_releaseValue(this->_obj);
 			}
+			*/
+			AV allocator;
+			allocator.release(this->_obj);
 		}
 	};
 
@@ -108,17 +116,13 @@ public:
 	 * similar behavior to strcmp and memcmp
 	 */
 	[[deprecated("Please use BF::Compare functor")]]
-	void setCompare(int (*compare)(K & a, K & b)) {
-		this->_compare = compare;
-	}
+	void setCompare(int (*compare)(K & a, K & b)) { }
 
 	/**
 	 * defines how Key and values are released
 	 */
-	void setRelease(void (*releaseKey)(K obj), void (*releaseValue)(V obj)) {
-		this->_releaseKey = releaseKey;
-		this->_releaseValue = releaseValue;
-	}
+	[[deprecated("Please use BF::Allocatorfunctor")]]
+	void setRelease(void (*releaseKey)(K obj), void (*releaseValue)(V obj)) { }
 
 	/**
 	 * adds key and value into map

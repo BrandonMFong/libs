@@ -128,16 +128,6 @@ int BFTestTreeComparePointers(int * const &ap, int * const &bp) {
 	return a - b;
 }
 
-template<> struct BF::Allocator<int *> {
-	int * create() const {
-		return 0;
-	}
-
-	void release(int * obj) const {
-		BFFree(obj);
-	}
-};
-
 BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
@@ -195,16 +185,6 @@ BFTEST_UNIT_FUNC(test_treeWithStrings, 2<<8, {
 void _BFTestTreeRelease(char * str) {
 	free(str);
 }
-
-template<> struct BF::Allocator<char *> {
-	char * create() const {
-		return 0;
-	}
-
-	void release(char * obj) const {
-		BFFree(obj);
-	}
-};
 
 BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 2<<10, {
 	Tree<char *> tree(true);

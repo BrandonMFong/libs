@@ -32,7 +32,7 @@
 - [ ] URL url = "this"; url = "this"; crashes
 - [x] Atomically figure out hash function without manually defining one for HashMap
 - [ ] Set
-    - [ ] release & compare functor work
+    - [x] release & compare functor work
         - [x] tree 
-        - [ ] basic map
+        - [x] basic map
 
