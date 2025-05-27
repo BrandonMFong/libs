@@ -33,7 +33,7 @@
 - [x] Atomically figure out hash function without manually defining one for HashMap
 - [ ] Set
     - [x] implementation
-    - [ ] tests
+    - [x] tests
     - [x] release & compare functor work
         - [x] tree 
         - [x] basic map

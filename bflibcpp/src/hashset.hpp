@@ -26,8 +26,8 @@ public:
 	HashSet() : _set(NULL), BasicSet<V,S>() {
 		this->_set = BFHashSetCreate();
 		if (!this->_set) return;
-		BFHashSetSetCompare(this->_set, this->_BFMapCompare);
-		BFHashSetSetRelease(this->_set, this->_BFMapRelease);
+		BFHashSetSetCompare(this->_set, this->_BFSetCompare);
+		BFHashSetSetRelease(this->_set, this->_BFSetRelease);
 		BFHashSetSetHashFunction(this->_set, this->_BFHashSetHashFunction);
 	}
 
