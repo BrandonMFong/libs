@@ -32,6 +32,8 @@
 #include "hash.hpp"
 #include "defer.hpp"
 #include "sort.hpp"
+#include "set.hpp"
+#include "hashset.hpp"
 
 #endif // BFLIBCPP_HPP
 
