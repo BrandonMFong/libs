@@ -21,22 +21,17 @@ int BFTestTreeCompare(const int & a, const int & b) {
 	return a - b;
 }
 
-void BFTestTreeRelease(int object) { }
-
 BFTEST_UNIT_FUNC(test_treeInit, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
-	tree.setRelease(BFTestTreeRelease);
 })
 
 BFTEST_UNIT_FUNC(test_treeInsert, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
-		BF_ASSERT(!tree.insert(i));
+		int err = tree.insert(i);
+		BF_ASSERT(err == 0, "itr=%d, couldn't insert %d, err=%d", BFTEST_UNIT_FUNC_ITR, i, err);
 	}
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 })
@@ -46,12 +41,10 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 		BFRandInit(time(0));
 	}
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
-		BF_ASSERT(!tree.insert(i));
+		BF_ASSERT(!tree.insert(i), "couldn't insert %d", i);
 	}
 	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
 
@@ -66,12 +59,10 @@ BFTEST_UNIT_FUNC(test_treeRemove, 2<<10, {
 
 BFTEST_UNIT_FUNC(test_treeContains, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i += 2) {
-		BF_ASSERT(!tree.insert(i));
+		BF_ASSERT(!tree.insert(i), "couldn't insert %d", i);
 	}
 	BF_ASSERT(tree.size() == treesize/2, "%ld != %ld", tree.size(), treesize);
 
@@ -117,12 +108,10 @@ void _BFTestTreeTraversePostorder(const typename Tree<T>::Node node) {
 
 BFTEST_UNIT_FUNC(test_treeTraversing, 2<<10,  {
 	Tree<int> tree;
-	tree.setCompare(BFTestTreeCompare);
-	tree.setRelease(BFTestTreeRelease);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i += 2) {
-		BF_ASSERT(!tree.insert(i));
+		BF_ASSERT(!tree.insert(i), "couldn't insert %d", i);
 	}
 	BF_ASSERT(tree.size() == treesize/2, "%ld != %ld", tree.size(), treesize);
 
@@ -139,17 +128,11 @@ int BFTestTreeComparePointers(int * const &ap, int * const &bp) {
 	return a - b;
 }
 
-void BFTestTreeReleasePointer(int * object) {
-	BFFree(object);
-}
-
 BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 	if (BFTEST_UNIT_FUNC_ITR == 0) {
 		BFRandInit(time(0));
 	}
 	Tree<int*> tree;
-	tree.setCompare(BFTestTreeComparePointers);
-	tree.setRelease(BFTestTreeReleasePointer);
 
 	int treesize = 2<<8;
 	for (int i = 0; i < treesize; i++) {
@@ -168,6 +151,55 @@ BFTEST_UNIT_FUNC(test_treeWithMallocObjects, 2<<10, {
 	}
 })
 
+String _BFTreeTestsCreateRandomWord() {
+	const char charset[] = "abcdefghijklmnopqrstuvwxyz";
+	size_t charset_size = strlen(charset);
+
+	srand(time(0));
+
+	size_t reslen = 2 << 3;
+	char word[reslen + 1];
+	for (int i = 0; i < reslen; i++) {
+		word[i] = charset[rand() % charset_size];
+	}
+
+	word[reslen] = '\0';
+
+	return word;
+}
+
+BFTEST_UNIT_FUNC(test_treeWithStrings, 2<<8, {
+	Tree<String> tree(true);
+
+	BF_ASSERT(tree.allowDuplicates());
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i++) {
+		String word = _BFTreeTestsCreateRandomWord();
+		int err = tree.insert(word);
+		BF_ASSERT(err == 0, "itr=%d, couldn't insert '%s', err=%d", BFTEST_UNIT_FUNC_ITR, word.cString(), err);
+	}
+	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
+})
+
+void _BFTestTreeRelease(char * str) {
+	free(str);
+}
+
+BFTEST_UNIT_FUNC(test_treeWithCustomCompare, 2<<10, {
+	Tree<char *> tree(true);
+
+	BF_ASSERT(tree.allowDuplicates());
+
+	int treesize = 2<<8;
+	for (int i = 0; i < treesize; i++) {
+		char * word = _BFTreeTestsCreateRandomWord().cStringCopy();
+		int err = tree.insert(word);
+		BF_ASSERT(err == 0, "itr=%d, couldn't insert '%s', err=%d", BFTEST_UNIT_FUNC_ITR, word, err);
+	}
+	BF_ASSERT(tree.size() == treesize, "%ld != %ld", tree.size(), treesize);
+})
+
 BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeInit);
 	BFTEST_LAUNCH(test_treeInsert);
@@ -175,7 +207,8 @@ BFTEST_COVERAGE_FUNC(tree_tests, {
 	BFTEST_LAUNCH(test_treeContains);
 	BFTEST_LAUNCH(test_treeTraversing);
 	BFTEST_LAUNCH(test_treeWithMallocObjects);
-
+	BFTEST_LAUNCH(test_treeWithStrings);
+	BFTEST_LAUNCH(test_treeWithCustomCompare);
 })
 
 #endif // TREE_TESTS_HPP

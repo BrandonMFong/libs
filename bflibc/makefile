@@ -27,7 +27,7 @@ filesystem coreutils stringutils \
 bftime thread bfmath \
 lock filewriter hash \
 rand map tree internal/tree \
-hashmap
+hashmap set hashset
 
 ### Release settings
 ifeq ($(CONFIG),release) # release

@@ -20,6 +20,9 @@
 #include "tree_tests.hpp"
 #include "url_tests.hpp"
 #include "defer_tests.hpp"
+#include "set_tests.hpp"
+#include "hashset_tests.hpp"
+#include "removepointer_tests.hpp"
 
 BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(atomic_tests);
@@ -37,6 +40,8 @@ BFTEST_SUITE_FUNC({
 	BFTEST_SUITE_LAUNCH(exception_tests);
 	BFTEST_SUITE_LAUNCH(tree_tests);
 	BFTEST_SUITE_LAUNCH(url_tests);
-	BFTEST_SUITE_LAUNCH(defer_tests);
+	BFTEST_SUITE_LAUNCH(set_tests);
+	BFTEST_SUITE_LAUNCH(hashset_tests);
+	BFTEST_SUITE_LAUNCH(removepointer_tests);
 })
 

@@ -10,6 +10,8 @@
 #include "release.hpp"
 #include "retain.hpp"
 #include "exception.hpp"
+#include "compare.hpp"
+#include "allocator.hpp"
 
 #include <type_traits>
 
@@ -25,7 +27,12 @@ namespace BF {
  * This is formatted to fit the bflibc implementation of
  * HashMap and Map
  */
-template <typename K, typename V, typename S = size_t>
+template <
+	typename K,
+	typename V,
+	typename S = size_t,
+	class C = Compare<K>
+>
 class BasicMap : public Collection<S> {
 public:
 	virtual const char * className() const {
@@ -41,55 +48,21 @@ protected:
 	 * this object will get injected into the
 	 * map implementations
 	 */
-	template<typename T>
+	template<typename T, class A = Allocator<T>>
 	class Container : public Object {
 	public:
 		T _obj;
 		const BasicMap<K,V,S> * _mapRef;
 		Container(T obj, const BasicMap<K,V,S> * mapRef)
-		: _obj(obj), _mapRef(mapRef), Object() {
-			BFRetain(this->_mapRef);
-		}
+		: _obj(obj), _mapRef(mapRef), Object() { }
 		virtual ~Container() {
-			BFRelease(this->_mapRef);
-		}
-
-		bool isBFObject() const {
-			return std::is_base_of_v<BF::Object, T>;
+			A allocator;
+			allocator.release(this->_obj);
 		}
 	};
-
-	template<typename T>
-	class Key : public Container<T> {
-	public:
-		Key(T obj, const BasicMap<K,V,S> * mapRef)
-		: Container<T>(obj, mapRef) { }
-		virtual ~Key() {
-			if (this->_mapRef->_releaseKey) {
-				this->_mapRef->_releaseKey(this->_obj);
-			}
-		}
-	};
-
-	template<typename T>
-	class Value : public Container<T> {
-	public:
-		Value(T obj, const BasicMap<K,V,S> * mapRef)
-		: Container<T>(obj, mapRef) { }
-		virtual ~Value() {
-			if (this->_mapRef->_releaseValue) {
-				this->_mapRef->_releaseValue(this->_obj);
-			}
-		}
-	};
-
-	friend class Key<K>;
-	friend class Value<V>;
 
 public:
-	BasicMap()
-	: _compare(NULL), _releaseKey(NULL),
-	_releaseValue(NULL), Collection<S>() { }
+	BasicMap() : Collection<S>() { }
 
 	virtual ~BasicMap() { }
 
@@ -98,24 +71,21 @@ public:
 	 *
 	 * similar behavior to strcmp and memcmp
 	 */
-	void setCompare(int (*compare)(K & a, K & b)) {
-		this->_compare = compare;
-	}
+	[[deprecated("Please use BF::Compare functor")]]
+	void setCompare(int (*compare)(K & a, K & b)) { }
 
 	/**
 	 * defines how Key and values are released
 	 */
-	void setRelease(void (*releaseKey)(K obj), void (*releaseValue)(V obj)) {
-		this->_releaseKey = releaseKey;
-		this->_releaseValue = releaseValue;
-	}
+	[[deprecated("Please use BF::Allocatorfunctor")]]
+	void setRelease(void (*releaseKey)(K obj), void (*releaseValue)(V obj)) { }
 
 	/**
 	 * adds key and value into map
 	 */
 	int insert(K k, V v) {
-		Key<K> * key = new Key<K>(k, this);
-		Value<V> * value = new Value<V>(v, this);
+		Container<K> * key = new Container<K>(k, this);
+		Container<V> * value = new Container<V>(v, this);
 		return this->_insert(key, value);
 	}
 
@@ -125,9 +95,9 @@ public:
 	 * throws an exception if no value could be found for key
 	 */
 	V & getValueForKey(K k) const {
-		Key<K> key(k, this);
+		Container<K> key(k, this);
 
-		Value<V> * value = this->_getValueForKey(&key);
+		Container<V> * value = this->_getValueForKey(&key);
 		if (value) {
 			return value->_obj;
 		} else {
@@ -152,7 +122,7 @@ public:
 	 * removes key/value pair with key
 	 */
 	int remove(K k) {
-		Key<K> key(k, this);
+		Container<K> key(k, this);
 		return this->_remove(&key);
 	}
 
@@ -160,7 +130,7 @@ public:
 	 * true if there is an entry with key=k
 	 */
 	bool contains(K k) const {
-		Key<K> key(k, this);
+		Container<K> key(k, this);
 		return this->_contains(&key);
 	}
 
@@ -172,11 +142,7 @@ private:
 	/**
 	 * returns NULL if there is no value for key
 	 */
-	virtual Value<V> * _getValueForKey(void * key) const = 0;
-
-	int (*_compare)(K & a, K & b);
-	void (*_releaseKey)(K obj);
-	void (*_releaseValue)(V obj);
+	virtual Container<V> * _getValueForKey(void * key) const = 0;
 
 protected:
 	/**
@@ -187,28 +153,22 @@ protected:
 	 * default return(-1)
 	 */
 	static int _BFMapCompare(void * a, void * b) {
-		Key<K> * akey = (Key<K> *) a;
-		Key<K> * bkey = (Key<K> *) b;
+		Container<K> * akey = (Container<K> *) a;
+		Container<K> * bkey = (Container<K> *) b;
 		if (!akey || !bkey) {
-			return -1;
-		}
-		
-		if (!akey->_mapRef->_compare && akey->isBFObject() && bkey->isBFObject()) {
-			BF::Object * obja = (BF::Object *) &akey->_obj;
-			BF::Object * objb = (BF::Object *) &bkey->_obj;
-			if (!obja || !objb) return -1;
-			return obja->compare(*objb);
+			return 0;
 		}
 
-		return akey->_mapRef->_compare(akey->_obj, bkey->_obj);
+		C cmp;
+		return cmp(akey->_obj, bkey->_obj);
 	}
 
 	/**
 	 * Releases the Key & Value objects
 	 */
  	static void _BFMapRelease(void * k, void * v) {
-		Key<K> * key = (Key<K> *) k;
-		Value<V> * value = (Value<V> *) v;
+		Container<K> * key = (Container<K> *) k;
+		Container<V> * value = (Container<V> *) v;
 		BFRelease(key);
 		BFRelease(value);
 	}

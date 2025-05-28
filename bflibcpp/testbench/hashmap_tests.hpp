@@ -27,7 +27,6 @@ int BFTestHashMapCompareString(String & a, String & b) {
 
 BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10,  {
 	HashMap<String, int> map;
-	map.setCompare(BFTestHashMapCompareString);
 	
 	int mapsize = 2<<7;
 	for (int i = 0; i < mapsize; i++) {
@@ -39,7 +38,6 @@ BFTEST_UNIT_FUNC(test_hashMapInsert, 2<<10,  {
 
 BFTEST_UNIT_FUNC(test_hashMapGet, 2<<10,  {
 	HashMap<String, int> map;
-	map.setCompare(BFTestHashMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -66,7 +64,6 @@ BFTEST_UNIT_FUNC(test_hashMapRemove, 2<<10,  {
 		BFRandInit(time(0));
 	}
 	HashMap<String, int> map;
-	map.setCompare(BFTestHashMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -105,8 +102,6 @@ BFTEST_UNIT_FUNC(test_hashMapWithAllocMem, 2<<10,  {
 		BFRandInit(time(0));
 	}
 	HashMap<char *, int *> map;
-	map.setCompare(BFTestHashMapCompareCString);
-	map.setRelease(BFTestHashMapReleaseKeyCString, BFTestHashMapReleaseValueInteger);
 
 	// insert	
 	int mapsize = 2<<7;
@@ -122,7 +117,6 @@ BFTEST_UNIT_FUNC(test_hashMapWithAllocMem, 2<<10,  {
 
 BFTEST_UNIT_FUNC(test_hashMapGetterWithSubscript, 2<<10,  {
 	HashMap<String, int> map;
-	map.setCompare(BFTestHashMapCompareString);
 
 	// insert	
 	int mapsize = 2<<7;

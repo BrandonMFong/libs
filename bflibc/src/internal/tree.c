@@ -16,6 +16,7 @@ _BFTreeNode * _BFTreeNodeCreate() {
 	res->right = NULL;
 	res->object = NULL;
 	res->height = 1;
+	res->count = 0;
 	return res;
 }
 
@@ -87,6 +88,8 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	void (*release)(BFTreeObject object),
+	unsigned char flags,
 	int * error
 ) {
 	// 1.  Perform the normal BST insertion
@@ -96,16 +99,24 @@ _BFTreeNode * _BFTreeNodeInsert(
 		return node;
 	}
 
-	if (compare(object, node->object) < 0) {
+	int cmpval = compare(object, node->object);
+	if (cmpval < 0) {
 		node->left = _BFTreeNodeInsert(
-			node->left, object, compare, error
+			node->left, object, compare, release, flags, error
 		);
-	} else if (compare(object, node->object) > 0) {
+	} else if (cmpval > 0) {
 		node->right = _BFTreeNodeInsert(
-			node->right, object, compare, error
+			node->right, object, compare, release, flags, error
 		);
 	} else { // Equal keys are not allowed in BST
-		if (error) *error = -1;
+		if ((flags & (0x01 << _BFTREE_FLAG_ALLOW_DUPLICATES)) != 0) {
+			node->count++;
+			if (release) {
+				release(object);
+			}
+		} else {
+			if (error) *error = -11;
+		}
 		return node;
 	}
 
@@ -170,7 +181,8 @@ _BFTreeNode * _BFTreeNodeRemove(
 	_BFTreeNode * root,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
-	void (*release)(BFTreeObject object)
+	void (*release)(BFTreeObject object),
+	unsigned char flags
 ) {
 	// STEP 1: PERFORM STANDARD BST DELETE
 
@@ -180,19 +192,29 @@ _BFTreeNode * _BFTreeNodeRemove(
 
 	// If the key to be deleted is smaller than the
 	// root's key, then it lies in left subtree
-	if (compare(object, root->object) < 0) {
+	int cmpval = compare(object, root->object);
+	if (cmpval < 0) {
 		root->left = _BFTreeNodeRemove(
-			root->left, object, compare, release
+			root->left, object, compare, release, flags
 		);
 	// If the key to be deleted is greater than the
 	// root's key, then it lies in right subtree
-	} else if (compare(object, root->object) > 0) {
+	} else if (cmpval > 0) {
 		root->right = _BFTreeNodeRemove(
-			root->right, object, compare, release
+			root->right, object, compare, release, flags
 		);
 	// if key is same as root's key, then This is
 	// the node to be deleted
+	// 
+	// unless duplicates are allowed
 	} else {
+		if (flags & (0x01 << _BFTREE_FLAG_ALLOW_DUPLICATES)) {
+			if (root->count > 0) {
+				root->count--;
+				return root;
+			}
+		}
+
 		// node with only one child or no child
 		if (root->left == NULL || root->right == NULL) {
 			_BFTreeNode * temp = root->left ? root->left : root->right;
@@ -223,7 +245,7 @@ _BFTreeNode * _BFTreeNodeRemove(
 
 			// Delete the inorder successor
 			root->right = _BFTreeNodeRemove(
-				root->right, temp->object, compare, NULL
+				root->right, temp->object, compare, NULL, flags
 			);
 		}
 	}
@@ -275,8 +297,8 @@ bool _BFTreeNodeSearch(
 ) {
 	if (!node) {
 		return false;
-	} else if (!obj) {
-		return false;
+	//} else if (!obj) {
+	//	return false;
 	}
 
 	int comp = compare(obj, node->object);

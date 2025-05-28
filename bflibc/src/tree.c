@@ -14,6 +14,7 @@ BFTree BFTreeCreate() {
 	res->compare = NULL;
 	res->release = NULL;
 	res->size = 0;
+	res->flags = 0x00;
 	return (BFTree) res;
 }
 
@@ -27,17 +28,27 @@ void BFTreeSetRelease(BFTree tree, void (*release)(BFTreeObject object)) {
 	((_BFTree *) tree)->release = release;
 }
 
+bool BFTreeGetAllowDuplicates(BFTree _tree) {
+	_BFTree * tree = (_BFTree *) _tree;
+	if (!tree) return false;
+
+	return (tree->flags & (0x01 << _BFTREE_FLAG_ALLOW_DUPLICATES)) != 0;
+}
+
+void BFTreeSetAllowDuplicates(BFTree _tree, bool allow) {
+	_BFTree * tree = (_BFTree *) _tree;
+	if (!tree) return;
+
+	unsigned char bit = allow ? 0x01 : 0x00;
+
+	tree->flags = tree->flags ^ (bit << _BFTREE_FLAG_ALLOW_DUPLICATES);
+}
+
 // left->right->node
 void BFTreeReleaseNode(_BFTree * tree, _BFTreeNode * node) {
 	if (!node) return;
 	BFTreeReleaseNode(tree, node->left);
 	BFTreeReleaseNode(tree, node->right);
-
-	/*
-	if (tree->release) {
-		tree->release(node->object);
-	}
-	*/
 
 	_BFTreeNodeRelease(node, tree->release);
 	tree->size--;
@@ -64,6 +75,8 @@ int BFTreeInsert(BFTree _tree, BFTreeObject object) {
 		tree->root,
 		object,
 		tree->compare,
+		tree->release,
+		tree->flags,
 		&err
 	);
 
@@ -80,7 +93,7 @@ int BFTreeRemove(BFTree _tree, BFTreeObject object) {
 	}
 	_BFTree * tree = (_BFTree *) _tree;
 	tree->root = _BFTreeNodeRemove(
-		tree->root, object, tree->compare, tree->release
+		tree->root, object, tree->compare, tree->release, tree->flags
 	);
 
 	tree->size--;

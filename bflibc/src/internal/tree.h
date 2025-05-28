@@ -13,6 +13,12 @@ typedef struct _BFTreeNode {
 	struct _BFTreeNode * right;
 	size_t height;
 	BFTreeObject object;
+
+	/**
+	 * IIF duplicates are allowed this will hold the count of
+	 * instances of object in the tree
+	 */
+	size_t count;
 } _BFTreeNode;
 
 _BFTreeNode * _BFTreeNodeCreate();
@@ -35,11 +41,26 @@ typedef struct _BFTree {
 	 * BFTreeRelease() is called
 	 */
 	void (*release)(BFTreeObject object);
+
+	/**
+	 * |x|x|x|x|x|x|x|<allow duplicates>|
+	 *
+	 * <allow duplicates>: default value == 0. 0: not allow. 1: allow
+	 */
+	unsigned char flags;
 } _BFTree;
+
+#define _BFTREE_FLAG_ALLOW_DUPLICATES 0
 
 /**
  * error: will nonzero if object couldn't be inserted.
  * 	one reason is there may be a duplicate
+ *
+ * object: pointer or integer value. value=0 is allowed. If this tree
+ * is allowed to have duplicates, any duplicates found will be counted
+ * and released using its release callback
+ 
+ * flags: _BFTree::flags
  *
  * returns node
  */
@@ -47,17 +68,22 @@ _BFTreeNode * _BFTreeNodeInsert(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
+	void (*release)(BFTreeObject object),
+	unsigned char flags,
 	int * error
 );
 
 /**
+ * flags: _BFTree::flags
+ *
  * returns node
  */
 _BFTreeNode * _BFTreeNodeRemove(
 	_BFTreeNode * node,
 	BFTreeObject object,
 	int (*compare)(BFTreeObject a, BFTreeObject b),
-	void (*release)(BFTreeObject object)
+	void (*release)(BFTreeObject object),
+	unsigned char flags
 );
 
 /**

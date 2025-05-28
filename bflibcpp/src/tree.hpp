@@ -9,6 +9,8 @@
 #include "collection.hpp"
 #include "release.hpp"
 #include "exception.hpp"
+#include "compare.hpp"
+#include "allocator.hpp"
 
 extern "C" {
 #include <bflibc/tree.h>
@@ -19,7 +21,7 @@ namespace BF {
 /**
  * AVL Tree
  */
-template<typename T, typename S = size_t>
+template<typename T, typename S = size_t, class C = Compare<T>, class A = Allocator<T>>
 class Tree : public Collection<S> {
 	/**
 	 * holds container of type T
@@ -28,14 +30,15 @@ class Tree : public Collection<S> {
 	public:
 		T _obj;
 		const Tree * _treeRef;
-		void (*_release)(T obj);
-		Container(T obj, const Tree * treeRef, void (*release)(T obj))
+		bool _release;
+		Container(T obj, const Tree * treeRef, bool release)
 		: _obj(obj), _treeRef(treeRef), _release(release), Object() {
 			BFRetain(this->_treeRef);
 		}
 		virtual ~Container() {
+			A allocator;
 			if (this->_release) {
-				this->_release(this->_obj);
+				allocator.release(this->_obj);
 			}
 			BFRelease(this->_treeRef);
 		}
@@ -66,11 +69,15 @@ public:
 		bool isNull() const { return this->_node == NULL; }
 	};
 
-	Tree() : Collection<S>() {
+	Tree() : _tree(NULL), Collection<S>() {
 		this->_tree = BFTreeCreate();
 		if (!this->_tree) return;
-		BFTreeSetCompare(this->_tree, this->_BFTreeCompare);
-		BFTreeSetRelease(this->_tree, this->_BFTreeRelease);
+		BFTreeSetCompare(this->_tree, this->_compare);
+		BFTreeSetRelease(this->_tree, this->_release);
+	}
+
+	Tree(bool allowDuplicates) : Tree() {
+		BFTreeSetAllowDuplicates(this->_tree, allowDuplicates);
 	}
 
 	virtual ~Tree() {
@@ -83,15 +90,20 @@ public:
 	 *
 	 * see _compare
 	 */
-	void setCompare(int (*compare)(const T & a, const T & b)) {
-		this->_compare = compare;
-	}
+	[[deprecated("Please use BF::Compare functor")]]
+	void setCompare(int (*compare)(const T & a, const T & b)) { }
 
 	/**
 	 * defines how objects are released
 	 */
-	void setRelease(void (*release)(T obj)) {
-		this->_release = release;
+	[[deprecated("Please use BF::Allocator functor")]]
+	void setRelease(void (*release)(T obj)) { }
+
+	/**
+	 * true if tree can allow duplicates
+	 */
+	bool allowDuplicates() const {
+		return BFTreeGetAllowDuplicates(this->_tree);
 	}
 
 	/**
@@ -106,7 +118,7 @@ public:
 	 */
 	int insert(T object) {
 		if (!this->_tree) return -1;
-		Container * c = new Container(object, this, this->_release);
+		Container * c = new Container(object, this, true);
 		return BFTreeInsert(this->_tree, c);
 	}
 
@@ -115,7 +127,7 @@ public:
 	 */
 	int remove(T object) {
 		if (!this->_tree) return -1;
-		Container c(object, this, NULL);
+		Container c(object, this, false);
 		return BFTreeRemove(this->_tree, &c);
 	}
 
@@ -124,7 +136,7 @@ public:
 	 */
 	bool contains(T object) const {
 		if (!this->_tree) return -1;
-		Container c(object, this, NULL);
+		Container c(object, this, false);
 		return BFTreeContains(this->_tree, &c);
 	}
 
@@ -143,15 +155,16 @@ private:
 	 *	a > b -> result > 0
 	 *	a == b -> result == 0
 	 */
-	int (*_compare)(const T & a, const T & b);
-	static int _BFTreeCompare(BFTreeObject a, BFTreeObject b) {
+	static int _compare(BFTreeObject a, BFTreeObject b) {
+		if (!a || !b) return 0;
 		Container * acont = (Container *) a;
 		Container * bcont = (Container *) b;
-		return acont->_treeRef->_compare(acont->_obj, bcont->_obj);
+
+		C cmp;
+		return cmp(acont->_obj, bcont->_obj);
 	}
 
-	void (*_release)(T obj);
-	static void _BFTreeRelease(BFTreeObject object) {
+	static void _release(BFTreeObject object) {
 		Container * cont = (Container *) object;
 		BFRelease(cont);
 	}
