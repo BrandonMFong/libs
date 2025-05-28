@@ -6,6 +6,8 @@
 #ifndef COMPARE_HPP
 #define COMPARE_HPP
 
+#include <string.h>
+
 namespace BF {
 
 template <typename T>
