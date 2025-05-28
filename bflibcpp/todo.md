@@ -37,5 +37,6 @@
     - [x] release & compare functor work
         - [x] tree 
         - [x] basic map
-    - [ ] allocator to accept byte size
+- [ ] allocator
+    - [ ] add onto the create() method. Might be useful in the Array and List structures
 
