@@ -34,6 +34,7 @@
 #include "sort.hpp"
 #include "set.hpp"
 #include "hashset.hpp"
+#include "removepointer.hpp"
 
 #endif // BFLIBCPP_HPP
 
