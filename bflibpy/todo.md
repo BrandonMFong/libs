@@ -1,0 +1,1 @@
+- [ ] add a `.rmchar()` function that extends `str`'s capabilities to remove a char. there is `replace()` but it requires 2 params
